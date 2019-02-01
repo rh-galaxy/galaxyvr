@@ -380,7 +380,7 @@ public class MapGenerator : MonoBehaviour
         if (iLevelType == (int)LevelType.MAP_MISSION && player.iNumLifes==0) bRunGameOverTimer = true;
 
         if (bRunGameOverTimer) {
-            fGameOverTimer += Time.fixedDeltaTime;
+            fGameOverTimer += Time.deltaTime;
             if (fGameOverTimer > 5.0f) bGameOver = true;
         }
     }
