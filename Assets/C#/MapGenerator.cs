@@ -313,6 +313,11 @@ public class MapGenerator : MonoBehaviour
         oObj.transform.localScale = new Vector3(vSize.x + 2.0f, 1.0f, vSize.z + 6);
         oObj.GetComponent<MeshRenderer>().material = oMaterialWalls;
 
+        //change fov if non VR since that default setting shows to wide fov
+        // and is not behaving reliably
+        if (!XRDevice.isPresent)
+            Camera.main.fieldOfView = 30.0f;
+
         Debug.Log("Start done");
     }
 
