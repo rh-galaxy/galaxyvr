@@ -10,8 +10,8 @@ public class Enemy : MonoBehaviour
     public GameObject enemy4;
     public GameObject oExplosion;
 
-    Vector3 pos;
-    Vector3 vel;
+    Vector3 vPos;
+    Vector3 vVel;
     int iCurWP;
     float fWPTime;
     float fFireTime;
@@ -50,9 +50,9 @@ public class Enemy : MonoBehaviour
             gameObject.SetActive(true); //remove later
             enemy4.SetActive(true);
         }
-        pos.x = stInfo.vWayPoints[0].x;
-        pos.y = stInfo.vWayPoints[0].y;
-        pos.z = 1.5f;
+        vPos.x = stInfo.vWayPoints[0].x;
+        vPos.y = stInfo.vWayPoints[0].y;
+        vPos.z = 1.5f;
 
         iNumHits = SENEMY_HITSTOKILL[stInfo.iEnemyType];
 
@@ -89,6 +89,14 @@ public class Enemy : MonoBehaviour
         // is done in the collision matrix in Edit->Project Settins
     }
 
+    public PlayerController2 thePlayer; //set in editor
+    bool InFireRange()
+    {
+        Vector2 vPlayerPos = thePlayer.GetPosition();
+        Vector2 vDist = vPlayerPos - new Vector2(vPos.x, vPos.y);
+        float fDist = Mathf.Sqrt(vDist.x * vDist.x + vDist.y * vDist.y);
+        return (fDist<(450/32.0f)); //~14 tiles, like in the old game
+    }
 
     void FixedUpdate()
     {
@@ -145,16 +153,16 @@ public class Enemy : MonoBehaviour
                     Vector2 vDist;
                     float fDist;
 
-                    vDist = new Vector3(stInfo.vWayPoints[iCurWP].x - pos.x, stInfo.vWayPoints[iCurWP].y - pos.y, 0);
+                    vDist = new Vector3(stInfo.vWayPoints[iCurWP].x - vPos.x, stInfo.vWayPoints[iCurWP].y - vPos.y, 0);
 
                     fDist = vDist.magnitude;
                     fWPTime = fDist / (stInfo.iSpeed / 32.0f);
 
-                    vel = new Vector3(vDist.x / fWPTime, vDist.y / fWPTime, 0);
+                    vVel = new Vector3(vDist.x / fWPTime, vDist.y / fWPTime, 0);
                     iCurWP = (iCurWP + 1) % stInfo.iNumWayPoints;
                     //send change in movement - m_stMsg1.iMsg |= N_MSG1_MOVEMENT;
                 }
-                pos += vel * Time.fixedDeltaTime;
+                vPos += vVel * Time.fixedDeltaTime;
                 //SetCommonInfo(&m_stMsg1);
             }
 
@@ -167,7 +175,7 @@ public class Enemy : MonoBehaviour
                     if (stInfo.iFireInterval == -1) stInfo.iFireInterval = 2000; //previous versions random time becomes 2 sec
                     fFireTime = stInfo.iFireInterval / 1000.0f;
 
-                    if (/*InFireRange()*/true)
+                    if (InFireRange())
                     {
                         //iPlaySound = 0; //bullet sound on first bullet, must be done at enemy pos
 
@@ -189,7 +197,7 @@ public class Enemy : MonoBehaviour
         }
 
         //set transform
-        transform.position = pos;
+        transform.position = vPos;
     }
 
     private void Update()
@@ -208,8 +216,8 @@ public class Enemy : MonoBehaviour
         float fSin = Mathf.Sin(i_fDirection * (Mathf.PI / 180.0f));
         float fCos = Mathf.Cos(i_fDirection * (Mathf.PI / 180.0f));
         ///**/Debug.DrawLine(new Vector3(pos.x, pos.y, -4.5f), new Vector3(pos.x + fCos * i_fOffset, pos.y + fSin * i_fOffset, -4.5f), Color.black, 2.5f, false);
-        stBulletInfo.vPos = new Vector2(pos.x + fCos * i_fOffset, pos.y + fSin * i_fOffset);
-        stBulletInfo.vVel = new Vector2(vel.x + fCos * i_fSpeed, vel.y + fSin * i_fSpeed);
+        stBulletInfo.vPos = new Vector2(vPos.x + fCos * i_fOffset, vPos.y + fSin * i_fOffset);
+        stBulletInfo.vVel = new Vector2(vVel.x + fCos * i_fSpeed, vVel.y + fSin * i_fSpeed);
         stBulletInfo.fDirection = i_fDirection;
 
         GameObject o = Instantiate(oMap.oBulletObjBase, oMap.transform);

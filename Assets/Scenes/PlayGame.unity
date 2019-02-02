@@ -715,7 +715,7 @@ GameObject:
 --- !u!199 &1014617126
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -6145,6 +6145,11 @@ PrefabInstance:
       propertyPath: oExplosion
       value: 
       objectReference: {fileID: 2005268267}
+    - target: {fileID: 4324216437145701036, guid: 82d76b60c7608024f9ffe10ab4352e48,
+        type: 3}
+      propertyPath: thePlayer
+      value: 
+      objectReference: {fileID: 1347681405}
     - target: {fileID: 3403201494872735561, guid: 82d76b60c7608024f9ffe10ab4352e48,
         type: 3}
       propertyPath: m_Offset.y

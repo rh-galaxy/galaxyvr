@@ -296,6 +296,11 @@ public class PlayerController2 : MonoBehaviour
         }
     }
 
+    public Vector2 GetPosition()
+    {
+        return oRb.position;
+    }
+
     Vector2 vForceDir = new Vector2(0, 0);
     int iLastInput = 0; //bool bitfield
     float fReplayMessageTimer = 0;
