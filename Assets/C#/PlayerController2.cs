@@ -50,6 +50,7 @@ public class PlayerController2 : MonoBehaviour
     //achievements
     internal float fAchieveFuelBurnt = 0;
     internal int iAchieveShipsDestroyed = 0;
+    internal int iAchieveBulletsFired = 0;
     internal bool bAchieveNoDamage = true;
     internal bool bAchieveFullThrottle = true;
     internal bool bAchieveFinishedRaceLevel = false;
@@ -592,6 +593,8 @@ public class PlayerController2 : MonoBehaviour
                 CreateBullet();
 
                 //C_Sound::GetSoundObject()->Play(0, m_fVol, m_fPan); //play bullet sound
+
+                iAchieveBulletsFired++;
             }
         }
         //////end react to input

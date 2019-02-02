@@ -214,7 +214,7 @@ public class GameManager : MonoBehaviour
                         bBackToMenu = true;
 
                         //////start of oculus specific code (achievements)
-                        if (bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                        if (!MapGenerator.bRunReplay && bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
                         {
                             //handle achievements
                             if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel || MapGenerator.theMap.bAchieveFinishedMissionLevel)
@@ -338,6 +338,12 @@ public class GameManager : MonoBehaviour
                                 {
                                     //increase it
                                     Achievements.AddCount("Doom", (ulong)iTemp);
+                                }
+                                iTemp = MapGenerator.theMap.player.iAchieveBulletsFired;
+                                if (iTemp > 0)
+                                {
+                                    //increase it
+                                    Achievements.AddCount("Trigger", (ulong)iTemp);
                                 }
                             }
                         }
