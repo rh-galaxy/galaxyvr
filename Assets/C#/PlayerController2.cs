@@ -20,7 +20,7 @@ public class PlayerController2 : MonoBehaviour
     Vector2 vStartPos;
     float fAcceleration = 0.0f;
     float fDirection = 90.0f;
-    const float fGravityScale = 0.055f;
+    const float fGravityScale = 0.045f;
 
     //ship properties
     const float MAXFUELINTANK = 60.0f;

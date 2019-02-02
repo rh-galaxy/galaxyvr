@@ -316,7 +316,7 @@ public class MapGenerator : MonoBehaviour
         //change fov if non VR since that default setting shows to wide fov
         // and is not behaving reliably
         if (!XRDevice.isPresent)
-            Camera.main.fieldOfView = 30.0f;
+            Camera.main.fieldOfView = 38.0f;
 
         Debug.Log("Start done");
     }
