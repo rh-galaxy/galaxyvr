@@ -96,6 +96,81 @@ public class GameManager : MonoBehaviour
             bUserValid = true;
         }
     }
+    
+    void HandleOculusAchievements()
+    {
+        //handle achievements
+        if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel || MapGenerator.theMap.bAchieveFinishedMissionLevel)
+        {
+            //finished any level with ok result
+
+            //survivor achievement check
+            if (MapGenerator.theMap.player.bAchieveNoDamage)
+                Achievements.Unlock("Survivor");
+            //hellbent achievement check
+            if (szLastLevel.CompareTo(MapGenerator.szLevel) != 0) iAchievementHellbentCounter = 1;
+            else iAchievementHellbentCounter++;
+            if (iAchievementHellbentCounter == 8)
+                Achievements.Unlock("Hellbent");
+            //speedster achievement check
+            if (MapGenerator.theMap.player.bAchieveFullThrottle)
+                Achievements.Unlock("Speedster");
+            //racer achievement check
+            if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel)
+                Achievements.AddCount("Racer", 1);
+            //transporter achievement check (named loader)
+            if (MapGenerator.theMap.bAchieveFinishedMissionLevel)
+                Achievements.AddCount("Loader", 1);
+
+            if (MapGenerator.theMap.bAchieveFinishedMissionLevel)
+            {
+                //cargo beginner
+                if (MapGenerator.szLevel.CompareTo("1mission00") == 0)
+                    Achievements.Unlock("Cargo1");
+                //cargo apprentice
+                if (MapGenerator.szLevel.CompareTo("1mission03") == 0)
+                    Achievements.Unlock("Cargo2");
+                //cargo expert
+                if (MapGenerator.szLevel.CompareTo("1mission06") == 0 && MapGenerator.theMap.player.iAchieveShipsDestroyed == 0)
+                    Achievements.Unlock("Cargo3");
+                //cargo master
+                if (MapGenerator.szLevel.CompareTo("1mission09") == 0 && MapGenerator.theMap.player.bAchieveNoDamage)
+                    Achievements.Unlock("Cargo4");
+            }
+            if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel)
+            {
+                //race beginner
+                if (MapGenerator.szLevel.CompareTo("2race00") == 0)
+                    Achievements.Unlock("Race1");
+                //race apprentice
+                if (MapGenerator.szLevel.CompareTo("2race03") == 0 && MapGenerator.theMap.player.fTotalTime > 200.0f)
+                    Achievements.Unlock("Race2");
+                //race expert
+                if (MapGenerator.szLevel.CompareTo("2race06") == 0 && MapGenerator.theMap.player.fTotalTime > 60.0f)
+                    Achievements.Unlock("Race3");
+                //race master
+                if (MapGenerator.szLevel.CompareTo("2race10") == 0 && MapGenerator.theMap.player.fTotalTime > 104.0f)
+                    Achievements.Unlock("Race4");
+            }
+
+            //fuelburner achievement check
+            int iTemp = (int)MapGenerator.theMap.player.fAchieveFuelBurnt;
+            if (iTemp > 0)
+                Achievements.AddCount("Fuelburner", (ulong)iTemp);
+            //ravager achievement check
+            iTemp = MapGenerator.theMap.iAchieveEnemiesKilled;
+            if (iTemp > 0)
+                Achievements.AddCount("Ravager", (ulong)iTemp);
+            //kamikaze achievement check (named doom)
+            iTemp = MapGenerator.theMap.player.iAchieveShipsDestroyed;
+            if (iTemp > 0)
+                Achievements.AddCount("Doom", (ulong)iTemp);
+            //trigger achievement check
+            iTemp = MapGenerator.theMap.player.iAchieveBulletsFired;
+            if (iTemp > 0)
+                Achievements.AddCount("Trigger", (ulong)iTemp);
+        }
+    }
 
     bool bLoadDone = false;
     int iLoadingMap = 0;
@@ -106,7 +181,6 @@ public class GameManager : MonoBehaviour
     {
         if (iState == 3) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
-
 
     void Update()
     {
@@ -216,136 +290,7 @@ public class GameManager : MonoBehaviour
                         //////start of oculus specific code (achievements)
                         if (!MapGenerator.bRunReplay && bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
                         {
-                            //handle achievements
-                            if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel || MapGenerator.theMap.bAchieveFinishedMissionLevel)
-                            {
-                                //finished any level with ok result
-
-                                //survivor achievement check
-                                if (MapGenerator.theMap.player.bAchieveNoDamage)
-                                {
-                                    //unlock it
-                                    Achievements.Unlock("Survivor");
-                                }
-
-                                //hellbent achievement check
-                                if (szLastLevel.CompareTo(MapGenerator.szLevel) != 0) iAchievementHellbentCounter = 1;
-                                else iAchievementHellbentCounter++;
-                                if (iAchievementHellbentCounter == 8)
-                                {
-                                    //unlock it
-                                    Achievements.Unlock("Hellbent");
-                                }
-
-                                //speedster achievement check
-                                if (MapGenerator.theMap.player.bAchieveFullThrottle)
-                                {
-                                    //unlock it
-                                    Achievements.Unlock("Speedster");
-                                }
-
-                                //racer achievement check
-                                if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel)
-                                {
-                                    //increase it
-                                    Achievements.AddCount("Racer", 1);
-                                }
-                                //transporter achievement check (named loader)
-                                if (MapGenerator.theMap.bAchieveFinishedMissionLevel)
-                                {
-                                    //increase it
-                                    Achievements.AddCount("Loader", 1);
-                                }
-
-                                if (MapGenerator.theMap.bAchieveFinishedMissionLevel)
-                                {
-                                    //cargo beginner
-                                    if (MapGenerator.szLevel.CompareTo("1mission00") == 0)
-                                    {
-                                        //unlock it
-                                        Achievements.Unlock("Cargo1");
-                                    }
-
-                                    //cargo apprentice
-                                    if (MapGenerator.szLevel.CompareTo("1mission03") == 0)
-                                    {
-                                        //unlock it
-                                        Achievements.Unlock("Cargo2");
-                                    }
-
-                                    //cargo expert
-                                    if (MapGenerator.szLevel.CompareTo("1mission06") == 0 && MapGenerator.theMap.player.iAchieveShipsDestroyed == 0)
-                                    {
-                                        //unlock it
-                                        Achievements.Unlock("Cargo3");
-                                    }
-
-                                    //cargo master
-                                    if (MapGenerator.szLevel.CompareTo("1mission09") == 0 && MapGenerator.theMap.player.bAchieveNoDamage)
-                                    {
-                                        //unlock it
-                                        Achievements.Unlock("Cargo4");
-                                    }
-                                }
-                                if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel)
-                                {
-                                    //race beginner
-                                    if (MapGenerator.szLevel.CompareTo("2race00") == 0)
-                                    {
-                                        //unlock it
-                                        Achievements.Unlock("Race1");
-                                    }
-
-                                    //race apprentice
-                                    if (MapGenerator.szLevel.CompareTo("2race03") == 0 && MapGenerator.theMap.player.fTotalTime > 200.0f)
-                                    {
-                                        //unlock it
-                                        Achievements.Unlock("Race2");
-                                    }
-
-                                    //race expert
-                                    if (MapGenerator.szLevel.CompareTo("2race06") == 0 && MapGenerator.theMap.player.fTotalTime > 60.0f)
-                                    {
-                                        //unlock it
-                                        Achievements.Unlock("Race3");
-                                    }
-
-                                    //race master
-                                    if (MapGenerator.szLevel.CompareTo("2race10") == 0 && MapGenerator.theMap.player.fTotalTime > 104.0f)
-                                    {
-                                        //unlock it
-                                        Achievements.Unlock("Race4");
-                                    }
-                                }
-
-                                //fuelburner achievement check
-                                int iTemp = (int)MapGenerator.theMap.player.fAchieveFuelBurnt;
-                                if (iTemp > 0)
-                                {
-                                    //increase it
-                                    Achievements.AddCount("Fuelburner", (ulong)iTemp);
-                                }
-                                //ravager achievement check
-                                iTemp = MapGenerator.theMap.iAchieveEnemiesKilled;
-                                if (iTemp > 0)
-                                {
-                                    //increase it
-                                    Achievements.AddCount("Ravager", (ulong)iTemp);
-                                }
-                                //kamikaze achievement check (named doom)
-                                iTemp = MapGenerator.theMap.player.iAchieveShipsDestroyed;
-                                if (iTemp > 0)
-                                {
-                                    //increase it
-                                    Achievements.AddCount("Doom", (ulong)iTemp);
-                                }
-                                iTemp = MapGenerator.theMap.player.iAchieveBulletsFired;
-                                if (iTemp > 0)
-                                {
-                                    //increase it
-                                    Achievements.AddCount("Trigger", (ulong)iTemp);
-                                }
-                            }
+                            HandleOculusAchievements();
                         }
                         //////end of oculus specific code
 
