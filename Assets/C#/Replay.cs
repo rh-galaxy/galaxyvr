@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,15 +15,13 @@ public struct ReplayMessage
     //MOVEMENT, set every time for movable objects
     public Vector2 vPos;
     public Vector2 vVel;
-    //public float fAcceleration;
     public float fDirection;
 
     //KEY_CHANGE
-    public byte iKeyFlag;  //player keyboardstate at sendtime
+    public byte iKeyFlag; //player keyboardstate at sendtime
 
     public byte iGeneralByte1;
     public byte iGeneralByte2;
-    public byte iGeneralByte3;
 }
 
 public class Replay
@@ -84,14 +83,61 @@ public class Replay
         return false;
     }
 
-/*
     public bool LoadFromMem(byte[] i_pMem)
     {
+        Reset();
 
+        if (i_pMem.Length % 32 != 0) return false; //not an array containing elements with size 32 bytes
+        int iOffset = 0;
+
+        for (int i = 0; i < i_pMem.Length/32; i++)
+        {
+            ReplayMessage stAction = new ReplayMessage();
+
+            stAction.iTimeSlot = BitConverter.ToInt32(i_pMem, iOffset + 0);
+            stAction.iType = (byte)BitConverter.ToChar(i_pMem, iOffset + 4);
+            stAction.iKeyFlag = (byte)BitConverter.ToChar(i_pMem, iOffset + 5);
+            stAction.iGeneralByte1 = (byte)BitConverter.ToChar(i_pMem, iOffset + 6);
+            stAction.iGeneralByte2 = (byte)BitConverter.ToChar(i_pMem, iOffset + 7);
+            stAction.iID = BitConverter.ToInt32(i_pMem, iOffset + 8);
+
+            //scale down the ints by 2^18 to get floats again,
+            // we never have a float bigger that +-8192.0 so
+            stAction.vPos.x = BitConverter.ToInt32(i_pMem, iOffset + 12) / (65536 * 4);
+            stAction.vPos.y = BitConverter.ToInt32(i_pMem, iOffset + 16) / (65536 * 4);
+            stAction.vVel.x = BitConverter.ToInt32(i_pMem, iOffset + 20) / (65536 * 4);
+            stAction.vVel.y = BitConverter.ToInt32(i_pMem, iOffset + 24) / (65536 * 4);
+            stAction.fDirection = BitConverter.ToInt32(i_pMem, iOffset + 28) / (65536 * 4);
+
+            iOffset += 32;
+            oReplayMessages.Add(stAction);
+        }
+        return true;
     }
     public byte[] SaveToMem()
     {
+        int iCount = oReplayMessages.Count;
+        byte[] data = new byte[0];
 
+        for (int i=0; i< iCount; i++)
+        {
+            ReplayMessage stAction = oReplayMessages[i];
+
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.iTimeSlot), 4);
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.iType), 1);
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.iKeyFlag), 1);
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.iGeneralByte1), 1);
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.iGeneralByte2), 1);
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.iID), 4);
+
+            //scale floats with 2^18 to get ints that will fit in 32 bit,
+            // we never have a float bigger that +-8192.0 so
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.vPos.x * (65536 * 4)), 4);
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.vPos.y * (65536 * 4)), 4);
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.vVel.x * (65536 * 4)), 4);
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.vVel.y * (65536 * 4)), 4);
+            System.Array.Copy(data, BitConverter.GetBytes(stAction.fDirection * (65536 * 4)), 4);
+        }
+        return data;
     }
-    */
 }

@@ -21,7 +21,6 @@ public class Bullet : MonoBehaviour
 {
     public const float BULLETBASEVEL = 9.0f;
     const float BULLETLIFETIME = 8.0f;
-    /*move this*/public const int COMPUTER_ENEMY_BASEID = 1024;
 
     static int iUniqeValBase = 0;
 
@@ -30,16 +29,11 @@ public class Bullet : MonoBehaviour
     float fTotAlive;
     S_BulletInfo stBullet;
 
-    /**/internal int iPlayerHitWithId;
-    /**/internal int iEnemyHitWithId;
-
     public void Init(S_BulletInfo i_stBulletInfo, int i_iOwnerID)
     {
         iBulletUniqeVal = iUniqeValBase++;
         iOwnerID = i_iOwnerID;
         stBullet = i_stBulletInfo;
-        iPlayerHitWithId = -1;
-        iEnemyHitWithId = -1;
 
         fTotAlive = 0.0f;
 
@@ -68,13 +62,10 @@ public class Bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-/*        int iObjID = iOwnerID;
-        if (iObjID > COMPUTER_ENEMY_BASEID) iObjID = COMPUTER_ENEMY_BASEID; //special case for computer enemies
-
         //collision.collider.name
         //if (iBulletOwner != iObjId)
         //{
-        //}*/
+        //}
 
         //if hit player and not coming from the player
         //hit player, handled in Player OnCollisionEnter2D
@@ -99,5 +90,4 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
 }
