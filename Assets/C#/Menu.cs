@@ -11,8 +11,7 @@ public class C_GameObj
 public class Menu : MonoBehaviour
 {
     public static Menu theMenu = null;
-    public static string szLevel;
-    public static bool bGazeActive = false;
+    public static bool bLevelSelected = false;
 
     const int iNumRace = 25;
     const int iNumMission = 30;
@@ -29,7 +28,6 @@ public class Menu : MonoBehaviour
     C_LevelInMenu[] aMenuLevels = new C_LevelInMenu[NUM_LEVELS];
 
     GameObject oGazeQuad;
-    //public Camera oCamera; //set in editor
 
     Material oCursorMaterial, oCursorMaterialWait;
 
@@ -244,7 +242,7 @@ public class Menu : MonoBehaviour
     }
 
 
-    void Update()
+    void FixedUpdate()
     {
         //do a raycast into the world based on the user's
         // head position and orientation
@@ -263,15 +261,37 @@ public class Menu : MonoBehaviour
                 Quaternion.FromToRotation(Vector3.back, oHitInfo.normal);
 
             //find which object we hit
-            if(oHitInfo.collider.name.StartsWith("Coll"))
+            bool bGazeActive = false;
+            string szLevel = null;
+            if (oHitInfo.collider.name.StartsWith("Coll"))
             {
                 char[] szName = oHitInfo.collider.name.ToCharArray();
                 string szId = new string(szName, 4, szName.Length - 4);
                 int iIndex = int.Parse(szId);
                 //just set it every time, it is collected when button pressed and m_bGazeActive is true
-                Menu.szLevel = aLevels[iIndex].szLevelName;
-                Menu.bGazeActive = true;
+                szLevel = aLevels[iIndex].szLevelName;
+                bGazeActive = true;
             }
+
+            //fake select a level and proceed
+            //just debugging in editor
+            if (Input.GetKey(KeyCode.Return))
+            {
+                MapGenerator.szLevel = "1mission03";
+                bLevelSelected = true;
+            }
+            //check for real start and level select
+            if (Input.GetButton("Fire1") && bGazeActive)
+            {
+                MapGenerator.szLevel = szLevel;
+                bLevelSelected = true;
+            }
+
+            //we are going to step 2 in the menu (unimplemented)
+            // probably have a separate state for this
+            /*if(bLevelSelected)
+            {
+            }*/
         }
         else
         {
@@ -282,7 +302,7 @@ public class Menu : MonoBehaviour
             //rotate the cursor to standard rotation
             oGazeQuad.transform.eulerAngles = new Vector3(0,0,0);
 
-            Menu.bGazeActive = false;
+            bLevelSelected = false;
         }
     }
 

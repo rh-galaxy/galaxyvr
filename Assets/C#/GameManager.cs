@@ -7,11 +7,11 @@ using Oculus.Platform;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance = null;
+    public static GameManager theGM = null;
 
     internal static bool bOculusDevicePresent = false;
-    internal static ulong iUserID = 0;
-    internal static string szUser = null;
+    internal static ulong iUserID = 1;
+    internal static string szUser = "UserNone";
     internal static bool bUserValid = false;
 
     string szLastLevel = "";
@@ -25,11 +25,11 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         //singleton
-        if (instance == null)
+        if (theGM == null)
         {
-            instance = this;
+            theGM = this;
         }
-        else if (instance != this)
+        else if (theGM != this)
         {
             //enforce singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
@@ -172,6 +172,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    internal HttpHiscore oHigh = new HttpHiscore();
+    /**//*void HandleHiscoreStart()
+    {
+        LevelInfo GetLevelLimits(string szLevel)
+    }*/
+
+    bool bStartReplay = false;
     bool bLoadDone = false;
     int iLoadingMap = 0;
     int iState = -1;
@@ -219,52 +226,67 @@ public class GameManager : MonoBehaviour
             case 1:
                 //running menu
                 {
-                    bool bStart = false;
-                    bool bStartReplay = false;
-
-                    //fake select a level and start
-                    //just debugging in editor
-                    if (Input.GetKey(KeyCode.Return))
-                    {
-                        //MapGenerator.szLevel = "2new_race.des";
-                        MapGenerator.szLevel = "1mission05";
-                        bStart = true;
-                    }
-                    //check for real start and level select
-                    if (Input.GetButton("Fire1") && Menu.bGazeActive)
-                    {
-                        MapGenerator.szLevel = Menu.szLevel;
-                        bStart = true;
-                    }
-                    /**/bStartReplay = Input.GetKey(KeyCode.R); //just for test now
+                    bool bStart = Menu.bLevelSelected;
+                    bStartReplay = Input.GetKey(KeyCode.R); //just for test now
+                    Menu.bLevelSelected = false; //reset when we have seen it
 
                     //start the selected level
                     if (bStart || bStartReplay)
                     {
-                        //Debug.LogError("Begin load level");
-                        szToLoad = "Scenes/PlayGame";
-                        bLoadDone = false;
-                        bIsMapScene = true;
-                        bBeginMapLoading = false;
-                        iLoadingMap = 0;
-                        MapGenerator.bMapLoaded = false;
-                        Menu.theMenu.SetWaiting(true);
-                        if (bStartReplay)
+                        if (GameManager.bUserValid)
                         {
-                            oReplay.ResetBeforePlay();
-                            MapGenerator.bRunReplay = true;
+                            StartCoroutine(oHigh.GetLimits());
                         }
-                        else
-                        {
-                            oReplay.Reset(); //reset before recording a new one during play
-                            MapGenerator.bRunReplay = false;
-                        }
-                        StartCoroutine(LoadAsyncScene());
                         iState++;
                     }
                     break;
                 }
             case 2:
+                //wait for http reply (achievements_get.php)
+                if(oHigh.bIsDone)
+                {
+                    LevelInfo stLevel = new LevelInfo();
+                    for (int i = 0; i < oHigh.oLevelList.Count; i++)
+                    {
+                        stLevel = oHigh.oLevelList[i];
+                        string szLevelToLoad = MapGenerator.szLevel.Substring(1);
+                        if (szLevelToLoad.CompareTo(stLevel.szName) == 0) break;
+                    }
+                    Debug.Log("http loaded page: "+stLevel.szName + " isTime " + stLevel.bIsTime.ToString());
+
+                    iState++;
+                }
+                break;
+            case 3:
+                //menu part 2 later
+                //...
+                iState++;
+                break;
+            case 4:
+                //begin loading the level (or replay), set this in state 3 later, now state 1
+                //Debug.LogError("Begin load level");
+                szToLoad = "Scenes/PlayGame";
+                bLoadDone = false;
+                bIsMapScene = true;
+                bBeginMapLoading = false;
+                iLoadingMap = 0;
+                MapGenerator.bMapLoaded = false;
+                Menu.theMenu.SetWaiting(true);
+                if (bStartReplay)
+                {
+                    oReplay.ResetBeforePlay();
+                    MapGenerator.bRunReplay = true;
+                }
+                else
+                {
+                    oReplay.Reset(); //reset before recording a new one during play
+                    MapGenerator.bRunReplay = false;
+                }
+                StartCoroutine(LoadAsyncScene());
+                iState++;
+                break;
+            case 5:
+                //while loading level
                 if (bBeginMapLoading)
                 {
                     //Debug.Log("Load level 90%");
@@ -275,7 +297,7 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 break;
-            case 3:
+            case 6:
                 //running game
                 {
                     bool bBackToMenu = !MapGenerator.bMapLoaded;
@@ -308,7 +330,8 @@ public class GameManager : MonoBehaviour
                     }
                     break;
                 }
-            case 4:
+            case 7:
+                //while menu is loading
                 if (bLoadDone)
                 {
                     //restart at running start
