@@ -172,11 +172,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    LevelInfo stLevel = new LevelInfo();
     internal HttpHiscore oHigh = new HttpHiscore();
-    /**//*void HandleHiscoreStart()
-    {
-        LevelInfo GetLevelLimits(string szLevel)
-    }*/
 
     bool bStartReplay = false;
     bool bLoadDone = false;
@@ -186,7 +183,7 @@ public class GameManager : MonoBehaviour
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
     private void FixedUpdate()
     {
-        if (iState == 3) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
+        if (iState == 6) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
     void Update()
@@ -245,7 +242,6 @@ public class GameManager : MonoBehaviour
                 //wait for http reply (achievements_get.php)
                 if(oHigh.bIsDone)
                 {
-                    LevelInfo stLevel = new LevelInfo();
                     for (int i = 0; i < oHigh.oLevelList.Count; i++)
                     {
                         stLevel = oHigh.oLevelList[i];
@@ -318,6 +314,21 @@ public class GameManager : MonoBehaviour
 
                         //always update last level played
                         szLastLevel = MapGenerator.szLevel;
+
+                        int iScoreMs;
+                        if (MapGenerator.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = MapGenerator.theMap.player.iScore;
+                        else iScoreMs = (int)(MapGenerator.theMap.player.fTotalTime * 1000);
+
+                        if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel || MapGenerator.theMap.bAchieveFinishedMissionLevel)
+                        {
+                            //finished ok, and with a new score or better than before, then send
+                            if (stLevel.iScoreMs == -1 || (!stLevel.bIsTime && iScoreMs> stLevel.iScoreMs) ||
+                                (stLevel.bIsTime && iScoreMs < stLevel.iScoreMs) )
+                            {
+                                oHigh.bIsDone = false;
+                                StartCoroutine(oHigh.SendHiscore(szLastLevel.Substring(1), iScoreMs, oReplay));
+                            }
+                        }
                     }
 
                     if (bBackToMenu)
@@ -331,6 +342,11 @@ public class GameManager : MonoBehaviour
                     break;
                 }
             case 7:
+                //while hiscore is being sent
+                if (oHigh.bIsDone)
+                    iState++;
+                break;
+            case 8:
                 //while menu is loading
                 if (bLoadDone)
                 {

@@ -117,26 +117,29 @@ public class Replay
     public byte[] SaveToMem()
     {
         int iCount = oReplayMessages.Count;
-        byte[] data = new byte[0];
+        byte[] data = new byte[iCount*32];
 
+        int iOffs = 0;
         for (int i=0; i< iCount; i++)
         {
             ReplayMessage stAction = oReplayMessages[i];
 
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.iTimeSlot), 4);
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.iType), 1);
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.iKeyFlag), 1);
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.iGeneralByte1), 1);
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.iGeneralByte2), 1);
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.iID), 4);
+            byte[] b = BitConverter.GetBytes(stAction.iTimeSlot);
+            System.Array.Copy(BitConverter.GetBytes(stAction.iTimeSlot), 0, data, iOffs + 0, 4);
+            System.Array.Copy(BitConverter.GetBytes(stAction.iType), 0, data, iOffs + 4, 1);
+            System.Array.Copy(BitConverter.GetBytes(stAction.iKeyFlag), 0, data, iOffs + 5, 1);
+            System.Array.Copy(BitConverter.GetBytes(stAction.iGeneralByte1), 0, data, iOffs + 6, 1);
+            System.Array.Copy(BitConverter.GetBytes(stAction.iGeneralByte2), 0, data, iOffs + 7, 1);
+            System.Array.Copy(BitConverter.GetBytes(stAction.iID), 0, data, iOffs + 8, 4);
 
             //scale floats with 2^18 to get ints that will fit in 32 bit,
             // we never have a float bigger that +-8192.0 so
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.vPos.x * (65536 * 4)), 4);
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.vPos.y * (65536 * 4)), 4);
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.vVel.x * (65536 * 4)), 4);
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.vVel.y * (65536 * 4)), 4);
-            System.Array.Copy(data, BitConverter.GetBytes(stAction.fDirection * (65536 * 4)), 4);
+            System.Array.Copy(BitConverter.GetBytes(stAction.vPos.x * (65536 * 4)), 0, data, iOffs + 12, 4);
+            System.Array.Copy(BitConverter.GetBytes(stAction.vPos.y * (65536 * 4)), 0, data, iOffs + 16, 4);
+            System.Array.Copy(BitConverter.GetBytes(stAction.vVel.x * (65536 * 4)), 0, data, iOffs + 20, 4);
+            System.Array.Copy(BitConverter.GetBytes(stAction.vVel.y * (65536 * 4)), 0, data, iOffs + 24, 4);
+            System.Array.Copy(BitConverter.GetBytes(stAction.fDirection * (65536 * 4)), 0, data, iOffs + 28, 4);
+            iOffs += 32;
         }
         return data;
     }

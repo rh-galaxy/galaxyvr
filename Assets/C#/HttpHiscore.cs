@@ -69,19 +69,58 @@ public class HttpHiscore
         bIsDone = true;
     }
 
-/*    public LevelInfo GetLevelLimits(string szLevel)
+    //probably unity is escaping the & and other chars so $_POST in php contained only one big element with everything
+    // luckily we can build our own raw sender...
+    UnityWebRequest CreateUnityWebRequest(string url, string param)
     {
-        LevelInfo stLevel = new LevelInfo();
-        if (!GameManager.bUserValid) return stLevel;
-        StartCoroutine(GetLimits());
-
-        for (int i = 0; i < oLevelList.Count; i++)
-        {
-            stLevel = oLevelList[i];
-            if(szLevel.CompareTo(stLevel.szName)==0) return stLevel;
-        }
-
-        return stLevel;
+        UnityWebRequest requestU = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
+        byte[] bytes = System.Text.Encoding.UTF8.GetBytes(param);
+        UploadHandlerRaw uH = new UploadHandlerRaw(bytes);
+        //uH.contentType = "application/json"; //this is ignored?
+        requestU.uploadHandler = uH;
+        requestU.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        DownloadHandler dH = new DownloadHandlerBuffer();
+        requestU.downloadHandler = dH;
+        return requestU;
     }
-*/
+
+    public IEnumerator SendHiscore(string i_szLevel, int i_iScoreMs, Replay i_oReplay)
+    {
+        byte[] bytes = i_oReplay.SaveToMem();
+        string base64 = System.Convert.ToBase64String(bytes);
+        int iCount = (int)(DateTime.Now - dtLastAccess).TotalSeconds;
+
+        string url = WEB_HOST + "/achievements_post.php";
+        string data= "LEVEL="+ i_szLevel + "&NAME="+ GameManager.szUser + "&USERID="+ GameManager.iUserID + "&COUNTER="+
+            iCount + "&SCORE="+ i_iScoreMs + "&REPLAY="+ base64;
+
+        www = CreateUnityWebRequest(url, data); //UnityWebRequest.Post(url, data); <- didn't work
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+        }
+        bIsDone = true;
+    }
+
+
+    /*    public LevelInfo GetLevelLimits(string szLevel)
+        {
+            LevelInfo stLevel = new LevelInfo();
+            if (!GameManager.bUserValid) return stLevel;
+            StartCoroutine(GetLimits());
+
+            for (int i = 0; i < oLevelList.Count; i++)
+            {
+                stLevel = oLevelList[i];
+                if(szLevel.CompareTo(stLevel.szName)==0) return stLevel;
+            }
+
+            return stLevel;
+        }
+    */
 }

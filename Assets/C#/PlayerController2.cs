@@ -46,7 +46,7 @@ public class PlayerController2 : MonoBehaviour
     float fLastNewLapTime = 0.0f;
     internal float fTotalTime = 0.0f;
     int iTotalLaps = -1;
-    int iScore = 0;
+    internal int iScore = 0;
     //achievements
     internal float fAchieveFuelBurnt = 0;
     internal int iAchieveShipsDestroyed = 0;
