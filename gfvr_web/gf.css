@@ -1,0 +1,163 @@
+/* GENERAL */
+
+body {
+	font-family: 'courier new',courier,monospace,arial;
+	color: #f0f0f0;
+	background-color: #000000;
+	background-image: url('images/gf_bk.jpg');
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-attachment: scroll;
+}
+
+img {
+	margin-right: 8px;
+	margin-bottom: 8px;
+	float: left;
+}
+
+iframe {
+	margin-right: 8px;
+	margin-bottom: 8px;
+}
+
+p {
+	margin: 10px;
+}
+
+h1,h2,h3 {
+	color: #ffffff;
+	display: inline;
+	margin: 8px;
+}
+
+h4,h5,h6 {
+	color: #ffffff;
+	margin-left: 8px;
+	margin-top: 16px;
+	margin-bottom: 8px;
+}
+
+table {
+	color: #f0f0f0;
+}
+
+/*A:link       {color:#0000BB; text-decoration:none;}
+A:active   {color:#0000BB; text-decoration:none;}
+A:visited {color:#0000BB; text-decoration:none;}
+A:hover     {color:#0000BB; text-decoration:underline;}*/
+A:link       {color:#FF8400; text-decoration:none;}
+A:active   {color:#FF8400; text-decoration:none;}
+A:visited {color:#FF8400; text-decoration:none;}
+A:hover     {color:#FF8400; text-decoration:underline;}
+
+
+/* SPECIAL */
+
+span.colored1 {color:#06b606;} /*green*/
+span.colored2 {color:#333333;font-style:italic;} /*dark grey*/
+span.colored3 {color:#ffd4d4;} /*slightly red*/
+span.colored4 {color:#f0f0b4;} /*slightly yellow*/
+
+table.main {
+	width: 908px;
+	background-color: #000000;
+}
+
+table.data {
+	margin: 10px;
+}
+table.ranking {
+	margin: 10px;
+	margin-bottom:42px;
+	float: left;
+}
+
+table.square {
+	margin: 0px;
+	border-spacing: 0px;
+	border: 0px;
+	background-color: #6A6A6A;
+}
+
+td {
+	padding: 0px;
+}
+
+td.bgcorner1 {
+	color: #f0f0f0;
+	background-image: url(images/square_corner1.png);
+	background-repeat: no-repeat;
+	background-color: #6A6A6A;
+	width: 8px;
+	height: 8px;
+}
+
+td.bgcorner2 {
+	color: #f0f0f0;
+	background-image: url(images/square_corner2.png);
+	background-repeat: no-repeat;
+	background-color: #6A6A6A;
+	width: 8px;
+	height: 8px;
+}
+
+td.bgcorner3 {
+	color: #f0f0f0;
+	background-image: url(images/square_corner3.png);
+	background-repeat: no-repeat;
+	background-color: #6A6A6A;
+	width: 8px;
+	height: 8px;
+}
+
+td.bgcorner4 {
+	color: #f0f0f0;
+	background-image: url(images/square_corner4.png);
+	background-repeat: no-repeat;
+	background-color: #6A6A6A;
+	width: 8px;
+	height: 8px;
+}
+
+td.bgmid1 {
+	color: #f0f0f0;
+	background-image: url(images/square_mid1.png);
+	background-repeat: repeat-x;
+	background-color: #6A6A6A;
+}
+
+td.bgmid2 {
+	color: #f0f0f0;
+	background-image: url(images/square_mid2.png);
+	background-repeat: repeat-y;
+	background-color: #6A6A6A;
+}
+
+td.bgmid3 {
+	color: #f0f0f0;
+	background-image: url(images/square_mid3.png);
+	background-repeat: repeat-y;
+	background-color: #6A6A6A;
+}
+
+td.bgmid4 {
+	color: #f0f0f0;
+	background-image: url(images/square_mid4.png);
+	background-repeat: repeat-x;
+	background-color: #6A6A6A;
+}
+
+label.register {
+	width: 10em;
+	float: left;
+	margin-right: 0.5em;
+	display: block;
+}
+.submit { //code to place the submit button
+	float: left;
+	padding: 20px;
+}
+.elements {
+	padding: 12px; //space between each form element
+}
