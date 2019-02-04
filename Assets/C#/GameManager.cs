@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
 
     internal static bool bOculusDevicePresent = false;
     internal static ulong iUserID = 1;
-    internal static string szUser = "UserNone";
-    internal static bool bUserValid = false;
+    internal static string szUser = "DebugUser";
+    internal static bool bUserValid = true; //use debug user if no oculus user
 
     string szLastLevel = "";
     int iAchievementHellbentCounter = 0;
@@ -183,7 +183,7 @@ public class GameManager : MonoBehaviour
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
     private void FixedUpdate()
     {
-        if (iState == 6) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
+        if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
     void Update()
@@ -223,18 +223,26 @@ public class GameManager : MonoBehaviour
             case 1:
                 //running menu
                 {
+                    //these 3 are set in menu part 2, reset them here
+                    Menu.bWorldBestReplay = false;
+                    Menu.bYourBestReplay = false;
+                    Menu.bLevelPlay = false;
+
                     bool bStart = Menu.bLevelSelected;
-                    bStartReplay = Input.GetKey(KeyCode.R); //just for test now
                     Menu.bLevelSelected = false; //reset when we have seen it
 
-                    //start the selected level
-                    if (bStart || bStartReplay)
+                    if (bStart)
                     {
-                        if (GameManager.bUserValid)
+                        //goto menu part 2 for the selected level
+                        if (GameManager.bUserValid) //will be and must always be true
                         {
                             StartCoroutine(oHigh.GetLimits());
+                            iState++;
+
+                            //set in the above, but since StartCoroutine returns before it has a chanse
+                            // to run we need to set it
+                            oHigh.bIsDone = false;
                         }
-                        iState++;
                     }
                     break;
                 }
@@ -250,15 +258,46 @@ public class GameManager : MonoBehaviour
                     }
                     Debug.Log("http loaded page: "+stLevel.szName + " isTime " + stLevel.bIsTime.ToString());
 
+                    Menu.theMenu.SetLevelInfo(stLevel); //set our level info to menu, it will be displayed there
+
+                    iState++;
+                }
+                //todo: handle network failure
+                break;
+            case 3:
+                //menu part 2
+                if(Menu.bLevelSelected)
+                {
+                    iState = 1; //goto menu part 1 since we have selected another level
+                }
+
+                if ((Menu.bWorldBestReplay && stLevel.iBestScore1 != -1) || (Menu.bYourBestReplay && stLevel.iScoreMs != -1))
+                {
+                    string szReplayName = null;
+                    if (Menu.bYourBestReplay) szReplayName = GameManager.szUser;
+                    if (Menu.bWorldBestReplay) szReplayName = stLevel.szBestName1;
+
+                    StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
+                    iState++; //load replay
+
+                    //set in the above, but since StartCoroutine returns before it has a chanse
+                    // to run we need to set it
+                    oHigh.bIsDone = false;
+                }
+                else if(Menu.bLevelPlay)
+                {
+                    iState += 2; //go directly to load level
+                }
+                break;
+            case 4:
+                //menu part 2, while loading replay
+                if (oHigh.bIsDone)
+                {
+                    bStartReplay = true;
                     iState++;
                 }
                 break;
-            case 3:
-                //menu part 2 later
-                //...
-                iState++;
-                break;
-            case 4:
+            case 5:
                 //begin loading the level (or replay), set this in state 3 later, now state 1
                 //Debug.LogError("Begin load level");
                 szToLoad = "Scenes/PlayGame";
@@ -278,10 +317,11 @@ public class GameManager : MonoBehaviour
                     oReplay.Reset(); //reset before recording a new one during play
                     MapGenerator.bRunReplay = false;
                 }
+                bStartReplay = false; //we have seen it
                 StartCoroutine(LoadAsyncScene());
                 iState++;
                 break;
-            case 5:
+            case 6:
                 //while loading level
                 if (bBeginMapLoading)
                 {
@@ -293,7 +333,7 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 break;
-            case 6:
+            case 7:
                 //running game
                 {
                     bool bBackToMenu = !MapGenerator.bMapLoaded;
@@ -325,8 +365,11 @@ public class GameManager : MonoBehaviour
                             if (stLevel.iScoreMs == -1 || (!stLevel.bIsTime && iScoreMs> stLevel.iScoreMs) ||
                                 (stLevel.bIsTime && iScoreMs < stLevel.iScoreMs) )
                             {
-                                oHigh.bIsDone = false;
                                 StartCoroutine(oHigh.SendHiscore(szLastLevel.Substring(1), iScoreMs, oReplay));
+
+                                //set in the above, but since StartCoroutine returns before it has a chanse
+                                // to run we need to set it
+                                oHigh.bIsDone = false;
                             }
                         }
                     }
@@ -341,12 +384,12 @@ public class GameManager : MonoBehaviour
                     }
                     break;
                 }
-            case 7:
+            case 8:
                 //while hiscore is being sent
                 if (oHigh.bIsDone)
                     iState++;
                 break;
-            case 8:
+            case 9:
                 //while menu is loading
                 if (bLoadDone)
                 {

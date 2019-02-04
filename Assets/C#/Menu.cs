@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class C_GameObj
-{
-    public int iID;
-}
 
 public class Menu : MonoBehaviour
 {
     public static Menu theMenu = null;
     public static bool bLevelSelected = false;
+    public static bool bLevelPlay = false;
+    public static bool bYourBestReplay = false;
+    public static bool bWorldBestReplay = false;
+    LevelInfo stLevel;
+    bool bAllowSelection;
 
     const int iNumRace = 25;
     const int iNumMission = 30;
@@ -26,6 +27,7 @@ public class Menu : MonoBehaviour
     S_Levels[] aLevels = new S_Levels[NUM_LEVELS];
 
     C_LevelInMenu[] aMenuLevels = new C_LevelInMenu[NUM_LEVELS];
+    C_ItemInMenu oMenuReplayWR, oMenuReplayYR, oMenuPlay;
 
     GameObject oGazeQuad;
 
@@ -239,8 +241,23 @@ public class Menu : MonoBehaviour
         // and is not behaving reliably
         if (!XRDevice.isPresent)
             Camera.main.fieldOfView = 38.0f;
+
+        //prevent selection if trigger was hold when menu is started
+        bAllowSelection = !Input.GetButton("Fire1");
     }
 
+    public void SetLevelInfo(LevelInfo i_stLevelInfo)
+    {
+        Vector3 vPos = new Vector3(-11, 3, 12.0f);
+        if (oMenuReplayWR != null) oMenuReplayWR.DestroyObj();
+        oMenuReplayWR = new C_ItemInMenu(vPos, "WR", "ReplayWR");
+        vPos.x = 0;
+        if (oMenuReplayYR != null) oMenuReplayYR.DestroyObj();
+        oMenuReplayYR = new C_ItemInMenu(vPos, "YR", "ReplayYR");
+        vPos.x = 11;
+        if (oMenuPlay != null) oMenuPlay.DestroyObj();
+        oMenuPlay = new C_ItemInMenu(vPos, "P", "Play");
+    }
 
     void FixedUpdate()
     {
@@ -261,44 +278,53 @@ public class Menu : MonoBehaviour
                 Quaternion.FromToRotation(Vector3.back, oHitInfo.normal);
 
             //find which object we hit
-            bool bGazeActive = false;
             string szLevel = null;
-            if (oHitInfo.collider.name.StartsWith("Coll"))
+
+            if (Input.GetButton("Fire1"))
             {
-                char[] szName = oHitInfo.collider.name.ToCharArray();
-                string szId = new string(szName, 4, szName.Length - 4);
-                int iIndex = int.Parse(szId);
-                //just set it every time, it is collected when button pressed and m_bGazeActive is true
-                szLevel = aLevels[iIndex].szLevelName;
-                bGazeActive = true;
+                if (bAllowSelection)
+                {
+                    if (oHitInfo.collider.name.StartsWith("Coll"))
+                    {
+                        char[] szName = oHitInfo.collider.name.ToCharArray();
+                        string szId = new string(szName, 4, szName.Length - 4);
+                        int iIndex = int.Parse(szId);
+                        //just set it every time, it is collected when button pressed and m_bGazeActive is true
+                        szLevel = aLevels[iIndex].szLevelName;
+
+                        MapGenerator.szLevel = szLevel;
+                        bLevelSelected = true;
+                        bAllowSelection = false; //trigger once only...
+                    }
+                    if (oHitInfo.collider.name.CompareTo("Play") == 0)
+                    {
+                        bLevelPlay = true;
+                        bAllowSelection = false;
+                    }
+                    if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
+                    {
+                        bYourBestReplay = true;
+                        bAllowSelection = false;
+                    }
+                    if (oHitInfo.collider.name.CompareTo("ReplayWR") == 0)
+                    {
+                        bWorldBestReplay = true;
+                        bAllowSelection = false;
+                    }
+                }
+            }
+            else
+            {
+                bAllowSelection = true;
             }
 
-            //fake select a level and proceed
-            //just debugging in editor
-            if (Input.GetKey(KeyCode.Return))
-            {
-                MapGenerator.szLevel = "1mission03";
-                bLevelSelected = true;
-            }
-            //check for real start and level select
-            if (Input.GetButton("Fire1") && bGazeActive)
-            {
-                MapGenerator.szLevel = szLevel;
-                bLevelSelected = true;
-            }
-
-            //we are going to step 2 in the menu (unimplemented)
-            // probably have a separate state for this
-            /*if(bLevelSelected)
-            {
-            }*/
         }
         else
         {
             //no hit, place cursor at max distance
 
             //set at max distance
-            oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*200.0f;
+            oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*180.0f;
             //rotate the cursor to standard rotation
             oGazeQuad.transform.eulerAngles = new Vector3(0,0,0);
 
@@ -350,6 +376,51 @@ public class Menu : MonoBehaviour
             oLevelText.GetComponent<TextMesh>().fontSize = 40;
             oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
             oLevelText.GetComponent<TextMesh>().text = i_oLevel.szLevelDisplayName;
+        }
+    }
+
+    public class C_ItemInMenu
+    {
+        public GameObject oLevelQuad;
+        GameObject oLevelText;
+
+        Vector3 vPos;
+
+        public void DestroyObj()
+        {
+            Destroy(oLevelQuad);
+            Destroy(oLevelText);
+        }
+
+        public C_ItemInMenu(Vector3 i_vPos, string szText, string szCollID)
+        {
+            vPos = i_vPos;
+
+            //create a quad with a text on, in the pos of each menu object
+            oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            oLevelQuad.transform.parent = Menu.theMenu.transform;
+            oLevelQuad.AddComponent<BoxCollider>();
+            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = szCollID;
+            oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);
+            oLevelQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
+            oLevelQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value * 100.0f); //vary 100 deg around z
+
+            string szMaterial = "LevelOctagon";
+            Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
+            oLevelQuad.GetComponent<MeshRenderer>().material = oMaterial;
+
+            //create text
+            oLevelText = new GameObject();
+            oLevelText.transform.parent = Menu.theMenu.transform;
+            oLevelText.name = "TextMesh";
+            oLevelText.AddComponent<TextMesh>();
+            oLevelText.transform.position = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
+            oLevelText.transform.localScale = new Vector3(0.8f, 0.8f, 1.0f);
+
+            oLevelText.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
+            oLevelText.GetComponent<TextMesh>().fontSize = 40;
+            oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
+            oLevelText.GetComponent<TextMesh>().text = szText;
         }
     }
 

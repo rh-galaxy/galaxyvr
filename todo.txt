@@ -25,13 +25,10 @@ Menu
 - Settings to turn the music on/off (+a minimum of other settings).
 The VR room around the player
 - More contents (could be clouds and a skybox, or a room, or blackness in space, anything really)
-Replay
+(Replay)
 - Implemented ->
-- Online hi-scores - be able to send/load the replays to the website (either HTTP or
-   HTTPS if possible, maybe easy to do HTTPS with C# ?)
-- The hi-score implementation on the website. (mostly done already)
-   Now if password is not to be needed, we need a way of preventing anyone to just send a bugus
-   replay... need to qualify somehow
+- Online hi-scores - As HTTP implemented (switch web to HTTPS, and make that work)
+- The hi-score implementation on the website is done
 Website
 - www.galaxy-forces-vr.com exists.
 - Better/more contents (+the hi-scores, but they are implemented)

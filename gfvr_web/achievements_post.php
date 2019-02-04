@@ -26,7 +26,7 @@
 				$isok = 1;
 			}
 		}
-		
+
 		if($isok) {
 			$query = "SELECT * FROM levels_t WHERE level='".$_POST["LEVEL"]."'";
 			$level = mysqli_query($db, $query);
@@ -70,9 +70,9 @@
 
 					$replay = str_replace(' ','+',$_POST["REPLAY"]);
 					if($num_rows==1) {
-						$query = "UPDATE achievements_t SET ip='".$ip."',timestamp=NOW(),score='".$_POST["SCORE"]."',replay='".$replay."' WHERE (level='".$_POST["LEVEL"]."' AND name=".$_POST["NAME"].")";
+						$query = "UPDATE achievements_t SET ip='".$ip."',timestamp=NOW(),score='".$_POST["SCORE"]."',replay='".$replay."' WHERE (level='".$_POST["LEVEL"]."' AND name='".$_POST["NAME"]."')";
 					} else {
-						$query = "INSERT INTO achievements_t (ip, name, level, score, replay) VALUES('".$ip."',".$_POST["NAME"].",'".$_POST["LEVEL"]."','".$_POST["SCORE"]."','".$replay."')";
+						$query = "INSERT INTO achievements_t (ip, name, level, score, replay) VALUES('".$ip."','".$_POST["NAME"]."','".$_POST["LEVEL"]."',".$_POST["SCORE"].",'".$replay."')";
 					}
 					$result = mysqli_query($db, $query);
 				}

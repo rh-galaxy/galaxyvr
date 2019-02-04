@@ -48,7 +48,7 @@
 //part 1 (per level) limits and player score
 						$score = -1;
 						$row = @mysqli_fetch_assoc($result);
-						$select_string = "SELECT achievements_t.score AS Score FROM achievements_t WHERE achievements_t.name=".$user." AND achievements_t.level='".$row['Level']."'";
+						$select_string = "SELECT achievements_t.score AS Score FROM achievements_t WHERE achievements_t.name='".$user."' AND achievements_t.level='".$row['Level']."'";
 
 						$result2 = @mysqli_query($db, $select_string);
 						// succeeded

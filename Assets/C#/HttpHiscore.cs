@@ -55,9 +55,10 @@ public class HttpHiscore
             LevelInfo stLevel = new LevelInfo();
 
             string[] szLines = szResult.Split((char)10);
+            oLevelList.Clear(); //rebuild list
 
             //parse result
-            for(int i=0; i<szLines.Length; i++)
+            for (int i=0; i<szLines.Length; i++)
             {
                 char[] szSeparator = { (char)32 };
                 string[] szTokens = szLines[i].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
@@ -100,6 +101,7 @@ public class HttpHiscore
 
     public IEnumerator SendHiscore(string i_szLevel, int i_iScoreMs, Replay i_oReplay)
     {
+        bIsDone = false;
         byte[] bytes = i_oReplay.SaveToMem();
         string base64 = System.Convert.ToBase64String(bytes);
         int iCount = (int)(DateTime.Now - dtLastAccess).TotalSeconds;
@@ -121,5 +123,27 @@ public class HttpHiscore
         bIsDone = true;
     }
 
+
+    public IEnumerator GetReplay(string i_szLevel, string i_szName, Replay i_oResult)
+    {
+        bIsDone = false;
+
+        string url = WEB_HOST + "/hiscore_getreplay2.php?Level=" + i_szLevel + "&Name=" + i_szName;
+        www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            //retrieve results as text and convert it to binary
+            byte[] bytes = System.Convert.FromBase64String(www.downloadHandler.text);
+
+            i_oResult.LoadFromMem(bytes);
+        }
+        bIsDone = true;
+    }
 
 }
