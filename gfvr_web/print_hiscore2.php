@@ -43,7 +43,7 @@ function print_hiscore()
 						echo ($i+1)."&nbsp;";
 						echo "</i></td>";
 						
-						echo "<td><a href=\"hiscore_for_members.php?Name=".$row["name"]."\">";
+						echo "<td><a href=\"print_hiscore_for_user.php?Name=".$row["name"]."\">";
 						echo $row["name"];
 						echo "</a></td>";
 						

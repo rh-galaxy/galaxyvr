@@ -22,7 +22,7 @@
 <br>
 <?php
 require_once("headline.php");
-headline("Member achievements");
+headline("User achievements");
 ?>
 <br>
 
@@ -93,7 +93,7 @@ square_start("'100%'");
 								echo "<td><img align=\"left\" src=\"images/a_".$icon."\" title=\"".$icon."\" alt=\"".$icon."\"></td>";
 								
 								//score
-								echo "<td><a href=\"web_replay2.php?Level=".$row2['Level']."&amp;Name=".$row2["Name"]."\">";
+								echo "<td>";
 								if($is_time != 0) {
 									// convert to time
 									$remain = $row2["Score"];
@@ -115,7 +115,7 @@ square_start("'100%'");
 									if($remain<0) $remain *= -1;
 									printf("%d.%02d", $part1, $remain/10);
 								}
-								echo "</a></td></tr>";
+								echo "</td></tr>";
 							}
 						} else {
 							//should never happen

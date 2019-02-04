@@ -46,7 +46,8 @@ public class PlayerController2 : MonoBehaviour
     float fLastNewLapTime = 0.0f;
     internal float fTotalTime = 0.0f;
     int iTotalLaps = -1;
-    internal int iScore = 0;
+    int iScore = 0;
+    float fTotalTimeMission = 0.0f; //always counting
     //achievements
     internal float fAchieveFuelBurnt = 0;
     internal int iAchieveShipsDestroyed = 0;
@@ -143,7 +144,7 @@ public class PlayerController2 : MonoBehaviour
             status.SetForRace(fShipHealth / FULL_HEALTH, fTotalTime, "[" + iCurLap.ToString() + "/" + iTotalLaps.ToString() + "] " + iCurCP.ToString());
         else
             status.SetForMission(fShipHealth / FULL_HEALTH, iNumLifes, iCargoSpaceUsed / MAXSPACEINHOLDWEIGHT,
-                iCargoNumUsed==3 || iCargoSpaceUsed==MAXSPACEINHOLDWEIGHT, fFuel / MAXFUELINTANK, iScore);
+                iCargoNumUsed==3 || iCargoSpaceUsed==MAXSPACEINHOLDWEIGHT, fFuel / MAXFUELINTANK, GetScore());
     }
 
     void OnGUI()
@@ -308,6 +309,9 @@ public class PlayerController2 : MonoBehaviour
     {
         if (!bInited)
             return;
+
+
+        fTotalTimeMission += Time.fixedDeltaTime;
 
         //////get input, either from replay or from human player
         if (MapGenerator.bRunReplay)
@@ -625,6 +629,19 @@ public class PlayerController2 : MonoBehaviour
         rm.iID = 0;
         rm.iType = (byte)MsgType.BULLETP_NEW;
         MapGenerator.theReplay.Add(rm);
+    }
+
+    public int GetScore()
+    {
+        int iLifes = iNumLifes;
+        if (iLifes < 0) iLifes = 0;
+
+        int iResultScore = (iScore + iLifes * 50) * 1000;
+        if (oMap.iLevelType == (int)LevelType.MAP_MISSION)
+        {
+            iResultScore -= (int)(fTotalTimeMission / 2); //long time is bad in mission
+        }
+        return iResultScore;
     }
 
     void HandleRace()

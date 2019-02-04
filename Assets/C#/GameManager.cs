@@ -316,7 +316,7 @@ public class GameManager : MonoBehaviour
                         szLastLevel = MapGenerator.szLevel;
 
                         int iScoreMs;
-                        if (MapGenerator.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = MapGenerator.theMap.player.iScore;
+                        if (MapGenerator.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = MapGenerator.theMap.player.GetScore();
                         else iScoreMs = (int)(MapGenerator.theMap.player.fTotalTime * 1000);
 
                         if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel || MapGenerator.theMap.bAchieveFinishedMissionLevel)

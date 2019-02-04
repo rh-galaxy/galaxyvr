@@ -10,6 +10,13 @@ public struct LevelInfo
     public bool bIsTime;
     public int iLimit1, iLimit2, iLimit3;
     public int iScoreMs;
+
+    public string szBestName1;
+    public int iBestScore1;
+    public string szBestName2;
+    public int iBestScore2;
+    public string szBestName3;
+    public int iBestScore3;
 }
 
 public class HttpHiscore
@@ -54,7 +61,7 @@ public class HttpHiscore
             {
                 char[] szSeparator = { (char)32 };
                 string[] szTokens = szLines[i].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                if (szTokens.Length != 6) continue;
+                if (szTokens.Length != 12) continue;
 
                 stLevel.szName = szTokens[0].Trim('\"');
                 stLevel.bIsTime = szTokens[1].CompareTo("1")==0;
@@ -62,6 +69,13 @@ public class HttpHiscore
                 stLevel.iLimit2 = int.Parse(szTokens[3]);
                 stLevel.iLimit3 = int.Parse(szTokens[4]);
                 stLevel.iScoreMs = int.Parse(szTokens[5]);
+
+                stLevel.szBestName1 = szTokens[6];
+                stLevel.iBestScore1 = int.Parse(szTokens[7]);
+                stLevel.szBestName2 = szTokens[8];
+                stLevel.iBestScore2 = int.Parse(szTokens[9]);
+                stLevel.szBestName3 = szTokens[10];
+                stLevel.iBestScore3 = int.Parse(szTokens[11]);
 
                 oLevelList.Add(stLevel);
             }
@@ -108,19 +122,4 @@ public class HttpHiscore
     }
 
 
-    /*    public LevelInfo GetLevelLimits(string szLevel)
-        {
-            LevelInfo stLevel = new LevelInfo();
-            if (!GameManager.bUserValid) return stLevel;
-            StartCoroutine(GetLimits());
-
-            for (int i = 0; i < oLevelList.Count; i++)
-            {
-                stLevel = oLevelList[i];
-                if(szLevel.CompareTo(stLevel.szName)==0) return stLevel;
-            }
-
-            return stLevel;
-        }
-    */
 }

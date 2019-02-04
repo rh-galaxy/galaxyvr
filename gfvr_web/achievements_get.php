@@ -20,14 +20,14 @@
 			$row = @mysqli_fetch_assoc($result_member);
 			if($row['username'] == $user) {
 				//user and id match
-				$query = "UPDATE members_t SET last_access=NOW() WHERE (oculus_id=".$userid.")";
+				$query = "UPDATE members_t SET last_access=".time()." WHERE (oculus_id=".$userid.")";
 			} else {
 				//update user name in members_t since it has changed
-				$query = "UPDATE members_t SET username='".$user."',last_access=NOW() WHERE (oculus_id=".$userid.")";
+				$query = "UPDATE members_t SET username='".$user."',last_access=".time()." WHERE (oculus_id=".$userid.")";
 			}
 		} else if($num_rows==0) {
 			//insert new row in members_t
-			$query = "INSERT INTO members_t (username, oculus_id) VALUES('".$user."','".$userid."')";
+			$query = "INSERT INTO members_t (username, oculus_id, last_access) VALUES('".$user."',".$userid.",".time().")";
 		}
 		$result = mysqli_query($db, $query);
 		
@@ -44,9 +44,11 @@
 				// it better be more than 0
 				if($num_rows > 0) {
 					for($i=0; $i < $num_rows; $i++) {
+////////////////////////////////////////////////////////////////////////////////////////////
+//part 1 (per level) limits and player score
 						$score = -1;
 						$row = @mysqli_fetch_assoc($result);
-						$select_string = "SELECT achievements_t.score AS Score FROM achievements_t WHERE achievements_t.oculus_id=".$userid." AND achievements_t.level='".$row['Level']."'";
+						$select_string = "SELECT achievements_t.score AS Score FROM achievements_t WHERE achievements_t.name=".$user." AND achievements_t.level='".$row['Level']."'";
 
 						$result2 = @mysqli_query($db, $select_string);
 						// succeeded
@@ -58,12 +60,39 @@
 								$score = $row2['Score'];
 							}
 						}
-						echo "\"".$row['Level']."\" ".$row['IsTime']." ".$row['limit1']." ".$row['limit2']." ".$row['limit3']." ".$score."\n";
+						echo "\"".$row['Level']."\" ".$row['IsTime']." ".$row['limit1']." ".$row['limit2']." ".$row['limit3']." ".$score." ";
+						
+////////////////////////////////////////////////////////////////////////////////////////////
+//part 2 (per level) record scores 1st-3rd place
+						$sort = "DESC";
+						if($row["IsTime"] != 0) $sort = "ASC";
+						$select_string = "SELECT achievements_t.name AS Name, achievements_t.score AS Score FROM achievements_t WHERE achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
+						$result2 = @mysqli_query($db, $select_string);
+
+						if($result2) {
+							$num_rows2 = @mysqli_num_rows($result2);
+							for($j=0; $j < 3; $j++) {
+								if($j>=$num_rows2) {
+									echo "_None ";
+									echo "-1 ";
+								} else {
+									// a bit slower but easier to read
+									$row2 = @mysqli_fetch_assoc($result2);
+
+									//name, score
+									echo $row2["Name"]." ";
+									echo $row2["Score"]." ";
+								}
+							}
+						}
+						echo "\n";
+////////////////////////////////////////////////////////////////////////////////////////////
+						
 					}
 				}
 			}
-		}
 
+		}
 		mysqli_close($db);
 	}
 

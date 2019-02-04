@@ -1,25 +1,28 @@
+
 <?php
 
 	require_once("db_connect.php");
 	require_once("checkparams.php");
 
-	$paramArray = array($_POST["LEVEL"], $_POST["NAME"], $_POST["PASSWORD"], $_POST["SCORE"], $_POST["REPLAY"]);
+	$paramArray = array($_POST["LEVEL"], $_POST["NAME"], $_POST["USERID"], $_POST["COUNTER"], $_POST["SCORE"], $_POST["REPLAY"]);
 
-	if(checkstring($paramArray) && $_POST["LEVEL"]!="" && $_POST["NAME"]!="" && $_POST["PASSWORD"]!="" && $_POST["SCORE"]!="" && $_POST["REPLAY"]!="") {
-
+	if(checkstring($paramArray) && $_POST["LEVEL"]!="" && $_POST["NAME"]!="" && $_POST["USERID"]!="" && $_POST["COUNTER"]!="" && $_POST["SCORE"]!="" && $_POST["REPLAY"]!="") {
 		$user = $_POST["NAME"];
-		$password = $_POST["PASSWORD"];
+		$userid = $_POST["USERID"];
 		$isok = 0; //no qualify
 
 		$db = connect_to_db();
 
-		$query = "SELECT * FROM members_t WHERE username='".$user."'";
+		$query = "SELECT * FROM members_t WHERE oculus_id=".$userid;
 		$result_member = mysqli_query($db, $query);
 
 		$num_rows = @mysqli_num_rows($result_member);
 		if($num_rows==1) {
 			$row = @mysqli_fetch_assoc($result_member);
-			if(($row['password'] == $password) && ($row['activation'] == null)) {
+			$count = $_POST["COUNTER"];
+			$tnow = time();
+			$tpast = $row['last_access'];
+			if(($tnow-$tpast)<$count+10 && ($tnow-$tpast)>$count-10) {
 				$isok = 1;
 			}
 		}
@@ -37,7 +40,7 @@
 					$scoretobeat = 36000000;
 					$sort = "ASC";
 				}
-				$query = "SELECT achievements_t.score FROM achievements_t WHERE level='".$_POST["LEVEL"]."' AND name='".$_POST["NAME"]."'";
+				$query = "SELECT achievements_t.score FROM achievements_t WHERE level='".$_POST["LEVEL"]."' AND name=".$_POST["NAME"];
 				$hiscore = mysqli_query($db, $query);
 				$num_rows = @mysqli_num_rows($hiscore);
 				if($num_rows==1) { //always qualify not 1
@@ -67,9 +70,9 @@
 
 					$replay = str_replace(' ','+',$_POST["REPLAY"]);
 					if($num_rows==1) {
-						$query = "UPDATE achievements_t SET ip='".$ip."',timestamp=NOW(),score='".$_POST["SCORE"]."',replay='".$replay."' WHERE (level='".$_POST["LEVEL"]."' AND name='".$_POST["NAME"]."')";
+						$query = "UPDATE achievements_t SET ip='".$ip."',timestamp=NOW(),score='".$_POST["SCORE"]."',replay='".$replay."' WHERE (level='".$_POST["LEVEL"]."' AND name=".$_POST["NAME"].")";
 					} else {
-						$query = "INSERT INTO achievements_t (ip, name, level, score, replay) VALUES('".$ip."','".$_POST["NAME"]."','".$_POST["LEVEL"]."','".$_POST["SCORE"]."','".$replay."')";
+						$query = "INSERT INTO achievements_t (ip, name, level, score, replay) VALUES('".$ip."',".$_POST["NAME"].",'".$_POST["LEVEL"]."','".$_POST["SCORE"]."','".$replay."')";
 					}
 					$result = mysqli_query($db, $query);
 				}
