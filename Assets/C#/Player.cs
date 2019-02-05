@@ -164,7 +164,7 @@ public class Player : MonoBehaviour
             status.SetForRace(fShipHealth / FULL_HEALTH, fTotalTime, "[" + iCurLap.ToString() + "/" + iTotalLaps.ToString() + "] " + iCurCP.ToString());
         else
             status.SetForMission(fShipHealth / FULL_HEALTH, iNumLifes, iCargoSpaceUsed / MAXSPACEINHOLDWEIGHT,
-                iCargoNumUsed==3 || iCargoSpaceUsed==MAXSPACEINHOLDWEIGHT, fFuel / MAXFUELINTANK, GetScore());
+                iCargoNumUsed==3 || iCargoSpaceUsed==MAXSPACEINHOLDWEIGHT, fFuel / MAXFUELINTANK, GetScore()/1000);
     }
 
     void OnGUI()
@@ -665,7 +665,7 @@ public class Player : MonoBehaviour
         int iResultScore = (iScore + iLifes * 50) * 1000;
         if (oMap.iLevelType == (int)LevelType.MAP_MISSION)
         {
-            iResultScore -= (int)(fTotalTimeMission / 2); //long time is bad in mission
+            iResultScore -= (int)((fTotalTimeMission*1000) / 2); //long time is bad in mission
         }
         return iResultScore;
     }
