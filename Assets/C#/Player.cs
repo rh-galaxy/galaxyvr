@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerController2 : MonoBehaviour
+public class Player : MonoBehaviour
 {
     MapGenerator oMap;
 

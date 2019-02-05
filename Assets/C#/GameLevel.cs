@@ -18,7 +18,7 @@ public class C_LandingZone //: MonoBehaviour
 
     int iWidth, iHeight;
     int iZoneSize; //width in tiles
-    
+
     //other
     internal bool bHomeBase;
     internal bool bExtraLife;
@@ -60,7 +60,7 @@ public class C_LandingZone //: MonoBehaviour
             oBox.transform.parent = MapGenerator.theMap.transform;
             MonoBehaviour.DestroyImmediate(oBox.GetComponent<BoxCollider>());
 
-            oBox.transform.position = new Vector3(vPos.x + ((iAdjustX - ((i / 3) * 28)) -13) / 32.0f, vPos.y + (6 + ((i % 3) * 7)) / 32.0f, /**/0.6f);
+            oBox.transform.position = new Vector3(vPos.x + ((iAdjustX - ((i / 3) * 28)) - 13) / 32.0f, vPos.y + (6 + ((i % 3) * 7)) / 32.0f, /**/0.6f);
             oBox.transform.localScale = new Vector3(aBoxSizeX[iCargoType] / 32.0f, 6.0f / 32.0f, 0.5f);
 
             oMaterial = Resources.Load("Pickups", typeof(Material)) as Material;
@@ -196,7 +196,7 @@ public class MapGenerator : MonoBehaviour
     internal bool bAchieveFinishedMissionLevel = false;
 
     public GameObject backPlane;
-    public PlayerController2 player;
+    public Player player;
 
     public float fWallHeight = 3.0f;
     public float fBumpHeight = 0.25f;
@@ -366,18 +366,20 @@ public class MapGenerator : MonoBehaviour
         if (!bMapLoaded) return;
 
         //race finished
-        if(player.bAchieveFinishedRaceLevel)  {
+        if (player.bAchieveFinishedRaceLevel)
+        {
             bRunGameOverTimer = true;
         }
         //mission finished
-        if(GetMissionFinished())
+        if (GetMissionFinished())
         {
             bRunGameOverTimer = true;
             bAchieveFinishedMissionLevel = true;
         }
-        if (iLevelType == (int)LevelType.MAP_MISSION && player.iNumLifes==0) bRunGameOverTimer = true;
+        if (iLevelType == (int)LevelType.MAP_MISSION && player.iNumLifes == 0) bRunGameOverTimer = true;
 
-        if (bRunGameOverTimer) {
+        if (bRunGameOverTimer)
+        {
             fGameOverTimer += Time.deltaTime;
             if (fGameOverTimer > 5.0f) bGameOver = true;
         }
@@ -387,8 +389,8 @@ public class MapGenerator : MonoBehaviour
     {
         if (iLevelType != (int)LevelType.MAP_MISSION) return false;
 
-        if(player.GetCargoLoaded() != 0) return false;
-        for(int i=0; i<aLandingZoneList.Count; i++)
+        if (player.GetCargoLoaded() != 0) return false;
+        for (int i = 0; i < aLandingZoneList.Count; i++)
         {
             if (aLandingZoneList[i].GetTotalCargo() != 0) return false;
         }
@@ -758,7 +760,7 @@ public class MapGenerator : MonoBehaviour
 
                 ZObject oZObj = Instantiate(oZObjBase, this.transform);
                 oZObj.Init(iType, iAngle, vPos);
-                
+
             }
             //header loaded
         }
@@ -900,11 +902,11 @@ public class MapGenerator : MonoBehaviour
             //generate final mesh, set tile material
             Material oMaterial = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMaterial, typeof(Material)) as Material;
             oMaterialWalls = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralWalls, typeof(Material)) as Material;
-            oMeshGen.GenerateMeshInit(aMapHighres, 1.0f/substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
+            oMeshGen.GenerateMeshInit(aMapHighres, 1.0f / substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
         }
         else if (n >= 3)
         {
-            return oMeshGen.GenerateMesh(n-3);
+            return oMeshGen.GenerateMesh(n - 3);
         }
 
         return false;
@@ -924,7 +926,7 @@ public class MapGenerator : MonoBehaviour
         if (f == null) return false;
 
         oTileTexture = new Texture2D(2, 2);
-        if(!oTileTexture.LoadImage(f.bytes, false))
+        if (!oTileTexture.LoadImage(f.bytes, false))
             return false;
 
         //analyse tileset (get rectangles)
