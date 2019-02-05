@@ -326,7 +326,7 @@ public class Menu : MonoBehaviour
             //set at max distance
             oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*180.0f;
             //rotate the cursor to standard rotation
-            oGazeQuad.transform.eulerAngles = new Vector3(0,0,0);
+            oGazeQuad.transform.rotation = Camera.main.transform.rotation;
 
             bLevelSelected = false;
         }

@@ -10,6 +10,10 @@ public class Enemy : MonoBehaviour
     public GameObject enemy4;
     public GameObject oExplosion;
 
+    public AudioClip oClipHit;
+    public AudioClip oClipExplosion;
+    public AudioClip oClipFire;
+
     Vector3 vPos;
     Vector3 vVel;
     int iCurWP;
@@ -76,9 +80,13 @@ public class Enemy : MonoBehaviour
                     bStartExplosion = true;
 
                     //play explosion sound
-                    //...
+                    GetComponent<AudioSource>().PlayOneShot(oClipExplosion);
 
                     oMap.iAchieveEnemiesKilled++;
+                }
+                else
+                {
+                    GetComponent<AudioSource>().PlayOneShot(oClipHit);
                 }
             }
         }
@@ -116,8 +124,8 @@ public class Enemy : MonoBehaviour
                     GameObject o = Instantiate(oMap.oBulletObjBase, oMap.transform);
                     o.GetComponent<Bullet>().Init(stBulletInfo, 1/*iOwnerID*/);
 
-                    //if(rm.iGeneralByte1==1)
-                    //    iPlaySound = 0; //bullet sound on first bullet, must be done at enemy pos
+                    if(rm.iGeneralByte1==1)
+                        GetComponent<AudioSource>().PlayOneShot(oClipFire);
                 }
             }
         }
@@ -177,7 +185,7 @@ public class Enemy : MonoBehaviour
 
                     if (InFireRange())
                     {
-                        //iPlaySound = 0; //bullet sound on first bullet, must be done at enemy pos
+                        GetComponent<AudioSource>().PlayOneShot(oClipFire);
 
                         float fDirection = 0;
                         if (SENEMY_RANDOMBULLETANGLE[stInfo.iEnemyType])
