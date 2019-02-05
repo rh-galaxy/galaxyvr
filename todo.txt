@@ -49,6 +49,8 @@ Known issues/small things undone
 - Handle the first few frames in MapGenerator.Update better, the game should be paused
    while level is still being loaded (Time.timeScale = low?). And the level should not
    show while it is loading, as it is visible that objects "pop up"
+- Rename PlayerController.cs to Player.cs
+- Rename MapGenerator.cs to something better since it handles the whole game...
 - Prevent running the game in non VR (later in Release version)
 - Enable code for  Oculus entitlement check (later in Release version)
 - Manage to remove the Prefabs/Materials folder in Unity project (use same mat in Resources)

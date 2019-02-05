@@ -89,7 +89,7 @@ public class Enemy : MonoBehaviour
         // is done in the collision matrix in Edit->Project Settins
     }
 
-    public Player thePlayer; //set in editor
+    public PlayerController2 thePlayer; //set in editor
     bool InFireRange()
     {
         Vector2 vPlayerPos = thePlayer.GetPosition();
