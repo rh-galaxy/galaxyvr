@@ -196,7 +196,7 @@ public class MapGenerator : MonoBehaviour
     internal bool bAchieveFinishedMissionLevel = false;
 
     public GameObject backPlane;
-    public PlayerController2 player;
+    public Player player;
 
     public float fWallHeight = 3.0f;
     public float fBumpHeight = 0.25f;
