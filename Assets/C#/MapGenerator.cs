@@ -23,7 +23,6 @@ public class C_LandingZone //: MonoBehaviour
     internal bool bHomeBase;
     internal bool bExtraLife;
     bool bShowAntenna, bShowHouse;
-    double dAntennaFrame;
     List<int> aCargoList; //array of cargo weights (small = 1..5,6..10,11..15,16..20+ = huge)
 
     GameObject oZone;
@@ -42,7 +41,6 @@ public class C_LandingZone //: MonoBehaviour
         bShowAntenna = i_bShowAntenna;
         bShowHouse = i_bShowHouse;
         aCargoList = i_aCargoList;
-        dAntennaFrame = 0.0;
         bExtraLife = i_bExtraLife;
 
         oZoneCargoList = new GameObject[aCargoList.Count];
@@ -509,7 +507,6 @@ public class MapGenerator : MonoBehaviour
 
         int iLineIndex = -1;
         int iStartPosCounter = 0;
-        int iEnemyCounter = 0;
         int iZoneCounter = 0;
 
         //to parse 0.00 as float on any system
