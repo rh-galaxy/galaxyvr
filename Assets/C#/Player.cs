@@ -22,8 +22,10 @@ public class Player : MonoBehaviour
     public AudioClip oClipLand;
     public AudioClip oClipLoadCargo;
     public AudioClip oClipUnloadCargo;
+    public AudioClip oClipScratch;
     AudioSource oASEngine;
     AudioSource oASGeneral;
+    bool bScratchPlayed = false;
 
     //movement
     Rigidbody2D oRb;
@@ -299,6 +301,12 @@ public class Player : MonoBehaviour
         if (szOtherObject.CompareTo("Map") == 0)
         {
             fShipHealth -= 0.5f * Time.fixedDeltaTime;
+
+            if(oRb.velocity.magnitude>0.5 && !bScratchPlayed)
+            {
+                bScratchPlayed = true;
+                /**/oASGeneral.PlayOneShot(oClipScratch);
+            }
         }
     }
 
@@ -317,6 +325,8 @@ public class Player : MonoBehaviour
         {
             iNoStearing--;
         }
+
+        bScratchPlayed = false; //scratch can be played again
     }
 
     public Vector2 GetPosition()
@@ -509,13 +519,11 @@ public class Player : MonoBehaviour
                 if (fTemp != 0)
                 {
                     oThruster.enableEmission = true;
-                    //oASEngine.enabled = true;
                     /**/oASEngine.Play();
                 }
                 else
                 {
                     oThruster.enableEmission = false;
-                    //oASEngine.enabled = false;
                     /**/oASEngine.Pause();
                 }
             }
@@ -726,6 +734,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void StopSound()
+    {
+        if (fAcceleration != 0.0f)
+        {
+            oASEngine.Pause();
+        }
+    }
+
     void Stop()
     {
         oCustomGravity.enabled = false;
@@ -735,7 +751,6 @@ public class Player : MonoBehaviour
         if (fAcceleration != 0.0f)
         {
             oThruster.enableEmission = false;
-            //oASEngine.enabled = false;
             /**/oASEngine.Pause();
         }
         fAcceleration = 0.0f;

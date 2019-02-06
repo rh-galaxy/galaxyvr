@@ -12,8 +12,6 @@ Door element
 Enemies
 - Create them in 3D [enemy 0..3,5,6]
 - Implement them in code
-Sound
-- Add existing music to the menu and game
 Menu
 - More contents (could be Game Name text/logo, animated objects, clouds, anything really)
 - Better gfx (different textures for the level select elements)
@@ -60,4 +58,4 @@ Known issues/small things undone
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
 - Checkpoint sounds are not clean... there is some unwanted noise in them
 - Play/Pause engine sound sometimes generate unwanted click sound
-- Sound missing for scratching/touching the cave wall
+- Improve sounds for scratching/touching the cave wall

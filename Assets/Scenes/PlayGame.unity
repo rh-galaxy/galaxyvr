@@ -5441,10 +5441,10 @@ MonoBehaviour:
   oClipFire: {fileID: 8300000, guid: 2d49096c73f6e3247bbf42b3ebb44ddd, type: 3}
   oClipCP: {fileID: 8300000, guid: bcd5639fc282a5a4f861825fba91695d, type: 3}
   oClipCPEnd: {fileID: 8300000, guid: cca2d5717d281374d8b33bfc44e3b6c4, type: 3}
-  oClipEngine: {fileID: 8300000, guid: 7f2af30f0380b594591db022c1023c44, type: 3}
   oClipLand: {fileID: 8300000, guid: 9858bdd16c9f2e942b2c1af3ca0b60e5, type: 3}
   oClipLoadCargo: {fileID: 8300000, guid: 0a50f9aeed20a174f9a57c3eb4f3b863, type: 3}
   oClipUnloadCargo: {fileID: 8300000, guid: 2682a0ba84e399540a4b5cd94e59059f, type: 3}
+  oClipScratch: {fileID: 8300000, guid: 5e242e28711630148939156edfeccd4e, type: 3}
 --- !u!60 &1347681406
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     int iAchievementHellbentCounter = 0;
 
     AsyncOperation asyncLoad;
+    AudioSource oASMusic;
 
     Replay oReplay = new Replay(); //create one replay... this is recycled during the session
 
@@ -57,6 +58,8 @@ public class GameManager : MonoBehaviour
         }
 
         MapGenerator.theReplay = oReplay;
+
+        oASMusic = GetComponent<AudioSource>();
     }
 
     // 
@@ -180,6 +183,8 @@ public class GameManager : MonoBehaviour
     int iLoadingMap = 0;
     int iState = -1;
 
+    bool bMusicOn = true;
+
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
     private void FixedUpdate()
     {
@@ -195,16 +200,20 @@ public class GameManager : MonoBehaviour
             if ((OVRManager.hasInputFocus && OVRManager.hasVrFocus) /**/|| (XRDevice.userPresence!=UserPresenceState.Present))
             {
                 Time.timeScale = 1.0f;
+                if (bMusicOn) oASMusic.UnPause();
             }
             else
             {
                 Time.timeScale = 0.000001f;
 
                 //also need to stop all sound
-                //...
+                if (bMusicOn) oASMusic.Pause();
+                if(MapGenerator.theMap!=null) MapGenerator.theMap.player.StopSound();
                 return;
             }
         }
+        if (bMusicOn && !oASMusic.isPlaying) oASMusic.Play();
+        else if (!bMusicOn && oASMusic.isPlaying) oASMusic.Pause();
 
         //the main state machine
         switch (iState)
@@ -223,6 +232,8 @@ public class GameManager : MonoBehaviour
             case 1:
                 //running menu
                 {
+                    oASMusic.volume = 0.63f;
+
                     //these 3 are set in menu part 2, reset them here
                     Menu.bWorldBestReplay = false;
                     Menu.bYourBestReplay = false;
@@ -330,6 +341,8 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.Log("LoadSeg Done");
                         iState++;
+                        //oASMusic.volume = 0.25f;
+                        oASMusic.volume = 0.10f;
                     }
                 }
                 break;
