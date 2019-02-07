@@ -82,8 +82,10 @@ square_start("'100%'");
 <p><img align="left" src="images/early_dev_screenshot1_860.jpg" title="Galaxy VR early dev"></p>
 <h4>Early development screenshot, head pitch down and turned to the left, greater fov</h4>
 <p><img align="left" src="images/early_dev_screenshot2_860.jpg" title="Galaxy VR early dev"></p>
+<h4>Development screenshot, enemies and status bar visible</h4>
+<p><img align="left" src="images/early_dev_screenshot3_860.jpg" title="Galaxy VR dev"></p>
 <h4>Early development demo</h4>
-<p><a href="http://www.galaxy-forces-vr.com/GalaxyForcesVR_v0.3.zip">Galaxy Forces VR v0.3</a></p>
+<p><a href="http://www.galaxy-forces-vr.com/GalaxyForcesVR_v0.35.zip">Galaxy Forces VR v0.35</a></p>
 
 <?php
 square_end();

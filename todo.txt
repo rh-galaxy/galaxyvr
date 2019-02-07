@@ -22,10 +22,6 @@ Menu
 - Settings to turn the music on/off (+a minimum of other settings).
 The VR room around the player
 - More contents (could be clouds and a skybox, or a room, or blackness in space, anything really)
-(Replay)
-- Implemented ->
-- Online hi-scores - As HTTP implemented (switch web to HTTPS, and make that work)
-- The hi-score implementation on the website is done
 Website
 - www.galaxy-forces-vr.com exists.
 - Better/more contents (+the hi-scores, but they are implemented)
@@ -59,3 +55,4 @@ Known issues/small things undone
 - Checkpoint sounds are not clean... there is some unwanted noise in them
 - Play/Pause engine sound sometimes generate unwanted click sound
 - Improve sounds for scratching/touching the cave wall
+- Switch web to HTTPS, and make the game access HTTPS

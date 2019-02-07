@@ -201,7 +201,7 @@ public class MeshGenerator : MonoBehaviour
         for (int j = 0; j < outlines.Count; j++)
         {
             //skip whole map outline in collission, always j==0
-            //if (j == 0) continue;
+            if (j == 0) continue;
 
             List<int> outline = outlines[j];
 
@@ -276,7 +276,6 @@ public class MeshGenerator : MonoBehaviour
                 MeshFromPoints(square.topLeft, square.topRight, square.bottomRight, square.bottomLeft);
                 break;
         }
-
     }
 
     void MeshFromPoints(params Node[] points)
@@ -334,7 +333,6 @@ public class MeshGenerator : MonoBehaviour
 
     void CalculateMeshOutlines()
     {
-
         for (int vertexIndex = 0; vertexIndex < vertices.Count; vertexIndex++)
         {
             if (!checkedVertices.Contains(vertexIndex))
@@ -436,7 +434,6 @@ public class MeshGenerator : MonoBehaviour
             }
         }
 
-
         public bool Contains(int vertexIndex)
         {
             return vertexIndex == vertexIndexA || vertexIndex == vertexIndexB || vertexIndex == vertexIndexC;
@@ -479,7 +476,6 @@ public class MeshGenerator : MonoBehaviour
 
     public class Square
     {
-
         public ControlNode topLeft, topRight, bottomRight, bottomLeft;
         public Node centreTop, centreRight, centreBottom, centreLeft;
         public int configuration;
@@ -520,7 +516,6 @@ public class MeshGenerator : MonoBehaviour
 
     public class ControlNode : Node
     {
-
         public bool active;
         public Node above, right;
 
@@ -530,6 +525,5 @@ public class MeshGenerator : MonoBehaviour
             above = new Node(position + Vector3.up * squareSize / 2f);
             right = new Node(position + Vector3.right * squareSize / 2f);
         }
-
     }
 }

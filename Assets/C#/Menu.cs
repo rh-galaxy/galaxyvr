@@ -235,7 +235,7 @@ public class Menu : MonoBehaviour
         oCursorMaterialWait = Resources.Load("Cursor2", typeof(Material)) as Material;
         oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
 
-        oGazeQuad.transform.localScale = new Vector3(3.5f, 3.5f, 1);
+        oGazeQuad.transform.localScale = new Vector3(3.8f, 3.8f, 1);
 
         //change fov if non VR since that default setting shows to wide fov
         // and is not behaving reliably
@@ -259,7 +259,8 @@ public class Menu : MonoBehaviour
         oMenuPlay = new C_ItemInMenu(vPos, "P", "Play");
     }
 
-    void FixedUpdate()
+    float fRotateZAngle = 0.0f;
+    void Update()
     {
         //do a raycast into the world based on the user's
         // head position and orientation
@@ -317,7 +318,6 @@ public class Menu : MonoBehaviour
             {
                 bAllowSelection = true;
             }
-
         }
         else
         {
@@ -325,11 +325,15 @@ public class Menu : MonoBehaviour
 
             //set at max distance
             oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*180.0f;
-            //rotate the cursor to standard rotation
+            //rotate the cursor to camera rotation
             oGazeQuad.transform.rotation = Camera.main.transform.rotation;
 
             bLevelSelected = false;
         }
+        //rotate again around Z, not visible on standard cursor, but visible on the waiting cursor
+        fRotateZAngle += 130 * Time.deltaTime;
+        if (fRotateZAngle > 360) fRotateZAngle -= 360; //keep it 0..360
+        oGazeQuad.transform.Rotate(Vector3.back, fRotateZAngle);
     }
 
     public void SetWaiting(bool i_bWaiting)
