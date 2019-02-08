@@ -201,7 +201,7 @@ public class MeshGenerator : MonoBehaviour
         for (int j = 0; j < outlines.Count; j++)
         {
             //skip whole map outline in collission, always j==0
-            if (j == 0) continue;
+            //if (j == 0) continue;
 
             List<int> outline = outlines[j];
 

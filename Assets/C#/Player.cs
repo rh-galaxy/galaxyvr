@@ -22,10 +22,11 @@ public class Player : MonoBehaviour
     public AudioClip oClipLand;
     public AudioClip oClipLoadCargo;
     public AudioClip oClipUnloadCargo;
-    public AudioClip oClipScratch;
     AudioSource oASEngine;
+    bool bEngineFadeOut = false;
+    AudioSource oASScrape;
+    bool bScrapeFadeOut = false;
     AudioSource oASGeneral;
-    bool bScratchPlayed = false;
 
     //movement
     Rigidbody2D oRb;
@@ -107,9 +108,11 @@ public class Player : MonoBehaviour
 
 
         foreach (AudioSource aSource in GetComponents<AudioSource>())
-        { //we only have two audiosources
+        { //we have 3 audiosources
             if (aSource.clip!=null && aSource.clip.name.Equals("engine"))
                 oASEngine = aSource;
+            else if (aSource.clip != null && aSource.clip.name.Equals("scratch"))
+                oASScrape = aSource;
             else
                 oASGeneral = aSource;
         }
@@ -244,6 +247,10 @@ public class Player : MonoBehaviour
 
             iNoStearing++;
             fNoStearingTimer = 0.0f;
+
+            bScrapeFadeOut = false;
+            oASScrape.volume = 1.0f;
+            oASScrape.Play();
         }
 
         //collide with enemy body
@@ -301,12 +308,6 @@ public class Player : MonoBehaviour
         if (szOtherObject.CompareTo("Map") == 0)
         {
             fShipHealth -= 0.5f * Time.fixedDeltaTime;
-
-            if(oRb.velocity.magnitude>0.5 && !bScratchPlayed)
-            {
-                bScratchPlayed = true;
-                /**/oASGeneral.PlayOneShot(oClipScratch);
-            }
         }
     }
 
@@ -324,9 +325,9 @@ public class Player : MonoBehaviour
         if (szOtherObject.CompareTo("Map") == 0)
         {
             iNoStearing--;
-        }
 
-        bScratchPlayed = false; //scratch can be played again
+            bScrapeFadeOut = true;
+        }
     }
 
     public Vector2 GetPosition()
@@ -341,7 +342,6 @@ public class Player : MonoBehaviour
     {
         if (!bInited)
             return;
-
 
         fTotalTimeMission += Time.fixedDeltaTime;
 
@@ -519,14 +519,17 @@ public class Player : MonoBehaviour
                 if (fTemp != 0)
                 {
                     oThruster.enableEmission = true;
-                    /**/oASEngine.Play();
+                    bEngineFadeOut = false;
+                    oASEngine.volume = 1.0f;
+                    oASEngine.Play();
                 }
                 else
                 {
                     oThruster.enableEmission = false;
-                    /**/oASEngine.Pause();
+                    bEngineFadeOut = true;
                 }
             }
+
             fAcceleration = fTemp;
             vForceDir.x = fCos;
             vForceDir.y = fSin;
@@ -641,6 +644,12 @@ public class Player : MonoBehaviour
             }
         }
         //////end react to input
+
+        //fade out some sounds over ~100ms, to avoid unwanted clicking noise
+        if (bEngineFadeOut)
+            oASEngine.volume *= 0.8f;
+        if (bScrapeFadeOut)
+            oASScrape.volume *= 0.8f;
     }
 
     void CreateBullet()
@@ -736,10 +745,12 @@ public class Player : MonoBehaviour
 
     public void StopSound()
     {
-        if (fAcceleration != 0.0f)
-        {
-            oASEngine.Pause();
-        }
+        //bEngineFadeOut = true;
+        //bScrapeFadeOut = true;
+        //^will not make the sounds stop since FixedUpdate is run to slowly
+        oASEngine.Stop();
+        oASScrape.Stop();
+        //^may cause clicking but we have to live with that
     }
 
     void Stop()
@@ -751,7 +762,7 @@ public class Player : MonoBehaviour
         if (fAcceleration != 0.0f)
         {
             oThruster.enableEmission = false;
-            /**/oASEngine.Pause();
+            bEngineFadeOut = true;
         }
         fAcceleration = 0.0f;
     }

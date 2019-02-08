@@ -208,7 +208,7 @@ public class Enemy : MonoBehaviour
         transform.position = vPos;
     }
 
-    private void Update()
+    void Update()
     {
         //only enemy 4 rotates
         if (stInfo.iEnemyType == 4)

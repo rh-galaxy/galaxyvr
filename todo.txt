@@ -42,17 +42,13 @@ Known issues/small things undone
 - Handle the first few frames in MapGenerator.Update better, the game should be paused
    while level is still being loaded (Time.timeScale = low?). And the level should not
    show while it is loading, as it is visible that objects "pop up"
-- Rename MapGenerator.cs to something better since it handles the whole game...
+- Rename MapGenerator.cs to GameLevel since it handles the whole game...
 - Prevent running the game in non VR (later in Release version)
 - Enable code for  Oculus entitlement check (later in Release version)
 - Manage to remove the Prefabs/Materials folder in Unity project (use same mat in Resources)
-- Replace image for Textures/128_hour_glass.png - maybe animated circle?
-- Replace image for Textures/256_cog.png - cleaner look
 - Make 1024x1024 image for game icon (the current icon is 128x128 and comes from the old game)
    Set this in Edit->Project_Settings->Player->Icon in Unity.
 - Fix the objects in the Prefabs folder to be done like it should be
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
 - Checkpoint sounds are not clean... there is some unwanted noise in them
-- Play/Pause engine sound sometimes generate unwanted click sound
-- Improve sounds for scratching/touching the cave wall
 - Switch web to HTTPS, and make the game access HTTPS
