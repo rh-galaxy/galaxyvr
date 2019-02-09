@@ -32,8 +32,6 @@ Release
 
 
 Known issues/small things undone
-- Thruster particles not as it should be (the force field does not always work in a build)
-   try and delete it and add it again?
 - Icon for achievement 17, Trigger (Fire 1000 bullets).
 - Maybe have a "remove bullet"-msg in the replay data.
 - Maybe have a "enemy killed"-msg in the replay data.
