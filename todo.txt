@@ -32,6 +32,8 @@ Release
 
 
 Known issues/small things undone
+- Particle system and force field does not work correctly, tried to delete
+   and recreate with no luck... out of ideas.
 - Icon for achievement 17, Trigger (Fire 1000 bullets).
 - Maybe have a "remove bullet"-msg in the replay data.
 - Maybe have a "enemy killed"-msg in the replay data.
