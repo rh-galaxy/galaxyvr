@@ -57,7 +57,7 @@ public class C_LandingZone //: MonoBehaviour
             //if(iCargoType>3) iCargoType=3;
 
             GameObject oBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            oBox.transform.parent = MapGenerator.theMap.transform;
+            oBox.transform.parent = GameLevel.theMap.transform;
             MonoBehaviour.DestroyImmediate(oBox.GetComponent<BoxCollider>());
 
             oBox.transform.position = new Vector3(vPos.x + ((iAdjustX - ((i / 3) * 28)) -13) / 32.0f, vPos.y + (6 + ((i % 3) * 7)) / 32.0f, /**/0.6f);
@@ -70,7 +70,7 @@ public class C_LandingZone //: MonoBehaviour
         }
 
         oZone = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        oZone.transform.parent = MapGenerator.theMap.transform;
+        oZone.transform.parent = GameLevel.theMap.transform;
         MonoBehaviour.DestroyImmediate(oZone.GetComponent<BoxCollider>());
         oZone.AddComponent<BoxCollider2D>();
         oZone.name = "LandingZone" + iId.ToString();
@@ -178,11 +178,11 @@ public class S_EnemyInfo
     public Vector2[] vWayPoints;
 }
 
-public class MapGenerator : MonoBehaviour
+public class GameLevel : MonoBehaviour
 {
     //should realy try to get rid of the statics and make the GameManager hold the object instead
-    // for now this means there can be only one MapGenerator...
-    public static MapGenerator theMap = null;
+    // for now this means there can be only one GameLevel...
+    public static GameLevel theMap = null;
     public static string szLevel;
     public static bool bMapLoaded = false;
     public static Replay theReplay = null;
@@ -259,7 +259,7 @@ public class MapGenerator : MonoBehaviour
     MeshGenerator oMeshGen;
     Material oMaterialWalls; //set when walls are created, and used also in creating the map border
 
-    MapGenerator()
+    GameLevel()
     {
         theMap = this;
     }

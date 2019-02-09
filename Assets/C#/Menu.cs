@@ -293,7 +293,7 @@ public class Menu : MonoBehaviour
                         //just set it every time, it is collected when button pressed and m_bGazeActive is true
                         szLevel = aLevels[iIndex].szLevelName;
 
-                        MapGenerator.szLevel = szLevel;
+                        GameLevel.szLevel = szLevel;
                         bLevelSelected = true;
                         bAllowSelection = false; //trigger once only...
                     }

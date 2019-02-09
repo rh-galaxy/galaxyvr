@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    MapGenerator oMap;
+    GameLevel oMap;
 
     public GameObject oShip;
     public ParticleSystem oThruster;
@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         bInited = false;
     }
 
-    public void Init(string i_szName, int i_iPlayerID, Vector2 i_vStartPos, MapGenerator i_oMap)
+    public void Init(string i_szName, int i_iPlayerID, Vector2 i_vStartPos, GameLevel i_oMap)
     {
         bInited = true;
 
@@ -346,10 +346,10 @@ public class Player : MonoBehaviour
         fTotalTimeMission += Time.fixedDeltaTime;
 
         //////get input, either from replay or from human player
-        if (MapGenerator.bRunReplay)
+        if (GameLevel.bRunReplay)
         {
             ReplayMessage rm;
-            while (MapGenerator.theReplay.Get(out rm, 0))
+            while (GameLevel.theReplay.Get(out rm, 0))
             {
                 //we got new input
                 if (rm.iType == (byte)MsgType.MOVEMENT)
@@ -435,7 +435,7 @@ public class Player : MonoBehaviour
                 rm.iKeyFlag = (byte)iInput;
                 rm.iID = 0;
                 rm.iType = (byte)MsgType.MOVEMENT;
-                MapGenerator.theReplay.Add(rm);
+                GameLevel.theReplay.Add(rm);
                 iLastInput = iInput;
                 fReplayMessageTimer = 0;
             }
@@ -445,13 +445,13 @@ public class Player : MonoBehaviour
         //////react to input
         fNoStearingTimer += Time.fixedDeltaTime;
 
-        if (fShipHealth < 0 && !MapGenerator.bRunReplay) Kill(true); //only kill if not in replay
+        if (fShipHealth < 0 && !GameLevel.bRunReplay) Kill(true); //only kill if not in replay
         if (fShipHealth != FULL_HEALTH) bAchieveNoDamage = false;
 
         if (bFreeFromBullets)
         {
             fFreeFromBulletsTimer += Time.fixedDeltaTime;
-            if (fFreeFromBulletsTimer > MapGenerator.BULLETFREETIME)
+            if (fFreeFromBulletsTimer > GameLevel.BULLETFREETIME)
             {
                 bFreeFromBullets = false;
             }
@@ -671,7 +671,7 @@ public class Player : MonoBehaviour
         rm.fDirection = stBulletInfo.fDirection;
         rm.iID = 0;
         rm.iType = (byte)MsgType.BULLETP_NEW;
-        MapGenerator.theReplay.Add(rm);
+        GameLevel.theReplay.Add(rm);
     }
 
     public int GetScore()
@@ -806,7 +806,7 @@ public class Player : MonoBehaviour
             rm.fDirection = fDirection;
             rm.iID = 0;
             rm.iType = (byte)MsgType.PLAYER_KILL;
-            MapGenerator.theReplay.Add(rm);
+            GameLevel.theReplay.Add(rm);
         }
     }
 

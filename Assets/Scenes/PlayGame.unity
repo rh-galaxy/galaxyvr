@@ -1009,7 +1009,7 @@ GameObject:
   - component: {fileID: 799215558}
   - component: {fileID: 799215560}
   m_Layer: 0
-  m_Name: MapGenerator
+  m_Name: GameLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

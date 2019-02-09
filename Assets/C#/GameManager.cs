@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
             bOculusDevicePresent = true;
         }
 
-        MapGenerator.theReplay = oReplay;
+        GameLevel.theReplay = oReplay;
 
         oASMusic = GetComponent<AudioSource>();
     }
@@ -103,73 +103,73 @@ public class GameManager : MonoBehaviour
     void HandleOculusAchievements()
     {
         //handle achievements
-        if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel || MapGenerator.theMap.bAchieveFinishedMissionLevel)
+        if (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel)
         {
             //finished any level with ok result
 
             //survivor achievement check
-            if (MapGenerator.theMap.player.bAchieveNoDamage)
+            if (GameLevel.theMap.player.bAchieveNoDamage)
                 Achievements.Unlock("Survivor");
             //hellbent achievement check
-            if (szLastLevel.CompareTo(MapGenerator.szLevel) != 0) iAchievementHellbentCounter = 1;
+            if (szLastLevel.CompareTo(GameLevel.szLevel) != 0) iAchievementHellbentCounter = 1;
             else iAchievementHellbentCounter++;
             if (iAchievementHellbentCounter == 8)
                 Achievements.Unlock("Hellbent");
             //speedster achievement check
-            if (MapGenerator.theMap.player.bAchieveFullThrottle)
+            if (GameLevel.theMap.player.bAchieveFullThrottle)
                 Achievements.Unlock("Speedster");
             //racer achievement check
-            if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel)
+            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
                 Achievements.AddCount("Racer", 1);
             //transporter achievement check (named loader)
-            if (MapGenerator.theMap.bAchieveFinishedMissionLevel)
+            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
                 Achievements.AddCount("Loader", 1);
 
-            if (MapGenerator.theMap.bAchieveFinishedMissionLevel)
+            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
             {
                 //cargo beginner
-                if (MapGenerator.szLevel.CompareTo("1mission00") == 0)
+                if (GameLevel.szLevel.CompareTo("1mission00") == 0)
                     Achievements.Unlock("Cargo1");
                 //cargo apprentice
-                if (MapGenerator.szLevel.CompareTo("1mission03") == 0)
+                if (GameLevel.szLevel.CompareTo("1mission03") == 0)
                     Achievements.Unlock("Cargo2");
                 //cargo expert
-                if (MapGenerator.szLevel.CompareTo("1mission06") == 0 && MapGenerator.theMap.player.iAchieveShipsDestroyed == 0)
+                if (GameLevel.szLevel.CompareTo("1mission06") == 0 && GameLevel.theMap.player.iAchieveShipsDestroyed == 0)
                     Achievements.Unlock("Cargo3");
                 //cargo master
-                if (MapGenerator.szLevel.CompareTo("1mission09") == 0 && MapGenerator.theMap.player.bAchieveNoDamage)
+                if (GameLevel.szLevel.CompareTo("1mission09") == 0 && GameLevel.theMap.player.bAchieveNoDamage)
                     Achievements.Unlock("Cargo4");
             }
-            if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel)
+            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
             {
                 //race beginner
-                if (MapGenerator.szLevel.CompareTo("2race00") == 0)
+                if (GameLevel.szLevel.CompareTo("2race00") == 0)
                     Achievements.Unlock("Race1");
                 //race apprentice
-                if (MapGenerator.szLevel.CompareTo("2race03") == 0 && MapGenerator.theMap.player.fTotalTime > 200.0f)
+                if (GameLevel.szLevel.CompareTo("2race03") == 0 && GameLevel.theMap.player.fTotalTime > 200.0f)
                     Achievements.Unlock("Race2");
                 //race expert
-                if (MapGenerator.szLevel.CompareTo("2race06") == 0 && MapGenerator.theMap.player.fTotalTime > 60.0f)
+                if (GameLevel.szLevel.CompareTo("2race06") == 0 && GameLevel.theMap.player.fTotalTime > 60.0f)
                     Achievements.Unlock("Race3");
                 //race master
-                if (MapGenerator.szLevel.CompareTo("2race10") == 0 && MapGenerator.theMap.player.fTotalTime > 104.0f)
+                if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime > 104.0f)
                     Achievements.Unlock("Race4");
             }
 
             //fuelburner achievement check
-            int iTemp = (int)MapGenerator.theMap.player.fAchieveFuelBurnt;
+            int iTemp = (int)GameLevel.theMap.player.fAchieveFuelBurnt;
             if (iTemp > 0)
                 Achievements.AddCount("Fuelburner", (ulong)iTemp);
             //ravager achievement check
-            iTemp = MapGenerator.theMap.iAchieveEnemiesKilled;
+            iTemp = GameLevel.theMap.iAchieveEnemiesKilled;
             if (iTemp > 0)
                 Achievements.AddCount("Ravager", (ulong)iTemp);
             //kamikaze achievement check (named doom)
-            iTemp = MapGenerator.theMap.player.iAchieveShipsDestroyed;
+            iTemp = GameLevel.theMap.player.iAchieveShipsDestroyed;
             if (iTemp > 0)
                 Achievements.AddCount("Doom", (ulong)iTemp);
             //trigger achievement check
-            iTemp = MapGenerator.theMap.player.iAchieveBulletsFired;
+            iTemp = GameLevel.theMap.player.iAchieveBulletsFired;
             if (iTemp > 0)
                 Achievements.AddCount("Trigger", (ulong)iTemp);
         }
@@ -208,7 +208,7 @@ public class GameManager : MonoBehaviour
 
                 //also need to stop all sound
                 if (bMusicOn) oASMusic.Pause();
-                if(MapGenerator.theMap!=null) MapGenerator.theMap.player.StopSound();
+                if(GameLevel.theMap!=null) GameLevel.theMap.player.StopSound();
                 return;
             }
         }
@@ -264,7 +264,7 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < oHigh.oLevelList.Count; i++)
                     {
                         stLevel = oHigh.oLevelList[i];
-                        string szLevelToLoad = MapGenerator.szLevel.Substring(1);
+                        string szLevelToLoad = GameLevel.szLevel.Substring(1);
                         if (szLevelToLoad.CompareTo(stLevel.szName) == 0) break;
                     }
                     Debug.Log("http loaded page: "+stLevel.szName + " isTime " + stLevel.bIsTime.ToString());
@@ -316,17 +316,17 @@ public class GameManager : MonoBehaviour
                 bIsMapScene = true;
                 bBeginMapLoading = false;
                 iLoadingMap = 0;
-                MapGenerator.bMapLoaded = false;
+                GameLevel.bMapLoaded = false;
                 Menu.theMenu.SetWaiting(true);
                 if (bStartReplay)
                 {
                     oReplay.ResetBeforePlay();
-                    MapGenerator.bRunReplay = true;
+                    GameLevel.bRunReplay = true;
                 }
                 else
                 {
                     oReplay.Reset(); //reset before recording a new one during play
-                    MapGenerator.bRunReplay = false;
+                    GameLevel.bRunReplay = false;
                 }
                 bStartReplay = false; //we have seen it
                 StartCoroutine(LoadAsyncScene());
@@ -337,7 +337,7 @@ public class GameManager : MonoBehaviour
                 if (bBeginMapLoading)
                 {
                     //Debug.Log("Load level 90%");
-                    if (MapGenerator.theMap.LoadInSegments(iLoadingMap++))
+                    if (GameLevel.theMap.LoadInSegments(iLoadingMap++))
                     {
                         Debug.Log("LoadSeg Done");
                         iState++;
@@ -349,30 +349,30 @@ public class GameManager : MonoBehaviour
             case 7:
                 //running game
                 {
-                    bool bBackToMenu = !MapGenerator.bMapLoaded;
+                    bool bBackToMenu = !GameLevel.bMapLoaded;
                     if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)) //back to menu
                     {
                         bBackToMenu = true;
                     }
-                    if (MapGenerator.theMap.bGameOver)
+                    if (GameLevel.theMap.bGameOver)
                     {
                         bBackToMenu = true;
 
                         //////start of oculus specific code (achievements)
-                        if (!MapGenerator.bRunReplay && bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                        if (!GameLevel.bRunReplay && bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
                         {
                             HandleOculusAchievements();
                         }
                         //////end of oculus specific code
 
                         //always update last level played
-                        szLastLevel = MapGenerator.szLevel;
+                        szLastLevel = GameLevel.szLevel;
 
                         int iScoreMs;
-                        if (MapGenerator.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = MapGenerator.theMap.player.GetScore();
-                        else iScoreMs = (int)(MapGenerator.theMap.player.fTotalTime * 1000);
+                        if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
+                        else iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
 
-                        if (MapGenerator.theMap.player.bAchieveFinishedRaceLevel || MapGenerator.theMap.bAchieveFinishedMissionLevel)
+                        if (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel)
                         {
                             //finished ok, and with a new score or better than before, then send
                             if (stLevel.iScoreMs == -1 || (!stLevel.bIsTime && iScoreMs> stLevel.iScoreMs) ||
@@ -432,7 +432,7 @@ public class GameManager : MonoBehaviour
             if (asyncLoad.progress >= 0.9f)
             {
                 bBeginMapLoading = true;
-                if (bIsMapScene && MapGenerator.bMapLoaded || !bIsMapScene)
+                if (bIsMapScene && GameLevel.bMapLoaded || !bIsMapScene)
                     asyncLoad.allowSceneActivation = true;
             }
 

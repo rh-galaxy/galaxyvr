@@ -4,7 +4,7 @@ using UnityEngine;
 
 // Bullet
 
-//class to handle bullets. (all existing bullets in a game are hold in MapGenerator)
+//class to handle bullets. (all existing bullets in a game are hold in GameLevel)
 // - collision detections against the map and objects always destroys the bullet.
 // - or it is removed after a timeout
 

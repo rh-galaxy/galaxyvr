@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public GameObject oPlayer;
-    public MapGenerator oMap;
+    public GameLevel oMap;
 
     private Vector3 camOffset;
     private Vector3 mapSize;

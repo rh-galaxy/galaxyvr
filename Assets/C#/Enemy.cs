@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     S_EnemyInfo stInfo;
 
-    MapGenerator oMap;
+    GameLevel oMap;
     public GameObject enemy4;
     public GameObject oExplosion;
 
@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
 	    {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {-70,-35,0,35,70,0,0,0}, {-180,-135,-90,-45,0,45,90,135}};
 
 
-    public void Init(S_EnemyInfo i_stInfo, MapGenerator i_oMap)
+    public void Init(S_EnemyInfo i_stInfo, GameLevel i_oMap)
     {
         oMap = i_oMap;
         stInfo = i_stInfo;
@@ -109,10 +109,10 @@ public class Enemy : MonoBehaviour
     void FixedUpdate()
     {
         //////handle creation of all new enemy bullets, could be done in another place...
-        if (MapGenerator.bRunReplay)
+        if (GameLevel.bRunReplay)
         {
             ReplayMessage rm;
-            while (MapGenerator.theReplay.Get(out rm, 1))
+            while (GameLevel.theReplay.Get(out rm, 1))
             {
                 if (rm.iType == (byte)MsgType.BULLETE_NEW)
                 {
@@ -175,7 +175,7 @@ public class Enemy : MonoBehaviour
             }
 
             //fire bullets
-            if (!MapGenerator.bRunReplay)
+            if (!GameLevel.bRunReplay)
             {
                 fFireTime -= Time.fixedDeltaTime;
                 if (fFireTime <= 0)
@@ -238,7 +238,7 @@ public class Enemy : MonoBehaviour
         rm.iID = 1;
         rm.iType = (byte)MsgType.BULLETE_NEW;
         rm.iGeneralByte1 = (byte)iBulletNum; //used for playing sound only for first bullet
-        MapGenerator.theReplay.Add(rm);
+        GameLevel.theReplay.Add(rm);
     }
 
 }
