@@ -577,7 +577,7 @@ public class Player : MonoBehaviour
                 if (fAcceleration != 0)
                 {
                     fFuel -= Time.fixedDeltaTime;
-                    if (fFuel < 0) fAchieveFuelBurnt += Time.fixedDeltaTime;
+                    if (fFuel > 0) fAchieveFuelBurnt += Time.fixedDeltaTime;
                 }
                 if (fFuel < 0) fFuel = 0;
             }
