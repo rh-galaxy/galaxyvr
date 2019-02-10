@@ -208,7 +208,7 @@ public class GameManager : MonoBehaviour
 
                 //also need to stop all sound
                 if (bMusicOn) oASMusic.Pause();
-                if(GameLevel.theMap!=null) GameLevel.theMap.player.StopSound();
+                if (GameLevel.theMap!=null) GameLevel.theMap.player.StopSound();
                 return;
             }
         }
@@ -232,7 +232,7 @@ public class GameManager : MonoBehaviour
             case 1:
                 //running menu
                 {
-                    oASMusic.volume = 0.63f;
+                    oASMusic.volume = 0.55f;
 
                     //these 3 are set in menu part 2, reset them here
                     Menu.bWorldBestReplay = false;
@@ -341,8 +341,7 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.Log("LoadSeg Done");
                         iState++;
-                        //oASMusic.volume = 0.25f;
-                        oASMusic.volume = 0.10f;
+                        oASMusic.volume = 0.09f;
                     }
                 }
                 break;

@@ -155,7 +155,6 @@ struct S_TilesetInfo
     {
         szMaterial = i_szMaterial;
         bRedBricks = i_bRedBricks;
-
         szMateralWalls = i_szMaterialWalls;
     }
     public string szMaterial;
@@ -176,6 +175,23 @@ public class S_EnemyInfo
 
     public int iNumWayPoints;
     public Vector2[] vWayPoints;
+}
+
+public class S_DoorInfo
+{
+    public S_DoorInfo()
+    {
+        stButtonPos = new Vector2[3];
+    }
+    public Vector2 vPos;
+    public float fLength;
+    public bool bHorizontal;
+    public float fOpenedForTime;
+    public float fClosedForTime;
+    public float fOpeningSpeed; //units/sec
+    public float fClosingSpeed; //units/sec
+    public int iNumButtons; //0 -> interval opening
+    public Vector2[] stButtonPos;
 }
 
 public class GameLevel : MonoBehaviour
@@ -250,6 +266,9 @@ public class GameLevel : MonoBehaviour
     internal List<Enemy> aEnemyList;
 
     public GameObject oBulletObjBase;
+
+    public Door oDoorObjBase;
+    internal List<Door> aDoorList;
 
     //static noncollidable objects
     List<GameObject> aDecorationList; //single bricks, brick wall left,center,right
@@ -503,6 +522,7 @@ public class GameLevel : MonoBehaviour
         aLandingZoneList = new List<C_LandingZone>();
         aCheckPointList = new List<CheckPoint>();
         aEnemyList = new List<Enemy>();
+        aDoorList = new List<Door>();
         aDecorationList = new List<GameObject>();
 
         int iLineIndex = -1;
@@ -701,35 +721,59 @@ public class GameLevel : MonoBehaviour
             }
             else if (szTokens[0].CompareTo("*DOOR") == 0)
             {
-                /*S_DoorInfo stParams;
-                int x, y, iAngle;
-                sscanf(szLine, "%s %d %d %d", szCommand, &x, &y, &stParams.iSize);
+                S_DoorInfo stParams = new S_DoorInfo();
 
-                C_Global::GetNextLineAndCommand(szFile + iLineIndex, szLine, szCommand, &iLineIndex); //command "*ANGLE"
-                sscanf(szLine, "%s %d", szCommand, &iAngle);
-                stParams.bHorizontal = ((iAngle / 90) % 2) != 0;
-                C_Global::GetNextLineAndCommand(szFile + iLineIndex, szLine, szCommand, &iLineIndex); //command "*OPENTIME"
-                sscanf(szLine, "%s %d", szCommand, &stParams.iOpenedForTime);
-                C_Global::GetNextLineAndCommand(szFile + iLineIndex, szLine, szCommand, &iLineIndex); //command "*CLOSETIME"
-                sscanf(szLine, "%s %d", szCommand, &stParams.iClosedForTime);
-                C_Global::GetNextLineAndCommand(szFile + iLineIndex, szLine, szCommand, &iLineIndex); //command "*OPENSPEED"
-                sscanf(szLine, "%s %d", szCommand, &stParams.iOpeningSpeed);
-                C_Global::GetNextLineAndCommand(szFile + iLineIndex, szLine, szCommand, &iLineIndex); //command "*CLOSESPEED"
-                sscanf(szLine, "%s %d", szCommand, &stParams.iClosingSpeed);
+                stParams.vPos.x = int.Parse(szTokens[1]);
+                stParams.vPos.y = int.Parse(szTokens[2]);
+                stParams.fLength = (int.Parse(szTokens[3]))/32.0f;
 
-                C_Global::GetNextLineAndCommand(szFile + iLineIndex, szLine, szCommand, &iLineIndex); //command "*NUMBUTTONS"
-                sscanf(szLine, "%s %d", szCommand, &stParams.iNumButtons);
+                //command "*ANGLE"
+                iLineIndex++;
+                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                stParams.bHorizontal = int.Parse(szTokens[1])!=90 && int.Parse(szTokens[1]) != 270;
 
-                C_Global::GetNextLineAndCommand(szFile + iLineIndex, szLine, szCommand, &iLineIndex); //command "*BUTTONSX"
-                sscanf(szLine, "%s %d %d %d", szCommand, &stParams.stButtonPos[0].x, &stParams.stButtonPos[1].x, &stParams.stButtonPos[2].x);
-                C_Global::GetNextLineAndCommand(szFile + iLineIndex, szLine, szCommand, &iLineIndex); //command "*BUTTONSY"
-                sscanf(szLine, "%s %d %d %d", szCommand, &stParams.stButtonPos[0].y, &stParams.stButtonPos[1].y, &stParams.stButtonPos[2].y);
+                if(!stParams.bHorizontal) stParams.vPos = AdjustPosition(stParams.vPos, new Vector2(52, 36));
+                else stParams.vPos = AdjustPosition(stParams.vPos, new Vector2(36, 52));
+
+                //command "*OPENTIME"
+                iLineIndex++;
+                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                stParams.fOpenedForTime = (float)(int.Parse(szTokens[1]) / 1000.0f);
+                //command "*CLOSETIME"
+                iLineIndex++;
+                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                stParams.fClosedForTime = (float)(int.Parse(szTokens[1]) / 1000.0f);
+                //command "*OPENSPEED"
+                iLineIndex++;
+                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                stParams.fOpeningSpeed = (float)(int.Parse(szTokens[1]) / 32.0f);
+                //command "*CLOSESPEED"
+                iLineIndex++;
+                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                stParams.fClosingSpeed = (float)(int.Parse(szTokens[1]) / 32.0f);
+                //command "*NUMBUTTONS"
+                iLineIndex++;
+                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                stParams.iNumButtons = int.Parse(szTokens[1]);
+                //command "*BUTTONSX"
+                iLineIndex++;
+                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < stParams.iNumButtons; i++)
+                    stParams.stButtonPos[i].x = int.Parse(szTokens[i + 1]);
+                //command "*BUTTONSY"
+                iLineIndex++;
+                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < stParams.iNumButtons; i++)
+                    stParams.stButtonPos[i].y = int.Parse(szTokens[i + 1]);
+                //make new coords
+                for (int i = 0; i < stParams.iNumButtons; i++)
+                    stParams.stButtonPos[i] = AdjustPosition(stParams.stButtonPos[i], new Vector2(24, 18));
 
                 //add door to list
-                C_Door* pclDoor = new C_Door(this, x, y, &stParams, DOOR_BASEID + m_iNumDoors, io_pclExtra->bMaster, io_pclExtra->pclNetMsg);
-                io_pclExtra->pclDoorList->push_back(pclDoor);
-                m_iNumDoors++; //network id
-                */
+                Door oDoor = Instantiate(oDoorObjBase, this.transform);
+                oDoor.Init(stParams, this);
+                aDoorList.Add(oDoor);
+                iNumDoors++; //id
             }
             else if (szTokens[0].CompareTo("*ZOBJECT") == 0)
             {

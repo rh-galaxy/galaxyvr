@@ -38,7 +38,7 @@ Known issues/small things undone
 - Maybe have a "enemy killed"-msg in the replay data.
 - Show minimap (take impl from old game)
 - More graphical game status
-- Handle the first few frames in MapGenerator.Update better, the game should be paused
+- Handle the first few frames in GameLevel.Update better, the game should be paused
    while level is still being loaded (Time.timeScale = low?). And the level should not
    show while it is loading, as it is visible that objects "pop up"
 - Prevent running the game in non VR (later in Release version)
