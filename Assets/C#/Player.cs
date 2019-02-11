@@ -233,7 +233,8 @@ public class Player : MonoBehaviour
         }
 
         //map or door
-        if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") || szOtherObject.CompareTo("Balk") == 0)
+        if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
+            szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp"))
         {
             //minimum impulse to damage (0 - always damage on map)
             fImpulse -= 0.0f;
@@ -299,7 +300,8 @@ public class Player : MonoBehaviour
         }
 
         //map or door
-        if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") || szOtherObject.CompareTo("Balk") == 0)
+        if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
+            szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp"))
         {
             fShipHealth -= 0.5f * Time.fixedDeltaTime;
         }
@@ -315,7 +317,8 @@ public class Player : MonoBehaviour
             bLanded = false;
         }
 
-        if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") || szOtherObject.CompareTo("Balk") == 0)
+        if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
+            szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp"))
         {
             bScrapeFadeOut = true;
         }

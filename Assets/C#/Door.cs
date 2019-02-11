@@ -9,6 +9,12 @@ public class Door : MonoBehaviour
     public GameObject oDoor1;
     public GameObject oDoor2;
 
+    public GameObject oButtonObjBase;
+    Material oMaterialRed;
+    Material oMaterialGreen;
+
+    GameObject[] oButtons;
+
     S_DoorInfo stDoorInfo;
 
     //animation
@@ -30,10 +36,21 @@ public class Door : MonoBehaviour
         oDoor1.transform.localScale = new Vector3(0.18f, 1.10f + fHalfMove, 3.2f);
         oDoor2.transform.localScale = new Vector3(0.18f, 1.10f + fHalfMove, 3.2f);
 
-        //fOpenPos
+        //buttons color
+        for (int i = 0; i < oButtons.Length; i++)
+        {
+            if(bIsOpening) oButtons[i].GetComponent<MeshRenderer>().material = oMaterialGreen;
+            else oButtons[i].GetComponent<MeshRenderer>().material = oMaterialRed;
+        }
     }
 
-    public void Init(S_DoorInfo i_stDoorInfo, GameLevel i_oMap)
+    public void ToggleOpenClose()
+    {
+        bIsOpening = !bIsOpening;
+        fStateTime = 0.0f;
+    }
+
+    public void Init(S_DoorInfo i_stDoorInfo, int i_iDoorId, GameLevel i_oMap)
     {
         stDoorInfo = i_stDoorInfo;
         fOpenPos = 0;
@@ -45,6 +62,18 @@ public class Door : MonoBehaviour
         //never changes
         oBase1.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
         oBase2.transform.localPosition = new Vector3(0.0f, stDoorInfo.fLength + 1.125f, 0.0f);
+
+        oButtons = new GameObject[stDoorInfo.iNumButtons];
+        for(int i=0; i< stDoorInfo.iNumButtons; i++)
+        {
+            oButtons[i] = Instantiate(oButtonObjBase, this.transform);
+            oButtons[i].SetActive(true);
+            oButtons[i].name = "Knapp" + i_iDoorId.ToString();
+            oButtons[i].transform.position = new Vector3(stDoorInfo.stButtonPos[i].x, stDoorInfo.stButtonPos[i].y, -0.2f);
+        }
+
+        oMaterialRed = Resources.Load("ButtonRed", typeof(Material)) as Material;
+        oMaterialGreen = Resources.Load("ButtonGreen", typeof(Material)) as Material;
 
         //variable
         SetOpenPos();

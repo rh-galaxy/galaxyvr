@@ -443,6 +443,11 @@ public class GameLevel : MonoBehaviour
         return new Vector3(iWidth * 1.0f, iHeight * 1.0f, fWallHeight);
     }
 
+    public void DoorToggleOpenClose(int i_iDoorId)
+    {
+        aDoorList[i_iDoorId].ToggleOpenClose();
+    }
+
     //gets only the info needed to generate the map mesh
     bool LoadDesPass1(string i_szFilename)
     {
@@ -771,7 +776,7 @@ public class GameLevel : MonoBehaviour
 
                 //add door to list
                 Door oDoor = Instantiate(oDoorObjBase, this.transform);
-                oDoor.Init(stParams, this);
+                oDoor.Init(stParams, iNumDoors, this);
                 aDoorList.Add(oDoor);
                 iNumDoors++; //id
             }
