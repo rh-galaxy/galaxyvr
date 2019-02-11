@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    LevelInfo stLevel = new LevelInfo();
+    LevelInfo stLevel;
     internal HttpHiscore oHigh = new HttpHiscore();
 
     bool bStartReplay = false;
@@ -253,6 +253,13 @@ public class GameManager : MonoBehaviour
                             //set in the above, but since StartCoroutine returns before it has a chanse
                             // to run we need to set it
                             oHigh.bIsDone = false;
+
+                            //set default level info (in case we have network error)
+                            stLevel = new LevelInfo();
+                            stLevel.szName = GameLevel.szLevel.Substring(1);
+                            stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
+                            stLevel.iScoreMs = stLevel.iBestScore1 = stLevel.iBestScore2 = stLevel.iBestScore3 = -1;
+                            stLevel.iLimit1 = stLevel.iLimit2 = stLevel.iLimit3 = -1;
                         }
                     }
                     break;
@@ -261,13 +268,15 @@ public class GameManager : MonoBehaviour
                 //wait for http reply (achievements_get.php)
                 if(oHigh.bIsDone)
                 {
+                    string szLevelToLoad = GameLevel.szLevel.Substring(1);
                     for (int i = 0; i < oHigh.oLevelList.Count; i++)
                     {
-                        stLevel = oHigh.oLevelList[i];
-                        string szLevelToLoad = GameLevel.szLevel.Substring(1);
-                        if (szLevelToLoad.CompareTo(stLevel.szName) == 0) break;
+                        if (szLevelToLoad.CompareTo(oHigh.oLevelList[i].szName) == 0) {
+                            stLevel = oHigh.oLevelList[i];
+                            break;
+                        }
                     }
-                    Debug.Log("http loaded page: "+stLevel.szName + " isTime " + stLevel.bIsTime.ToString());
+                    //Debug.Log("http loaded page: "+stLevel.szName + " isTime " + stLevel.bIsTime.ToString());
 
                     Menu.theMenu.SetLevelInfo(stLevel); //set our level info to menu, it will be displayed there
 

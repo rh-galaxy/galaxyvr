@@ -5,16 +5,14 @@ Map elements
 - Map decorations, barrels - low poly model (visual, and collision in map)
 - Map decorations, red/green house in 3 parts (left, center, (right)) -
    low poly model (visual, and collision in map)
-Door element
-- A low poly model for the end points of the door (only one needs to be created,
-   can be rotated to make all parts)
-- Implement the door element in code
 Enemies
 - Create them in 3D [enemy 0..3,5,6]
 - Implement them in code
 Menu
 - More contents (could be Game Name text/logo, animated objects, clouds, anything really)
 - Better gfx (different textures for the level select elements)
+- Animation (movement) of the element that the player is looking on, or highlighting.
+- Sound for the above, and when something is selected.
 - Make part 2 of the menu - after a level is selected in part 1, shows 3 options -
    play, play your best replay, play the world record replay
 - In part 2 - show your score vs the world best on the level, also show your rank
@@ -25,6 +23,7 @@ The VR room around the player
 Website
 - www.galaxy-forces-vr.com exists.
 - Better/more contents (+the hi-scores, but they are implemented)
+- Credits page
 Release
 - Images in different sizes for release on the Oculus Store
 - Game play promotion video
@@ -33,14 +32,16 @@ Release
 
 Known issues/small things undone
 - Particle system and force field does not work correctly, tried to delete
-   and recreate with no luck... out of ideas.
+   and recreate with no luck... out of ideas. (but it's better than before,
+   will have to be acceptable)
 - Maybe have a "remove bullet"-msg in the replay data.
 - Maybe have a "enemy killed"-msg in the replay data.
+- Maybe have a "door movement"-msg in the replay data.
 - Show minimap (take impl from old game)
 - More graphical game status
 - Handle the first few frames in GameLevel.Update better, the game should be paused
-   while level is still being loaded (Time.timeScale = low?). And the level should not
-   show while it is loading, as it is visible that objects "pop up"
+   while level is still being loaded (Time.timeScale = low, but then update will not run).
+   And the level should not show while it is loading, as it is visible that objects "pop up"
 - Prevent running the game in non VR (later in Release version)
 - Enable code for  Oculus entitlement check (later in Release version)
 - Manage to remove the Prefabs/Materials folder in Unity project (use same mat in Resources)
@@ -50,3 +51,4 @@ Known issues/small things undone
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
 - Checkpoint sounds are not clean... there is some unwanted noise in them
 - Switch web to HTTPS, and make the game access HTTPS
+- Door element misses the control buttons physical and in code
