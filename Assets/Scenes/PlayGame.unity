@@ -12210,6 +12210,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1013437713503669264, guid: cf997f988015a65478cc1e1bb9e279f0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9056462398561133900, guid: cf997f988015a65478cc1e1bb9e279f0,
         type: 3}
       propertyPath: m_LocalScale.z
@@ -12322,13 +12327,13 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!1 &8154916555962048586 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1013437714929636503, guid: cf997f988015a65478cc1e1bb9e279f0,
+  m_CorrespondingSourceObject: {fileID: 6288478532789210546, guid: cf997f988015a65478cc1e1bb9e279f0,
     type: 3}
   m_PrefabInstance: {fileID: 8154916555962048581}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &8154916555962048587 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1013437713503669264, guid: cf997f988015a65478cc1e1bb9e279f0,
+  m_CorrespondingSourceObject: {fileID: 6288478532168422709, guid: cf997f988015a65478cc1e1bb9e279f0,
     type: 3}
   m_PrefabInstance: {fileID: 8154916555962048581}
   m_PrefabAsset: {fileID: 0}
@@ -12356,7 +12361,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.65, y: 1.05}
+  m_Size: {x: 6.5, y: 9.75}
   m_EdgeRadius: 0
 --- !u!61 &8154916555962048589
 BoxCollider2D:
@@ -12382,5 +12387,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.65, y: 1.05}
+  m_Size: {x: 6.5, y: 9.75}
   m_EdgeRadius: 0

@@ -79,8 +79,6 @@ public class Player : MonoBehaviour
     bool bLanded = false;
     float fLandTime = 0.0f;
     int iZoneId = -1;
-    int iNoStearing = 0;
-    float fNoStearingTimer = 0.0f;
 
     bool bAlive = true;
     bool bFreeFromBullets = false;
@@ -231,22 +229,17 @@ public class Player : MonoBehaviour
             //unrealistic with bouncing when tilted/half way outside zone
             //so not done
 
-            iNoStearing++;
-            fNoStearingTimer = 0.0f;
-
             oASGeneral.PlayOneShot(oClipLand);
         }
 
-        if (szOtherObject.CompareTo("Map") == 0)
+        //map or door
+        if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") || szOtherObject.CompareTo("Balk") == 0)
         {
             //minimum impulse to damage (0 - always damage on map)
             fImpulse -= 0.0f;
             if (fImpulse <= 0) fImpulse = 0.0f;
 
             fShipHealth -= (fImpulse / 80.0f) * 0.5f;
-
-            iNoStearing++;
-            fNoStearingTimer = 0.0f;
 
             bScrapeFadeOut = false;
             oASScrape.volume = 1.0f;
@@ -305,7 +298,8 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (szOtherObject.CompareTo("Map") == 0)
+        //map or door
+        if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") || szOtherObject.CompareTo("Balk") == 0)
         {
             fShipHealth -= 0.5f * Time.fixedDeltaTime;
         }
@@ -317,15 +311,12 @@ public class Player : MonoBehaviour
 
         if (szOtherObject.StartsWith("LandingZone"))
         {
-            iNoStearing--;
             fLandTime = 0.0f;
             bLanded = false;
         }
 
-        if (szOtherObject.CompareTo("Map") == 0)
+        if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") || szOtherObject.CompareTo("Balk") == 0)
         {
-            iNoStearing--;
-
             bScrapeFadeOut = true;
         }
     }
@@ -443,8 +434,6 @@ public class Player : MonoBehaviour
         //////end of get input
 
         //////react to input
-        fNoStearingTimer += Time.fixedDeltaTime;
-
         if (fShipHealth < 0 && !GameLevel.bRunReplay) Kill(true); //only kill if not in replay
         if (fShipHealth != FULL_HEALTH) bAchieveNoDamage = false;
 
@@ -472,9 +461,6 @@ public class Player : MonoBehaviour
                     //activate ship
                     oShip.SetActive(true);
                     GetComponent<PolygonCollider2D>().enabled = true;
-
-                    //if (m_iNoStearing != 0)
-                    //    this will fix itself when we move to the start pos below
 
                     bFreeFromBullets = true;
                     fFreeFromBulletsTimer = 0.0f;
@@ -536,12 +522,8 @@ public class Player : MonoBehaviour
 
             oRb.AddForce(vForceDir * fAcceleration * 3.6f, ForceMode2D.Force);
 
-            /**/
-            if (iNoStearing < 0)
-                iNoStearing = iNoStearing; //not to happen
-
-            if (true) //was if(iNoStearing == 0 && fNoStearingTimer > 0.2f), but it's probably better letting the ship be able to steer
-            { //cannot stear ship if in collision
+            //steering
+            {
                 if (bAdjust)
                 {
                     if (fDirection != 90.0f)
