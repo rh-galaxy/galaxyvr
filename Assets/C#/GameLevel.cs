@@ -467,9 +467,6 @@ public class GameLevel : MonoBehaviour
 
         int iLineIndex = -1;
 
-        //to parse 0.00 as float on any system
-        CultureInfo ci = new CultureInfo("en-US");
-
         while (iLineIndex < szLines.Length - 1)
         {
             iLineIndex++;
@@ -1000,6 +997,126 @@ public class GameLevel : MonoBehaviour
         }
 
         return true;
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //minimap, make independant of other code, therefore there is some duplicate code here
+    static int iMiniWidth, iMiniHeight;
+    static string szMiniMapfile;
+    static bool LoadDesForMiniMap(string i_szFilename)
+    {
+        int iPos = i_szFilename.LastIndexOf('.');
+        string szFilenameNoExt = i_szFilename;
+        if (iPos > 0) szFilenameNoExt = i_szFilename.Remove(iPos);
+        TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
+        if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
+        if (f == null) return false;
+
+        String szFileText = System.Text.Encoding.UTF8.GetString(f.bytes);
+        string[] szLines = szFileText.Split((char)10);
+
+        int iLineIndex = -1;
+
+        bool bResult1 = false, bResult2 = false;
+        while (iLineIndex < szLines.Length - 1)
+        {
+            iLineIndex++;
+            char[] szSeparator = { (char)32 };
+            string[] szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+            if (szTokens.Length == 0) continue;
+            if (szTokens[0].Length == 0) continue;
+            if (!szTokens[0].StartsWith("*")) continue;
+
+            if (szTokens[0].CompareTo("*MAPSIZE") == 0)
+            {
+                iMiniWidth = int.Parse(szTokens[1]);
+                iMiniHeight = int.Parse(szTokens[2]);
+                bResult1 = true;
+            }
+            else if (szTokens[0].CompareTo("*MAPFILE") == 0)
+            {
+                szMiniMapfile = szTokens[1];
+                bResult2 = true;
+            }
+            if (bResult1 && bResult2) return true;
+        }
+
+        return false;
+    }
+
+    public static Texture2D GetMiniMap(string i_szFilename)
+    {
+        int x, y;
+
+        Color stColor = new Color(0.01f, 0.01f, 0.01f, 1.0f);
+        Color stColor1 = new Color(0.7f, 0.7f, 0.7f, 1.0f);
+        Color stColor2 = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+
+        //load des file
+        if (!LoadDesForMiniMap(i_szFilename)) return null;
+
+        //load tile numbers
+        int[,] aMap = new int[iMiniHeight, iMiniWidth];
+        string szFilenameNoExt = szMiniMapfile.Remove(szMiniMapfile.LastIndexOf('.'));
+        TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
+        if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
+        if (f == null) return null;
+        for (y = 0; y < iMiniHeight; y++)
+        {
+            for (x = 0; x < iMiniWidth; x++)
+            {
+                aMap[iMiniHeight - 1 - y, x] = f.bytes[y * iMiniWidth + x];
+            }
+        }
+
+        //Texture2D oTileTexture = new Texture2D(iMiniWidth, iMiniHeight);
+        Texture2D oTileTexture = new Texture2D(96, 96);
+        oTileTexture.alphaIsTransparency = true;
+
+        for (y = 0; y < 96; y++)
+        {
+            for (x = 0; x < 96; x++)
+            {
+                oTileTexture.SetPixel(x, y, stColor2);
+            }
+        }
+
+        for (y = 0; y < iMiniHeight; y++)
+        {
+            for (x = 0; x < iMiniWidth; x++)
+            {
+                int iTile = 0;
+                iTile = aMap[y, x];
+                if (iTile != 0)
+                {
+                    iTile = 2; //assume. a solid tile on all current tilesets (2=transparrent)
+                               //if any neighbor is 0, this tile is a border (1)
+                    int k, l;
+                    for (k = x - 1; k <= x + 1; k++)
+                    {
+                        for (l = y - 1; l <= y + 1; l++)
+                        {
+                            if (k < iMiniWidth && l < iMiniHeight && k >= 0 && l >= 0 && aMap[l, k] == 0)
+                            {
+                                iTile = 1;
+                                break;
+                            }
+                        }
+                        if (iTile == 1) break;
+                    }
+                }
+
+                if (iTile == 0)
+                    oTileTexture.SetPixel(x, y, stColor);
+                else if (iTile == 1)
+                    oTileTexture.SetPixel(x, y, stColor1);
+                //else
+                //    oTileTexture.SetPixel(x, y, stColor2);
+            }
+        }
+
+        oTileTexture.Apply();
+        return oTileTexture;
     }
 
     void OnDrawGizmos()

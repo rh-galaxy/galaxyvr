@@ -246,9 +246,11 @@ public class Menu : MonoBehaviour
         bAllowSelection = !Input.GetButton("Fire1");
     }
 
+    Texture2D oMiniMapTex;
+    GameObject oMiniMapQuad = null;
     public void SetLevelInfo(LevelInfo i_stLevelInfo)
     {
-        Vector3 vPos = new Vector3(-11, 3, 12.0f);
+        Vector3 vPos = new Vector3(-11, 4.0f, 12.0f);
         if (oMenuReplayWR != null) oMenuReplayWR.DestroyObj();
         oMenuReplayWR = new C_ItemInMenu(vPos, "WR", "ReplayWR");
         vPos.x = 0;
@@ -257,6 +259,18 @@ public class Menu : MonoBehaviour
         vPos.x = 11;
         if (oMenuPlay != null) oMenuPlay.DestroyObj();
         oMenuPlay = new C_ItemInMenu(vPos, "P", "Play");
+
+        //i_stLevelInfo.szName is in the form "race00", but we need the filename "2race00"
+        //we rely on GameLevel.szLevel for that
+        oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel);
+
+        if(oMiniMapQuad==null) oMiniMapQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        Material oMaterial = Resources.Load("MiniMap", typeof(Material)) as Material;
+        oMaterial.mainTexture = oMiniMapTex;
+        oMiniMapQuad.GetComponent<MeshRenderer>().material = oMaterial;
+        oMiniMapQuad.transform.parent = Menu.theMenu.transform;
+        oMiniMapQuad.transform.position = new Vector3(22.0f, vPos.y, vPos.z);
+        oMiniMapQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
     }
 
     float fRotateZAngle = 0.0f;
@@ -297,17 +311,17 @@ public class Menu : MonoBehaviour
                         bLevelSelected = true;
                         bAllowSelection = false; //trigger once only...
                     }
-                    if (oHitInfo.collider.name.CompareTo("Play") == 0)
+                    else if (oHitInfo.collider.name.CompareTo("Play") == 0)
                     {
                         bLevelPlay = true;
                         bAllowSelection = false;
                     }
-                    if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
+                    else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
                     {
                         bYourBestReplay = true;
                         bAllowSelection = false;
                     }
-                    if (oHitInfo.collider.name.CompareTo("ReplayWR") == 0)
+                    else if (oHitInfo.collider.name.CompareTo("ReplayWR") == 0)
                     {
                         bWorldBestReplay = true;
                         bAllowSelection = false;
