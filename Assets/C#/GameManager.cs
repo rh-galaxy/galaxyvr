@@ -155,24 +155,28 @@ public class GameManager : MonoBehaviour
                 if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime < 104.0f)
                     Achievements.Unlock("Race4");
             }
-
-            //fuelburner achievement check
-            int iTemp = (int)GameLevel.theMap.player.fAchieveFuelBurnt;
-            if (iTemp > 0)
-                Achievements.AddCount("Fuelburner", (ulong)iTemp);
-            //ravager achievement check
-            iTemp = GameLevel.theMap.iAchieveEnemiesKilled;
-            if (iTemp > 0)
-                Achievements.AddCount("Ravager", (ulong)iTemp);
-            //kamikaze achievement check (named doom)
-            iTemp = GameLevel.theMap.player.iAchieveShipsDestroyed;
-            if (iTemp > 0)
-                Achievements.AddCount("Doom", (ulong)iTemp);
-            //trigger achievement check
-            iTemp = GameLevel.theMap.player.iAchieveBulletsFired;
-            if (iTemp > 0)
-                Achievements.AddCount("Trigger", (ulong)iTemp);
+            string szBits = "0000000000000000000000000000000000000000000000000000000";
+            char[] aBitsChars = szBits.ToCharArray();
+            aBitsChars[GameLevel.iLevelIndex] = '1';
+            string szBits2 = new string(aBitsChars, 0, aBitsChars.Length - 0);
+            Achievements.AddFields("Galaxy55", szBits2);
         }
+        //fuelburner achievement check
+        int iTemp = (int)GameLevel.theMap.player.fAchieveFuelBurnt;
+        if (iTemp > 0)
+            Achievements.AddCount("Fuelburner", (ulong)iTemp);
+        //ravager achievement check
+        iTemp = GameLevel.theMap.iAchieveEnemiesKilled;
+        if (iTemp > 0)
+            Achievements.AddCount("Ravager", (ulong)iTemp);
+        //kamikaze achievement check (named doom)
+        iTemp = GameLevel.theMap.player.iAchieveShipsDestroyed;
+        if (iTemp > 0)
+            Achievements.AddCount("Doom", (ulong)iTemp);
+        //trigger achievement check
+        iTemp = GameLevel.theMap.player.iAchieveBulletsFired;
+        if (iTemp > 0)
+            Achievements.AddCount("Trigger", (ulong)iTemp);
     }
 
     LevelInfo stLevel;

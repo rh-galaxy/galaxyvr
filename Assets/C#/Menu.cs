@@ -290,9 +290,9 @@ public class Menu : MonoBehaviour
                         char[] szName = oHitInfo.collider.name.ToCharArray();
                         string szId = new string(szName, 4, szName.Length - 4);
                         int iIndex = int.Parse(szId);
-                        //just set it every time, it is collected when button pressed and m_bGazeActive is true
                         szLevel = aLevels[iIndex].szLevelName;
 
+                        GameLevel.iLevelIndex = iIndex;
                         GameLevel.szLevel = szLevel;
                         bLevelSelected = true;
                         bAllowSelection = false; //trigger once only...

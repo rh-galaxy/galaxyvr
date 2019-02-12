@@ -200,6 +200,7 @@ public class GameLevel : MonoBehaviour
     // for now this means there can be only one GameLevel...
     public static GameLevel theMap = null;
     public static string szLevel;
+    public static int iLevelIndex;
     public static bool bMapLoaded = false;
     public static Replay theReplay = null;
     public static bool bRunReplay = false;
