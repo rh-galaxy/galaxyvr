@@ -143,16 +143,16 @@ public class GameManager : MonoBehaviour
             if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
             {
                 //race beginner
-                if (GameLevel.szLevel.CompareTo("2race00") == 0)
+                if (GameLevel.szLevel.CompareTo("2race00") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
                     Achievements.Unlock("Race1");
                 //race apprentice
-                if (GameLevel.szLevel.CompareTo("2race03") == 0 && GameLevel.theMap.player.fTotalTime > 200.0f)
+                if (GameLevel.szLevel.CompareTo("2race03") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
                     Achievements.Unlock("Race2");
                 //race expert
-                if (GameLevel.szLevel.CompareTo("2race06") == 0 && GameLevel.theMap.player.fTotalTime > 60.0f)
+                if (GameLevel.szLevel.CompareTo("2race06") == 0 && GameLevel.theMap.player.fTotalTime < 60.0f)
                     Achievements.Unlock("Race3");
                 //race master
-                if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime > 104.0f)
+                if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime < 104.0f)
                     Achievements.Unlock("Race4");
             }
 
