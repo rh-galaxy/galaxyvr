@@ -8,147 +8,6 @@ using UnityEngine.XR;
 
 public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP }; //MAP_DOGFIGHT, MAP_MISSION_COOP not supported for now
 
-//TODO move LandingZone code to a new file when we have all the 3D objects
-// also make LandingZone : MonoBehaviour
-
-public class C_LandingZone //: MonoBehaviour
-{
-    public int iId;
-    public Vector2 vPos;
-
-    int iWidth, iHeight;
-    int iZoneSize; //width in tiles
-    
-    //other
-    internal bool bHomeBase;
-    internal bool bExtraLife;
-    bool bShowAntenna, bShowHouse;
-    List<int> aCargoList; //array of cargo weights (small = 1..5,6..10,11..15,16..20+ = huge)
-
-    GameObject oZone;
-    GameObject[] oZoneCargoList;
-
-    public C_LandingZone(int i_iId, Vector2 i_vPos, int i_iWidth, float i_fDepth, bool i_bHomeBase,
-        bool i_bShowAntenna, bool i_bShowHouse, List<int> i_aCargoList, bool i_bExtraLife)
-    {
-        Material oMaterial;
-
-        vPos = i_vPos;
-        iZoneSize = i_iWidth;
-        iId = i_iId;
-
-        bHomeBase = i_bHomeBase;
-        bShowAntenna = i_bShowAntenna;
-        bShowHouse = i_bShowHouse;
-        aCargoList = i_aCargoList;
-        bExtraLife = i_bExtraLife;
-
-        oZoneCargoList = new GameObject[aCargoList.Count];
-
-        int iAdjustX = (iZoneSize * 32) / 2;
-        int iBaseX = bShowHouse ? -50 + iAdjustX : -78 + iAdjustX;
-        //float[] aBoxSizeX = { 13.0f, 11.0f, 9.0f, 7.0f };
-        float[] aBoxSizeX = { 26.0f, 22.0f, 18.0f, 14.0f };
-
-        for (int i = 0; i < aCargoList.Count; i++)
-        {
-            int iCargoType = 3 - (aCargoList[i] - 1) / 5; //1..5=small container, 6..10, 11..15, 16..20+ = large container
-            if (iCargoType < 0) iCargoType = 0;
-            //if(iCargoType>3) iCargoType=3;
-
-            GameObject oBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            oBox.transform.parent = GameLevel.theMap.transform;
-            MonoBehaviour.DestroyImmediate(oBox.GetComponent<BoxCollider>());
-
-            oBox.transform.position = new Vector3(vPos.x + ((iAdjustX - ((i / 3) * 28)) -13) / 32.0f, vPos.y + (6 + ((i % 3) * 7)) / 32.0f, /**/0.6f);
-            oBox.transform.localScale = new Vector3(aBoxSizeX[iCargoType] / 32.0f, 6.0f / 32.0f, 0.5f);
-
-            oMaterial = Resources.Load("Pickups", typeof(Material)) as Material;
-            oBox.GetComponent<MeshRenderer>().material = oMaterial;
-
-            oZoneCargoList[i] = oBox;
-        }
-
-        oZone = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        oZone.transform.parent = GameLevel.theMap.transform;
-        MonoBehaviour.DestroyImmediate(oZone.GetComponent<BoxCollider>());
-        oZone.AddComponent<BoxCollider2D>();
-        oZone.name = "LandingZone" + iId.ToString();
-
-        oZone.transform.position = new Vector3(vPos.x, vPos.y, 0);
-        oZone.transform.localScale = new Vector3(iZoneSize * 1.0f, 4.0f / 32.0f, i_fDepth);
-
-        oMaterial = Resources.Load("LandingZone", typeof(Material)) as Material;
-        oZone.GetComponent<MeshRenderer>().material = oMaterial;
-    }
-
-    int GetZoneSize()
-    {
-        return iZoneSize;
-    }
-
-    public int GetTotalCargo()
-    {
-        int iCargo = 0;
-        if (aCargoList != null)
-        {
-            for (int i = 0; i < aCargoList.Count; i++)
-            {
-                iCargo += aCargoList[i];
-            }
-        }
-        return iCargo;
-    }
-
-    public void TakeExtraLife()
-    {
-        bExtraLife = false;
-    }
-
-    public int PopCargo(bool bPeekOnly)
-    {
-        int iCargo = -1;
-        int iPos = aCargoList.Count - 1;
-        if (iPos >= 0)
-        {
-            iCargo = aCargoList[iPos];
-            if (!bPeekOnly)
-            {
-                oZoneCargoList[iPos].SetActive(false);
-                aCargoList.RemoveAt(iPos);
-            }
-        }
-
-        return iCargo;
-    }
-
-    public void PushCargo(int i_iWeight)
-    {
-        aCargoList.Add(i_iWeight);
-        if (aCargoList.Count <= oZoneCargoList.Length)
-            oZoneCargoList[aCargoList.Count - 1].SetActive(true);
-        //else
-        //    i_iWeight = i_iWeight; //should not happen
-    }
-
-    void Draw()
-    {
-        /*dAntennaFrame += i_dTime * 0.0046; //4.6 fps anim
-        if (dAntennaFrame >= NUM_ANTENNARECTS) m_dAntennaFrame = 0.0; //is m_dAntennaFrame-='length' really, but then it can happen that it'll be more than 'length' when too much time have passed since last time (frame)...*/
-        //VR: have a rotating beacon on the top instead?
-
-        /*int i, x, y;
-
-        if (bShowHouse) ODraw(m_pclImage, &s_stHouseRect, x - 70 + iAdjustX, y + 21);
-        if (bShowAntenna) ODraw(m_pclImage, &s_stAntennaRects[(int)m_dAntennaFrame], x, y + 29);
-        if (bExtraLife)
-        {
-            int iBaseX = m_bShowAntenna ? -8 : -4;
-            ODraw(m_pclImage, &s_stExtraLifeRect, x + iBaseX, y + s_stExtraLifeRect.height);
-        }*/
-    }
-}
-
 struct S_TilesetInfo
 {
     public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls)
@@ -258,7 +117,8 @@ public class GameLevel : MonoBehaviour
     internal const float BULLETFREETIME = 3.1f;  //sec to be free from bullets when just come alive
 
     //map objects
-    List<C_LandingZone> aLandingZoneList;
+    public LandingZone oLandingZoneObjBase;
+    List<LandingZone> aLandingZoneList;
 
     public CheckPoint oCheckPointObjBase;
     internal List<CheckPoint> aCheckPointList;
@@ -432,7 +292,7 @@ public class GameLevel : MonoBehaviour
         (i_vPixelPos.y - i_vPixelSize.y * 0.5f) / 32.0f - iHeight * 0.5f);
     }
 
-    public C_LandingZone GetLandingZone(int i_iId)
+    public LandingZone GetLandingZone(int i_iId)
     {
         for (int i = 0; i < aLandingZoneList.Count; i++)
             if (aLandingZoneList[i].iId == i_iId) return aLandingZoneList[i];
@@ -522,7 +382,7 @@ public class GameLevel : MonoBehaviour
         vGravity = new Vector2(DEFAULT_SHIPGRAVITYBASEX, -DEFAULT_SHIPGRAVITYBASEY);
         fDrag = DEFAULT_SHIPRESISTANCE;
 
-        aLandingZoneList = new List<C_LandingZone>();
+        aLandingZoneList = new List<LandingZone>();
         aCheckPointList = new List<CheckPoint>();
         aEnemyList = new List<Enemy>();
         aDoorList = new List<Door>();
@@ -638,7 +498,8 @@ public class GameLevel : MonoBehaviour
                 }
 
                 Vector2 vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * w, 4));
-                C_LandingZone oZone = new C_LandingZone(iZoneCounter++, vPos, w, fWallHeight,
+                LandingZone oZone = Instantiate(oLandingZoneObjBase, this.transform);
+                oZone.Init(iZoneCounter++, vPos, w, fWallHeight,
                     bHomeBase, bAntenna, bHouse, aCargoList, bExtraLife);
                 aLandingZoneList.Add(oZone);
             }
@@ -1000,7 +861,7 @@ public class GameLevel : MonoBehaviour
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //minimap, make independant of other code, therefore there is some duplicate code here
+    //minimap, made independant of other code, therefore there is some duplicate code here
     static int iMiniWidth, iMiniHeight;
     static string szMiniMapfile;
     static bool LoadDesForMiniMap(string i_szFilename)
@@ -1070,8 +931,7 @@ public class GameLevel : MonoBehaviour
         }
 
         //Texture2D oTileTexture = new Texture2D(iMiniWidth, iMiniHeight);
-        Texture2D oTileTexture = new Texture2D(96, 96);
-        //oTileTexture.alphaIsTransparency = true;
+        Texture2D oTileTexture = new Texture2D(96, 96); //make it square with a size that is as large as the biggest level in x and in y
 
         for (y = 0; y < 96; y++)
         {

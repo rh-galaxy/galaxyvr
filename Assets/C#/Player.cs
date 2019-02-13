@@ -580,7 +580,7 @@ public class Player : MonoBehaviour
             //actions on landingzones
             if (bLanded)
             {
-                C_LandingZone oZone = oMap.GetLandingZone(iZoneId);
+                LandingZone oZone = oMap.GetLandingZone(iZoneId);
 
                 //add fuel
                 if (oZone.bHomeBase)
@@ -784,7 +784,7 @@ public class Player : MonoBehaviour
         int i;
         for (i = iCargoNumUsed - 1; i >= 0; i--)
         {
-            C_LandingZone oZone = oMap.GetLandingZone(aHoldZoneId[i]);
+            LandingZone oZone = oMap.GetLandingZone(aHoldZoneId[i]);
             oZone.PushCargo(aHold[i]);
         }
         //reset cargo

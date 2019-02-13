@@ -37,7 +37,6 @@ Known issues/small things undone
 - Maybe have a "remove bullet"-msg in the replay data.
 - Maybe have a "enemy killed"-msg in the replay data.
 - Maybe have a "door movement"-msg in the replay data.
-- Show minimap (take impl from old game)
 - More graphical game status
 - Handle the first few frames in GameLevel.Update better, the game should be paused
    while level is still being loaded (Time.timeScale = low, but then update will not run).
