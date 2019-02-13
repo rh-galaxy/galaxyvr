@@ -1071,7 +1071,7 @@ public class GameLevel : MonoBehaviour
 
         //Texture2D oTileTexture = new Texture2D(iMiniWidth, iMiniHeight);
         Texture2D oTileTexture = new Texture2D(96, 96);
-        oTileTexture.alphaIsTransparency = true;
+        //oTileTexture.alphaIsTransparency = true;
 
         for (y = 0; y < 96; y++)
         {

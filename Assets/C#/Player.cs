@@ -64,6 +64,7 @@ public class Player : MonoBehaviour
     float fTotalTimeMission = 0.0f; //always counting
     //achievements
     internal float fAchieveFuelBurnt = 0;
+    internal float fAchieveDistance = 0;
     internal int iAchieveShipsDestroyed = 0;
     internal int iAchieveBulletsFired = 0;
     internal bool bAchieveNoDamage = true;
@@ -144,6 +145,8 @@ public class Player : MonoBehaviour
             iNumLifes = NUM_LIFES_MISSION; //limit num lifes to begin with
             status.Init(false);
         }
+
+        vLastPosition = vStartPos;
     }
 
     bool bFireTriggered = false, bFire = false;
@@ -332,10 +335,14 @@ public class Player : MonoBehaviour
     Vector2 vForceDir = new Vector2(0, 0);
     int iLastInput = 0; //bool bitfield
     float fReplayMessageTimer = 0;
+    Vector2 vLastPosition;
     void FixedUpdate()
     {
         if (!bInited)
             return;
+
+        fAchieveDistance += (oRb.position - vLastPosition).magnitude;
+        vLastPosition = oRb.position;
 
         fTotalTimeMission += Time.fixedDeltaTime;
 

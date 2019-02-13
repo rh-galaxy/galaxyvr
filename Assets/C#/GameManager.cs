@@ -4,12 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 using Oculus.Platform;
+using Steamworks;
 
 public class GameManager : MonoBehaviour
 {
+    public bool bPrefereOculus = true; //hardcoded and set depending on which exe we compile!
     public static GameManager theGM = null;
 
     internal static bool bOculusDevicePresent = false;
+    internal static bool bValveDevicePresent = false;
     internal static ulong iUserID = 1;
     internal static string szUser = "DebugUser";
     internal static bool bUserValid = true; //use debug user if no oculus user
@@ -40,6 +43,227 @@ public class GameManager : MonoBehaviour
         //the rest is done once only...
         DontDestroyOnLoad(gameObject);
 
+        bool bInited;
+        if (bPrefereOculus)
+            bInited = InitOculus();
+        else
+            bInited = InitValve();
+
+        GameLevel.theReplay = oReplay;
+        oASMusic = GetComponent<AudioSource>();
+    }
+
+    //////start of valve specific code
+    CGameID gameID;
+    bool bSteamStatsValid = false;
+    int iSteamStatsTotalRacePlayed;
+    int iSteamStatsTotalMissionPlayed;
+    int iSteamStatsTotalFuelBurnt;
+    int iSteamStatsTotalEnemiesKilled;
+    int iSteamStatsTotalShipsDestroyed;
+    int iSteamStatsTotalBulletsFired;
+    int iSteamStatsTotalMetersTravelled;
+    int iSteamStatsLevelsPlayedBits1;
+    int iSteamStatsLevelsPlayedBits2;
+
+    protected Callback<UserStatsReceived_t> UserStatsReceived;
+
+    bool InitValve()
+    {
+        try
+        {
+/**/            if (SteamAPI.RestartAppIfNecessary(/**/(AppId_t)480))
+/**///also fix appid...txt
+            {
+                UnityEngine.Application.Quit();
+                return false;
+            }
+        }
+        catch (System.DllNotFoundException e)
+        {
+            Debug.LogError("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. It's likely not in the correct location.\n" + e, this);
+            UnityEngine.Application.Quit();
+            return false;
+        }
+
+        bool bInited = SteamAPI.Init();
+        if (!bInited)
+        {
+            Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed.", this);
+            UnityEngine.Application.Quit();
+            return false;
+        }
+
+        // cache the GameID for use in the callbacks
+        gameID = new CGameID(SteamUtils.GetAppID());
+        UserStatsReceived = Callback<UserStatsReceived_t>.Create(OnUserStatsReceived);
+        bool bSuccess = SteamUserStats.RequestCurrentStats();
+
+        iUserID = SteamUser.GetSteamID().m_SteamID;
+        /**/szUser = "Steam " + SteamFriends.GetPersonaName();
+
+        bValveDevicePresent = true;
+        return true;
+    }
+
+    private void OnDestroy()
+    {
+        if (!SteamManager.Initialized)
+            return;
+
+        SteamAPI.Shutdown();
+    }
+
+    private void OnUserStatsReceived(UserStatsReceived_t pCallback)
+    {
+        if (!SteamManager.Initialized)
+            return;
+
+        // we may get callbacks for other games' stats arriving, ignore them
+        if ((ulong)gameID == pCallback.m_nGameID)
+        {
+            if (EResult.k_EResultOK == pCallback.m_eResult)
+            {
+                Debug.Log("Received stats and achievements from Steam\n");
+                bSteamStatsValid = true;
+
+                // load stats
+                SteamUserStats.GetStat("TotalRacePlayed", out iSteamStatsTotalRacePlayed);
+                SteamUserStats.GetStat("TotalMissionPlayed", out iSteamStatsTotalMissionPlayed);
+                SteamUserStats.GetStat("TotalFuelBurnt", out iSteamStatsTotalFuelBurnt);
+                SteamUserStats.GetStat("TotalEnemiesKilled", out iSteamStatsTotalEnemiesKilled);
+                SteamUserStats.GetStat("TotalShipsDestroyed", out iSteamStatsTotalShipsDestroyed);
+                SteamUserStats.GetStat("TotalBulletsFired", out iSteamStatsTotalBulletsFired);
+                SteamUserStats.GetStat("TotalMetersTravelled", out iSteamStatsTotalMetersTravelled);
+                SteamUserStats.GetStat("LevelsPlayedBits1", out iSteamStatsLevelsPlayedBits1);
+                SteamUserStats.GetStat("LevelsPlayedBits2", out iSteamStatsLevelsPlayedBits2);
+            }
+            else
+            {
+                Debug.Log("RequestStats - failed, " + pCallback.m_eResult);
+            }
+        }
+    }
+
+    void HandleValveAchievements()
+    {
+        if (!bSteamStatsValid) return;
+        //handle achievements
+        if (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel)
+        {
+            //finished any level with ok result
+
+            //survivor achievement check
+            if (GameLevel.theMap.player.bAchieveNoDamage)
+                SteamUserStats.SetAchievement("Survivor");
+            //hellbent achievement check
+            if (szLastLevel.CompareTo(GameLevel.szLevel) != 0) iAchievementHellbentCounter = 1;
+            else iAchievementHellbentCounter++;
+            if (iAchievementHellbentCounter == 8)
+                SteamUserStats.SetAchievement("Hellbent");
+            //speedster achievement check
+            if (GameLevel.theMap.player.bAchieveFullThrottle)
+                SteamUserStats.SetAchievement("Speedster");
+            //racer achievement check
+            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
+            {
+                iSteamStatsTotalRacePlayed++;
+                if(iSteamStatsTotalRacePlayed>=12) SteamUserStats.SetAchievement("Racer");
+                SteamUserStats.SetStat("TotalRacePlayed", iSteamStatsTotalRacePlayed);
+            }
+            //transporter achievement check (named loader)
+            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
+            {
+                iSteamStatsTotalMissionPlayed++;
+                if (iSteamStatsTotalMissionPlayed >= 12) SteamUserStats.SetAchievement("Loader");
+                SteamUserStats.SetStat("TotalMissionPlayed", iSteamStatsTotalMissionPlayed);
+            }
+            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
+            {
+                //cargo beginner
+                if (GameLevel.szLevel.CompareTo("1mission00") == 0)
+                    SteamUserStats.SetAchievement("Cargo1");
+                //cargo apprentice
+                if (GameLevel.szLevel.CompareTo("1mission03") == 0)
+                    SteamUserStats.SetAchievement("Cargo2");
+                //cargo expert
+                if (GameLevel.szLevel.CompareTo("1mission06") == 0 && GameLevel.theMap.player.iAchieveShipsDestroyed == 0)
+                    SteamUserStats.SetAchievement("Cargo3");
+                //cargo master
+                if (GameLevel.szLevel.CompareTo("1mission09") == 0 && GameLevel.theMap.player.bAchieveNoDamage)
+                    SteamUserStats.SetAchievement("Cargo4");
+            }
+            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
+            {
+                //race beginner
+                if (GameLevel.szLevel.CompareTo("2race00") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
+                    SteamUserStats.SetAchievement("Race1");
+                //race apprentice
+                if (GameLevel.szLevel.CompareTo("2race03") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
+                    SteamUserStats.SetAchievement("Race2");
+                //race expert
+                if (GameLevel.szLevel.CompareTo("2race06") == 0 && GameLevel.theMap.player.fTotalTime < 60.0f)
+                    SteamUserStats.SetAchievement("Race3");
+                //race master
+                if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime < 104.0f)
+                    SteamUserStats.SetAchievement("Race4");
+            }
+            int bits = 0x00000001;
+            if (GameLevel.iLevelIndex >= 31) iSteamStatsLevelsPlayedBits2 |= bits << (GameLevel.iLevelIndex-31);
+            else iSteamStatsLevelsPlayedBits1 |= bits << GameLevel.iLevelIndex; //we use 31 bits in Bits1 and 24 bits in Bits2 (55 bits)
+            if(iSteamStatsLevelsPlayedBits1 == 0x7fffffff && iSteamStatsLevelsPlayedBits2 == 0x00ffffff) SteamUserStats.SetAchievement("Galaxy55");
+            SteamUserStats.SetStat("LevelsPlayedBits1", iSteamStatsLevelsPlayedBits1);
+            SteamUserStats.SetStat("LevelsPlayedBits2", iSteamStatsLevelsPlayedBits2);
+        }
+        //fuelburner achievement check
+        int iTemp = (int)GameLevel.theMap.player.fAchieveFuelBurnt;
+        if (iTemp > 0)
+        {
+            iSteamStatsTotalFuelBurnt += iTemp;
+            if (iSteamStatsTotalFuelBurnt >= 1200) SteamUserStats.SetAchievement("Fuelburner"); //20 minutes
+            SteamUserStats.SetStat("TotalFuelBurnt", iSteamStatsTotalFuelBurnt);
+        }
+        //ravager achievement check
+        iTemp = GameLevel.theMap.iAchieveEnemiesKilled;
+        if (iTemp > 0)
+        {
+            iSteamStatsTotalEnemiesKilled += iTemp;
+            if (iSteamStatsTotalEnemiesKilled >= 100) SteamUserStats.SetAchievement("Ravager");
+            SteamUserStats.SetStat("TotalEnemiesKilled", iSteamStatsTotalEnemiesKilled);
+        }
+        //kamikaze achievement check (named doom)
+        iTemp = GameLevel.theMap.player.iAchieveShipsDestroyed;
+        if (iTemp > 0)
+        {
+            iSteamStatsTotalShipsDestroyed += iTemp;
+            if (iSteamStatsTotalShipsDestroyed >= 100) SteamUserStats.SetAchievement("Doom");
+            SteamUserStats.SetStat("TotalShipsDestroyed", iSteamStatsTotalShipsDestroyed);
+        }
+        //trigger achievement check
+        iTemp = GameLevel.theMap.player.iAchieveBulletsFired;
+        if (iTemp > 0)
+        {
+            iSteamStatsTotalBulletsFired += iTemp;
+            if (iSteamStatsTotalBulletsFired >= 1000) SteamUserStats.SetAchievement("Trigger");
+            SteamUserStats.SetStat("TotalBulletsFired", iSteamStatsTotalBulletsFired);
+        }
+        //hitchhiker42 achievement check
+        iTemp = (int)GameLevel.theMap.player.fAchieveDistance;
+        if (iTemp > 0)
+        {
+            iSteamStatsTotalMetersTravelled += iTemp * 5; //5m per unit is reasonable
+            if (iSteamStatsTotalMetersTravelled >= 42000) SteamUserStats.SetAchievement("Hitchhiker42");
+            SteamUserStats.SetStat("TotalMetersTravelled", iSteamStatsTotalMetersTravelled);
+        }
+
+        //send to server
+        bool bSuccess = SteamUserStats.StoreStats();
+    }
+    //////end of valve specific code
+
+    //////start of oculus specific code
+    bool InitOculus()
+    {
         if (XRDevice.model.StartsWith("Oculus Rift"))
         {
             //init Oculus SDK
@@ -55,14 +279,11 @@ public class GameManager : MonoBehaviour
                 UnityEngine.Application.Quit();
             }
             bOculusDevicePresent = true;
+            return true;
         }
-
-        GameLevel.theReplay = oReplay;
-
-        oASMusic = GetComponent<AudioSource>();
+        return false;
     }
 
-    // 
     void EntitlementCallback(Message msg)
     {
         if (msg.IsError)
@@ -88,13 +309,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            //save ID, will need to save that as unique value in the web score db instead of user name
-            // since the user can change their user name (once every 6 month) so need to update the name in the 
-            // db if that happens (the only way I can think of doing this is to send both id and name and update
-            // name if changed, this can result with two different IDs with the same name in the web db... well,
-            // let it happen)
+            //save ID, and user name
             iUserID = msg.GetUser().ID;
-            szUser = msg.GetUser().OculusID;
+            /**///szUser = "Oculus " + msg.GetUser().OculusID;
+            /**/szUser = msg.GetUser().OculusID;
             Debug.Log("You are " + szUser);
             bUserValid = true;
         }
@@ -177,7 +395,12 @@ public class GameManager : MonoBehaviour
         iTemp = GameLevel.theMap.player.iAchieveBulletsFired;
         if (iTemp > 0)
             Achievements.AddCount("Trigger", (ulong)iTemp);
+        //hitchhiker42 achievement check
+        iTemp = (int)GameLevel.theMap.player.fAchieveDistance;
+        if (iTemp > 0)
+            Achievements.AddCount("Hitchhiker42", (ulong)iTemp*5); //5m per unit is reasonable
     }
+    //////end of oculus specific code
 
     LevelInfo stLevel;
     internal HttpHiscore oHigh = new HttpHiscore();
@@ -376,6 +599,12 @@ public class GameManager : MonoBehaviour
                             HandleOculusAchievements();
                         }
                         //////end of oculus specific code
+                        //////start of valve specific code
+                        if (!GameLevel.bRunReplay && bValveDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                        {
+                            HandleValveAchievements();
+                        }
+                        //////end of valve specific code
 
                         //always update last level played
                         szLastLevel = GameLevel.szLevel;
