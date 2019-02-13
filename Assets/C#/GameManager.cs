@@ -49,6 +49,12 @@ public class GameManager : MonoBehaviour
         else
             bInited = InitValve();
 
+        /**//*if(!bInited)
+        {
+            //no VR
+            UnityEngine.Application.Quit();
+        }*/
+
         GameLevel.theReplay = oReplay;
         oASMusic = GetComponent<AudioSource>();
     }
@@ -99,6 +105,7 @@ public class GameManager : MonoBehaviour
         UserStatsReceived = Callback<UserStatsReceived_t>.Create(OnUserStatsReceived);
         bool bSuccess = SteamUserStats.RequestCurrentStats();
 
+        // get user name
         iUserID = SteamUser.GetSteamID().m_SteamID;
         /**/szUser = "Steam " + SteamFriends.GetPersonaName();
 
@@ -413,8 +420,12 @@ public class GameManager : MonoBehaviour
     bool bMusicOn = true;
 
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
+    int iCnt = 0;
     private void FixedUpdate()
     {
+        iCnt++;
+        if(bValveDevicePresent && (iCnt%50==0)) SteamAPI.RunCallbacks(); //run twice a sec
+
         if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
