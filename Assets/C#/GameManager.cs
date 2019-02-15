@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 using Oculus.Platform;
+#if !DISABLESTEAMWORKS
 using Steamworks;
+#endif
 
 public class GameManager : MonoBehaviour
 {
-    public bool bPrefereOculus = true; //hardcoded and set depending on which exe we compile!
     public static GameManager theGM = null;
 
     internal static bool bOculusDevicePresent = false;
@@ -44,10 +45,11 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         bool bInited;
-        if (bPrefereOculus)
-            bInited = InitOculus();
-        else
-            bInited = InitValve();
+#if !DISABLESTEAMWORKS
+        bInited = InitValve();
+#else
+        bInited = InitOculus();
+#endif
 
         /**//*if(!bInited)
         {
@@ -60,6 +62,7 @@ public class GameManager : MonoBehaviour
     }
 
     //////start of valve specific code
+#if !DISABLESTEAMWORKS
     CGameID gameID;
     bool bSteamStatsValid = false;
     int iSteamStatsTotalRacePlayed;
@@ -266,6 +269,7 @@ public class GameManager : MonoBehaviour
         //send to server
         bool bSuccess = SteamUserStats.StoreStats();
     }
+#endif
     //////end of valve specific code
 
     //////start of oculus specific code
@@ -423,8 +427,10 @@ public class GameManager : MonoBehaviour
     int iCnt = 0;
     private void FixedUpdate()
     {
+#if !DISABLESTEAMWORKS
         iCnt++;
         if(bValveDevicePresent && (iCnt%50==0)) SteamAPI.RunCallbacks(); //run twice a sec
+#endif
 
         if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
@@ -470,18 +476,21 @@ public class GameManager : MonoBehaviour
             case 1:
                 //running menu
                 {
-                    oASMusic.volume = 0.55f;
+                    oASMusic.volume = 0.45f;
 
                     //these 3 are set in menu part 2, reset them here
-                    Menu.bWorldBestReplay = false;
+                    Menu.bWorldBestReplay1 = false;
+                    Menu.bWorldBestReplay2 = false;
+                    Menu.bWorldBestReplay3 = false;
                     Menu.bYourBestReplay = false;
                     Menu.bLevelPlay = false;
 
                     bool bStart = Menu.bLevelSelected;
-                    Menu.bLevelSelected = false; //reset when we have seen it
 
                     if (bStart)
                     {
+                        Menu.bLevelSelected = false; //reset when we have seen it
+
                         //goto menu part 2 for the selected level
                         if (GameManager.bUserValid) //will be and must always be true
                         {
@@ -516,7 +525,7 @@ public class GameManager : MonoBehaviour
                     }
                     //Debug.Log("http loaded page: "+stLevel.szName + " isTime " + stLevel.bIsTime.ToString());
 
-                    Menu.theMenu.SetLevelInfo(stLevel); //set our level info to menu, it will be displayed there
+                    Menu.theMenu.SetLevelInfo(stLevel, false); //set our level info to menu, it will be displayed there
 
                     iState++;
                 }
@@ -528,12 +537,22 @@ public class GameManager : MonoBehaviour
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
+                if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape))
+                {
+                    iState = 1; //goto menu part 1 (back)
+                    Menu.theMenu.SetLevelInfo(stLevel, true); //stLevel not used
+                }
 
-                if ((Menu.bWorldBestReplay && stLevel.iBestScore1 != -1) || (Menu.bYourBestReplay && stLevel.iScoreMs != -1))
+                if ((Menu.bWorldBestReplay1 && stLevel.iBestScore1 != -1)
+                    || (Menu.bWorldBestReplay2 && stLevel.iBestScore2 != -1)
+                    || (Menu.bWorldBestReplay3 && stLevel.iBestScore3 != -1)
+                    || (Menu.bYourBestReplay && stLevel.iScoreMs != -1))
                 {
                     string szReplayName = null;
                     if (Menu.bYourBestReplay) szReplayName = GameManager.szUser;
-                    if (Menu.bWorldBestReplay) szReplayName = stLevel.szBestName1;
+                    if (Menu.bWorldBestReplay1) szReplayName = stLevel.szBestName1;
+                    if (Menu.bWorldBestReplay2) szReplayName = stLevel.szBestName2;
+                    if (Menu.bWorldBestReplay3) szReplayName = stLevel.szBestName3;
 
                     StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
                     iState++; //load replay
@@ -611,10 +630,12 @@ public class GameManager : MonoBehaviour
                         }
                         //////end of oculus specific code
                         //////start of valve specific code
+#if !DISABLESTEAMWORKS
                         if (!GameLevel.bRunReplay && bValveDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
                         {
                             HandleValveAchievements();
                         }
+#endif
                         //////end of valve specific code
 
                         //always update last level played
@@ -624,7 +645,7 @@ public class GameManager : MonoBehaviour
                         if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
                         else iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
 
-                        if (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel)
+                        if (!GameLevel.bRunReplay && (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel))
                         {
                             //finished ok, and with a new score or better than before, then send
                             if (stLevel.iScoreMs == -1 || (!stLevel.bIsTime && iScoreMs> stLevel.iScoreMs) ||

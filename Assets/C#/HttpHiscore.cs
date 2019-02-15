@@ -123,7 +123,6 @@ public class HttpHiscore
         bIsDone = true;
     }
 
-
     public IEnumerator GetReplay(string i_szLevel, string i_szName, Replay i_oResult)
     {
         bIsDone = false;

@@ -27,14 +27,15 @@ headline("Galaxy Forces VR");
 <?php
 square_start("'100%'");
 ?>
-<p>A single player space shooter game in VR (Oculus Rift). The player is in control of a ship.
-The goal is to race against the clock to get the fastest time (<i>race</i>), or transport cargo to get the best score (<i>mission</i>).</p>
-
-<p>There will be more than 50 levels when this game is ready for release some time later this year.</p>
+<p>A single player space shooter game in VR. The player is in control of a ship.
+The goal is to race against the clock to get the fastest time (<i>race</i>), or transport cargo to get the best score (<i>mission</i>).
+All done in 55 narrow space caves filled with enemies. Featuring stunning interactive music, realistic physics and challenging game-play.</p>
 
 <p>The game is inspired by <a href="https://www.mobygames.com/game/amiga/gravity-force">Gravity Force</a> on the Amiga, and by <a href="http://www.galaxy-forces.com">Galaxy Forces V2</a>.</p>
 
-<p>All players may have their best score for each level sent to this website and the top scores and top players are displayed below. The replay of the record scores are possible to view from the game to see how it was done.</p>
+<p>All players may have their best score for each level sent to this website and the top scores and top players are displayed below. The replay of the record scores are possible to view from the game to see how it was done. There are also 19 achievements to unlock.</p>
+
+<p>Will be available on Oculus Home (for Rift), and Steam (Rift and Vive) some time later this year.</p>
 
 <table cellspacing="10" cellpadding="0">
 <tr>
@@ -80,7 +81,7 @@ square_start("'100%'");
 <p>contact@galaxy-forces-vr.com</p>
 <h4>Early development screenshot</h4>
 <p><img align="left" src="images/early_dev_screenshot1_860.jpg" title="Galaxy VR early dev"></p>
-<h4>Early development screenshot, head pitch down and turned to the left, greater fov</h4>
+<h4>Early development screenshot, head pitch down, greater fov</h4>
 <p><img align="left" src="images/early_dev_screenshot2_860.jpg" title="Galaxy VR early dev"></p>
 <h4>Development screenshot, enemies and status bar visible</h4>
 <p><img align="left" src="images/early_dev_screenshot3_860.jpg" title="Galaxy VR dev"></p>

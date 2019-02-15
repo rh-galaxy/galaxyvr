@@ -10,14 +10,8 @@ Enemies
 - Implement them in code
 Menu
 - More contents (could be Game Name text/logo, animated objects, clouds, anything really)
-- Better gfx (different textures for the level select elements)
 - Animation (movement) of the element that the player is looking on, or highlighting.
 - Sound for the above, and when something is selected.
-- Make part 2 of the menu - after a level is selected in part 1, shows 3 options -
-   play, play your best replay, play the world record replay
-- In part 2 - show your score vs the world best on the level, also show your rank
-   (gold, silver or bronze), load this from website
-- Settings to turn the music on/off (+a minimum of other settings).
 The VR room around the player
 - More contents (could be clouds and a skybox, or a room, or blackness in space, anything really)
 Website

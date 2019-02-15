@@ -40,10 +40,11 @@
 					$scoretobeat = 36000000;
 					$sort = "ASC";
 				}
-				$query = "SELECT achievements_t.score FROM achievements_t WHERE level='".$_POST["LEVEL"]."' AND name=".$_POST["NAME"];
+
+				$query = "SELECT achievements_t.score FROM achievements_t WHERE level='".$_POST["LEVEL"]."' AND name='".$_POST["NAME"]."'";
 				$hiscore = mysqli_query($db, $query);
 				$num_rows = @mysqli_num_rows($hiscore);
-				if($num_rows==1) { //always qualify not 1
+				if($num_rows!=0) { //always qualify not 1
 					$row1 = mysqli_fetch_row($hiscore);
 					$scoretobeat = $row1[0]; //the score to beat
 				}
@@ -69,7 +70,7 @@
 					}
 
 					$replay = str_replace(' ','+',$_POST["REPLAY"]);
-					if($num_rows==1) {
+					if($num_rows!=0) {
 						$query = "UPDATE achievements_t SET ip='".$ip."',timestamp=NOW(),score='".$_POST["SCORE"]."',replay='".$replay."' WHERE (level='".$_POST["LEVEL"]."' AND name='".$_POST["NAME"]."')";
 					} else {
 						$query = "INSERT INTO achievements_t (ip, name, level, score, replay) VALUES('".$ip."','".$_POST["NAME"]."','".$_POST["LEVEL"]."',".$_POST["SCORE"].",'".$replay."')";
