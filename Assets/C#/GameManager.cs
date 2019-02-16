@@ -467,7 +467,6 @@ public class GameManager : MonoBehaviour
             case -3:
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 //and should be active here ("Scenes/GameStart")
-                //set it in Unity->File->Scene Autoload
                 iState++;
                 break;
             case -2:
@@ -497,7 +496,7 @@ public class GameManager : MonoBehaviour
                             if (stLevel.iScoreMs != -1) iMissionsFinished++;
                         }
                     }
-                    Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + (int)(iMissionsFinished * 1.5f));
+                    Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + (int)(iMissionsFinished * 1.35f));
                     Menu.theMenu.SetMissionUnlock((int)(iMissionsFinished * 1.35f));
                     iState++;
                 }

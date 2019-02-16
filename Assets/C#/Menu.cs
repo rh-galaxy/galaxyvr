@@ -30,7 +30,7 @@ public class Menu : MonoBehaviour
     }
     S_Levels[] aLevels = new S_Levels[NUM_LEVELS];
 
-    C_LevelInMenu[] aMenuLevels = new C_LevelInMenu[NUM_LEVELS];
+    C_LevelInMenu[] aMenuLevels;
 
     GameObject oGazeQuad;
     Material oCursorMaterial, oCursorMaterialWait;
@@ -41,213 +41,234 @@ public class Menu : MonoBehaviour
 
         aLevels[0].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[0].szLevelName = "2race00";
-        aLevels[0].szLevelDisplayName = "R00";
-        aLevels[0].szLevelDescription = "Race the eight";
+        aLevels[0].szLevelDisplayName = "00";
+        aLevels[0].szLevelDescription = "Race00 - Race the eight";
         aLevels[1].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[1].szLevelName = "2race01";
-        aLevels[1].szLevelDisplayName = "R01";
-        aLevels[1].szLevelDescription = "Loop de loop";
+        aLevels[1].szLevelDisplayName = "01";
+        aLevels[1].szLevelDescription = "Race01 - Loop de loop";
         aLevels[2].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[2].szLevelName = "2race02";
-        aLevels[2].szLevelDisplayName = "R02";
-        aLevels[2].szLevelDescription = "Double Infinity";
+        aLevels[2].szLevelDisplayName = "02";
+        aLevels[2].szLevelDescription = "Race02 - Double Infinity";
         aLevels[3].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[3].szLevelName = "2race03";
-        aLevels[3].szLevelDisplayName = "R03";
-        aLevels[3].szLevelDescription = "Snake Race";
+        aLevels[3].szLevelDisplayName = "03";
+        aLevels[3].szLevelDescription = "Race03 - Snake Race";
         aLevels[4].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[4].szLevelName = "2race04";
-        aLevels[4].szLevelDisplayName = "R04";
-        aLevels[4].szLevelDescription = "A big bad Sss";
+        aLevels[4].szLevelDisplayName = "04";
+        aLevels[4].szLevelDescription = "Race04 - A big bad S";
         aLevels[5].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[5].szLevelName = "2race05";
-        aLevels[5].szLevelDisplayName = "R05";
-        aLevels[5].szLevelDescription = "Optimization oppotunity";
+        aLevels[5].szLevelDisplayName = "05";
+        aLevels[5].szLevelDescription = "Race05 - Optimization oppotunity";
         aLevels[6].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[6].szLevelName = "2race06";
-        aLevels[6].szLevelDisplayName = "R06";
-        aLevels[6].szLevelDescription = "C u back there";
+        aLevels[6].szLevelDisplayName = "06";
+        aLevels[6].szLevelDescription = "Race06 - C u back there";
         aLevels[7].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[7].szLevelName = "2race07";
-        aLevels[7].szLevelDisplayName = "R07";
-        aLevels[7].szLevelDescription = "Back and forth";
+        aLevels[7].szLevelDisplayName = "07";
+        aLevels[7].szLevelDescription = "Race07 - Back and forth";
         aLevels[8].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[8].szLevelName = "2race08";
-        aLevels[8].szLevelDisplayName = "R08";
-        aLevels[8].szLevelDescription = "Platforms";
+        aLevels[8].szLevelDisplayName = "08";
+        aLevels[8].szLevelDescription = "Race08 - Platforms";
         aLevels[9].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[9].szLevelName = "2race09";
-        aLevels[9].szLevelDisplayName = "R09";
-        aLevels[9].szLevelDescription = "The hand";
+        aLevels[9].szLevelDisplayName = "09";
+        aLevels[9].szLevelDescription = "Race09 - The hand";
         aLevels[10].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[10].szLevelName = "2race10";
-        aLevels[10].szLevelDisplayName = "R10";
-        aLevels[10].szLevelDescription = "The face";
+        aLevels[10].szLevelDisplayName = "10";
+        aLevels[10].szLevelDescription = "Race10 - The face";
         aLevels[11].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[11].szLevelName = "2race11";
-        aLevels[11].szLevelDisplayName = "R11";
-        aLevels[11].szLevelDescription = "The baby";
+        aLevels[11].szLevelDisplayName = "11";
+        aLevels[11].szLevelDescription = "Race11 - The baby";
         aLevels[12].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[12].szLevelName = "2race12";
-        aLevels[12].szLevelDisplayName = "R12";
-        aLevels[12].szLevelDescription = "Anvil on top";
+        aLevels[12].szLevelDisplayName = "12";
+        aLevels[12].szLevelDescription = "Race12 - Anvil on top";
         aLevels[13].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[13].szLevelName = "2race13";
-        aLevels[13].szLevelDisplayName = "R13";
-        aLevels[13].szLevelDescription = "The boot";
+        aLevels[13].szLevelDisplayName = "13";
+        aLevels[13].szLevelDescription = "Race13 - The boot";
         aLevels[14].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[14].szLevelName = "2race14";
-        aLevels[14].szLevelDisplayName = "R14";
-        aLevels[14].szLevelDescription = "Introducing doors";
+        aLevels[14].szLevelDisplayName = "14";
+        aLevels[14].szLevelDescription = "Race14 - Introducing doors";
         aLevels[15].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[15].szLevelName = "2race15";
-        aLevels[15].szLevelDisplayName = "R15";
-        aLevels[15].szLevelDescription = "Face with doors";
+        aLevels[15].szLevelDisplayName = "15";
+        aLevels[15].szLevelDescription = "Race15 - Face with doors";
         aLevels[16].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[16].szLevelName = "2race16";
-        aLevels[16].szLevelDisplayName = "R16";
-        aLevels[16].szLevelDescription = "Spiral journey";
+        aLevels[16].szLevelDisplayName = "16";
+        aLevels[16].szLevelDescription = "Race16 - Spiral journey";
         aLevels[17].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[17].szLevelName = "2race17";
-        aLevels[17].szLevelDisplayName = "R17";
-        aLevels[17].szLevelDescription = "Krypton";
+        aLevels[17].szLevelDisplayName = "17";
+        aLevels[17].szLevelDescription = "Race17 - Krypton";
         aLevels[18].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[18].szLevelName = "2race18";
-        aLevels[18].szLevelDisplayName = "R18";
-        aLevels[18].szLevelDescription = "No boundaries";
+        aLevels[18].szLevelDisplayName = "18";
+        aLevels[18].szLevelDescription = "Race18 - No boundaries";
         aLevels[19].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[19].szLevelName = "2race19"; //2race00_zero
-        aLevels[19].szLevelDisplayName = "R19";
-        aLevels[19].szLevelDescription = "Zero G";
+        aLevels[19].szLevelDisplayName = "19";
+        aLevels[19].szLevelDescription = "Race19 - Zero G";
         aLevels[20].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[20].szLevelName = "2race20"; //2race04_jupiter
-        aLevels[20].szLevelDisplayName = "R20";
-        aLevels[20].szLevelDescription = "Jupiter trip";
+        aLevels[20].szLevelDisplayName = "20";
+        aLevels[20].szLevelDescription = "Race20 - Jupiter trip";
         aLevels[21].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[21].szLevelName = "2race21"; //2race10_mod
-        aLevels[21].szLevelDisplayName = "R21";
-        aLevels[21].szLevelDescription = "G-force and drag mod";
+        aLevels[21].szLevelDisplayName = "21";
+        aLevels[21].szLevelDescription = "Race21 - G-force and drag mod";
         aLevels[22].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[22].szLevelName = "2race22";
-        aLevels[22].szLevelDisplayName = "R22";
-        aLevels[22].szLevelDescription = "Hi lava";
+        aLevels[22].szLevelDisplayName = "22";
+        aLevels[22].szLevelDescription = "Race22 - Hi lava";
         aLevels[23].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[23].szLevelName = "2race23";
-        aLevels[23].szLevelDisplayName = "R23";
-        aLevels[23].szLevelDescription = "Complex cave";
+        aLevels[23].szLevelDisplayName = "23";
+        aLevels[23].szLevelDescription = "Race23 - Complex cave";
         aLevels[24].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[24].szLevelName = "2race24";
-        aLevels[24].szLevelDisplayName = "R24";
-        aLevels[24].szLevelDescription = "Clover dale";
+        aLevels[24].szLevelDisplayName = "24";
+        aLevels[24].szLevelDescription = "Race24 - Last race";
 
         aLevels[25].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[25].szLevelName = "1mission00";
-        aLevels[25].szLevelDisplayName = "M00";
-        aLevels[25].szLevelDescription = "Assignment one";
+        aLevels[25].szLevelDisplayName = "00";
+        aLevels[25].szLevelDescription = "Mission00 - Assignment one";
         aLevels[26].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[26].szLevelName = "1mission01";
-        aLevels[26].szLevelDisplayName = "M01";
-        aLevels[26].szLevelDescription = "Enemy one";
+        aLevels[26].szLevelDisplayName = "01";
+        aLevels[26].szLevelDescription = "Mission01 - Enemy one";
         aLevels[27].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[27].szLevelName = "1mission02";
-        aLevels[27].szLevelDisplayName = "M02";
-        aLevels[27].szLevelDescription = "Yin Yang";
+        aLevels[27].szLevelDisplayName = "02";
+        aLevels[27].szLevelDescription = "Mission02 - Yin Yang";
         aLevels[28].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[28].szLevelName = "1mission03";
-        aLevels[28].szLevelDisplayName = "M03";
-        aLevels[28].szLevelDescription = "The harp";
+        aLevels[28].szLevelDisplayName = "03";
+        aLevels[28].szLevelDescription = "Mission03 - The harp";
         aLevels[29].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[29].szLevelName = "1mission04";
-        aLevels[29].szLevelDisplayName = "M04";
-        aLevels[29].szLevelDescription = "Medusa";
+        aLevels[29].szLevelDisplayName = "04";
+        aLevels[29].szLevelDescription = "Mission04 - Medusa";
         aLevels[30].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[30].szLevelName = "1mission05";
-        aLevels[30].szLevelDisplayName = "M05";
-        aLevels[30].szLevelDescription = "Forks";
+        aLevels[30].szLevelDisplayName = "05";
+        aLevels[30].szLevelDescription = "Mission05 - Forks";
         aLevels[31].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[31].szLevelName = "1mission06";
-        aLevels[31].szLevelDisplayName = "M06";
-        aLevels[31].szLevelDescription = "The iron foot";
+        aLevels[31].szLevelDisplayName = "06";
+        aLevels[31].szLevelDescription = "Mission06 - The iron foot";
         aLevels[32].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[32].szLevelName = "1mission07";
-        aLevels[32].szLevelDisplayName = "M07";
-        /**/aLevels[32].szLevelDescription = "";
+        aLevels[32].szLevelDisplayName = "07";
+        aLevels[32].szLevelDescription = "Mission07 - Quantum Pi";
         aLevels[33].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[33].szLevelName = "1mission08";
-        aLevels[33].szLevelDisplayName = "M08";
-        /**/aLevels[33].szLevelDescription = "";
+        aLevels[33].szLevelDisplayName = "08";
+        aLevels[33].szLevelDescription = "Mission08 - The whale";
         aLevels[34].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[34].szLevelName = "1mission09";
-        aLevels[34].szLevelDisplayName = "M09";
-        /**/aLevels[34].szLevelDescription = "";
+        aLevels[34].szLevelDisplayName = "09";
+        aLevels[34].szLevelDescription = "Mission09 - The genie";
         aLevels[35].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[35].szLevelName = "1mission10";
-        aLevels[35].szLevelDisplayName = "M10";
-        /**/aLevels[35].szLevelDescription = "";
+        aLevels[35].szLevelDisplayName = "10";
+        aLevels[35].szLevelDescription = "Mission10 - One shot";
         aLevels[36].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[36].szLevelName = "1mission11";
-        aLevels[36].szLevelDisplayName = "M11";
-        /**/aLevels[36].szLevelDescription = "";
+        aLevels[36].szLevelDisplayName = "11";
+        aLevels[36].szLevelDescription = "Mission11 - Lunar gravity";
         aLevels[37].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[37].szLevelName = "1mission12";
-        aLevels[37].szLevelDisplayName = "M12";
+        aLevels[37].szLevelDisplayName = "12";
+        aLevels[37].szLevelDescription = "Mission12 - Snow cave";
         aLevels[38].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[38].szLevelName = "1mission13";
-        aLevels[38].szLevelDisplayName = "M13";
+        aLevels[38].szLevelDisplayName = "13";
+        aLevels[38].szLevelDescription = "Mission13 - Eight platforms";
         aLevels[39].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[39].szLevelName = "1mission14";
-        aLevels[39].szLevelDisplayName = "M14";
+        aLevels[39].szLevelDisplayName = "14";
+        aLevels[39].szLevelDescription = "Mission14 - The mummy";
         aLevels[40].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[40].szLevelName = "1mission15";
-        aLevels[40].szLevelDisplayName = "M15";
+        aLevels[40].szLevelDisplayName = "15";
+        aLevels[40].szLevelDescription = "Mission15 - The waist";
         aLevels[41].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[41].szLevelName = "1mission16";
-        aLevels[41].szLevelDisplayName = "M16";
+        aLevels[41].szLevelDisplayName = "16";
+        aLevels[41].szLevelDescription = "Mission16 - The legs";
         aLevels[42].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[42].szLevelName = "1mission17";
-        aLevels[42].szLevelDisplayName = "M17";
+        aLevels[42].szLevelDisplayName = "17";
+        aLevels[42].szLevelDescription = "Mission17 - Short trips";
         aLevels[43].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[43].szLevelName = "1mission18"; //1mission01_mod
-        aLevels[43].szLevelDisplayName = "M18";
+        aLevels[43].szLevelDisplayName = "18";
+        aLevels[43].szLevelDescription = "Mission18 - Astroid gravity";
         aLevels[44].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[44].szLevelName = "1mission19"; //1mission04_mod
-        aLevels[44].szLevelDisplayName = "M19";
+        aLevels[44].szLevelDisplayName = "19";
+        aLevels[44].szLevelDescription = "Mission19 - 04 mod";
         aLevels[45].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[45].szLevelName = "1mission20"; //1mission06_mod
-        aLevels[45].szLevelDisplayName = "M20";
+        aLevels[45].szLevelDisplayName = "20";
+        aLevels[45].szLevelDescription = "Mission20 - 06 mod";
         aLevels[46].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[46].szLevelName = "1mission21"; //1mission_narrow
-        aLevels[46].szLevelDisplayName = "M21";
+        aLevels[46].szLevelDisplayName = "21";
+        aLevels[46].szLevelDescription = "Mission21 - Narrow snake";
         aLevels[47].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[47].szLevelName = "1mission22"; //1mission_hard
-        aLevels[47].szLevelDisplayName = "M22";
+        aLevels[47].szLevelDisplayName = "22";
+        aLevels[47].szLevelDescription = "Mission22 - Hard";
         aLevels[48].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[48].szLevelName = "1mission23";
-        aLevels[48].szLevelDisplayName = "M23";
+        aLevels[48].szLevelDisplayName = "23";
+        aLevels[48].szLevelDescription = "Mission23 - The snail";
         aLevels[49].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[49].szLevelName = "1mission24";
-        aLevels[49].szLevelDisplayName = "M24";
+        aLevels[49].szLevelDisplayName = "24";
+        aLevels[49].szLevelDescription = "Mission24 - Goggles";
         aLevels[50].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[50].szLevelName = "1mission25";
-        aLevels[50].szLevelDisplayName = "M25";
+        aLevels[50].szLevelDisplayName = "25";
+        aLevels[50].szLevelDescription = "Mission25 - Trouble";
         aLevels[51].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[51].szLevelName = "1mission26";
-        aLevels[51].szLevelDisplayName = "M26";
+        aLevels[51].szLevelDisplayName = "26";
+        aLevels[51].szLevelDescription = "Mission26 - More 06";
         aLevels[52].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[52].szLevelName = "1mission27";
-        aLevels[52].szLevelDisplayName = "M27";
+        aLevels[52].szLevelDisplayName = "27";
+        aLevels[52].szLevelDescription = "Mission27 - One way";
         aLevels[53].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[53].szLevelName = "1mission28";
-        aLevels[53].szLevelDisplayName = "M28";
+        aLevels[53].szLevelDisplayName = "28";
+        aLevels[53].szLevelDescription = "Mission28 - Desolation";
         aLevels[54].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[54].szLevelName = "1mission29";
-        aLevels[54].szLevelDisplayName = "M29";
+        aLevels[54].szLevelDisplayName = "29";
+        aLevels[54].szLevelDescription = "Mission29 - Last mission";
     }
 
     Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
     void Start()
     {
+        aMenuLevels = new C_LevelInMenu[NUM_LEVELS];
+        /**/Debug.LogError("Start");
+
         oMaterialOctagonLocked = Resources.Load("LevelOctagonGrey", typeof(Material)) as Material;
         oMaterialOctagonUnlocked = Resources.Load("LevelOctagon", typeof(Material)) as Material;
         oMaterialOctagonHighlighted = Resources.Load("LevelOctagonHigh", typeof(Material)) as Material;
@@ -335,9 +356,7 @@ public class Menu : MonoBehaviour
         oLevelInfoContainer.transform.eulerAngles = vRotation;
         oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
         oLevelInfoContainer.SetActive(true);
-        oLevelText.GetComponent<TextMesh>().text = i_stLevelInfo.szName;
-        if (aLevels[GameLevel.iLevelIndex].szLevelDescription != null)
-            oLevelText.GetComponent<TextMesh>().text += " - " + aLevels[GameLevel.iLevelIndex].szLevelDescription;
+        oLevelText.GetComponent<TextMesh>().text = aLevels[GameLevel.iLevelIndex].szLevelDescription;
         oWRNameText1.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName1;
         oWRNameText2.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName2;
         oWRNameText3.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName3;
@@ -410,6 +429,12 @@ public class Menu : MonoBehaviour
     float fRotateZAngle = 0.0f;
     void Update()
     {
+        Material oMatTemp;
+        if(aMenuLevels[0]==null)
+        {
+            Debug.LogError("Update - NULL");
+        }
+
         //do a raycast into the world based on the user's
         // head position and orientation
         Vector3 vHeadPosition = Camera.main.transform.position;
@@ -439,18 +464,20 @@ public class Menu : MonoBehaviour
 
                 for (int i = 0; i < iNumRace + iNumMission; i++)
                 {
+                    oMatTemp = oMaterialOctagonLocked;
                     if (i == iIndex)
                     {
-                        if (i < iNumRace) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialPentagonHighlighted;
-                        else if (i - iNumRace < iMissionsUnlocked) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
-                        else aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonLocked;
+                        if (i < iNumRace) oMatTemp = oMaterialPentagonHighlighted;
+                        else if (i - iNumRace < iMissionsUnlocked) oMatTemp = oMaterialOctagonHighlighted;
+                        //else oMatTemp = oMaterialOctagonLocked;
                     }
                     else
                     {
-                        if (i < iNumRace) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialPentagonUnlocked;
-                        else if (i - iNumRace < iMissionsUnlocked) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-                        else aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonLocked;
+                        if (i < iNumRace) oMatTemp = oMaterialPentagonUnlocked;
+                        else if (i - iNumRace < iMissionsUnlocked) oMatTemp = oMaterialOctagonUnlocked;
+                        //else oMatTemp = oMaterialOctagonLocked;
                     }
+                    aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMatTemp;
                 }
                 bHitLevel = true;
             }
@@ -467,10 +494,13 @@ public class Menu : MonoBehaviour
                         int iIndex = int.Parse(szId);
                         szLevel = aLevels[iIndex].szLevelName;
 
-                        GameLevel.iLevelIndex = iIndex;
-                        GameLevel.szLevel = szLevel;
-                        bLevelSelected = true;
-                        bAllowSelection = false; //trigger once only...
+                        if(iIndex < iNumRace+iMissionsUnlocked)
+                        {
+                            GameLevel.iLevelIndex = iIndex;
+                            GameLevel.szLevel = szLevel;
+                            bLevelSelected = true;
+                            bAllowSelection = false; //trigger once only...
+                        }
                     }
                     else if (oHitInfo.collider.name.CompareTo("Play") == 0)
                     {
@@ -521,9 +551,10 @@ public class Menu : MonoBehaviour
         {
             for (int i = 0; i < iNumRace + iNumMission; i++)
             {
-                if (i < iNumRace) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialPentagonUnlocked;
-                else if (i - iNumRace < iMissionsUnlocked) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-                else aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonLocked;
+                if (i < iNumRace) oMatTemp = oMaterialPentagonUnlocked;
+                else if (i - iNumRace < iMissionsUnlocked) oMatTemp = oMaterialOctagonUnlocked;
+                else oMatTemp = oMaterialOctagonLocked;
+                aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMatTemp;
             }
         }
 
