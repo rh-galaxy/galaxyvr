@@ -12,6 +12,9 @@ Menu
 - More contents (could be Game Name text/logo, animated objects, clouds, anything really)
 - Animation (movement) of the element that the player is looking on, or highlighting.
 - Sound for the above, and when something is selected.
+- Rename levels to a friendly describing name/have a short description in LevelInfo?
+  Also have a text "MISSION" and "RACE" by the levels and just show the numbers in
+  the selections
 The VR room around the player
 - More contents (could be clouds and a skybox, or a room, or blackness in space, anything really)
 Website

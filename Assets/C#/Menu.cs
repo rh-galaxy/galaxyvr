@@ -26,6 +26,7 @@ public class Menu : MonoBehaviour
         public int iLevelType;
         public string szLevelName;
         public string szLevelDisplayName;
+        public string szLevelDescription;
     }
     S_Levels[] aLevels = new S_Levels[NUM_LEVELS];
 
@@ -41,115 +42,152 @@ public class Menu : MonoBehaviour
         aLevels[0].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[0].szLevelName = "2race00";
         aLevels[0].szLevelDisplayName = "R00";
+        aLevels[0].szLevelDescription = "Race the eight";
         aLevels[1].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[1].szLevelName = "2race01";
         aLevels[1].szLevelDisplayName = "R01";
+        aLevels[1].szLevelDescription = "Loop de loop";
         aLevels[2].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[2].szLevelName = "2race02";
         aLevels[2].szLevelDisplayName = "R02";
+        aLevels[2].szLevelDescription = "Double Infinity";
         aLevels[3].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[3].szLevelName = "2race03";
         aLevels[3].szLevelDisplayName = "R03";
+        aLevels[3].szLevelDescription = "Snake Race";
         aLevels[4].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[4].szLevelName = "2race04";
         aLevels[4].szLevelDisplayName = "R04";
+        aLevels[4].szLevelDescription = "A big bad Sss";
         aLevels[5].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[5].szLevelName = "2race05";
         aLevels[5].szLevelDisplayName = "R05";
+        aLevels[5].szLevelDescription = "Optimization oppotunity";
         aLevels[6].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[6].szLevelName = "2race06";
         aLevels[6].szLevelDisplayName = "R06";
+        aLevels[6].szLevelDescription = "C u back there";
         aLevels[7].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[7].szLevelName = "2race07";
         aLevels[7].szLevelDisplayName = "R07";
+        aLevels[7].szLevelDescription = "Back and forth";
         aLevels[8].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[8].szLevelName = "2race08";
         aLevels[8].szLevelDisplayName = "R08";
+        aLevels[8].szLevelDescription = "Platforms";
         aLevels[9].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[9].szLevelName = "2race09";
         aLevels[9].szLevelDisplayName = "R09";
+        aLevels[9].szLevelDescription = "The hand";
         aLevels[10].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[10].szLevelName = "2race10";
         aLevels[10].szLevelDisplayName = "R10";
+        aLevels[10].szLevelDescription = "The face";
         aLevels[11].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[11].szLevelName = "2race11";
         aLevels[11].szLevelDisplayName = "R11";
+        aLevels[11].szLevelDescription = "The baby";
         aLevels[12].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[12].szLevelName = "2race12";
         aLevels[12].szLevelDisplayName = "R12";
+        aLevels[12].szLevelDescription = "Anvil on top";
         aLevels[13].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[13].szLevelName = "2race13";
         aLevels[13].szLevelDisplayName = "R13";
+        aLevels[13].szLevelDescription = "The boot";
         aLevels[14].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[14].szLevelName = "2race14";
         aLevels[14].szLevelDisplayName = "R14";
+        aLevels[14].szLevelDescription = "Introducing doors";
         aLevels[15].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[15].szLevelName = "2race15";
         aLevels[15].szLevelDisplayName = "R15";
+        aLevels[15].szLevelDescription = "Face with doors";
         aLevels[16].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[16].szLevelName = "2race16";
         aLevels[16].szLevelDisplayName = "R16";
+        aLevels[16].szLevelDescription = "Spiral journey";
         aLevels[17].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[17].szLevelName = "2race17";
         aLevels[17].szLevelDisplayName = "R17";
+        aLevels[17].szLevelDescription = "Krypton";
         aLevels[18].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[18].szLevelName = "2race18";
         aLevels[18].szLevelDisplayName = "R18";
+        aLevels[18].szLevelDescription = "No boundaries";
         aLevels[19].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[19].szLevelName = "2race19"; //2race00_zero
         aLevels[19].szLevelDisplayName = "R19";
+        aLevels[19].szLevelDescription = "Zero G";
         aLevels[20].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[20].szLevelName = "2race20"; //2race04_jupiter
         aLevels[20].szLevelDisplayName = "R20";
+        aLevels[20].szLevelDescription = "Jupiter trip";
         aLevels[21].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[21].szLevelName = "2race21"; //2race10_mod
         aLevels[21].szLevelDisplayName = "R21";
+        aLevels[21].szLevelDescription = "G-force and drag mod";
         aLevels[22].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[22].szLevelName = "2race22";
         aLevels[22].szLevelDisplayName = "R22";
+        aLevels[22].szLevelDescription = "Hi lava";
         aLevels[23].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[23].szLevelName = "2race23";
         aLevels[23].szLevelDisplayName = "R23";
+        aLevels[23].szLevelDescription = "Complex cave";
         aLevels[24].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[24].szLevelName = "2race24";
         aLevels[24].szLevelDisplayName = "R24";
+        aLevels[24].szLevelDescription = "Clover dale";
 
         aLevels[25].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[25].szLevelName = "1mission00";
         aLevels[25].szLevelDisplayName = "M00";
+        aLevels[25].szLevelDescription = "Assignment one";
         aLevels[26].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[26].szLevelName = "1mission01";
         aLevels[26].szLevelDisplayName = "M01";
+        aLevels[26].szLevelDescription = "Enemy one";
         aLevels[27].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[27].szLevelName = "1mission02";
         aLevels[27].szLevelDisplayName = "M02";
+        aLevels[27].szLevelDescription = "Yin Yang";
         aLevels[28].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[28].szLevelName = "1mission03";
         aLevels[28].szLevelDisplayName = "M03";
+        aLevels[28].szLevelDescription = "The harp";
         aLevels[29].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[29].szLevelName = "1mission04";
         aLevels[29].szLevelDisplayName = "M04";
+        aLevels[29].szLevelDescription = "Medusa";
         aLevels[30].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[30].szLevelName = "1mission05";
         aLevels[30].szLevelDisplayName = "M05";
+        aLevels[30].szLevelDescription = "Forks";
         aLevels[31].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[31].szLevelName = "1mission06";
         aLevels[31].szLevelDisplayName = "M06";
+        aLevels[31].szLevelDescription = "The iron foot";
         aLevels[32].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[32].szLevelName = "1mission07";
         aLevels[32].szLevelDisplayName = "M07";
+        /**/aLevels[32].szLevelDescription = "";
         aLevels[33].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[33].szLevelName = "1mission08";
         aLevels[33].szLevelDisplayName = "M08";
+        /**/aLevels[33].szLevelDescription = "";
         aLevels[34].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[34].szLevelName = "1mission09";
         aLevels[34].szLevelDisplayName = "M09";
+        /**/aLevels[34].szLevelDescription = "";
         aLevels[35].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[35].szLevelName = "1mission10";
         aLevels[35].szLevelDisplayName = "M10";
+        /**/aLevels[35].szLevelDescription = "";
         aLevels[36].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[36].szLevelName = "1mission11";
         aLevels[36].szLevelDisplayName = "M11";
+        /**/aLevels[36].szLevelDescription = "";
         aLevels[37].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[37].szLevelName = "1mission12";
         aLevels[37].szLevelDisplayName = "M12";
@@ -206,8 +244,16 @@ public class Menu : MonoBehaviour
         aLevels[54].szLevelDisplayName = "M29";
     }
 
+    Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
+    Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
     void Start()
     {
+        oMaterialOctagonLocked = Resources.Load("LevelOctagonGrey", typeof(Material)) as Material;
+        oMaterialOctagonUnlocked = Resources.Load("LevelOctagon", typeof(Material)) as Material;
+        oMaterialOctagonHighlighted = Resources.Load("LevelOctagonHigh", typeof(Material)) as Material;
+        oMaterialPentagonUnlocked = Resources.Load("LevelPentagon", typeof(Material)) as Material;
+        oMaterialPentagonHighlighted = Resources.Load("LevelPentagonHigh", typeof(Material)) as Material;
+
         //int iLen = NUM_LEVELS / 2;
         float fStartAngle = -45;
         float fAngleRange = 90;
@@ -247,6 +293,14 @@ public class Menu : MonoBehaviour
         bAllowSelection = !Input.GetButton("Fire1");
     }
 
+    int iMissionsUnlocked = 0;
+    public void SetMissionUnlock(int i_iMissionsToUnlock)
+    {
+        if (i_iMissionsToUnlock <= 0) i_iMissionsToUnlock = 1; //first time, or maybe network error
+        if (i_iMissionsToUnlock > iNumMission) i_iMissionsToUnlock = iNumMission;
+        iMissionsUnlocked = i_iMissionsToUnlock;
+    }
+
     C_ItemInMenu oMenuReplayWR1, oMenuReplayWR2, oMenuReplayWR3;
     C_ItemInMenu oMenuReplayYR, oMenuPlay;
     Texture2D oMiniMapTex;
@@ -281,44 +335,49 @@ public class Menu : MonoBehaviour
         oLevelInfoContainer.transform.eulerAngles = vRotation;
         oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
         oLevelInfoContainer.SetActive(true);
-
         oLevelText.GetComponent<TextMesh>().text = i_stLevelInfo.szName;
+        if (aLevels[GameLevel.iLevelIndex].szLevelDescription != null)
+            oLevelText.GetComponent<TextMesh>().text += " - " + aLevels[GameLevel.iLevelIndex].szLevelDescription;
         oWRNameText1.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName1;
         oWRNameText2.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName2;
         oWRNameText3.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName3;
-        string szScore = i_stLevelInfo.iBestScore1.ToString();
+        string szScore = (i_stLevelInfo.iBestScore1 / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iBestScore1);
         if (i_stLevelInfo.iBestScore1 == -1) szScore = "--";
         oWRScoreText1.GetComponent<TextMesh>().text = szScore;
-        szScore = i_stLevelInfo.iBestScore2.ToString();
+        szScore = (i_stLevelInfo.iBestScore2 / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iBestScore2);
         if (i_stLevelInfo.iBestScore2 == -1) szScore = "--";
         oWRScoreText2.GetComponent<TextMesh>().text = szScore;
-        szScore = i_stLevelInfo.iBestScore3.ToString();
+        szScore = (i_stLevelInfo.iBestScore3 / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iBestScore3);
         if (i_stLevelInfo.iBestScore3 == -1) szScore = "--";
         oWRScoreText3.GetComponent<TextMesh>().text = szScore;
 
-        szScore = i_stLevelInfo.iScoreMs.ToString();
+        szScore = (i_stLevelInfo.iScoreMs / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iScoreMs);
         if (i_stLevelInfo.iScoreMs == -1) szScore = "--";
         oYRScoreText.GetComponent<TextMesh>().text = szScore;
 
-        int iRank = 4;
-        if (i_stLevelInfo.bIsTime)
+        int iRank = 5; //no score at all
+        if(i_stLevelInfo.iScoreMs!=-1)
         {
-            if (i_stLevelInfo.iScoreMs < i_stLevelInfo.iLimit1) iRank = 1;
-            else if (i_stLevelInfo.iScoreMs < i_stLevelInfo.iLimit2) iRank = 2;
-            else if (i_stLevelInfo.iScoreMs < i_stLevelInfo.iLimit3) iRank = 3;
-        }
-        else
-        {
-            if (i_stLevelInfo.iScoreMs >= i_stLevelInfo.iLimit1) iRank = 1;
-            else if (i_stLevelInfo.iScoreMs >= i_stLevelInfo.iLimit2) iRank = 2;
-            else if (i_stLevelInfo.iScoreMs >= i_stLevelInfo.iLimit3) iRank = 3;
+            iRank = 4; //a score less than bronze
+            if (i_stLevelInfo.bIsTime)
+            {
+                if (i_stLevelInfo.iScoreMs < i_stLevelInfo.iLimit1) iRank = 1; //gold
+                else if (i_stLevelInfo.iScoreMs < i_stLevelInfo.iLimit2) iRank = 2; //silver
+                else if (i_stLevelInfo.iScoreMs < i_stLevelInfo.iLimit3) iRank = 3; //bronze
+            }
+            else
+            {
+                if (i_stLevelInfo.iScoreMs >= i_stLevelInfo.iLimit1) iRank = 1; //gold
+                else if (i_stLevelInfo.iScoreMs >= i_stLevelInfo.iLimit2) iRank = 2; //silver
+                else if (i_stLevelInfo.iScoreMs >= i_stLevelInfo.iLimit3) iRank = 3; //bronze
+            }
         }
         Material oMaterial = null;
-        if (iRank == 4) oMaterial = Resources.Load("LandingZone", typeof(Material)) as Material;
+        if (iRank == 4 || iRank == 5) oMaterial = Resources.Load("LandingZone", typeof(Material)) as Material;
         if (iRank == 3) oMaterial = Resources.Load("RankBronze", typeof(Material)) as Material;
         if (iRank == 2) oMaterial = Resources.Load("RankSilver", typeof(Material)) as Material;
         if (iRank == 1) oMaterial = Resources.Load("RankGold", typeof(Material)) as Material;
@@ -356,6 +415,7 @@ public class Menu : MonoBehaviour
         Vector3 vHeadPosition = Camera.main.transform.position;
         Vector3 vGazeDirection = Camera.main.transform.forward;
 
+        bool bHitLevel = false;
         RaycastHit oHitInfo;
         if (Physics.Raycast(vHeadPosition, vGazeDirection, out oHitInfo, 400.0f))
         {
@@ -369,7 +429,33 @@ public class Menu : MonoBehaviour
 
             //find which object we hit
             string szLevel = null;
-            
+
+            //manage highlighting of viewed object
+            if (oHitInfo.collider.name.StartsWith("Coll"))
+            {
+                char[] szName = oHitInfo.collider.name.ToCharArray();
+                string szId = new string(szName, 4, szName.Length - 4);
+                int iIndex = int.Parse(szId);
+
+                for (int i = 0; i < iNumRace + iNumMission; i++)
+                {
+                    if (i == iIndex)
+                    {
+                        if (i < iNumRace) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialPentagonHighlighted;
+                        else if (i - iNumRace < iMissionsUnlocked) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+                        else aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonLocked;
+                    }
+                    else
+                    {
+                        if (i < iNumRace) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialPentagonUnlocked;
+                        else if (i - iNumRace < iMissionsUnlocked) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+                        else aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonLocked;
+                    }
+                }
+                bHitLevel = true;
+            }
+
+            //manage selection
             if (Input.GetButton("Fire1"))
             {
                 if (bAllowSelection)
@@ -423,12 +509,24 @@ public class Menu : MonoBehaviour
             //no hit, place cursor at max distance
 
             //set at max distance
-            oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*180.0f;
+            oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*170.0f;
             //rotate the cursor to camera rotation
             oGazeQuad.transform.rotation = Camera.main.transform.rotation;
 
             bLevelSelected = false;
         }
+
+        //nothing highlighted?
+        if(!bHitLevel)
+        {
+            for (int i = 0; i < iNumRace + iNumMission; i++)
+            {
+                if (i < iNumRace) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialPentagonUnlocked;
+                else if (i - iNumRace < iMissionsUnlocked) aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+                else aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonLocked;
+            }
+        }
+
         //rotate again around Z, not visible on standard cursor, but visible on the waiting cursor
         fRotateZAngle += 130 * Time.deltaTime;
         if (fRotateZAngle > 360) fRotateZAngle -= 360; //keep it 0..360
@@ -466,32 +564,8 @@ public class Menu : MonoBehaviour
             Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
             oLevelQuad.GetComponent<MeshRenderer>().material = oMaterial;
 
-            //create text
-            /*oLevelText = new GameObject();
-            oLevelText.transform.parent = Menu.theMenu.transform;
-            oLevelText.name = "TextMesh";
-            oLevelText.AddComponent<TextMesh>();
-            oLevelText.transform.position = new Vector3(vPos.x, vPos.y, vPos.z-0.1f);
-            oLevelText.transform.localScale = new Vector3(0.8f, 0.8f, 1.0f);
-            oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
-
-            oLevelText.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
-            oLevelText.GetComponent<TextMesh>().fontSize = 40;*/
-            //Font f = Resources.Load("arial.ttf", typeof(Font)) as Font;
-            //oLevelText.GetComponent<TextMesh>().font = f;
-            /**/
-            /*oLevelText = Instantiate(Menu.theMenu.oText3DBaseObj, Menu.theMenu.transform);
-            oLevelText.transform.position = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
-            oLevelText.transform.localScale = new Vector3(0.8f, 0.8f, 1.0f);
-            oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
-
-            oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
-            oLevelText.GetComponent<TextMesh>().text = i_oLevel.szLevelDisplayName;*/
-            //oMaterial = Resources.Load("WhiteText", typeof(Material)) as Material;
-            /**///oLevelText.GetComponent<MeshRenderer>().material = oMaterial;
-
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-            oLevelText.transform.position = new Vector3(vPos.x-4.0f, vPos.y-3.65f, vPos.z - 1.1f);
+            oLevelText.transform.position = new Vector3(vPos.x-3.9f, vPos.y-3.50f, vPos.z - 1.1f);
             oLevelText.transform.localScale = new Vector3(1.85f, 1.85f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_oLevel.szLevelDisplayName;
@@ -542,8 +616,6 @@ public class Menu : MonoBehaviour
             oLevelText.GetComponent<TextMesh>().fontSize = 40;
             oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
             oLevelText.GetComponent<TextMesh>().text = szText;
-            /**///oMaterial = Resources.Load("WhiteText", typeof(Material)) as Material;
-            /**///oLevelText.GetComponent<MeshRenderer>().material = oMaterial;
         }
     }
 

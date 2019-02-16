@@ -15,8 +15,8 @@ public class GameManager : MonoBehaviour
     internal static bool bOculusDevicePresent = false;
     internal static bool bValveDevicePresent = false;
     internal static ulong iUserID = 1;
-    internal static string szUser = "DebugUser";
-    internal static bool bUserValid = true; //use debug user if no oculus user
+    internal static string szUser = "DebugUser"; //use debug user if no VR user
+    internal static bool bUserValid = false;
 
     string szLastLevel = "";
     int iAchievementHellbentCounter = 0;
@@ -56,12 +56,13 @@ public class GameManager : MonoBehaviour
             //no VR
             UnityEngine.Application.Quit();
         }*/
+        if(!bOculusDevicePresent && !bValveDevicePresent) bUserValid = true;
 
         GameLevel.theReplay = oReplay;
         oASMusic = GetComponent<AudioSource>();
     }
 
-    //////start of valve specific code
+//////start of valve specific code
 #if !DISABLESTEAMWORKS
     CGameID gameID;
     bool bSteamStatsValid = false;
@@ -111,6 +112,7 @@ public class GameManager : MonoBehaviour
         // get user name
         iUserID = SteamUser.GetSteamID().m_SteamID;
         /**/szUser = "Steam " + SteamFriends.GetPersonaName();
+        /**/bUserValid = true;
 
         bValveDevicePresent = true;
         return true;
@@ -270,9 +272,9 @@ public class GameManager : MonoBehaviour
         bool bSuccess = SteamUserStats.StoreStats();
     }
 #endif
-    //////end of valve specific code
+//////end of valve specific code
 
-    //////start of oculus specific code
+//////start of oculus specific code
     bool InitOculus()
     {
         if (XRDevice.model.StartsWith("Oculus Rift"))
@@ -419,7 +421,7 @@ public class GameManager : MonoBehaviour
     bool bStartReplay = false;
     bool bLoadDone = false;
     int iLoadingMap = 0;
-    int iState = -1;
+    int iState = -2;
 
     bool bMusicOn = true;
 
@@ -462,23 +464,50 @@ public class GameManager : MonoBehaviour
         //the main state machine
         switch (iState)
         {
-            case -1:
+            case -3:
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 //and should be active here ("Scenes/GameStart")
                 //set it in Unity->File->Scene Autoload
                 iState++;
                 break;
-            case 0:
+            case -2:
                 //wait for oculus user id/name to be ready
-                //if (bUserValid) iState++;
-                /*couldn't play if no vr-support, just skip for now*/iState++;
+                if (bUserValid) iState++;
+                break;
+            case -1:
+                //get the progress, to see how many missions are unlocked
+                StartCoroutine(oHigh.GetLimits());
+                iState++;
+
+                //set in the above, but since StartCoroutine returns before it has a chanse
+                // to run we need to set it
+                oHigh.bIsDone = false;
+
+                break;
+            case 0:
+                //wait for http reply (achievements_get.php)
+                if (oHigh.bIsDone)
+                {
+                    int iMissionsFinished = 0;
+                    for (int i = 0; i < oHigh.oLevelList.Count; i++)
+                    {
+                        stLevel = oHigh.oLevelList[i];
+                        if (!stLevel.bIsTime)
+                        {
+                            if (stLevel.iScoreMs != -1) iMissionsFinished++;
+                        }
+                    }
+                    Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + (int)(iMissionsFinished * 1.5f));
+                    Menu.theMenu.SetMissionUnlock((int)(iMissionsFinished * 1.35f));
+                    iState++;
+                }
                 break;
             case 1:
                 //running menu
                 {
-                    oASMusic.volume = 0.45f;
+                    oASMusic.volume = 0.40f;
 
-                    //these 3 are set in menu part 2, reset them here
+                    //these 5 are set in menu part 2, reset them here
                     Menu.bWorldBestReplay1 = false;
                     Menu.bWorldBestReplay2 = false;
                     Menu.bWorldBestReplay3 = false;
@@ -494,27 +523,28 @@ public class GameManager : MonoBehaviour
                         //goto menu part 2 for the selected level
                         if (GameManager.bUserValid) //will be and must always be true
                         {
-                            StartCoroutine(oHigh.GetLimits());
+                            ///StartCoroutine(oHigh.GetLimits()); 
                             iState++;
 
                             //set in the above, but since StartCoroutine returns before it has a chanse
                             // to run we need to set it
-                            oHigh.bIsDone = false;
-
-                            //set default level info (in case we have network error)
-                            stLevel = new LevelInfo();
-                            stLevel.szName = GameLevel.szLevel.Substring(1);
-                            stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
-                            stLevel.iScoreMs = stLevel.iBestScore1 = stLevel.iBestScore2 = stLevel.iBestScore3 = -1;
-                            stLevel.iLimit1 = stLevel.iLimit2 = stLevel.iLimit3 = -1;
+                            ///oHigh.bIsDone = false;
+                            //^we already have the info from state 0
                         }
                     }
                     break;
                 }
             case 2:
-                //wait for http reply (achievements_get.php)
-                if(oHigh.bIsDone)
+                //we have the info already
+                if (true)
                 {
+                    //set default level info (in case we have network error)
+                    stLevel = new LevelInfo();
+                    stLevel.szName = GameLevel.szLevel.Substring(1);
+                    stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
+                    stLevel.iScoreMs = stLevel.iBestScore1 = stLevel.iBestScore2 = stLevel.iBestScore3 = -1;
+                    stLevel.iLimit1 = stLevel.iLimit2 = stLevel.iLimit3 = -1;
+
                     string szLevelToLoad = GameLevel.szLevel.Substring(1);
                     for (int i = 0; i < oHigh.oLevelList.Count; i++)
                     {
@@ -523,13 +553,12 @@ public class GameManager : MonoBehaviour
                             break;
                         }
                     }
-                    //Debug.Log("http loaded page: "+stLevel.szName + " isTime " + stLevel.bIsTime.ToString());
+                    //Debug.Log("http loadinfo: "+stLevel.szName + " isTime " + stLevel.bIsTime.ToString());
 
                     Menu.theMenu.SetLevelInfo(stLevel, false); //set our level info to menu, it will be displayed there
 
                     iState++;
                 }
-                //todo: handle network failure
                 break;
             case 3:
                 //menu part 2
@@ -680,7 +709,7 @@ public class GameManager : MonoBehaviour
                 if (bLoadDone)
                 {
                     //restart at running start
-                    iState = 1;
+                    iState = -1;
                     bLoadDone = false;
                 }
                 break;
