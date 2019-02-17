@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 using Oculus.Platform;
 #if !DISABLESTEAMWORKS //Add in Edit->Project Settings...->Player.Scripting Define Symbols [DISABLESTEAMWORKS]
-using Steamworks;
+using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
 #endif
 
 public class GameManager : MonoBehaviour
@@ -704,7 +704,7 @@ public class GameManager : MonoBehaviour
                 //running game
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
-                    if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton1) || Input.GetKey(KeyCode.Escape)) //back to menu
+                    if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)) //back to menu
                     {
                         bBackToMenu = true;
                     }
