@@ -144,6 +144,8 @@ public class Player : MonoBehaviour
         {
             iNumLifes = NUM_LIFES_MISSION; //limit num lifes to begin with
             status.Init(false);
+
+            bAchieveFullThrottle = false;
         }
 
         vLastPosition = vStartPos;

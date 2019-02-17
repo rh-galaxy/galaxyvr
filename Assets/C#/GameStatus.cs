@@ -8,6 +8,7 @@ public class GameStatus : MonoBehaviour
     public GameObject oTextTime, oTextLapProgress, oTextScore, oTextLives;
     public GameObject oHealthBar, oFuelBar, oCargoBar;
 
+    public GameObject oLeft, oRight, oBottom;
     public GameObject oBack;
 
     float BAR_LENGTH = 5.0f;
@@ -45,6 +46,12 @@ public class GameStatus : MonoBehaviour
 
         oTextTime.GetComponent<TextMesh>().text = i_fTime.ToString("N2");
         oTextLapProgress.GetComponent<TextMesh>().text = i_szLapProgress;
+
+        oLeft.transform.localPosition = new Vector3(-3.625f, -1.8f + 1.35f, 0.4f);
+        oLeft.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f);
+        oRight.transform.localPosition = new Vector3(2.625f, -1.8f + 1.35f, 0.4f);
+        oRight.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f);
+        oBottom.transform.localPosition = new Vector3(-0.5f, -4.925f+2.70f, 0.4f);
     }
 
     public void SetForMission(float i_fHealth, int i_iNumLives, float i_fCargo, bool i_bCargoFull, float i_fFuel, float i_fScore)

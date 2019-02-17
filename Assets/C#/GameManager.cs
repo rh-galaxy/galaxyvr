@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 using Oculus.Platform;
-#if !DISABLESTEAMWORKS
+#if !DISABLESTEAMWORKS //Add in Edit->Project Settings...->Player.Scripting Define Symbols [DISABLESTEAMWORKS]
 using Steamworks;
 #endif
 
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
         else if (theGM != this)
         {
             //enforce singleton pattern, meaning there can only ever be one instance of a GameManager.
-            Destroy(gameObject);
+            Destroy(gameObject); //<- this makes OnDestroy() be called and we don't want to deinit everything there
             return;
         }
 
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         oASMusic = GetComponent<AudioSource>();
     }
 
-//////start of valve specific code
+    //////start of valve specific code
 #if !DISABLESTEAMWORKS
     CGameID gameID;
     bool bSteamStatsValid = false;
@@ -77,13 +77,14 @@ public class GameManager : MonoBehaviour
     int iSteamStatsLevelsPlayedBits2;
 
     protected Callback<UserStatsReceived_t> UserStatsReceived;
+    protected Callback<UserStatsStored_t> UserStatsStored;
+    protected Callback<UserAchievementStored_t> UserAchievementStored;
 
     bool InitValve()
     {
         try
         {
-/**/            if (SteamAPI.RestartAppIfNecessary(/**/(AppId_t)480))
-/**///also fix appid...txt
+            if (SteamAPI.RestartAppIfNecessary((AppId_t)1035550)) //344685
             {
                 UnityEngine.Application.Quit();
                 return false;
@@ -107,24 +108,30 @@ public class GameManager : MonoBehaviour
         // cache the GameID for use in the callbacks
         gameID = new CGameID(SteamUtils.GetAppID());
         UserStatsReceived = Callback<UserStatsReceived_t>.Create(OnUserStatsReceived);
+        UserStatsStored = Callback<UserStatsStored_t>.Create(OnUserStatsStored);
+        UserAchievementStored = Callback<UserAchievementStored_t>.Create(OnAchievementStored);
         bool bSuccess = SteamUserStats.RequestCurrentStats();
 
         // get user name
         iUserID = SteamUser.GetSteamID().m_SteamID;
-        /**/szUser = "Steam " + SteamFriends.GetPersonaName();
-        /**/bUserValid = true;
+        szUser = "steam_" + SteamFriends.GetPersonaName();
+        bUserValid = true;
 
         bValveDevicePresent = true;
+
         return true;
     }
 
-    private void OnDestroy()
+    //cannot do this, because it is called when Awake is called a second time when loading another scene!
+    // so OnDestroy() gets called for the new object that is then destroyed to enforce singleton
+    //we only want to do this when the app exits
+    /*private void OnDestroy()
     {
         if (!SteamManager.Initialized)
             return;
 
         SteamAPI.Shutdown();
-    }
+    }*/
 
     private void OnUserStatsReceived(UserStatsReceived_t pCallback)
     {
@@ -153,6 +160,47 @@ public class GameManager : MonoBehaviour
             else
             {
                 Debug.Log("RequestStats - failed, " + pCallback.m_eResult);
+            }
+        }
+    }
+    private void OnUserStatsStored(UserStatsStored_t pCallback)
+    {
+        // we may get callbacks for other games' stats arriving, ignore them
+        if ((ulong)gameID == pCallback.m_nGameID)
+        {
+            if (EResult.k_EResultOK == pCallback.m_eResult)
+            {
+                Debug.Log("StoreStats - success");
+            }
+            else if (EResult.k_EResultInvalidParam == pCallback.m_eResult)
+            {
+                // One or more stats we set broke a constraint. They've been reverted,
+                // and we should re-iterate the values now to keep in sync.
+                Debug.Log("StoreStats - some failed to validate");
+                // Fake up a callback here so that we re-load the values.
+                UserStatsReceived_t callback = new UserStatsReceived_t();
+                callback.m_eResult = EResult.k_EResultOK;
+                callback.m_nGameID = (ulong)gameID;
+                OnUserStatsReceived(callback);
+            }
+            else
+            {
+                Debug.Log("StoreStats - failed, " + pCallback.m_eResult);
+            }
+        }
+    }
+    private void OnAchievementStored(UserAchievementStored_t pCallback)
+    {
+        // We may get callbacks for other games' stats arriving, ignore them
+        if ((ulong)gameID == pCallback.m_nGameID)
+        {
+            if (0 == pCallback.m_nMaxProgress)
+            {
+                Debug.Log("Achievement '" + pCallback.m_rgchAchievementName + "' unlocked!");
+            }
+            else
+            {
+                Debug.Log("Achievement '" + pCallback.m_rgchAchievementName + "' progress callback, (" + pCallback.m_nCurProgress + "," + pCallback.m_nMaxProgress + ")");
             }
         }
     }
@@ -272,9 +320,9 @@ public class GameManager : MonoBehaviour
         bool bSuccess = SteamUserStats.StoreStats();
     }
 #endif
-//////end of valve specific code
+    //////end of valve specific code
 
-//////start of oculus specific code
+    //////start of oculus specific code
     bool InitOculus()
     {
         if (XRDevice.model.StartsWith("Oculus Rift"))
@@ -324,7 +372,7 @@ public class GameManager : MonoBehaviour
         {
             //save ID, and user name
             iUserID = msg.GetUser().ID;
-            /**///szUser = "Oculus " + msg.GetUser().OculusID;
+            /**///szUser = "oculus_" + msg.GetUser().OculusID;
             /**/szUser = msg.GetUser().OculusID;
             Debug.Log("You are " + szUser);
             bUserValid = true;
@@ -426,19 +474,32 @@ public class GameManager : MonoBehaviour
     bool bMusicOn = true;
 
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
-    int iCnt = 0;
     private void FixedUpdate()
     {
-#if !DISABLESTEAMWORKS
-        iCnt++;
-        if(bValveDevicePresent && (iCnt%50==0)) SteamAPI.RunCallbacks(); //run twice a sec
-#endif
-
         if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
     void Update()
     {
+#if !DISABLESTEAMWORKS
+        if (SteamManager.Initialized)
+            SteamAPI.RunCallbacks(); //must run every frame for some reason or garbage collector takes something and unity crashes
+#endif
+        if(Menu.bQuit)
+        {
+#if !DISABLESTEAMWORKS
+            if (SteamManager.Initialized)
+                SteamAPI.Shutdown();
+#endif
+#if UNITY_EDITOR
+            // Application.Quit() does not work in the editor so
+            // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            UnityEngine.Application.Quit();
+#endif
+        }
+
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
         if (bOculusDevicePresent)
@@ -497,7 +558,7 @@ public class GameManager : MonoBehaviour
                         }
                     }
                     Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + (int)(iMissionsFinished * 1.35f));
-                    Menu.theMenu.SetMissionUnlock((int)(iMissionsFinished * 1.35f));
+                    Menu.theMenu.SetMissionUnlock((int)(iMissionsFinished * 1.35f) + 1);
                     iState++;
                 }
                 break;
@@ -565,7 +626,7 @@ public class GameManager : MonoBehaviour
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
-                if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape))
+                if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton1) || Input.GetKey(KeyCode.Escape))
                 {
                     iState = 1; //goto menu part 1 (back)
                     Menu.theMenu.SetLevelInfo(stLevel, true); //stLevel not used
@@ -643,7 +704,7 @@ public class GameManager : MonoBehaviour
                 //running game
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
-                    if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)) //back to menu
+                    if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton1) || Input.GetKey(KeyCode.Escape)) //back to menu
                     {
                         bBackToMenu = true;
                     }
@@ -659,7 +720,7 @@ public class GameManager : MonoBehaviour
                         //////end of oculus specific code
                         //////start of valve specific code
 #if !DISABLESTEAMWORKS
-                        if (!GameLevel.bRunReplay && bValveDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                        if (!GameLevel.bRunReplay && bValveDevicePresent /**//*&& XRDevice.userPresence != UserPresenceState.NotPresent*/)
                         {
                             HandleValveAchievements();
                         }
