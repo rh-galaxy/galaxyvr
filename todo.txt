@@ -36,6 +36,7 @@ Known issues/small things undone
 - Manage to remove the Prefabs/Materials folder in Unity project (use same mat in Resources)
 - Fix the objects in the Prefabs folder to be done like it should be
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
+- Handle display of long user names...
 
 Must do:
 - Prevent running the game in non VR (later in Release version)

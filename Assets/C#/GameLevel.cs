@@ -975,6 +975,7 @@ public class GameLevel : MonoBehaviour
             }
         }
 
+        oTileTexture.wrapMode = TextureWrapMode.Clamp; //prevents botton/left edges from beeing visible on top/right
         oTileTexture.Apply();
         return oTileTexture;
     }
