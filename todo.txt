@@ -10,8 +10,6 @@ Enemies
 - Implement them in code
 Menu
 - More contents (could be logo, animated objects, clouds, anything really)
-- Sound for the selection (but not highlighting/viewing?).
-- Remake buttons in LevelInfo square, and do highlighting.
 The VR room around the player
 - More contents (could be clouds and a skybox, or a room, or blackness in space, anything really)
 Website

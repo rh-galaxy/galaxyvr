@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
 
         // get user name
         iUserID = SteamUser.GetSteamID().m_SteamID;
-        szUser = "steam_" + SteamFriends.GetPersonaName();
+        szUser = "s_" + SteamFriends.GetPersonaName();
         bUserValid = true;
 
         bValveDevicePresent = true;
@@ -372,8 +372,8 @@ public class GameManager : MonoBehaviour
         {
             //save ID, and user name
             iUserID = msg.GetUser().ID;
-            /**///szUser = "oculus_" + msg.GetUser().OculusID;
-            /**/szUser = msg.GetUser().OculusID;
+            /**///szUser = "o_" + msg.GetUser().OculusID;
+            szUser = msg.GetUser().OculusID;
             Debug.Log("You are " + szUser);
             bUserValid = true;
         }
@@ -720,7 +720,7 @@ public class GameManager : MonoBehaviour
                         //////end of oculus specific code
                         //////start of valve specific code
 #if !DISABLESTEAMWORKS
-                        if (!GameLevel.bRunReplay && bValveDevicePresent /**//*&& XRDevice.userPresence != UserPresenceState.NotPresent*/)
+                        if (!GameLevel.bRunReplay && bValveDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
                         {
                             HandleValveAchievements();
                         }

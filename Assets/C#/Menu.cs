@@ -59,7 +59,7 @@ public class Menu : MonoBehaviour
         aLevels[4].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[4].szLevelName = "2race04";
         aLevels[4].szLevelDisplayName = "04";
-        aLevels[4].szLevelDescription = "Race04 - A big bad S";
+        aLevels[4].szLevelDescription = "Race04 - The big S";
         aLevels[5].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[5].szLevelName = "2race05";
         aLevels[5].szLevelDisplayName = "05";
@@ -418,9 +418,9 @@ public class Menu : MonoBehaviour
         vPos = new Vector3(0.5f, 1.5f, -0.1f);
         if (oMenuReplayYR != null) oMenuReplayYR.DestroyObj();
         if(i_stLevelInfo.iScoreMs!=-1) oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f);
-        vPos = new Vector3(0.5f, -2.5f, -0.1f);
+        vPos = new Vector3(1.5f, -2.6f, -0.1f); //vPos = new Vector3(0.5f, -2.5f, -0.1f);
         if (oMenuPlay != null) oMenuPlay.DestroyObj();
-        oMenuPlay = new C_ItemInMenu(vPos, "Play", "Play", 4.0f, 2.0f);
+        oMenuPlay = new C_ItemInMenu(vPos, "PLAY", "Play", 8.5f, 3.4f);
 
         //i_stLevelInfo.szName is in the form "race00", but we need the filename "2race00"
         //we rely on GameLevel.szLevel for that
@@ -443,6 +443,13 @@ public class Menu : MonoBehaviour
         Vector3 vHeadPosition = Camera.main.transform.position;
         Vector3 vGazeDirection = Camera.main.transform.forward;
 
+        //reset highlighting
+        if (oMenuReplayWR1 != null && oMenuReplayWR1.oLevelQuad != null) oMenuReplayWR1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMenuReplayWR2 != null && oMenuReplayWR2.oLevelQuad != null) oMenuReplayWR2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMenuReplayWR3 != null && oMenuReplayWR3.oLevelQuad != null) oMenuReplayWR3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMenuReplayYR != null && oMenuReplayYR.oLevelQuad != null) oMenuReplayYR.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMenuPlay != null && oMenuPlay.oLevelQuad != null) oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+
         bool bHitLevel = false;
         RaycastHit oHitInfo;
         if (Physics.Raycast(vHeadPosition, vGazeDirection, out oHitInfo, 400.0f))
@@ -456,7 +463,6 @@ public class Menu : MonoBehaviour
                 Quaternion.FromToRotation(Vector3.back, oHitInfo.normal);
 
             //find which object we hit
-            string szLevel = null;
 
             //manage highlighting of viewed object
             if (oHitInfo.collider.name.StartsWith("Coll"))
@@ -484,18 +490,39 @@ public class Menu : MonoBehaviour
                 }
                 bHitLevel = true;
             }
+            else if (oHitInfo.collider.name.CompareTo("Play") == 0)
+            {
+                oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
+            {
+                oMenuReplayYR.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("ReplayWR1") == 0)
+            {
+                oMenuReplayWR1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("ReplayWR2") == 0)
+            {
+                oMenuReplayWR2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
+            {
+                oMenuReplayWR3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+            }            
 
             //manage selection
             if (Input.GetButton("Fire1"))
             {
                 if (bAllowSelection)
                 {
+                    bool bPlaySelectSound = false;
                     if (oHitInfo.collider.name.StartsWith("Coll"))
                     {
                         char[] szName = oHitInfo.collider.name.ToCharArray();
                         string szId = new string(szName, 4, szName.Length - 4);
                         int iIndex = int.Parse(szId);
-                        szLevel = aLevels[iIndex].szLevelName;
+                        string szLevel = aLevels[iIndex].szLevelName;
 
                         if(iIndex < iNumRace+iMissionsUnlocked)
                         {
@@ -503,38 +530,47 @@ public class Menu : MonoBehaviour
                             GameLevel.szLevel = szLevel;
                             bLevelSelected = true;
                             bAllowSelection = false; //trigger once only...
+                            bPlaySelectSound = true;
                         }
                     }
                     else if (oHitInfo.collider.name.CompareTo("Play") == 0)
                     {
                         bLevelPlay = true;
                         bAllowSelection = false;
+                        bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
                     {
                         bYourBestReplay = true;
                         bAllowSelection = false;
+                        bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR1") == 0)
                     {
                         bWorldBestReplay1 = true;
                         bAllowSelection = false;
+                        bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR2") == 0)
                     {
                         bWorldBestReplay2 = true;
                         bAllowSelection = false;
+                        bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
                     {
                         bWorldBestReplay3 = true;
                         bAllowSelection = false;
+                        bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
                     {
                         bQuit = true;
                         bAllowSelection = false;
+                        bPlaySelectSound = true;
                     }
+
+                    if(bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
                 }
             }
             else
@@ -638,7 +674,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
 
-            string szMaterial = "LevelCircle";
+            string szMaterial = "LevelOctagon";
             Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
             oLevelQuad.GetComponent<MeshRenderer>().material = oMaterial;
 
