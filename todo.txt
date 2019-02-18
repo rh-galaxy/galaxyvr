@@ -9,11 +9,9 @@ Enemies
 - Create them in 3D [enemy 0..3,5,6]
 - Implement them in code
 Menu
-- More contents (could be Game Name text/logo, animated objects, clouds, anything really)
-- Animation (movement) of the element that the player is looking on, or _highlighting_.
-- Sound for the above, and when something is selected.
-- Remake buttons in LevelInfo square
-- Make borders for LevelInfo square
+- More contents (could be logo, animated objects, clouds, anything really)
+- Sound for the selection (but not highlighting/viewing?).
+- Remake buttons in LevelInfo square, and do highlighting.
 The VR room around the player
 - More contents (could be clouds and a skybox, or a room, or blackness in space, anything really)
 Website
@@ -22,6 +20,7 @@ Website
 - Credits page
 Release
 - Images in different sizes for release on the Oculus Store
+- Images in different sizes for release on the Steam Store
 - Game play promotion video
 - Test/fix it working on minimum req hardware
 
@@ -33,16 +32,18 @@ Known issues/small things undone
 - Maybe have a "remove bullet"-msg in the replay data.
 - Maybe have a "enemy killed"-msg in the replay data.
 - Maybe have a "door movement"-msg in the replay data.
-- More graphical game status
 - Handle the first few frames in GameLevel.Update better, the game should be paused
    while level is still being loaded (Time.timeScale = low, but then update will not run).
    And the level should not show while it is loading, as it is visible that objects "pop up"
-- Prevent running the game in non VR (later in Release version)
-- Enable code for  Oculus entitlement check (later in Release version)
 - Manage to remove the Prefabs/Materials folder in Unity project (use same mat in Resources)
-- Make 1024x1024 image for game icon (the current icon is 128x128 and comes from the old game)
-   Set this in Edit->Project_Settings->Player->Icon in Unity.
 - Fix the objects in the Prefabs folder to be done like it should be
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
+
+Must do:
+- Prevent running the game in non VR (later in Release version)
+- Enable code for Oculus entitlement check (later in Release version)
+- Make 1024x1024 image for game icon (the current icon is 128x128 and comes from the old game)
+   Set this in Edit->Project_Settings->Player->Icon in Unity.
 - Checkpoint sounds are not clean... there is some unwanted noise in them
 - Switch web to HTTPS, and make the game access HTTPS
+- Have game status stop moving at the bottom border of the map.
