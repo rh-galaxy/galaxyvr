@@ -46,4 +46,3 @@ Must do:
    Set this in Edit->Project_Settings->Player->Icon in Unity.
 - Checkpoint sounds are not clean... there is some unwanted noise in them
 - Switch web to HTTPS, and make the game access HTTPS
-- Have game status stop moving at the bottom border of the map.

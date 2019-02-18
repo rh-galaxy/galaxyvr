@@ -2,8 +2,11 @@
 
 public class GameStatus : MonoBehaviour
 {
-    public GameObject player;
-    private Vector3 offset = new Vector3(-8, -17, -8);
+    public GameObject oPlayer;
+    private Vector3 vOffset = new Vector3(-8, -17, -8);
+
+    public GameLevel oMap;
+    private Vector3 vMapSize;
 
     public GameObject oTextTime, oTextLapProgress, oTextScore, oTextLives;
     public GameObject oHealthBar, oFuelBar, oCargoBar;
@@ -36,6 +39,17 @@ public class GameStatus : MonoBehaviour
 
         oMatRed = Resources.Load("Ship_Body", typeof(Material)) as Material;
         oMatOriginal = oCargoBar.GetComponent<Renderer>().material;
+
+        vMapSize = oMap.GetMapSize();
+
+        if(i_bIsRace)
+        {
+            oLeft.transform.localPosition = new Vector3(-3.625f, -1.8f + 1.35f, 0.4f);
+            oLeft.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f);
+            oRight.transform.localPosition = new Vector3(2.625f, -1.8f + 1.35f, 0.4f);
+            oRight.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f);
+            oBottom.transform.localPosition = new Vector3(-0.5f, -4.925f + 2.70f, 0.4f);
+        }
     }
 
     public void SetForRace(float i_fHealth, float i_fTime, string i_szLapProgress)
@@ -46,12 +60,6 @@ public class GameStatus : MonoBehaviour
 
         oTextTime.GetComponent<TextMesh>().text = i_fTime.ToString("N2");
         oTextLapProgress.GetComponent<TextMesh>().text = i_szLapProgress;
-
-        oLeft.transform.localPosition = new Vector3(-3.625f, -1.8f + 1.35f, 0.4f);
-        oLeft.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f);
-        oRight.transform.localPosition = new Vector3(2.625f, -1.8f + 1.35f, 0.4f);
-        oRight.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f);
-        oBottom.transform.localPosition = new Vector3(-0.5f, -4.925f+2.70f, 0.4f);
     }
 
     public void SetForMission(float i_fHealth, int i_iNumLives, float i_fCargo, bool i_bCargoFull, float i_fFuel, float i_fScore)
@@ -74,6 +82,14 @@ public class GameStatus : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.position = player.transform.position + offset;
+        //transform.position = oPlayer.transform.position + vOffset;
+
+        //limit left/bottom movement instead:
+        Vector3 v = oPlayer.transform.position + vOffset;
+        float fLeftLimit = -(vMapSize.x / 2.0f) - 3.0f;
+        if (v.x < fLeftLimit) v.x = fLeftLimit;
+        float fBottomLimit = -(vMapSize.y / 2.0f) + 3.0f;
+        if (v.y < fBottomLimit) v.y = fBottomLimit;
+        transform.position = v;
     }
 }

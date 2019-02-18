@@ -7,14 +7,14 @@ public class CameraController : MonoBehaviour
     public GameObject oPlayer;
     public GameLevel oMap;
 
-    private Vector3 camOffset;
-    private Vector3 mapSize;
+    private Vector3 vCamOffset;
+    private Vector3 vMapSize;
 
     // Start is called before the first frame update
     void Start()
     {
-        camOffset = new Vector3(0,3,-10);
-        mapSize = oMap.GetMapSize();
+        vCamOffset = new Vector3(0,3,-10);
+        vMapSize = oMap.GetMapSize();
     }
 
     // Update is called once per frame
@@ -30,13 +30,13 @@ public class CameraController : MonoBehaviour
             transform.Rotate(new Vector3(fX * 3.0f, fY * 3.0f, fZ * 3.0f));
         }
 
-        Vector3 v = oPlayer.transform.position + camOffset;
-        float fLeftLimit = -(mapSize.x / 2.0f) + 5;
-        float fRightLimit = (mapSize.x / 2.0f) - 5;
+        Vector3 v = oPlayer.transform.position + vCamOffset;
+        float fLeftLimit = -(vMapSize.x / 2.0f) + 5;
+        float fRightLimit = (vMapSize.x / 2.0f) - 5;
         if (v.x < fLeftLimit) v.x = fLeftLimit;
         if (v.x > fRightLimit) v.x = fRightLimit;
-        float fTopLimit = (mapSize.y / 2.0f) - 3;
-        float fBottomLimit = -(mapSize.y / 2.0f) + 10;
+        float fTopLimit = (vMapSize.y / 2.0f) - 3;
+        float fBottomLimit = -(vMapSize.y / 2.0f) + 10;
         if (v.y < fBottomLimit) v.y = fBottomLimit;
         if (v.y > fTopLimit) v.y = fTopLimit;
         transform.position = v;
