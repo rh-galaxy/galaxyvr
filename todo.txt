@@ -35,7 +35,6 @@ Known issues/small things undone
 - Fix the objects in the Prefabs folder to be done like it should be
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
 - Handle display of long user names...
-- More contents in the VR room around the player?
 
 Must do:
 - Prevent running the game in non VR (later in Release version)
@@ -44,6 +43,8 @@ Must do:
    Set this in Edit->Project_Settings->Player->Icon in Unity.
 - Checkpoint sounds are not clean... there is some unwanted noise in them
 - Switch web to HTTPS, and make the game access HTTPS
+- Better Gold/Silver/Bronze badges for level ranking
+- Show Gold/Silver/Bronze badges for level ranking by each level in part 1 of the menu
 
 -------
 Achievements: (implemented for steam and oculus)

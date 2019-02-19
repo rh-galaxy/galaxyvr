@@ -10,15 +10,17 @@ public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP };
 
 struct S_TilesetInfo
 {
-    public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls)
+    public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls, int i_iPlanet)
     {
         szMaterial = i_szMaterial;
         bRedBricks = i_bRedBricks;
         szMateralWalls = i_szMaterialWalls;
+        iPlanet = i_iPlanet;
     }
     public string szMaterial;
     public bool bRedBricks;
     public string szMateralWalls;
+    public int iPlanet;
 }
 
 public class S_EnemyInfo
@@ -87,12 +89,12 @@ public class GameLevel : MonoBehaviour
 
     int iTilesetInfoIndex = 0;
     S_TilesetInfo[] m_stTilesetInfos = {
-        new S_TilesetInfo("Cave_Alien", true, "Walls_Alien"),
-        new S_TilesetInfo("Cave_Evil", true, "Walls_Grey"),
-        new S_TilesetInfo("Cave_Cave", true, "Walls_Grey"),
-        new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite"),
-        new S_TilesetInfo("Cave_Frost", true, "Walls_Frost"),
-        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava") };
+        new S_TilesetInfo("Cave_Alien", true, "Walls_Alien", 5),
+        new S_TilesetInfo("Cave_Evil", true, "Walls_Grey", 3),
+        new S_TilesetInfo("Cave_Cave", true, "Walls_Grey", 5),
+        new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite", 2),
+        new S_TilesetInfo("Cave_Frost", true, "Walls_Frost", 4),
+        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava", 1) };
 
     internal Vector2 vGravity;
     internal float fDrag;
@@ -140,6 +142,7 @@ public class GameLevel : MonoBehaviour
     public Material oSkyBoxMat3;
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
+    public Planet oPlanet;
 
     MeshGenerator oMeshGen;
     Material oMaterialWalls; //set when walls are created, and used also in creating the map border
@@ -256,6 +259,8 @@ public class GameLevel : MonoBehaviour
                 }
             }
             iFinalizeCounter++;
+
+            /**/oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
         }
         //end of init code
 

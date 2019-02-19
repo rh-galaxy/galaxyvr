@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: AlienAtmosphere3
+  m_Shader: {fileID: 4800000, guid: 0f78add172b79fb40aebb6b2173da900, type: 3}
+  m_ShaderKeywords: _EMISSION _METALLICGLOSSMAP _NORMALMAP
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AOMap:
+        m_Texture: {fileID: 2800000, guid: 36b15fe8dacb23e41a7c1078bf079a1e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Glossiness:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: c7cb4ed4ddf452147ba7d34abd16db88, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetalGlossiness:
+        m_Texture: {fileID: 2800000, guid: 9a98456ba8ba376499c5321e3c8c5350, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 2800000, guid: 9a98456ba8ba376499c5321e3c8c5350, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 2800000, guid: 91de6fc0a8829d74ea933f8f3f964b76, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AOalbedo: 0
+    - _AOintensity: 1.21
+    - _AOsmoothness: -0.097
+    - _AlphaScale: 1.2
+    - _BumpScale: 0.25
+    - _Cutoff: 0.588
+    - _DetailNormalMapScale: 1
+    - _DisplacementAtmosphere: 0.0346
+    - _DisplacementClouds: 0.005
+    - _DstBlend: 0
+    - _EmissionScale: 0
+    - _EmissionScaleUI: 15
+    - _Glossiness: 0.563
+    - _Inneratmopsheredensity: 0.391
+    - _Innerouterlimit: 0.6647399
+    - _Inneroutersmoothness: 0.2572428
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Outeratmopsheredensity: 1
+    - _Outeratmospherelimit: 0.735
+    - _Parallax: 0.0094
+    - _SmoothnessShift: 0.077
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 0.6102941, g: 0.6102941, b: 0.6102941, a: 1}
+    - _EmissionColor: {r: 15, g: 15, b: 15, a: 15}
+    - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}
+    - _Highatmospherecolor: {r: 0, g: 0.2794118, b: 0.11754563, a: 0}
+    - _Inneratmosphere: {r: 0.25812188, g: 0.30147058, b: 0.23053633, a: 1}
+    - _Lowatmospherecolor: {r: 0.18158932, g: 0.2647059, b: 0.12456747, a: 1}
