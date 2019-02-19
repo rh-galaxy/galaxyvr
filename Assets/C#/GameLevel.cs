@@ -144,6 +144,10 @@ public class GameLevel : MonoBehaviour
     public Material oSkyBoxMat5;
     public Planet oPlanet;
 
+    public AudioClip oClipLevelStart;
+    public AudioClip oClipLevelGameOver;
+    public AudioClip oClipLevelWin;
+
     MeshGenerator oMeshGen;
     Material oMaterialWalls; //set when walls are created, and used also in creating the map border
 
@@ -260,23 +264,36 @@ public class GameLevel : MonoBehaviour
             }
             iFinalizeCounter++;
 
-            /**/oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
+            oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
+            GetComponent<AudioSource>().PlayOneShot(oClipLevelStart);
         }
         //end of init code
 
         if (!bMapLoaded) return;
 
-        //race finished
-        if(player.bAchieveFinishedRaceLevel)  {
-            bRunGameOverTimer = true;
-        }
-        //mission finished
-        if(GetMissionFinished())
+        if(!bRunGameOverTimer)
         {
-            bRunGameOverTimer = true;
-            bAchieveFinishedMissionLevel = true;
+            //race finished
+            if(player.bAchieveFinishedRaceLevel)  {
+                bRunGameOverTimer = true;
+            }
+            //mission finished (won)
+            if(GetMissionFinished())
+            {
+                bRunGameOverTimer = true;
+                bAchieveFinishedMissionLevel = true;
+
+                GetComponent<AudioSource>().PlayOneShot(oClipLevelWin);
+            }
+            //mission finished (lost)
+            if (iLevelType == (int)LevelType.MAP_MISSION && player.iNumLifes==0)
+            {
+                bRunGameOverTimer = true;
+
+                GetComponent<AudioSource>().PlayOneShot(oClipLevelGameOver);
+            }
         }
-        if (iLevelType == (int)LevelType.MAP_MISSION && player.iNumLifes==0) bRunGameOverTimer = true;
+
 
         if (bRunGameOverTimer) {
             fGameOverTimer += Time.deltaTime;
