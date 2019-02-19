@@ -10,8 +10,6 @@ Enemies
 - Implement them in code
 Menu
 - More contents (could be logo, animated objects, clouds, anything really)
-The VR room around the player
-- More contents (could be clouds and a skybox, or a room, or blackness in space, anything really)
 Website
 - www.galaxy-forces-vr.com exists.
 - Better/more contents (+the hi-scores, but they are implemented)
@@ -37,6 +35,7 @@ Known issues/small things undone
 - Fix the objects in the Prefabs folder to be done like it should be
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
 - Handle display of long user names...
+- More contents in the VR room around the player?
 
 Must do:
 - Prevent running the game in non VR (later in Release version)

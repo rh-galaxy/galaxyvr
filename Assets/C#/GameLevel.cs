@@ -203,14 +203,14 @@ public class GameLevel : MonoBehaviour
 
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);
-        /*switch(iSkyBox)
+        switch(iSkyBox)
         {
             case 1: RenderSettings.skybox = oSkyBoxMat1; break;
             case 2: RenderSettings.skybox = oSkyBoxMat2; break;
             case 3: RenderSettings.skybox = oSkyBoxMat3; break;
             case 4: RenderSettings.skybox = oSkyBoxMat4; break;
             case 5: RenderSettings.skybox = oSkyBoxMat5; break;
-        }*/
+        }
 
         Debug.Log("Start done");
     }
