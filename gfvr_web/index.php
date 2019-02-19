@@ -55,7 +55,7 @@ headline("Hiscores");
 <?php
 square_start("'100%'");
 ?>
-<p>Oculus users are prefixed 'o_' and Steam users are prefixed 's_' to separate the two.</p>
+<p>Steam users are prefixed 's_' to separate them from Oculus users (no prefix).</p>
 <table width="83%">
 <tr><td>
 <?php

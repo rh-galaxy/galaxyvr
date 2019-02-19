@@ -135,11 +135,16 @@ public class GameLevel : MonoBehaviour
     List<GameObject> aDecorationList; //single bricks, brick wall left,center,right
     public ZObject oZObjBase;
 
+    public Material oSkyBoxMat1;
+    public Material oSkyBoxMat2;
+    public Material oSkyBoxMat3;
+    public Material oSkyBoxMat4;
+    public Material oSkyBoxMat5;
 
     MeshGenerator oMeshGen;
     Material oMaterialWalls; //set when walls are created, and used also in creating the map border
 
-    GameLevel()
+    public GameLevel()
     {
         theMap = this;
     }
@@ -195,6 +200,17 @@ public class GameLevel : MonoBehaviour
         // and is not behaving reliably
         if (!XRDevice.isPresent)
             Camera.main.fieldOfView = 38.0f;
+
+        //set random skybox
+        int iSkyBox = UnityEngine.Random.Range(1, 5);
+        /*switch(iSkyBox)
+        {
+            case 1: RenderSettings.skybox = oSkyBoxMat1; break;
+            case 2: RenderSettings.skybox = oSkyBoxMat2; break;
+            case 3: RenderSettings.skybox = oSkyBoxMat3; break;
+            case 4: RenderSettings.skybox = oSkyBoxMat4; break;
+            case 5: RenderSettings.skybox = oSkyBoxMat5; break;
+        }*/
 
         Debug.Log("Start done");
     }

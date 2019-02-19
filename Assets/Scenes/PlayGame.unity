@@ -1442,6 +1442,11 @@ MonoBehaviour:
   oBulletObjBase: {fileID: 8140659858730618808}
   oDoorObjBase: {fileID: 2080158388583774448}
   oZObjBase: {fileID: 1729895974285792216}
+  oSkyBoxMat1: {fileID: 2100000, guid: 1a096e073ffc2964b876fb03469ff7ec, type: 2}
+  oSkyBoxMat2: {fileID: 2100000, guid: 6728cfcc775d5aa478d4fb00a8f5ddcd, type: 2}
+  oSkyBoxMat3: {fileID: 2100000, guid: 29f7eb4ef68545141b687e420fdb4b83, type: 2}
+  oSkyBoxMat4: {fileID: 2100000, guid: e0315be70fe9cdb4ba42c102a8dc4f3f, type: 2}
+  oSkyBoxMat5: {fileID: 2100000, guid: 2f830a8d4ed77994e83d5a131b7f1fd4, type: 2}
 --- !u!4 &799215559
 Transform:
   m_ObjectHideFlags: 0
