@@ -440,9 +440,9 @@ public class Menu : MonoBehaviour
         vPos = new Vector3(0.5f, 1.5f, -0.1f);
         if (oMenuReplayYR != null) oMenuReplayYR.DestroyObj();
         if(i_stLevelInfo.iScoreMs!=-1) oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f);
-        vPos = new Vector3(1.4f, -2.6f, -0.1f); //vPos = new Vector3(0.5f, -2.5f, -0.1f);
+        vPos = new Vector3(1.3f, -2.6f, -0.1f); //vPos = new Vector3(0.5f, -2.5f, -0.1f);
         if (oMenuPlay != null) oMenuPlay.DestroyObj();
-        oMenuPlay = new C_ItemInMenu(vPos, "PLAY", "Play", 8.5f, 3.3f);
+        oMenuPlay = new C_ItemInMenu(vPos, "PLAY", "Play", 8.5f, 3.1f);
 
         //i_stLevelInfo.szName is in the form "race00", but we need the filename "2race00"
         //we rely on GameLevel.szLevel for that
