@@ -70,6 +70,9 @@ public class GameLevel : MonoBehaviour
     bool bRunGameOverTimer = false;
     float fGameOverTimer = 0.0f;
     internal bool bGameOver = false;
+    bool bPlayClipWin = false;
+    bool bPlayClipGameOver = false;
+
     internal int iAchieveEnemiesKilled = 0;
     internal bool bAchieveFinishedMissionLevel = false;
 
@@ -282,22 +285,33 @@ public class GameLevel : MonoBehaviour
             {
                 bRunGameOverTimer = true;
                 bAchieveFinishedMissionLevel = true;
-
-                GetComponent<AudioSource>().PlayOneShot(oClipLevelWin);
+                bPlayClipWin = true;
             }
             //mission finished (lost)
             if (iLevelType == (int)LevelType.MAP_MISSION && player.iNumLifes==0)
             {
                 bRunGameOverTimer = true;
-
-                GetComponent<AudioSource>().PlayOneShot(oClipLevelGameOver);
+                bPlayClipGameOver = true;
             }
         }
 
 
         if (bRunGameOverTimer) {
             fGameOverTimer += Time.deltaTime;
-            if (fGameOverTimer > 5.0f) bGameOver = true;
+
+            //delay sounds 1.5 sec
+            if(bPlayClipWin && fGameOverTimer > 1.5f)
+            {
+                GetComponent<AudioSource>().PlayOneShot(oClipLevelWin);
+                bPlayClipWin = false;
+            }
+            if (bPlayClipGameOver && fGameOverTimer > 1.5f)
+            {
+                GetComponent<AudioSource>().PlayOneShot(oClipLevelGameOver);
+                bPlayClipGameOver = false;
+            }
+
+            if (fGameOverTimer > 6.0f) bGameOver = true;
         }
     }
 
