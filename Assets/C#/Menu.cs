@@ -263,6 +263,12 @@ public class Menu : MonoBehaviour
         aLevels[54].szLevelDescription = "Mission29 - Last mission";
     }
 
+    public Material oSkyBoxMat1;
+    public Material oSkyBoxMat2;
+    public Material oSkyBoxMat3;
+    public Material oSkyBoxMat4;
+    public Material oSkyBoxMat5;
+
     C_Item2InMenu oMenuQuit;
 
     Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
@@ -320,6 +326,17 @@ public class Menu : MonoBehaviour
         bAllowSelection = !Input.GetButton("Fire1");
 
         oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Quit", "Quit", 25.0f, 12.0f);
+
+        //set random skybox
+        int iSkyBox = UnityEngine.Random.Range(1, 5);
+        switch (iSkyBox)
+        {
+            case 1: RenderSettings.skybox = oSkyBoxMat1; break;
+            case 2: RenderSettings.skybox = oSkyBoxMat2; break;
+            case 3: RenderSettings.skybox = oSkyBoxMat3; break;
+            case 4: RenderSettings.skybox = oSkyBoxMat4; break;
+            case 5: RenderSettings.skybox = oSkyBoxMat5; break;
+        }
     }
 
     int iMissionsUnlocked = 0;

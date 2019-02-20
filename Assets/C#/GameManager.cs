@@ -697,7 +697,8 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.Log("LoadSeg Done");
                         iState++;
-                        oASMusic.volume = 0.09f;
+                        //oASMusic.volume = 0.09f;
+                        /**/oASMusic.volume = 0.00f;
                     }
                 }
                 break;
