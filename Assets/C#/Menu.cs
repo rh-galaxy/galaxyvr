@@ -267,6 +267,7 @@ public class Menu : MonoBehaviour
 
     Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
+    internal Material oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
         aMenuLevels = new C_LevelInMenu[NUM_LEVELS];
@@ -276,6 +277,10 @@ public class Menu : MonoBehaviour
         oMaterialOctagonHighlighted = Resources.Load("LevelOctagonHigh", typeof(Material)) as Material;
         oMaterialPentagonUnlocked = Resources.Load("LevelPentagon", typeof(Material)) as Material;
         oMaterialPentagonHighlighted = Resources.Load("LevelPentagonHigh", typeof(Material)) as Material;
+
+        oMaterialRankBronze = Resources.Load("RankBronze", typeof(Material)) as Material;
+        oMaterialRankSilver = Resources.Load("RankSilver", typeof(Material)) as Material;
+        oMaterialRankGold = Resources.Load("RankGold", typeof(Material)) as Material;
 
         //int iLen = NUM_LEVELS / 2;
         float fStartAngle = -45;
@@ -400,9 +405,9 @@ public class Menu : MonoBehaviour
         }
         Material oMaterial = null;
         if (iRank == 4 || iRank == 5) oMaterial = Resources.Load("LandingZone", typeof(Material)) as Material;
-        if (iRank == 3) oMaterial = Resources.Load("RankBronze", typeof(Material)) as Material;
-        if (iRank == 2) oMaterial = Resources.Load("RankSilver", typeof(Material)) as Material;
-        if (iRank == 1) oMaterial = Resources.Load("RankGold", typeof(Material)) as Material;
+        if (iRank == 3) oMaterial = oMaterialRankBronze;
+        if (iRank == 2) oMaterial = oMaterialRankSilver;
+        if (iRank == 1) oMaterial = oMaterialRankGold;
         oRankQuad.GetComponent<MeshRenderer>().material = oMaterial;
 
         Vector3 vPos = new Vector3(-8.8f, 1.5f, -0.1f);
@@ -427,6 +432,12 @@ public class Menu : MonoBehaviour
         oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel);
         oMaterial = Resources.Load("MiniMap", typeof(Material)) as Material;
         oMaterial.mainTexture = oMiniMapTex;
+    }
+
+    public void InitLevelRanking()
+    {
+        for (int i = 0; i < aMenuLevels.Length; i++)
+            aMenuLevels[i].InitLevelRanking(i);
     }
 
     float fRotateZAngle = 0.0f;
@@ -617,13 +628,18 @@ public class Menu : MonoBehaviour
     public class C_LevelInMenu
     {
         public GameObject oLevelQuad;
+        public GameObject oRankQuad;
         GameObject oLevelText;
 
         Vector3 vPos;
+        float fRotateAngle;
+        Vector3 vAroundPoint;
 
         public C_LevelInMenu(Vector3 i_vPos, Vector3 i_vAroundPoint, float i_fRotateAngle, S_Levels i_oLevel, int i_iLevelId)
         {
             vPos = i_vPos;
+            fRotateAngle = i_fRotateAngle;
+            vAroundPoint = i_vAroundPoint;
 
             //create a quad with a text on, in the pos of each menu object
             oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -634,17 +650,62 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
             oLevelQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value*100.0f); //vary 100 deg around z
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
-
             string szMaterial = (i_oLevel.iLevelType == (int)LevelType.MAP_RACE) ? "LevelPentagon" : "LevelOctagon";
             Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
             oLevelQuad.GetComponent<MeshRenderer>().material = oMaterial;
 
+            //quad for level ranking star
+            //set in InitLevelRanking() when received from server
+
+            //level text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
             oLevelText.transform.localPosition = new Vector3(vPos.x-3.9f, vPos.y-3.50f, vPos.z - 1.1f);
             oLevelText.transform.localScale = new Vector3(1.85f, 1.85f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_oLevel.szLevelDisplayName;
             oLevelText.SetActive(true);
+        }
+
+        public void InitLevelRanking(int i_iLevelId)
+        {
+            if (oRankQuad != null) Destroy(oRankQuad);
+
+            if (GameManager.theGM.oHigh.bIsDone && i_iLevelId < GameManager.theGM.oHigh.oLevelList.Count)
+            {
+                LevelInfo stLevelInfo = GameManager.theGM.oHigh.oLevelList[i_iLevelId];
+                int iRank = 5; //no score at all
+                if (stLevelInfo.iScoreMs != -1)
+                {
+                    iRank = 4; //a score less than bronze
+                    if (stLevelInfo.bIsTime)
+                    {
+                        if (stLevelInfo.iScoreMs < stLevelInfo.iLimit1) iRank = 1; //gold
+                        else if (stLevelInfo.iScoreMs < stLevelInfo.iLimit2) iRank = 2; //silver
+                        else if (stLevelInfo.iScoreMs < stLevelInfo.iLimit3) iRank = 3; //bronze
+                    }
+                    else
+                    {
+                        if (stLevelInfo.iScoreMs >= stLevelInfo.iLimit1) iRank = 1; //gold
+                        else if (stLevelInfo.iScoreMs >= stLevelInfo.iLimit2) iRank = 2; //silver
+                        else if (stLevelInfo.iScoreMs >= stLevelInfo.iLimit3) iRank = 3; //bronze
+                    }
+                }
+                Material oMaterial = null;
+                if (iRank == 3) oMaterial = Menu.theMenu.oMaterialRankBronze;
+                if (iRank == 2) oMaterial = Menu.theMenu.oMaterialRankSilver;
+                if (iRank == 1) oMaterial = Menu.theMenu.oMaterialRankGold;
+
+                if (oMaterial != null)
+                {
+                    oRankQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    oRankQuad.transform.parent = Menu.theMenu.transform;
+                    oRankQuad.transform.localPosition = new Vector3(vPos.x + 3.5f, vPos.y - 3.5f, vPos.z - 1.5f);
+                    oRankQuad.transform.localScale = new Vector3(4.0f, 4.0f, 1.0f);
+                    oRankQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value * 100.0f); //vary 100 deg around z
+                    oRankQuad.transform.RotateAround(vAroundPoint, Vector3.up, fRotateAngle);
+                    oRankQuad.GetComponent<MeshRenderer>().material = oMaterial;
+                }
+            }
         }
     }
 
@@ -673,7 +734,6 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
-
             string szMaterial = "LevelOctagon";
             Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
             oLevelQuad.GetComponent<MeshRenderer>().material = oMaterial;

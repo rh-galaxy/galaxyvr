@@ -559,6 +559,7 @@ public class GameManager : MonoBehaviour
                     }
                     Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + (int)(iMissionsFinished * 1.35f));
                     Menu.theMenu.SetMissionUnlock((int)(iMissionsFinished * 1.35f) + 1);
+                    Menu.theMenu.InitLevelRanking();
                     iState++;
                 }
                 break;
@@ -588,7 +589,7 @@ public class GameManager : MonoBehaviour
 
                             //set in the above, but since StartCoroutine returns before it has a chanse
                             // to run we need to set it
-                            ///oHigh.bIsDone = false;
+                            //oHigh.bIsDone = false;
                             //^we already have the info from state 0
                         }
                     }
