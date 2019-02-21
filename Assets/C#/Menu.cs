@@ -716,7 +716,7 @@ public class Menu : MonoBehaviour
                 {
                     oRankQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     oRankQuad.transform.parent = Menu.theMenu.transform;
-                    oRankQuad.transform.localPosition = new Vector3(vPos.x + 3.5f, vPos.y - 3.5f, vPos.z - 1.5f);
+                    oRankQuad.transform.localPosition = new Vector3(vPos.x + 3.5f, vPos.y - 3.5f, vPos.z - 1.7f);
                     oRankQuad.transform.localScale = new Vector3(4.0f, 4.0f, 1.0f);
                     oRankQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value * 100.0f); //vary 100 deg around z
                     oRankQuad.transform.RotateAround(vAroundPoint, Vector3.up, fRotateAngle);

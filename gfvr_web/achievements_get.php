@@ -97,3 +97,12 @@
 	}
 
 ?>
+
+<?php
+	//update statistics
+	require_once("db_connect.php");
+	$db = connect_to_db();
+	$query = "UPDATE statistics_t SET count=count+1 WHERE page='achievements_get.php'";
+	$info = mysqli_query($db, $query);
+	if($db) mysqli_close($db);
+?>

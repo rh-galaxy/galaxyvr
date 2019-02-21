@@ -8,8 +8,8 @@ Map elements
 Enemies
 - Create them in 3D [enemy 0..3,5,6]
 - Implement them in code
-Menu
-- More contents (could be logo, animated objects, clouds, anything really)
+In-game Credits
+- "Uses FMOD Studio / Firelight Technologies"
 Website
 - www.galaxy-forces-vr.com exists.
 - Better/more contents (+the hi-scores, but they are implemented)
@@ -54,8 +54,8 @@ Achievements: (implemented for steam and oculus)
 - Cargo apprentice - Finish mission level 03 [normal unlock]                           Cargo2
 - Cargo expert - Finish mission level 06 with no life lost [normal unlock]             Cargo3
 - Cargo master - Finish mission level 09 with no damage [normal unlock]                Cargo4
-- Race beginner - Finish race level 00 [normal unlock]                                 Race1
-- Race apprentice - Finish race level 03 in under 200 seconds [normal unlock]          Race2
+- Race beginner - Finish race level 00 in under 3 minutes [normal unlock]              Race1
+- Race apprentice - Finish race level 03 in under 3 minutes [normal unlock]            Race2
 - Race expert - Finish race level 06 in under 60 seconds [normal unlock]               Race3
 - Race master - Finish race level 10 in under 104 seconds [normal unlock]              Race4
 - Fuel burner - Burn 20 minutes worth of fuel [counter unlock]                         Fuelburner
