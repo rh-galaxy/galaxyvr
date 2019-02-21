@@ -271,8 +271,9 @@ public class Menu : MonoBehaviour
 
     C_Item2InMenu oMenuQuit;
 
-    Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
-    Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
+    internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
+    internal Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
+    internal Material oMaterialOctagonPlay, oMaterialOctagonPlayHighlighted;
     internal Material oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
@@ -283,6 +284,8 @@ public class Menu : MonoBehaviour
         oMaterialOctagonHighlighted = Resources.Load("LevelOctagonHigh", typeof(Material)) as Material;
         oMaterialPentagonUnlocked = Resources.Load("LevelPentagon", typeof(Material)) as Material;
         oMaterialPentagonHighlighted = Resources.Load("LevelPentagonHigh", typeof(Material)) as Material;
+        oMaterialOctagonPlay = Resources.Load("LevelOctagonPlay", typeof(Material)) as Material;
+        oMaterialOctagonPlayHighlighted = Resources.Load("LevelOctagonPlayHigh", typeof(Material)) as Material;
 
         oMaterialRankBronze = Resources.Load("RankBronze", typeof(Material)) as Material;
         oMaterialRankSilver = Resources.Load("RankSilver", typeof(Material)) as Material;
@@ -427,22 +430,23 @@ public class Menu : MonoBehaviour
         if (iRank == 1) oMaterial = oMaterialRankGold;
         oRankQuad.GetComponent<MeshRenderer>().material = oMaterial;
 
-        Vector3 vPos = new Vector3(-8.8f, 1.5f, -0.1f);
+        Vector3 vPos = new Vector3(-8.9f, 1.5f, -0.1f);
         if (oMenuReplayWR1 != null) oMenuReplayWR1.DestroyObj();
         if (i_stLevelInfo.iBestScore1 != -1) oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f);
-        vPos = new Vector3(-8.8f, -1.0f, -0.1f);
+        vPos = new Vector3(-8.9f, -1.0f, -0.1f);
         if (oMenuReplayWR2 != null) oMenuReplayWR2.DestroyObj();
         if (i_stLevelInfo.iBestScore2 != -1) oMenuReplayWR2 = new C_ItemInMenu(vPos, "2", "ReplayWR2", 4.0f, 4.0f);
-        vPos = new Vector3(-8.8f, -3.5f, -0.1f);
+        vPos = new Vector3(-8.9f, -3.5f, -0.1f);
         if (oMenuReplayWR3 != null) oMenuReplayWR3.DestroyObj();
         if (i_stLevelInfo.iBestScore3 != -1) oMenuReplayWR3 = new C_ItemInMenu(vPos, "3", "ReplayWR3", 4.0f, 4.0f);
 
         vPos = new Vector3(0.5f, 1.5f, -0.1f);
         if (oMenuReplayYR != null) oMenuReplayYR.DestroyObj();
         if(i_stLevelInfo.iScoreMs!=-1) oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f);
-        vPos = new Vector3(1.3f, -2.6f, -0.1f); //vPos = new Vector3(0.5f, -2.5f, -0.1f);
+        //vPos = new Vector3(1.3f, -2.6f, -0.1f);
+        vPos = new Vector3(0.5f, -2.5f, -0.1f);
         if (oMenuPlay != null) oMenuPlay.DestroyObj();
-        oMenuPlay = new C_ItemInMenu(vPos, "PLAY", "Play", 8.5f, 3.1f);
+        oMenuPlay = new C_ItemInMenu(vPos, ">", "Play", 4.0f, 4.0f);
 
         //i_stLevelInfo.szName is in the form "race00", but we need the filename "2race00"
         //we rely on GameLevel.szLevel for that
@@ -476,7 +480,7 @@ public class Menu : MonoBehaviour
         if (oMenuReplayWR2 != null && oMenuReplayWR2.oLevelQuad != null) oMenuReplayWR2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
         if (oMenuReplayWR3 != null && oMenuReplayWR3.oLevelQuad != null) oMenuReplayWR3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
         if (oMenuReplayYR != null && oMenuReplayYR.oLevelQuad != null) oMenuReplayYR.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-        if (oMenuPlay != null && oMenuPlay.oLevelQuad != null) oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMenuPlay != null && oMenuPlay.oLevelQuad != null) oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
 
         bool bHitLevel = false;
         RaycastHit oHitInfo;
@@ -520,7 +524,7 @@ public class Menu : MonoBehaviour
             }
             else if (oHitInfo.collider.name.CompareTo("Play") == 0)
             {
-                oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+                oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlayHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
             {
@@ -728,6 +732,7 @@ public class Menu : MonoBehaviour
 
     public class C_ItemInMenu
     {
+        public bool bIsPlay = false;
         public GameObject oLevelQuad;
         GameObject oLevelText;
 
@@ -739,15 +744,21 @@ public class Menu : MonoBehaviour
             Destroy(oLevelText);
         }
 
-        public C_ItemInMenu(Vector3 i_vPos, string szText, string szCollID, float i_fScale, float i_fScaleText)
+        public C_ItemInMenu(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText)
         {
             vPos = i_vPos;
 
+            if (i_szText.CompareTo(">") == 0)
+            {
+                bIsPlay = true;
+                i_szText = "";
+            }
+            
             //create a quad with a text on, in the pos of each menu object
             oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             oLevelQuad.transform.parent = Menu.theMenu.oLevelInfoContainer.transform;
             oLevelQuad.AddComponent<BoxCollider>();
-            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = szCollID;
+            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
@@ -767,7 +778,7 @@ public class Menu : MonoBehaviour
             oLevelText.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
             oLevelText.GetComponent<TextMesh>().fontSize = 40;
             oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
-            oLevelText.GetComponent<TextMesh>().text = szText;
+            oLevelText.GetComponent<TextMesh>().text = i_szText;
         }
     }
 
@@ -784,7 +795,7 @@ public class Menu : MonoBehaviour
             Destroy(oLevelText);
         }
 
-        public C_Item2InMenu(Vector3 i_vPos, Vector3 i_vAroundPoint, float i_fRotateAngle, string szText, string szCollID, float i_fScale, float i_fScaleText)
+        public C_Item2InMenu(Vector3 i_vPos, Vector3 i_vAroundPoint, float i_fRotateAngle, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText)
         {
             vPos = i_vPos;
 
@@ -792,7 +803,7 @@ public class Menu : MonoBehaviour
             oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             oLevelQuad.transform.parent = Menu.theMenu.transform;
             oLevelQuad.AddComponent<BoxCollider>();
-            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = szCollID;
+            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
@@ -813,7 +824,7 @@ public class Menu : MonoBehaviour
             oLevelText.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
             oLevelText.GetComponent<TextMesh>().fontSize = 40;
             oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
-            oLevelText.GetComponent<TextMesh>().text = szText;
+            oLevelText.GetComponent<TextMesh>().text = i_szText;
         }
     }
 
