@@ -259,7 +259,7 @@ Debug.Log("LoadMap: " + (Time.realtimeSinceStartup - t1)*1000.0f);
         {
 float t1 = Time.realtimeSinceStartup;
             oMeshGen.GenerateMeshFinalize(iFinalizeCounter);
-Debug.LogError("GenerateMeshFinalize: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+Debug.Log("GenerateMeshFinalize: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             iFinalizeCounter++;
         }
         else if (iFinalizeCounter == 17)
@@ -872,11 +872,15 @@ Debug.LogError("GenerateMeshFinalize: " + (Time.realtimeSinceStartup - t1) * 100
             //generate final mesh, set tile material
             Material oMaterial = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMaterial, typeof(Material)) as Material;
             oMaterialWalls = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralWalls, typeof(Material)) as Material;
-            oMeshGen.GenerateMeshInit(aMapHighres, 1.0f/substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
+            oMeshGen.GenerateMeshInit1(aMapHighres, 1.0f/substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
         }
-        else if (n >= 2 + iHeight)
+        else if (n <= 3 + iHeight)
         {
-            return oMeshGen.GenerateMesh(n - (2 + iHeight));
+            oMeshGen.GenerateMeshInit2(n - (2 + iHeight));
+        }
+        else if (n >= 4 + iHeight)
+        {
+            return oMeshGen.GenerateMesh(n - (4 + iHeight));
         }
 
         return false;

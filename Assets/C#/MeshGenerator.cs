@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,7 +34,7 @@ public class MeshGenerator : MonoBehaviour
     }
 
     int h, w;
-    public void GenerateMeshInit(int[,] i_aMap, float i_fSquareSize, float i_fWallHeight, float i_fBumpHeight, Material i_oMat, Material i_oMatWalls)
+    public void GenerateMeshInit1(int[,] i_aMap, float i_fSquareSize, float i_fWallHeight, float i_fBumpHeight, Material i_oMat, Material i_oMatWalls)
     {
         aMap = i_aMap;
         fSquareSize = i_fSquareSize;
@@ -41,13 +42,25 @@ public class MeshGenerator : MonoBehaviour
         fBumpHeight = i_fBumpHeight;
         oMat = i_oMat;
         oMatWalls = i_oMatWalls;
-float t1 = Time.realtimeSinceStartup;
-        squareGrid = new SquareGrid(i_aMap, i_fSquareSize);
-Debug.LogError("new SquareGrid: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
-        Clear();
+        squareGrid = new SquareGrid(aMap, fSquareSize);
+    }
 
-        w = squareGrid.squares.GetLength(0);
-        h = squareGrid.squares.GetLength(1);
+    public void GenerateMeshInit2(int n)
+    {
+float t1 = Time.realtimeSinceStartup;
+        if (n == 0)
+        {
+            squareGrid.Init(0);
+        }
+        else
+        {
+            squareGrid.Init(1);
+
+            Clear();
+            w = squareGrid.aSquares.GetLength(0);
+            h = squareGrid.aSquares.GetLength(1);
+        }
+Debug.Log("new SquareGrid2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
     }
 
     public bool GenerateMesh(int n)
@@ -58,7 +71,7 @@ Debug.LogError("new SquareGrid: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         {
             for (int y = 0; y < h; y++)
             {
-                TriangulateSquare(squareGrid.squares[x, y]);
+                TriangulateSquare(squareGrid.aSquares[x, y]);
             }
             return false;
         }
@@ -73,7 +86,7 @@ Debug.LogError("new SquareGrid: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             //create and set the walls mesh
 float t1 = Time.realtimeSinceStartup;
             CalculateMeshOutlines(n);
-Debug.LogError("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+Debug.Log("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
         else if (n == 12)
         {
@@ -222,64 +235,64 @@ Debug.LogError("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 10
         }
     }
 
-    void TriangulateSquare(Square square)
+    void TriangulateSquare(Square i_oSquare)
     {
-        switch (square.configuration)
+        switch (i_oSquare.iConfiguration)
         {
             case 0:
                 break;
 
             // 1 points:
             case 1:
-                MeshFromPoints(square.centreLeft, square.centreBottom, square.bottomLeft);
+                MeshFromPoints(i_oSquare.oCentreLeft, i_oSquare.oCentreBottom, i_oSquare.oBottomLeft);
                 break;
             case 2:
-                MeshFromPoints(square.bottomRight, square.centreBottom, square.centreRight);
+                MeshFromPoints(i_oSquare.oBottomRight, i_oSquare.oCentreBottom, i_oSquare.oCentreRight);
                 break;
             case 4:
-                MeshFromPoints(square.topRight, square.centreRight, square.centreTop);
+                MeshFromPoints(i_oSquare.oTopRight, i_oSquare.oCentreRight, i_oSquare.oCentreTop);
                 break;
             case 8:
-                MeshFromPoints(square.topLeft, square.centreTop, square.centreLeft);
+                MeshFromPoints(i_oSquare.oTopLeft, i_oSquare.oCentreTop, i_oSquare.oCentreLeft);
                 break;
 
             // 2 points:
             case 3:
-                MeshFromPoints(square.centreRight, square.bottomRight, square.bottomLeft, square.centreLeft);
+                MeshFromPoints(i_oSquare.oCentreRight, i_oSquare.oBottomRight, i_oSquare.oBottomLeft, i_oSquare.oCentreLeft);
                 break;
             case 6:
-                MeshFromPoints(square.centreTop, square.topRight, square.bottomRight, square.centreBottom);
+                MeshFromPoints(i_oSquare.oCentreTop, i_oSquare.oTopRight, i_oSquare.oBottomRight, i_oSquare.oCentreBottom);
                 break;
             case 9:
-                MeshFromPoints(square.topLeft, square.centreTop, square.centreBottom, square.bottomLeft);
+                MeshFromPoints(i_oSquare.oTopLeft, i_oSquare.oCentreTop, i_oSquare.oCentreBottom, i_oSquare.oBottomLeft);
                 break;
             case 12:
-                MeshFromPoints(square.topLeft, square.topRight, square.centreRight, square.centreLeft);
+                MeshFromPoints(i_oSquare.oTopLeft, i_oSquare.oTopRight, i_oSquare.oCentreRight, i_oSquare.oCentreLeft);
                 break;
             case 5:
-                MeshFromPoints(square.centreTop, square.topRight, square.centreRight, square.centreBottom, square.bottomLeft, square.centreLeft);
+                MeshFromPoints(i_oSquare.oCentreTop, i_oSquare.oTopRight, i_oSquare.oCentreRight, i_oSquare.oCentreBottom, i_oSquare.oBottomLeft, i_oSquare.oCentreLeft);
                 break;
             case 10:
-                MeshFromPoints(square.topLeft, square.centreTop, square.centreRight, square.bottomRight, square.centreBottom, square.centreLeft);
+                MeshFromPoints(i_oSquare.oTopLeft, i_oSquare.oCentreTop, i_oSquare.oCentreRight, i_oSquare.oBottomRight, i_oSquare.oCentreBottom, i_oSquare.oCentreLeft);
                 break;
 
             // 3 point:
             case 7:
-                MeshFromPoints(square.centreTop, square.topRight, square.bottomRight, square.bottomLeft, square.centreLeft);
+                MeshFromPoints(i_oSquare.oCentreTop, i_oSquare.oTopRight, i_oSquare.oBottomRight, i_oSquare.oBottomLeft, i_oSquare.oCentreLeft);
                 break;
             case 11:
-                MeshFromPoints(square.topLeft, square.centreTop, square.centreRight, square.bottomRight, square.bottomLeft);
+                MeshFromPoints(i_oSquare.oTopLeft, i_oSquare.oCentreTop, i_oSquare.oCentreRight, i_oSquare.oBottomRight, i_oSquare.oBottomLeft);
                 break;
             case 13:
-                MeshFromPoints(square.topLeft, square.topRight, square.centreRight, square.centreBottom, square.bottomLeft);
+                MeshFromPoints(i_oSquare.oTopLeft, i_oSquare.oTopRight, i_oSquare.oCentreRight, i_oSquare.oCentreBottom, i_oSquare.oBottomLeft);
                 break;
             case 14:
-                MeshFromPoints(square.topLeft, square.topRight, square.bottomRight, square.centreBottom, square.centreLeft);
+                MeshFromPoints(i_oSquare.oTopLeft, i_oSquare.oTopRight, i_oSquare.oBottomRight, i_oSquare.oCentreBottom, i_oSquare.oCentreLeft);
                 break;
 
             // 4 point:
             case 15:
-                MeshFromPoints(square.topLeft, square.topRight, square.bottomRight, square.bottomLeft);
+                MeshFromPoints(i_oSquare.oTopLeft, i_oSquare.oTopRight, i_oSquare.oBottomRight, i_oSquare.oBottomLeft);
                 break;
         }
     }
@@ -303,21 +316,21 @@ Debug.LogError("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 10
     {
         for (int i = 0; i < points.Length; i++)
         {
-            if (points[i].vertexIndex == -1)
+            if (points[i].iVertexIndex == -1)
             {
-                points[i].vertexIndex = vertices.Count;
-                vertices.Add(points[i].position);
+                points[i].iVertexIndex = vertices.Count;
+                vertices.Add(points[i].vPos);
             }
         }
     }
 
     void CreateTriangle(Node a, Node b, Node c)
     {
-        triangles.Add(a.vertexIndex);
-        triangles.Add(b.vertexIndex);
-        triangles.Add(c.vertexIndex);
+        triangles.Add(a.iVertexIndex);
+        triangles.Add(b.iVertexIndex);
+        triangles.Add(c.iVertexIndex);
 
-        Triangle triangle = new Triangle(a.vertexIndex, b.vertexIndex, c.vertexIndex);
+        Triangle triangle = new Triangle(a.iVertexIndex, b.iVertexIndex, c.iVertexIndex);
         AddTriangleToDictionary(triangle.vertexIndexA, triangle);
         AddTriangleToDictionary(triangle.vertexIndexB, triangle);
         AddTriangleToDictionary(triangle.vertexIndexC, triangle);
@@ -454,88 +467,102 @@ Debug.LogError("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 10
 
     public class SquareGrid
     {
-        public Square[,] squares;
+        public Square[,] aSquares;
+        int iNodeCountX, iNodeCountY;
+        float fMapWidth, fMapHeight;
+        float fSquareSize;
+        ControlNode[,] oControlNodes;
+        int[,] oMap;
 
-        public SquareGrid(int[,] map, float squareSize)
+        public SquareGrid(int[,] i_oMap, float i_fSquareSize)
         {
-            int nodeCountX = map.GetLength(1);
-            int nodeCountY = map.GetLength(0);
-            float mapWidth = nodeCountX * squareSize;
-            float mapHeight = nodeCountY * squareSize;
+            oMap = i_oMap;
+            fSquareSize = i_fSquareSize;
+            iNodeCountX = i_oMap.GetLength(1);
+            iNodeCountY = i_oMap.GetLength(0);
+            fMapWidth = iNodeCountX * fSquareSize;
+            fMapHeight = iNodeCountY * fSquareSize;
 
-            ControlNode[,] controlNodes = new ControlNode[nodeCountX, nodeCountY];
+            oControlNodes = new ControlNode[iNodeCountX, iNodeCountY];
+        }
 
-            for (int x = 0; x < nodeCountX; x++)
+        public void Init(int n)
+        {
+            if(n==0)
             {
-                for (int y = 0; y < nodeCountY; y++)
+                for (int x = 0; x < iNodeCountX; x++)
                 {
-                    Vector3 pos = new Vector3(-mapWidth / 2 + x * squareSize + squareSize / 2, -mapHeight / 2 + y * squareSize + squareSize / 2, 0);
-                    controlNodes[x, y] = new ControlNode(pos, map[y, x] != 0, squareSize);
+                    for (int y = 0; y < iNodeCountY; y++)
+                    {
+                        Vector3 vPos = new Vector3(-fMapWidth / 2 + x * fSquareSize + fSquareSize / 2, -fMapHeight / 2 + y * fSquareSize + fSquareSize / 2, 0);
+                        oControlNodes[x, y] = new ControlNode(vPos, oMap[y, x] != 0, fSquareSize);
+                    }
+                }
+                aSquares = new Square[iNodeCountX - 1, iNodeCountY - 1];
+            }
+            else
+            {
+                for (int x = 0; x < iNodeCountX - 1; x++)
+                {
+                    for (int y = 0; y < iNodeCountY - 1; y++)
+                    {
+                        aSquares[x, y] = new Square(oControlNodes[x, y + 1], oControlNodes[x + 1, y + 1], oControlNodes[x + 1, y], oControlNodes[x, y]);
+                    }
                 }
             }
-
-            squares = new Square[nodeCountX - 1, nodeCountY - 1];
-            for (int x = 0; x < nodeCountX - 1; x++)
-            {
-                for (int y = 0; y < nodeCountY - 1; y++)
-                {
-                    squares[x, y] = new Square(controlNodes[x, y + 1], controlNodes[x + 1, y + 1], controlNodes[x + 1, y], controlNodes[x, y]);
-                }
-            }
-
         }
     }
 
     public class Square
     {
-        public ControlNode topLeft, topRight, bottomRight, bottomLeft;
-        public Node centreTop, centreRight, centreBottom, centreLeft;
-        public int configuration;
+        public ControlNode oTopLeft, oTopRight, oBottomRight, oBottomLeft;
+        public Node oCentreTop, oCentreRight, oCentreBottom, oCentreLeft;
+        public int iConfiguration;
 
         public Square(ControlNode _topLeft, ControlNode _topRight, ControlNode _bottomRight, ControlNode _bottomLeft)
         {
-            topLeft = _topLeft;
-            topRight = _topRight;
-            bottomRight = _bottomRight;
-            bottomLeft = _bottomLeft;
+            oTopLeft = _topLeft;
+            oTopRight = _topRight;
+            oBottomRight = _bottomRight;
+            oBottomLeft = _bottomLeft;
 
-            centreTop = topLeft.right;
-            centreRight = bottomRight.above;
-            centreBottom = bottomLeft.right;
-            centreLeft = bottomLeft.above;
+            oCentreTop = oTopLeft.oRight;
+            oCentreRight = oBottomRight.oAbove;
+            oCentreBottom = oBottomLeft.oRight;
+            oCentreLeft = oBottomLeft.oAbove;
 
-            if (topLeft.active)
-                configuration += 8;
-            if (topRight.active)
-                configuration += 4;
-            if (bottomRight.active)
-                configuration += 2;
-            if (bottomLeft.active)
-                configuration += 1;
+            if (oTopLeft.bActive)
+                iConfiguration += 8;
+            if (oTopRight.bActive)
+                iConfiguration += 4;
+            if (oBottomRight.bActive)
+                iConfiguration += 2;
+            if (oBottomLeft.bActive)
+                iConfiguration += 1;
         }
     }
 
     public class Node
     {
-        public Vector3 position;
-        public int vertexIndex = -1;
+        public Vector3 vPos;
+        public int iVertexIndex = -1;
 
         public Node(Vector3 _pos)
         {
-            position = _pos;
+            vPos = _pos;
         }
     }
 
     public class ControlNode : Node
     {
-        public bool active;
-        public Node above, right;
+        public bool bActive;
+        public Node oAbove, oRight;
 
         public ControlNode(Vector3 _pos, bool _active, float squareSize) : base(_pos)
         {
-            active = _active;
-            above = new Node(position + Vector3.up * squareSize / 2f);
-            right = new Node(position + Vector3.right * squareSize / 2f);
+            bActive = _active;
+            oAbove = new Node(vPos + Vector3.up * squareSize / 2f);
+            oRight = new Node(vPos + Vector3.right * squareSize / 2f);
         }
     }
 }
