@@ -8,8 +8,6 @@ Map elements
 Enemies
 - Create them in 3D [enemy 0..3,5,6]
 - Implement them in code
-In-game Credits
-- "Uses FMOD Studio / Firelight Technologies"
 Website
 - www.galaxy-forces-vr.com exists.
 - Better/more contents (+the hi-scores, but they are implemented)

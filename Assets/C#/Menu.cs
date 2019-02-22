@@ -269,11 +269,13 @@ public class Menu : MonoBehaviour
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
 
-    C_Item2InMenu oMenuQuit;
+    C_Item2InMenu oMenuQuit, oMenuCredits;
+    GameObject oCreditsQuad;
 
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     internal Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
     internal Material oMaterialOctagonPlay, oMaterialOctagonPlayHighlighted;
+    internal Material oMaterialCircle, oMaterialCircleHighlighted;
     internal Material oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
@@ -286,6 +288,8 @@ public class Menu : MonoBehaviour
         oMaterialPentagonHighlighted = Resources.Load("LevelPentagonHigh", typeof(Material)) as Material;
         oMaterialOctagonPlay = Resources.Load("LevelOctagonPlay", typeof(Material)) as Material;
         oMaterialOctagonPlayHighlighted = Resources.Load("LevelOctagonPlayHigh", typeof(Material)) as Material;
+        oMaterialCircle = Resources.Load("LevelCircle", typeof(Material)) as Material;
+        oMaterialCircleHighlighted = Resources.Load("LevelCircleHigh", typeof(Material)) as Material;
 
         oMaterialRankBronze = Resources.Load("RankBronze", typeof(Material)) as Material;
         oMaterialRankSilver = Resources.Load("RankSilver", typeof(Material)) as Material;
@@ -328,7 +332,8 @@ public class Menu : MonoBehaviour
         //prevent selection if trigger was hold when menu is started
         bAllowSelection = !Input.GetButton("Fire1");
 
-        oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Quit", "Quit", 25.0f, 12.0f);
+        oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Quit", "Quit", 30.0f, 12.0f);
+        oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 53, "Credits", "Credits", 30.0f, 9.0f);
 
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);
@@ -481,6 +486,8 @@ public class Menu : MonoBehaviour
         if (oMenuReplayWR3 != null && oMenuReplayWR3.oLevelQuad != null) oMenuReplayWR3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
         if (oMenuReplayYR != null && oMenuReplayYR.oLevelQuad != null) oMenuReplayYR.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
         if (oMenuPlay != null && oMenuPlay.oLevelQuad != null) oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
+        if (oMenuQuit != null && oMenuQuit.oLevelQuad != null) oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
+        if (oMenuCredits != null && oMenuCredits.oLevelQuad != null) oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
 
         bool bHitLevel = false;
         RaycastHit oHitInfo;
@@ -541,7 +548,15 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
             {
                 oMenuReplayWR3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
-            }            
+            }
+            else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
+            {
+                oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
+            {
+                oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+            }
 
             //manage selection
             if (Input.GetButton("Fire1"))
@@ -601,8 +616,23 @@ public class Menu : MonoBehaviour
                         bAllowSelection = false;
                         bPlaySelectSound = true;
                     }
+                    else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
+                    {
+                        if(oCreditsQuad==null)
+                        {
+                            oCreditsQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                            oCreditsQuad.transform.parent = Menu.theMenu.transform;
+                            oCreditsQuad.transform.localPosition = new Vector3(0, -15, 12.0f);
+                            oCreditsQuad.transform.localScale = new Vector3(40.0f, 40.0f, 1.0f);
+                            Vector3 vAroundPoint = new Vector3(0, 0, -90);
+                            oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 60);
+                            oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
+                        }
+                        bAllowSelection = false;
+                        bPlaySelectSound = true;
+                    }
 
-                    if(bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
+                    if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
                 }
             }
             else
@@ -671,16 +701,15 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
             oLevelQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value*100.0f); //vary 100 deg around z
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
-            string szMaterial = (i_oLevel.iLevelType == (int)LevelType.MAP_RACE) ? "LevelPentagon" : "LevelOctagon";
-            Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
-            oLevelQuad.GetComponent<MeshRenderer>().material = oMaterial;
+            oLevelQuad.GetComponent<MeshRenderer>().material = (i_oLevel.iLevelType == (int)LevelType.MAP_RACE) ?
+                Menu.theMenu.oMaterialPentagonUnlocked : Menu.theMenu.oMaterialPentagonHighlighted;
 
             //quad for level ranking star
             //set in InitLevelRanking() when received from server
 
             //level text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-            oLevelText.transform.localPosition = new Vector3(vPos.x-3.9f, vPos.y-3.50f, vPos.z - 1.1f);
+            oLevelText.transform.localPosition = new Vector3(vPos.x-3.9f, vPos.y-3.45f, vPos.z - 1.1f);
             oLevelText.transform.localScale = new Vector3(1.85f, 1.85f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_oLevel.szLevelDisplayName;
@@ -762,9 +791,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
-            string szMaterial = "LevelOctagon";
-            Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
-            oLevelQuad.GetComponent<MeshRenderer>().material = oMaterial;
+            oLevelQuad.GetComponent<MeshRenderer>().material = Menu.theMenu.oMaterialPentagonUnlocked;
 
             //create text
             oLevelText = new GameObject();
@@ -807,10 +834,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
-
-            string szMaterial = "LevelCircle";
-            Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
-            oLevelQuad.GetComponent<MeshRenderer>().material = oMaterial;
+            oLevelQuad.GetComponent<MeshRenderer>().material = Menu.theMenu.oMaterialCircle;
 
             //create text
             oLevelText = new GameObject();
