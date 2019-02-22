@@ -390,9 +390,12 @@ public class Menu : MonoBehaviour
         oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
         oLevelInfoContainer.SetActive(true);
         oLevelText.GetComponent<TextMesh>().text = aLevels[GameLevel.iLevelIndex].szLevelDescription;
-        oWRNameText1.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName1;
-        oWRNameText2.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName2;
-        oWRNameText3.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName3;
+        if (i_stLevelInfo.szBestName1.Length <= 17) oWRNameText1.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName1;
+        else oWRNameText1.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName1.Substring(0, 16) + "...";
+        if (i_stLevelInfo.szBestName2.Length <= 17) oWRNameText2.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName2;
+        else oWRNameText2.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName2.Substring(0, 16) + "...";
+        if (i_stLevelInfo.szBestName3.Length <= 17) oWRNameText3.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName3;
+        else oWRNameText3.GetComponent<TextMesh>().text = i_stLevelInfo.szBestName3.Substring(0, 16) + "...";
         string szScore = (i_stLevelInfo.iBestScore1 / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iBestScore1);
         if (i_stLevelInfo.iBestScore1 == -1) szScore = "--";

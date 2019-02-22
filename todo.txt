@@ -34,7 +34,6 @@ Known issues/small things undone
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
 - Make 1024x1024 image for game icon (the current icon is 128x128 and comes from the old game)
    Set this in Edit->Project_Settings->Player->Icon in Unity.
-- Handle display of long user names...
 
 Must do:
 - Prevent running the game in non VR (later in Release version)
