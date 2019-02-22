@@ -41,7 +41,9 @@ public class MeshGenerator : MonoBehaviour
         fBumpHeight = i_fBumpHeight;
         oMat = i_oMat;
         oMatWalls = i_oMatWalls;
+float t1 = Time.realtimeSinceStartup;
         squareGrid = new SquareGrid(i_aMap, i_fSquareSize);
+Debug.LogError("new SquareGrid: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         Clear();
 
         w = squareGrid.squares.GetLength(0);
@@ -66,12 +68,18 @@ public class MeshGenerator : MonoBehaviour
     Vector2[] uvs;
     public bool GenerateMeshFinalize(int n)
     {
-        if (n == 0)
+        if (n <= 11)
         {
             //create and set the walls mesh
+float t1 = Time.realtimeSinceStartup;
+            CalculateMeshOutlines(n);
+Debug.LogError("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+        }
+        else if (n == 12)
+        {
             CreateWallMesh();
         }
-        else if (n == 1)
+        else if (n == 13)
         {
             //create bumps on non outline vertices in the map mesh
             for (int i = 0; i < vertices.Count; i++)
@@ -95,7 +103,7 @@ public class MeshGenerator : MonoBehaviour
                 }
             }
         }
-        else if (n == 2)
+        else if (n == 14)
         {
             //create texture coords
             //int tileAmount = 10;
@@ -109,12 +117,12 @@ public class MeshGenerator : MonoBehaviour
                 uvs[i] = new Vector2(percentX, percentY);
             }
         }
-        else if (n == 3)
+        else if (n == 15)
         {
             //generate 2d collission
             Generate2DColliders();
         }
-        else if (n == 4)
+        else if (n == 16)
         {
             //set the map mesh
             Mesh mapMesh = new Mesh();
@@ -132,10 +140,9 @@ public class MeshGenerator : MonoBehaviour
         return false;
     }
 
+    //must run CalculateMeshOutlines() before this
     void CreateWallMesh()
     {
-        CalculateMeshOutlines();
-
         List<Vector3> wallVertices = new List<Vector3>();
         List<int> wallTriangles = new List<int>();
         Mesh wallMesh = new Mesh();
@@ -143,7 +150,6 @@ public class MeshGenerator : MonoBehaviour
         for(int j=0; j < outlines.Count; j++)
         {
             List<int> outline = outlines[j];
-
             for (int i = 0; i < outline.Count - 1; i++)
             {
                 int startIndex = wallVertices.Count;
@@ -331,9 +337,15 @@ public class MeshGenerator : MonoBehaviour
         }
     }
 
-    void CalculateMeshOutlines()
+    void CalculateMeshOutlines(int n)
     {
-        for (int vertexIndex = 0; vertexIndex < vertices.Count; vertexIndex++)
+        int iStart = 0;
+        int iCntTo = vertices.Count;
+        int iInterval = vertices.Count / 12;
+        if (n != 11) iCntTo = (1+n) * iInterval;
+        iStart = n*iInterval;
+
+        for (int vertexIndex = iStart; vertexIndex < iCntTo; vertexIndex++)
         {
             if (!checkedVertices.Contains(vertexIndex))
             {

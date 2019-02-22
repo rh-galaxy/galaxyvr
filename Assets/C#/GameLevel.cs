@@ -229,19 +229,23 @@ public class GameLevel : MonoBehaviour
     {
         if (n == 0)
         {
+float t1 = Time.realtimeSinceStartup;
             Debug.Log("Loading Level: " + szLevel);
             LoadDesPass1(szLevel);
             oMeshGen = GetComponent<MeshGenerator>();
-
+Debug.Log("LoadDesPass1: "+ (Time.realtimeSinceStartup- t1) * 1000.0f);
             //load and generate map
+t1 = Time.realtimeSinceStartup;
             string szPngTileset = szTilefile.Remove(szTilefile.LastIndexOf('.')) + ".png";
             LoadTileSet(szPngTileset);
-
+Debug.Log("LoadTileSet: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             return false;
         }
         else
         {
+float t1 = Time.realtimeSinceStartup;
             bool bFinished = LoadMap(n - 1);
+Debug.Log("LoadMap: " + (Time.realtimeSinceStartup - t1)*1000.0f);
             if (bFinished) bMapLoaded = true;
             return bFinished;
         }
@@ -251,12 +255,14 @@ public class GameLevel : MonoBehaviour
     void Update()
     {
         //finalize the loading in the first few frames after Start()
-        if (iFinalizeCounter <= 4)
+        if (iFinalizeCounter <= 16)
         {
+float t1 = Time.realtimeSinceStartup;
             oMeshGen.GenerateMeshFinalize(iFinalizeCounter);
+Debug.LogError("GenerateMeshFinalize: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             iFinalizeCounter++;
         }
-        else if (iFinalizeCounter == 5)
+        else if (iFinalizeCounter == 17)
         {
             for (int y = 0; y < iHeight; y++)
             {
@@ -807,6 +813,27 @@ public class GameLevel : MonoBehaviour
         }
     }
 
+    void LoadRow(int y, int substeps, float pixelsamplepos)
+    {
+        for (int x = 0; x < iWidth; x++)
+        {
+            ReplaceAndAddObjectPass1(x, y);
+            int iTile = aMap[y, x];
+            Rect r = stTileRects[iTile];
+            for (int y2 = 0; y2 < substeps; y2++)
+            {
+                for (int x2 = 0; x2 < substeps; x2++)
+                {
+                    int posx = (int)r.position.x + (int)(x2 * pixelsamplepos + pixelsamplepos / 2);
+                    int posy = (int)r.position.y + (int)(y2 * pixelsamplepos + pixelsamplepos / 2);
+                    //sample every pixelsamplepos pixel in the tile texture
+                    aMapHighres[y * substeps + y2, x * substeps + x2] = oTileTexture.GetPixel(posx, posy) == Color.black ? 0 : iTile;
+                    //aMapHighres[y * substeps + y2, x * substeps + x2] = aMap[y, x];
+                }
+            }
+        }
+    }
+
     bool LoadMap(int n)
     {
         int substeps = 6;
@@ -828,43 +855,28 @@ public class GameLevel : MonoBehaviour
                 }
             }
 
-            //generate new high res map based on the textures of the tiles
-            int pixelsamplepos = 32 / substeps;
             aMapHighres = new int[iHeight * substeps, iWidth * substeps];
-            for (int y = 0; y < iHeight; y++)
-            {
-                for (int x = 0; x < iWidth; x++)
-                {
-                    ReplaceAndAddObjectPass1(x, y);
-                    int iTile = aMap[y, x];
-                    Rect r = stTileRects[iTile];
-                    for (int y2 = 0; y2 < substeps; y2++)
-                    {
-                        for (int x2 = 0; x2 < substeps; x2++)
-                        {
-                            int posx = (int)r.position.x + x2 * pixelsamplepos + pixelsamplepos / 2;
-                            int posy = (int)r.position.y + y2 * pixelsamplepos + pixelsamplepos / 2;
-                            //sample every pixelsamplepos pixel in the tile texture
-                            aMapHighres[y * substeps + y2, x * substeps + x2] = oTileTexture.GetPixel(posx, posy) == Color.black ? 0 : iTile;
-                            //aMapHighres[y * substeps + y2, x * substeps + x2] = aMap[y, x];
-                        }
-                    }
-                }
-            }
         }
-        else if (n == 1)
+        else if (n < 1 + iHeight)
         {
+            //generate new high res map based on the textures of the tiles
+            float pixelsamplepos = 32 / substeps;
+
+            //for (int y = 0; y < iHeight; y++)
+            //{
+                LoadRow(n-1, substeps, pixelsamplepos);
+            //}
         }
-        else if (n == 2)
+        else if (n == 1 + iHeight)
         {
             //generate final mesh, set tile material
             Material oMaterial = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMaterial, typeof(Material)) as Material;
             oMaterialWalls = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralWalls, typeof(Material)) as Material;
             oMeshGen.GenerateMeshInit(aMapHighres, 1.0f/substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
         }
-        else if (n >= 3)
+        else if (n >= 2 + iHeight)
         {
-            return oMeshGen.GenerateMesh(n-3);
+            return oMeshGen.GenerateMesh(n - (2 + iHeight));
         }
 
         return false;
