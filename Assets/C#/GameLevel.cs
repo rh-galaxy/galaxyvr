@@ -229,16 +229,12 @@ public class GameLevel : MonoBehaviour
     {
         if (n == 0)
         {
-float t1 = Time.realtimeSinceStartup;
             Debug.Log("Loading Level: " + szLevel);
             LoadDesPass1(szLevel);
             oMeshGen = GetComponent<MeshGenerator>();
-Debug.Log("LoadDesPass1: "+ (Time.realtimeSinceStartup- t1) * 1000.0f);
             //load and generate map
-t1 = Time.realtimeSinceStartup;
             string szPngTileset = szTilefile.Remove(szTilefile.LastIndexOf('.')) + ".png";
             LoadTileSet(szPngTileset);
-Debug.Log("LoadTileSet: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             return false;
         }
         else
@@ -261,6 +257,9 @@ float t1 = Time.realtimeSinceStartup;
             oMeshGen.GenerateMeshFinalize(iFinalizeCounter);
 Debug.Log("GenerateMeshFinalize: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             iFinalizeCounter++;
+
+            //pause physics
+            Time.timeScale = 0.0f;
         }
         else if (iFinalizeCounter == 17)
         {
@@ -275,6 +274,9 @@ Debug.Log("GenerateMeshFinalize: " + (Time.realtimeSinceStartup - t1) * 1000.0f)
 
             oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
             GetComponent<AudioSource>().PlayOneShot(oClipLevelStart);
+
+            //time back to normal
+            Time.timeScale = 1.0f;
         }
         //end of init code
 

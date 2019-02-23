@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
 
         GameLevel.theReplay = oReplay;
         oASMusic = GetComponent<AudioSource>();
+        if(bMusicOn) oASMusic.Play();
     }
 
     //////start of valve specific code
@@ -469,8 +470,9 @@ public class GameManager : MonoBehaviour
     bool bStartReplay = false;
     bool bLoadDone = false;
     int iLoadingMap = 0;
-    int iState = -2;
+    int iState = -3;
 
+    bool bPause = false;
     bool bMusicOn = true;
 
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
@@ -502,25 +504,39 @@ public class GameManager : MonoBehaviour
 
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
+        bool bPauseNow = false;
         if (bOculusDevicePresent)
         {
             if ((OVRManager.hasInputFocus && OVRManager.hasVrFocus) /**/|| (XRDevice.userPresence!=UserPresenceState.Present))
             {
-                Time.timeScale = 1.0f;
-                if (bMusicOn) oASMusic.UnPause();
+                bPauseNow = false;
             }
             else
             {
-                Time.timeScale = 0.000001f;
+                bPauseNow = true;
+            }
+        }
+
+        //pause state change
+        if (bPause != bPauseNow)
+        {
+            bPause = bPauseNow;
+            if(bPauseNow)
+            {
+                Time.timeScale = 0.0f;
 
                 //also need to stop all sound
                 if (bMusicOn) oASMusic.Pause();
-                if (GameLevel.theMap!=null) GameLevel.theMap.player.StopSound();
-                return;
+                if (GameLevel.theMap != null) GameLevel.theMap.player.StopSound();
+                
+                //Update keeps running, but FixedUpdate stops
+            }
+            else
+            {
+                Time.timeScale = 1.0f;
+                if (bMusicOn) oASMusic.UnPause();
             }
         }
-        if (bMusicOn && !oASMusic.isPlaying) oASMusic.Play();
-        else if (!bMusicOn && oASMusic.isPlaying) oASMusic.Pause();
 
         //the main state machine
         switch (iState)
@@ -528,6 +544,9 @@ public class GameManager : MonoBehaviour
             case -3:
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 //and should be active here ("Scenes/GameStart")
+                //Screen.SetResolution(1280, 720, true);
+                //Screen.SetResolution(864, 960, false);
+                //^set 1280x720 when recording video, then run the 864x960 to get the default back to that (bug in unity)
                 iState++;
                 break;
             case -2:
