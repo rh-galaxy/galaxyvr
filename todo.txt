@@ -40,7 +40,6 @@ Must do:
 - Enable code for Oculus entitlement check (later in Release version)
 - Checkpoint sounds are not clean... there is some unwanted noise in them
 - Bulletfire sound is not clean... there is some unwanted noise
-- Switch web to HTTPS, and make the game access HTTPS
 
 -------
 Achievements: (implemented for steam and oculus)
