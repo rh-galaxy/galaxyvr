@@ -21,7 +21,7 @@ public struct LevelInfo
 
 public class HttpHiscore
 {
-    const string WEB_HOST = "http://galaxy-forces-vr.com";
+    const string WEB_HOST = "https://galaxy-forces-vr.com";
 
     public List<LevelInfo> oLevelList = new List<LevelInfo>();
     public bool bIsDone = false;
