@@ -118,9 +118,10 @@ public class GameManager : MonoBehaviour
         szUser = "s_" + SteamFriends.GetPersonaName();
         bUserValid = true;
 
-        bValveDevicePresent = true;
+        if (XRDevice.isPresent)
+            bValveDevicePresent = true;
 
-        return true;
+        return bValveDevicePresent;
     }
 
     //cannot do this, because it is called when Awake is called a second time when loading another scene!
@@ -586,6 +587,7 @@ public class GameManager : MonoBehaviour
                 //running menu
                 {
                     oASMusic.volume = 0.40f;
+                    //oASMusic.volume = 0.00f;
 
                     //these 5 are set in menu part 2, reset them here
                     Menu.bWorldBestReplay1 = false;

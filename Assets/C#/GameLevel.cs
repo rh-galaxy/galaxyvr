@@ -206,7 +206,7 @@ public class GameLevel : MonoBehaviour
         oObj.transform.localScale = new Vector3(vSize.x + 2.0f, 1.0f, vSize.z + 6);
         oObj.GetComponent<MeshRenderer>().material = oMaterialWalls;
 
-        //change fov if non VR since that default setting shows to wide fov
+        //change fov if non VR since the default setting shows to wide fov
         // and is not behaving reliably
         if (!XRDevice.isPresent)
             Camera.main.fieldOfView = 38.0f;
@@ -239,9 +239,9 @@ public class GameLevel : MonoBehaviour
         }
         else
         {
-float t1 = Time.realtimeSinceStartup;
+/**/float t1 = Time.realtimeSinceStartup;
             bool bFinished = LoadMap(n - 1);
-Debug.Log("LoadMap: " + (Time.realtimeSinceStartup - t1)*1000.0f);
+/**/Debug.Log("LoadMap: " + (Time.realtimeSinceStartup - t1)*1000.0f);
             if (bFinished) bMapLoaded = true;
             return bFinished;
         }
@@ -253,9 +253,9 @@ Debug.Log("LoadMap: " + (Time.realtimeSinceStartup - t1)*1000.0f);
         //finalize the loading in the first few frames after Start()
         if (iFinalizeCounter <= 16)
         {
-float t1 = Time.realtimeSinceStartup;
+/**/float t1 = Time.realtimeSinceStartup;
             oMeshGen.GenerateMeshFinalize(iFinalizeCounter);
-Debug.Log("GenerateMeshFinalize: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+/**/Debug.Log("GenerateMeshFinalize: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             iFinalizeCounter++;
 
             //pause physics

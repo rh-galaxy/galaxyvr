@@ -26,9 +26,8 @@ Known issues/small things undone
 - Maybe have a "remove bullet"-msg in the replay data.
 - Maybe have a "enemy killed"-msg in the replay data.
 - Maybe have a "door movement"-msg in the replay data.
-- Handle the first few frames in GameLevel.Update better, the game should be paused
-   while level is still being loaded (Time.timeScale = low, but then update will not run).
-   And the level should not show while it is loading, as it is visible that objects "pop up"
+- Handle the first few frames in GameLevel.Update better, the game is now paused while loading
+   but the level should not show while it is loading, as it is visible that objects "pop up"
 - Manage to remove the Prefabs/Materials folder in Unity project (use same mat in Resources)
 - Fix the objects in the Prefabs folder to be done like it should be
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
