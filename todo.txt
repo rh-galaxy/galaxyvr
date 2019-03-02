@@ -15,6 +15,7 @@ Website
 Release
 - Images in different sizes for release on the Oculus Store
 - Images in different sizes for release on the Steam Store
+- Make it work with vive input
 - Game play promotion video
 - Test/fix it working on minimum req hardware
 
