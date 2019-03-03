@@ -11,8 +11,6 @@ public class ZObject : MonoBehaviour
 
     public void Init(int i_iType, float i_fRotation, Vector2 i_vPos)
     {
-        ///**/i_iType = 2;
-
         gameObject.SetActive(true);
         U0.SetActive(i_iType == 0);
         U1.SetActive(i_iType == 1);

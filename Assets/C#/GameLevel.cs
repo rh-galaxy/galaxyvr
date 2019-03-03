@@ -6,7 +6,7 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.XR;
 
-public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP }; //MAP_DOGFIGHT, MAP_MISSION_COOP not supported for now
+public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP }; //MAP_DOGFIGHT, MAP_MISSION_COOP not supported
 
 struct S_TilesetInfo
 {
@@ -139,6 +139,7 @@ public class GameLevel : MonoBehaviour
     //static noncollidable objects
     List<GameObject> aDecorationList; //single bricks, brick wall left,center,right
     public ZObject oZObjBase;
+    public Decoration oDecorationObjBase; //barrels, trees
 
     public Material oSkyBoxMat1;
     public Material oSkyBoxMat2;
@@ -810,6 +811,14 @@ public class GameLevel : MonoBehaviour
                     oObj.GetComponent<MeshRenderer>().material = oMaterial;
 
                     aDecorationList.Add(oObj);
+                    break;
+                }
+            //barrels
+            case 64:
+                {
+                    Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f + 0.0f, y * 32.0f + (32.0f + 7.0f)), new Vector2(64.0f, 32.0f));
+                    Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
+                    oDObj.Init(0, vPos);
                     break;
                 }
         }

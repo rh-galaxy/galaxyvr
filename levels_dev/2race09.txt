@@ -1,6 +1,6 @@
 *MAPTYPE RACE 3
 *MAPSIZE  57 52
-*MAPFILE  race09.map
+*MAPFILE  race09.txt
 *TILESIZE 32
 *TILESET  ts_alien.tga
 

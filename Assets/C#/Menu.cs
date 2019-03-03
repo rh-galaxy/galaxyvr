@@ -564,7 +564,7 @@ public class Menu : MonoBehaviour
             //manage selection
             if (Input.GetButton("Fire1")
 #if !DISABLESTEAMWORKS
-                || GameManager.theGM.vRTK.bButton0
+                || GameManager.theGM.bButton0
 #endif
                 )
             {

@@ -238,9 +238,10 @@ public class Player : MonoBehaviour
             oASGeneral.PlayOneShot(oClipLand);
         }
 
-        //map or door
+        //map or door, or map decorations
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
-            szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp"))
+            szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
+            szOtherObject.CompareTo("Tunnor_test") == 0)
         {
             //minimum impulse to damage (0 - always damage on map)
             fImpulse -= 0.0f;
@@ -305,9 +306,10 @@ public class Player : MonoBehaviour
             }
         }
 
-        //map or door
+        //map or door, or map decorations
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
-            szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp"))
+            szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
+            szOtherObject.CompareTo("Tunnor_test") == 0)
         {
             fShipHealth -= 0.5f * Time.fixedDeltaTime;
         }
@@ -323,8 +325,10 @@ public class Player : MonoBehaviour
             bLanded = false;
         }
 
+        //map or door, or map decorations
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
-            szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp"))
+            szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
+            szOtherObject.CompareTo("Tunnor_test") == 0)
         {
             bScrapeFadeOut = true;
         }
@@ -413,15 +417,15 @@ public class Player : MonoBehaviour
             if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
             if (fY2 < -0.5f && bLeft == false && bRight == false) bAdjust = true;
 #if !DISABLESTEAMWORKS
-            if (GameManager.theGM.vRTK.bLeft) bLeft = true;
-            if (GameManager.theGM.vRTK.bRight) bRight = true;
-            if (GameManager.theGM.vRTK.bDown && bLeft == false && bRight == false) bAdjust = true;
+            if (GameManager.theGM.bLeft) bLeft = true;
+            if (GameManager.theGM.bRight) bRight = true;
+            if (GameManager.theGM.bDown && bLeft == false && bRight == false) bAdjust = true;
 #endif
             if (fY2 > 0.5f || fTrg1 > 0.3f || fTrg2 > 0.3f) bThrottle = true;
             if (Input.GetButton("Fire2")) bThrottle = true; //button 1 (B)
             if (Input.GetButton("Jump")) bThrottle = true;  //button 3 (Y)
 #if !DISABLESTEAMWORKS
-            if (GameManager.theGM.vRTK.bTrigger) bThrottle = true;
+            if (GameManager.theGM.bTrigger) bThrottle = true;
 #endif
 
             //keyboard and joystick for fire (is a trigger once event)
@@ -430,7 +434,7 @@ public class Player : MonoBehaviour
             if (Input.GetButton("Fire1")) bNewFireState = true;     //button 0 (A)
             if (Input.GetButton("Fire3")) bNewFireState = true;     //button 2 (X)
 #if !DISABLESTEAMWORKS
-            if(GameManager.theGM.vRTK.bButton0) bNewFireState = true;
+            if(GameManager.theGM.bButton0) bNewFireState = true;
 #endif
             if (!bFire)
             {
