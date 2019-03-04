@@ -10,17 +10,19 @@ public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP };
 
 struct S_TilesetInfo
 {
-    public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls, int i_iPlanet)
+    public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls, int i_iPlanet, int i_iTree)
     {
         szMaterial = i_szMaterial;
         bRedBricks = i_bRedBricks;
         szMateralWalls = i_szMaterialWalls;
         iPlanet = i_iPlanet;
+        iTree = i_iTree;
     }
     public string szMaterial;
     public bool bRedBricks;
     public string szMateralWalls;
     public int iPlanet;
+    public int iTree;
 }
 
 public class S_EnemyInfo
@@ -92,12 +94,12 @@ public class GameLevel : MonoBehaviour
 
     int iTilesetInfoIndex = 0;
     S_TilesetInfo[] m_stTilesetInfos = {
-        new S_TilesetInfo("Cave_Alien", true, "Walls_Alien", 5),
-        new S_TilesetInfo("Cave_Evil", true, "Walls_Grey", 3),
-        new S_TilesetInfo("Cave_Cave", true, "Walls_Grey", 5),
-        new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite", 2),
-        new S_TilesetInfo("Cave_Frost", true, "Walls_Frost", 4),
-        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava", 1) };
+        new S_TilesetInfo("Cave_Alien", true, "Walls_Alien", 5, 1),
+        new S_TilesetInfo("Cave_Evil", true, "Walls_Grey", 3, 1),
+        new S_TilesetInfo("Cave_Cave", true, "Walls_Grey", 5, 1),
+        new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite", 2, 3),
+        new S_TilesetInfo("Cave_Frost", true, "Walls_Frost", 4, 3),
+        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava", 1, 2) };
 
     internal Vector2 vGravity;
     internal float fDrag;
@@ -741,9 +743,9 @@ public class GameLevel : MonoBehaviour
         switch (iTile)
         {
             //tree1
-            case 62: aMap[y, x] = 17; break;
+            //case 62: aMap[y, x] = 17; break;
             //tree2
-            case 63: aMap[y, x] = 24; break;
+            //case 63: aMap[y, x] = 24; break;
             //barrels
             //case 64: aMap[y, x] = 17; break;
 
@@ -813,10 +815,19 @@ public class GameLevel : MonoBehaviour
                     aDecorationList.Add(oObj);
                     break;
                 }
+            //trees
+            case 62:
+            case 63:
+                {
+                    Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f + 11.0f, y * 32.0f + (32.0f + 5.0f)), new Vector2(32.0f, 32.0f));
+                    Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
+                    oDObj.Init(m_stTilesetInfos[iTilesetInfoIndex].iTree, vPos);
+                    break;
+                }
             //barrels
             case 64:
                 {
-                    Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f + 0.0f, y * 32.0f + (32.0f + 7.0f)), new Vector2(64.0f, 32.0f));
+                    Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f + 1.0f, y * 32.0f + (32.0f + 7.0f)), new Vector2(64.0f, 32.0f));
                     Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
                     oDObj.Init(0, vPos);
                     break;
