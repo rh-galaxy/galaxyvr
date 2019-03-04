@@ -106,6 +106,7 @@ public class Player : MonoBehaviour
         fFuel = MAXFUELINTANK;
         oThruster.enableEmission = false;
 
+        oShipBodyMR = oShipBody.GetComponent<MeshRenderer>();
 
         foreach (AudioSource aSource in GetComponents<AudioSource>())
         { //we have 3 audiosources
@@ -157,6 +158,7 @@ public class Player : MonoBehaviour
 
     Color oShipColorNormal = new Color(138 / 255.0f, 0, 0, 1.0f);
     Color oShipColorBlink = new Color(180 / 255.0f, 0, 0, 0.5f);
+    MeshRenderer oShipBodyMR;
     void Update()
     {
         if (!bInited)
@@ -166,7 +168,7 @@ public class Player : MonoBehaviour
         if (bFreeFromBullets && (((int)(fFreeFromBulletsTimer * 1000)) % 300 > 200))
             oShipMaterial.color = oShipColorBlink;
         else oShipMaterial.color = oShipColorNormal;
-        oShipBody.GetComponent<MeshRenderer>().material = oShipMaterial;
+        oShipBodyMR.material = oShipMaterial;
 
 
         if (oMap.iLevelType == (int)LevelType.MAP_RACE)

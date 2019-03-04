@@ -31,9 +31,6 @@ public class GameManager : MonoBehaviour
 
     public bool triggerSenseAxisEvents = true;
     public bool touchpadSenseAxisEvents = true;
-    public bool middleFingerSenseAxisEvents = true;
-    public bool ringFingerSenseAxisEvents = true;
-    public bool pinkyFingerSenseAxisEvents = true;
 
     public bool bTrigger = false; //accelerate
     public bool bButton0 = false; //fire
@@ -348,7 +345,7 @@ public class GameManager : MonoBehaviour
             //no VR
             UnityEngine.Application.Quit();
         }*/
-        if(!bOculusDevicePresent && !bValveDevicePresent) bUserValid = true;
+        if(!bOculusDevicePresent && !bValveDevicePresent) bUserValid = true; //'DebugUser'
 
         GameLevel.theReplay = oReplay;
         oASMusic = GetComponent<AudioSource>();

@@ -220,11 +220,11 @@ public class Menu : MonoBehaviour
         aLevels[44].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[44].szLevelName = "1mission19"; //1mission04_mod
         aLevels[44].szLevelDisplayName = "19";
-        aLevels[44].szLevelDescription = "Mission19 - 04 mod";
+        aLevels[44].szLevelDescription = "Mission19 - Medusa 2";
         aLevels[45].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[45].szLevelName = "1mission20"; //1mission06_mod
         aLevels[45].szLevelDisplayName = "20";
-        aLevels[45].szLevelDescription = "Mission20 - 06 mod";
+        aLevels[45].szLevelDescription = "Mission20 - The dragon";
         aLevels[46].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[46].szLevelName = "1mission21"; //1mission_narrow
         aLevels[46].szLevelDisplayName = "21";
