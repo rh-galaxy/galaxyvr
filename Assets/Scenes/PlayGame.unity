@@ -183,9 +183,6 @@ MonoBehaviour:
   touchpadTwoAxisEvents: 1
   triggerSenseAxisEvents: 1
   touchpadSenseAxisEvents: 1
-  middleFingerSenseAxisEvents: 1
-  ringFingerSenseAxisEvents: 1
-  pinkyFingerSenseAxisEvents: 1
   bTrigger: 0
   bButton0: 0
   bLeft: 0
@@ -286,6 +283,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11440782, guid: 2af01fc25e1b9fc4c84380e5a743fb5a, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2394684, guid: 2af01fc25e1b9fc4c84380e5a743fb5a, type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2394684, guid: 2af01fc25e1b9fc4c84380e5a743fb5a, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -767,6 +772,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11466180, guid: 7801146a11a16084b9b5bff80667fc4b, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2335356, guid: 7801146a11a16084b9b5bff80667fc4b, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2335356, guid: 7801146a11a16084b9b5bff80667fc4b, type: 3}
+      propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1871,6 +1884,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11444022, guid: 9d450ad32f306e844a3adbc887679a0a, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300328, guid: 9d450ad32f306e844a3adbc887679a0a, type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300328, guid: 9d450ad32f306e844a3adbc887679a0a, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -11994,6 +12015,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2351780, guid: d6a213a5cb6bc7a47a613a88c9279d68, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2351780, guid: d6a213a5cb6bc7a47a613a88c9279d68, type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6a213a5cb6bc7a47a613a88c9279d68, type: 3}
 --- !u!1 &1497335914
@@ -12417,6 +12446,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11423638, guid: fbf5239440024b54aa2971834b80b507, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2367616, guid: fbf5239440024b54aa2971834b80b507, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2367616, guid: fbf5239440024b54aa2971834b80b507, type: 3}
+      propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
