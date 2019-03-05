@@ -38,8 +38,8 @@ public class Enemy : MonoBehaviour
     int[] SENEMY_BULLETSPEED = { 190, 160, 190, 160, 110, 90, 120, 140 };
     bool[] SENEMY_RANDOMBULLETANGLE = { false, false, false, false, true, false, false, false };
     int[,] SENEMY_BULLETANGLE = {
-        {0,0,0,0,0,0,0,0}, {-50,0,50,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {-50,0,50,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {-70,-35,0,35,70,0,0,0}, {-180,-135,-90,-45,0,45,90,135}};
+        {0,0,0,0,0,0,0,0}, {-45,0,45,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {-45,0,45,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {-70,-35,0,35,70,0,0,0}, {-180,-135,-90,-45,0,45,90,135} };
     Vector2[,] SENEMY_FIREPOINT = {
         {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },
         {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },

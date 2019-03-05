@@ -85,7 +85,9 @@ square_start("'100%'");
 <h4>Development screenshot, enemies and status bar visible</h4>
 <p><img align="left" src="images/early_dev_screenshot3_860.jpg" title="Galaxy VR dev"></p>
 <h4>Development screenshot, space background and planet below</h4>
-<p><img align="left" src="images/early_dev_screenshot4_860.jpg" title="Galaxy VR dev"></p>
+<p><img align="left" src="images/dev_screenshot4_860.jpg" title="Galaxy VR dev"></p>
+<h4>Development screenshot, enemies and trees</h4>
+<p><img align="left" src="images/dev_screenshot5_860.jpg" title="Galaxy VR dev"></p>
 
 <?php
 square_end();

@@ -634,13 +634,13 @@ public class GameLevel : MonoBehaviour
                             if (stEnemy.iAngle == 0)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(16, 12));
-                                stEnemy.vWayPoints[i].x -= 6.0f/32.0f;
+                                stEnemy.vWayPoints[i].x -= 4.5f/32.0f;
                             }
                             else if (stEnemy.iAngle == 270)
                             {
                                 stEnemy.iAngle = 90;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
-                                stEnemy.vWayPoints[i].y -= 6.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y -= 4.0f / 32.0f;
                             }
                             else if (stEnemy.iAngle == 180)
                             {
@@ -651,8 +651,8 @@ public class GameLevel : MonoBehaviour
                             {
                                 stEnemy.iAngle = 270;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
-                                stEnemy.vWayPoints[i].y += 4.0f / 32.0f;
-                                stEnemy.vWayPoints[i].x += 4.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y += 7.0f / 32.0f;
+                                stEnemy.vWayPoints[i].x += 3.0f / 32.0f;
                             }
                             break;
                         case 1:
@@ -666,7 +666,7 @@ public class GameLevel : MonoBehaviour
                             {
                                 stEnemy.iAngle = 90;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
-                                stEnemy.vWayPoints[i].y -= 6.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y -= 2.5f / 32.0f;
                             }
                             else if (stEnemy.iAngle == 180)
                             {
