@@ -640,7 +640,7 @@ public class GameLevel : MonoBehaviour
                             {
                                 stEnemy.iAngle = 90;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
-                                stEnemy.vWayPoints[i].y -= 10.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y -= 6.0f / 32.0f;
                             }
                             else if (stEnemy.iAngle == 180)
                             {

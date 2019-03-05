@@ -1,7 +1,8 @@
 Map elements
-- Landing zone, hangar building - low poly model (only visual)
+- Landing zone, hangar - low poly model (only visual)
 - Landing zone, antenna - low poly model (only visual)
-- Map decorations, red/green house in 3 parts (left, center, (right)) -
+- Landing zone, silo - low poly model (only visual)
+- Map decorations, red/green house in 3 parts (left, center, right) -
    low poly model (visual, and collision in map)
 Enemies
 - Create them in 3D [enemy 5 only left todo]
