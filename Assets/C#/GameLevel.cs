@@ -629,16 +629,87 @@ public class GameLevel : MonoBehaviour
                 {
                     switch (stEnemy.iEnemyType)
                     {
-                        case 0: break;
-                        case 1: break;
-                        case 2: break;
-                        case 3: break;
-                        case 4:
+                        case 0:
+                        case 2:
+                            if (stEnemy.iAngle == 0)
                             {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(64, 32)); break;
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(16, 12));
+                                stEnemy.vWayPoints[i].x -= 6.0f/32.0f;
                             }
-                        case 5: break;
-                        case 6: break;
+                            else if (stEnemy.iAngle == 270)
+                            {
+                                stEnemy.iAngle = 90;
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
+                                stEnemy.vWayPoints[i].y -= 10.0f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 180)
+                            {
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(16, 12));
+                                stEnemy.vWayPoints[i].x += 9.0f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 90)
+                            {
+                                stEnemy.iAngle = 270;
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
+                                stEnemy.vWayPoints[i].y += 4.0f / 32.0f;
+                                stEnemy.vWayPoints[i].x += 4.0f / 32.0f;
+                            }
+                            break;
+                        case 1:
+                        case 3:
+                            if (stEnemy.iAngle == 0)
+                            {
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
+                                stEnemy.vWayPoints[i].x -= 4.0f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 270)
+                            {
+                                stEnemy.iAngle = 90;
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
+                                stEnemy.vWayPoints[i].y -= 6.0f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 180)
+                            {
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
+                                stEnemy.vWayPoints[i].x += 6.0f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 90)
+                            {
+                                stEnemy.iAngle = 270;
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
+                                stEnemy.vWayPoints[i].y += 4.0f / 32.0f;
+                            }
+                            break;
+                        case 4:
+                            stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(64, 32));
+                            break;
+                        case 5:
+                            /**/
+                            break;
+                        case 6:
+                            if (stEnemy.iAngle == 0)
+                            {
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
+                                stEnemy.vWayPoints[i].x -= 6.0f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 270)
+                            {
+                                stEnemy.iAngle = 90;
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
+                                stEnemy.vWayPoints[i].y -= 6.0f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 180)
+                            {
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
+                                stEnemy.vWayPoints[i].x += 6.0f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 90)
+                            {
+                                stEnemy.iAngle = 270;
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
+                                stEnemy.vWayPoints[i].y += 2.0f / 32.0f;
+                            }
+                            break;
                     }
                 }
 

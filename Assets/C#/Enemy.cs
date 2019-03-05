@@ -7,7 +7,14 @@ public class Enemy : MonoBehaviour
     S_EnemyInfo stInfo;
 
     GameLevel oMap;
+    public GameObject enemy0;
+    public GameObject enemy1;
+    public GameObject enemy2;
+    public GameObject enemy3;
     public GameObject enemy4;
+    public GameObject enemy4_part;
+    public GameObject enemy5;
+    public GameObject enemy6;
     public GameObject oExplosion;
 
     public AudioClip oClipHit;
@@ -20,6 +27,7 @@ public class Enemy : MonoBehaviour
     float fWPTime;
     float fFireTime;
 
+    bool bInited = false;
     int iNumHits = 1;
     bool bStartExplosion = false;
     float fExplosionTimer = 0.0f;
@@ -30,65 +38,83 @@ public class Enemy : MonoBehaviour
     int[] SENEMY_BULLETSPEED = { 190, 160, 190, 160, 110, 90, 120, 140 };
     bool[] SENEMY_RANDOMBULLETANGLE = { false, false, false, false, true, false, false, false };
     int[,] SENEMY_BULLETANGLE = {
-	    {0,0,0,0,0,0,0,0}, {-50,0,50,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {-50,0,50,0,0,0,0,0},
-	    {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {-70,-35,0,35,70,0,0,0}, {-180,-135,-90,-45,0,45,90,135}};
+        {0,0,0,0,0,0,0,0}, {-50,0,50,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {-50,0,50,0,0,0,0,0},
+        {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {-70,-35,0,35,70,0,0,0}, {-180,-135,-90,-45,0,45,90,135}};
+    Vector2[,] SENEMY_FIREPOINT = {
+        {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },
+        {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },
+        {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },
+        {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },
+        {new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0) },
+        {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },
+        {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) } };
+    Vector2[] SENEMY5_FIREPOINT2 = {
+        new Vector2(20.0f/32.0f, 0), new Vector2(0, 20.0f/32.0f), new Vector2(-20.0f/32.0f, 0), new Vector2(0, -20.0f/32.0f) };
 
 
     public void Init(S_EnemyInfo i_stInfo, GameLevel i_oMap)
     {
+        bInited = true;
         oMap = i_oMap;
         stInfo = i_stInfo;
 
-        //set all to inactive
-        gameObject.SetActive(false); //remove later
-        enemy4.SetActive(false);
+        //set the correct one active
+        gameObject.SetActive(true);
+        enemy0.SetActive(stInfo.iEnemyType == 0);
+        enemy1.SetActive(stInfo.iEnemyType == 1);
+        enemy2.SetActive(stInfo.iEnemyType == 2);
+        enemy3.SetActive(stInfo.iEnemyType == 3);
+        enemy4.SetActive(stInfo.iEnemyType == 4);
+        /**///enemy5.SetActive(false /*stInfo.iEnemyType == 5*/);
+        enemy6.SetActive(stInfo.iEnemyType == 6);
+        oExplosion.SetActive(false);
 
-        //enable and init for the current enemy type
+        //init for the current enemy type
         iCurWP = 1;
         fWPTime = 0;
         fFireTime = 0;
-        oExplosion.SetActive(false);
-        //gameObject.SetActive(true); /*later this is true for all, and then remove below*/
-        if (stInfo.iEnemyType == 4)
-        {
-            gameObject.SetActive(true); //remove later
-            enemy4.SetActive(true);
-        }
+        if (stInfo.iEnemyType != 4) oExplosion.transform.localScale = new Vector3(0.9f, 0.9f, 2.0f); //smaller explosion
+        if (stInfo.iEnemyType == 0) enemy0.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
+        if (stInfo.iEnemyType == 1) enemy1.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
+        if (stInfo.iEnemyType == 2) enemy2.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
+        if (stInfo.iEnemyType == 3) enemy3.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
+        if (stInfo.iEnemyType == 4) enemy4.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
+        /**///if (stInfo.iEnemyType == 5) enemy5.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
+        if (stInfo.iEnemyType == 6) enemy6.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         vPos.x = stInfo.vWayPoints[0].x;
         vPos.y = stInfo.vWayPoints[0].y;
-        vPos.z = 1.5f;
+        vPos.z = 0.0f;
 
         iNumHits = SENEMY_HITSTOKILL[stInfo.iEnemyType];
 
         name = "Enemy";
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void HitByBullet()
     {
-        string szOtherObject = collision.collider.gameObject.name;
-
-        if (szOtherObject.StartsWith("BulletP"))
+        //player bullet, one hit
+        if (iNumHits > 0)
         {
-            //player bullet, one hit
-            if (iNumHits > 0)
+            iNumHits--;
+
+            if (iNumHits == 0)
             {
-                iNumHits--;
+                //kill this enemy
+                bStartExplosion = true;
 
-                if (iNumHits == 0)
-                {
-                    //kill this enemy
-                    bStartExplosion = true;
+                //play explosion sound
+                GetComponent<AudioSource>().PlayOneShot(oClipExplosion);
 
-                    //play explosion sound
-                    GetComponent<AudioSource>().PlayOneShot(oClipExplosion);
-
-                    oMap.iAchieveEnemiesKilled++;
-                }
-                else
-                {
-                    GetComponent<AudioSource>().PlayOneShot(oClipHit);
-                }
+                oMap.iAchieveEnemiesKilled++;
             }
+            else
+            {
+                GetComponent<AudioSource>().PlayOneShot(oClipHit);
+            }
+        }
+        else
+        {
+            GetComponent<AudioSource>().PlayOneShot(oClipHit);
         }
 
         //collision with player, done in player
@@ -108,6 +134,8 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!bInited) return;
+
         //////handle creation of all new enemy bullets, could be done in another place...
         if (GameLevel.bRunReplay)
         {
@@ -137,7 +165,15 @@ public class Enemy : MonoBehaviour
             //start explosion
             if (bStartExplosion)
             {
-                /**/enemy4.SetActive(false); //set the specific enemytype inactive later
+                //set the specific enemytype inactive later
+                enemy0.SetActive(false);
+                enemy1.SetActive(false);
+                enemy2.SetActive(false);
+                enemy3.SetActive(false);
+                enemy4.SetActive(false);
+                /**///enemy5.SetActive(false);
+                enemy6.SetActive(false);
+
                 oExplosion.SetActive(true);
                 fExplosionTimer = 0.0f;
                 bStartExplosion = false;
@@ -187,7 +223,7 @@ public class Enemy : MonoBehaviour
                     {
                         GetComponent<AudioSource>().PlayOneShot(oClipFire);
 
-                        float fDirection = 0;
+                        float fDirection = stInfo.iAngle;
                         if (SENEMY_RANDOMBULLETANGLE[stInfo.iEnemyType])
                         {
                             fDirection = Random.value * 359;
@@ -195,9 +231,10 @@ public class Enemy : MonoBehaviour
 
                         for (int i = 0; i < SENEMY_NUMBULLETS[stInfo.iEnemyType]; i++)
                         {
-                            //if (stInfo.iEnemyType == 5) m_pstFirePoint = &SENEMY5_FIREPOINT[2 * (int)(m_dDirection / 90) + i];
-                            CreateBullet(fDirection, 0.0f, Bullet.BULLETBASEVEL / 2, i);
-                            //^only valid for enemy 4, fix this!
+                            Vector2 vFirePoint = vPos;
+                            if (stInfo.iEnemyType == 5 && i == 1) vFirePoint = SENEMY5_FIREPOINT2[stInfo.iAngle / 90];
+                            else vFirePoint += SENEMY_FIREPOINT[stInfo.iEnemyType, stInfo.iAngle / 90];
+                            CreateBullet(vFirePoint, fDirection + SENEMY_BULLETANGLE[stInfo.iEnemyType, i], Bullet.BULLETBASEVEL / 2, i);
                         }
                     }
                 }
@@ -210,21 +247,23 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        if (!bInited) return;
+
         //only enemy 4 rotates
         if (stInfo.iEnemyType == 4)
         {
-            enemy4.transform.Rotate(Vector3.forward, 50.0f * Time.deltaTime);
+            enemy4_part.transform.Rotate(Vector3.forward, 50.0f * Time.deltaTime);
         }
     }
 
-    void CreateBullet(float i_fDirection, float i_fOffset, float i_fSpeed, int iBulletNum)
+    void CreateBullet(Vector2 i_vFirePoint, float i_fDirection, float i_fSpeed, int iBulletNum)
     {
         S_BulletInfo stBulletInfo;
 
         float fSin = Mathf.Sin(i_fDirection * (Mathf.PI / 180.0f));
         float fCos = Mathf.Cos(i_fDirection * (Mathf.PI / 180.0f));
         ///**/Debug.DrawLine(new Vector3(pos.x, pos.y, -4.5f), new Vector3(pos.x + fCos * i_fOffset, pos.y + fSin * i_fOffset, -4.5f), Color.black, 2.5f, false);
-        stBulletInfo.vPos = new Vector2(vPos.x + fCos * i_fOffset, vPos.y + fSin * i_fOffset);
+        stBulletInfo.vPos = i_vFirePoint; // new Vector2(vPos.x + fCos * i_fOffset, vPos.y + fSin * i_fOffset);
         stBulletInfo.vVel = new Vector2(vVel.x + fCos * i_fSpeed, vVel.y + fSin * i_fSpeed);
         stBulletInfo.fDirection = i_fDirection;
 

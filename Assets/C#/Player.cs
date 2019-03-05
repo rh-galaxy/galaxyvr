@@ -265,10 +265,12 @@ public class Player : MonoBehaviour
         //enemy bullet, take damage
         if (szOtherObject.StartsWith("BulletE"))
         {
-            if (!bFreeFromBullets) fShipHealth -= 0.5f;
-
-            //play hit sound
-            oASGeneral.PlayOneShot(oClipHit);
+            if (!bFreeFromBullets)
+            {
+                fShipHealth -= 0.47f; //4 hits if full health
+                //play hit sound
+                oASGeneral.PlayOneShot(oClipHit);
+            }
         }
 
         //own bullet, do nothing
@@ -436,7 +438,8 @@ public class Player : MonoBehaviour
             if (Input.GetButton("Fire1")) bNewFireState = true;     //button 0 (A)
             if (Input.GetButton("Fire3")) bNewFireState = true;     //button 2 (X)
 #if !DISABLESTEAMWORKS
-            if(GameManager.theGM.bButton0) bNewFireState = true;
+            if (GameManager.theGM.bButton1) bNewFireState = true;
+            if (GameManager.theGM.bGrip) bNewFireState = true;
 #endif
             if (!bFire)
             {

@@ -16,27 +16,14 @@ public class GameManager : MonoBehaviour
 #if !DISABLESTEAMWORKS
     public VRTK_ControllerEvents controllerEvents;
 
-    public bool triggerButtonEvents = true;
-    public bool gripButtonEvents = true;
-    public bool touchpadButtonEvents = true;
-    public bool touchpadTwoButtonEvents = true;
-    public bool buttonOneButtonEvents = true;
-    public bool buttonTwoButtonEvents = true;
-    public bool startMenuButtonEvents = true;
-
-    public bool triggerAxisEvents = true;
-    public bool gripAxisEvents = true;
-    public bool touchpadAxisEvents = true;
-    public bool touchpadTwoAxisEvents = true;
-
-    public bool triggerSenseAxisEvents = true;
-    public bool touchpadSenseAxisEvents = true;
-
     public bool bTrigger = false; //accelerate
-    public bool bButton0 = false; //fire
+    public bool bGrip = false; //fire
+    public bool bButton1 = false; //fire
+    public bool bButton2 = false; 
     public bool bLeft = false, bRight = false;
     public bool bUp = false, bDown = false;
-    public bool bStart = false;
+    public bool bStart = false; //back, is this menu button or system menu button?
+    public bool bStartSeen = false;
 
     private void OnEnable()
     {
@@ -116,40 +103,28 @@ public class GameManager : MonoBehaviour
     {
         bTrigger = true;
 
-        if (triggerButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TRIGGER", "pressed", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TRIGGER", "pressed", e);
     }
 
     private void DoTriggerReleased(object sender, ControllerInteractionEventArgs e)
     {
         bTrigger = false;
 
-        if (triggerButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TRIGGER", "released", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TRIGGER", "released", e);
     }
 
     private void DoGripPressed(object sender, ControllerInteractionEventArgs e)
     {
-        bButton0 = true;
+        bGrip = true;
 
-        if (gripButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "GRIP", "pressed", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "GRIP", "pressed", e);
     }
 
     private void DoGripReleased(object sender, ControllerInteractionEventArgs e)
     {
-        bButton0 = false;
+        bGrip = false;
 
-        if (gripButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "GRIP", "released", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "GRIP", "released", e);
     }
 
     private void DoTouchpadPressed(object sender, ControllerInteractionEventArgs e)
@@ -162,18 +137,12 @@ public class GameManager : MonoBehaviour
         //bLeft, bRight;
         //bUp, bDown;
 
-        if (touchpadButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "pressed down", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "pressed down", e);
     }
 
     private void DoTouchpadReleased(object sender, ControllerInteractionEventArgs e)
     {
-        if (touchpadButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "released", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "released", e);
     }
 
     private void DoTouchpadAxisChanged(object sender, ControllerInteractionEventArgs e)
@@ -186,10 +155,7 @@ public class GameManager : MonoBehaviour
         //bLeft, bRight;
         //bUp, bDown;
 
-        if (touchpadAxisEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "axis changed", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "axis changed", e);
     }
 
     private void DoTouchpadTwoPressed(object sender, ControllerInteractionEventArgs e)
@@ -202,18 +168,12 @@ public class GameManager : MonoBehaviour
         //bLeft, bRight;
         //bUp, bDown;
 
-        if (touchpadTwoButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPADTWO", "pressed down", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPADTWO", "pressed down", e);
     }
 
     private void DoTouchpadTwoReleased(object sender, ControllerInteractionEventArgs e)
     {
-        if (touchpadTwoButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPADTWO", "released", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPADTWO", "released", e);
     }
 
     private void DoTouchpadTwoAxisChanged(object sender, ControllerInteractionEventArgs e)
@@ -226,74 +186,54 @@ public class GameManager : MonoBehaviour
         //bLeft, bRight;
         //bUp, bDown;
 
-        if (touchpadTwoAxisEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPADTWO", "axis changed", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPADTWO", "axis changed", e);
     }
 
     private void DoTouchpadSenseAxisChanged(object sender, ControllerInteractionEventArgs e)
     {
-        if (touchpadSenseAxisEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "sense axis changed", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "sense axis changed", e);
     }
 
     private void DoButtonOnePressed(object sender, ControllerInteractionEventArgs e)
     {
-        bButton0 = true;
+        bButton1 = true;
 
-        if (buttonOneButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON ONE", "pressed down", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON ONE", "pressed down", e);
     }
 
     private void DoButtonOneReleased(object sender, ControllerInteractionEventArgs e)
     {
-        bButton0 = false;
+        bButton1 = false;
 
-        if (buttonOneButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON ONE", "released", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON ONE", "released", e);
     }
 
     private void DoButtonTwoPressed(object sender, ControllerInteractionEventArgs e)
     {
-        if (buttonTwoButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON TWO", "pressed down", e);
-        }
+        bButton2 = true;
+
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON TWO", "pressed down", e);
     }
 
     private void DoButtonTwoReleased(object sender, ControllerInteractionEventArgs e)
     {
-        if (buttonTwoButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON TWO", "released", e);
-        }
+        bButton2 = false;
+
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON TWO", "released", e);
     }
 
     private void DoStartMenuPressed(object sender, ControllerInteractionEventArgs e)
     {
         bStart = true;
 
-        if (startMenuButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "START MENU", "pressed down", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "START MENU", "pressed down", e);
     }
 
     private void DoStartMenuReleased(object sender, ControllerInteractionEventArgs e)
     {
         bStart = false;
 
-        if (startMenuButtonEvents)
-        {
-            DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "START MENU", "released", e);
-        }
+        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "START MENU", "released", e);
     }
 #endif
     //end VRTK//////////////////////////////
@@ -794,7 +734,7 @@ public class GameManager : MonoBehaviour
 
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
-        bool bPauseNow = false;
+        bool bPauseNow = bPause; //no change below
         if (bOculusDevicePresent)
         {
             if ((OVRManager.hasInputFocus && OVRManager.hasVrFocus) /**/|| (XRDevice.userPresence!=UserPresenceState.Present))
@@ -809,8 +749,15 @@ public class GameManager : MonoBehaviour
         if (bValveDevicePresent)
         {
 #if !DISABLESTEAMWORKS
-            //if ()
-            //    ;
+            /*if (!bStartSeen && bStart)
+            {
+                bStartSeen = true;
+                bPauseNow = !bPause;
+            }
+            if (!bStart)
+            {
+                bStartSeen = false;
+            }*/
 #endif
         }
 
@@ -944,7 +891,11 @@ public class GameManager : MonoBehaviour
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
-                if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton1) || Input.GetKey(KeyCode.Escape))
+                if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton1) || Input.GetKey(KeyCode.Escape)
+#if !DISABLESTEAMWORKS
+                    || bStart
+#endif
+                    )
                 {
                     iState = 1; //goto menu part 1 (back)
                     Menu.theMenu.SetLevelInfo(stLevel, true); //stLevel not used
@@ -1023,7 +974,11 @@ public class GameManager : MonoBehaviour
                 //running game
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
-                    if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)) //back to menu
+                    if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)
+#if !DISABLESTEAMWORKS
+                        || bStart
+#endif
+                        ) //back to menu
                     {
                         bBackToMenu = true;
                     }

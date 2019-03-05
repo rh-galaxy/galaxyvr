@@ -1,13 +1,11 @@
 Map elements
 - Landing zone, hangar building - low poly model (only visual)
 - Landing zone, antenna - low poly model (only visual)
-- Map decorations, trees - low poly model (visual, and collision in map)
-- Map decorations, barrels - low poly model (visual, and collision in map)
 - Map decorations, red/green house in 3 parts (left, center, (right)) -
    low poly model (visual, and collision in map)
 Enemies
-- Create them in 3D [enemy 0..3,5,6]
-- Implement them in code
+- Create them in 3D [enemy 5 only left todo]
+- Implement in code [enemy 5]
 Website
 - www.galaxy-forces-vr.com exists.
 - Better/more contents (+the hi-scores, but they are implemented)
@@ -34,12 +32,12 @@ Known issues/small things undone
    now there are models (ship1, enemy4, U, U_wider) mixed with the real prefab objects
 - Make 1024x1024 image for game icon (the current icon is 128x128 and comes from the old game)
    Set this in Edit->Project_Settings->Player->Icon in Unity.
+- Checkpoint sounds are not clean... there is some unwanted noise in them
+- Bulletfire sound is not clean... there is some unwanted noise
 
 Must do:
 - Prevent running the game in non VR (later in Release version)
 - Enable code for Oculus entitlement check (later in Release version)
-- Checkpoint sounds are not clean... there is some unwanted noise in them
-- Bulletfire sound is not clean... there is some unwanted noise
 
 -------
 Achievements: (implemented for steam and oculus)
