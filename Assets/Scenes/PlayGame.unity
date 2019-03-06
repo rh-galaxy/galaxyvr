@@ -753,14 +753,14 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingLayerMask: 1627419502
+  m_RenderingLayerMask: 461373440
   m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: -3.0590932e+31, y: NaN, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 1e-45, y: 0, z: 0, w: 1.83672e-40}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -7799,7 +7799,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.8278329, y: -0.2751915}
+  m_Offset: {x: 1.2601824, y: -0.1882171}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -7810,7 +7810,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.7115598, y: 0.28411973}
+  m_Size: {x: 1.5762587, y: 0.2261368}
   m_EdgeRadius: 0
 --- !u!61 &1081335218
 BoxCollider2D:
@@ -7825,7 +7825,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.79655147, y: 0.16325235}
+  m_Offset: {x: -0.5294225, y: 0.16325235}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -7836,7 +7836,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.3069856, y: 0.30212784}
+  m_Size: {x: 1.1734207, y: 0.30212784}
   m_EdgeRadius: 0
 --- !u!114 &1090136799 stripped
 MonoBehaviour:

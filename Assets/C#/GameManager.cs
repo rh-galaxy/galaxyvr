@@ -314,16 +314,17 @@ public class GameManager : MonoBehaviour
     {
         try
         {
-            if (SteamAPI.RestartAppIfNecessary((AppId_t)1035550)) //344685
+            if (SteamAPI.RestartAppIfNecessary((AppId_t)1035550))
             {
-                UnityEngine.Application.Quit();
+                Debug.LogError("[Steamworks.NET] SteamAPI.RestartAppIfNecessary returned false\n", this);
+/**///                UnityEngine.Application.Quit();
                 return false;
             }
         }
         catch (System.DllNotFoundException e)
         {
             Debug.LogError("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. It's likely not in the correct location.\n" + e, this);
-            UnityEngine.Application.Quit();
+/**///            UnityEngine.Application.Quit();
             return false;
         }
 
@@ -331,7 +332,7 @@ public class GameManager : MonoBehaviour
         if (!bInited)
         {
             Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed.", this);
-            UnityEngine.Application.Quit();
+/**///            UnityEngine.Application.Quit();
             return false;
         }
 
@@ -869,6 +870,7 @@ public class GameManager : MonoBehaviour
                     stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
                     stLevel.iScoreMs = stLevel.iBestScore1 = stLevel.iBestScore2 = stLevel.iBestScore3 = -1;
                     stLevel.iLimit1 = stLevel.iLimit2 = stLevel.iLimit3 = -1;
+                    stLevel.szBestName1 = "_None"; stLevel.szBestName2 = "_None"; stLevel.szBestName3 = "_None";
 
                     string szLevelToLoad = GameLevel.szLevel.Substring(1);
                     for (int i = 0; i < oHigh.oLevelList.Count; i++)
