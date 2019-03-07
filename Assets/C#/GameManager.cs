@@ -245,6 +245,9 @@ public class GameManager : MonoBehaviour
     internal static ulong iUserID = 1;
     internal static string szUser = "DebugUser"; //use debug user if no VR user
     internal static bool bUserValid = false;
+    internal static bool bNoUser = false;
+    internal static bool bNoInternet = false;
+    internal static bool bNoVR = false;
 
     string szLastLevel = "";
     int iAchievementHellbentCounter = 0;
@@ -280,12 +283,18 @@ public class GameManager : MonoBehaviour
         bInited = InitOculus();
 #endif
 
-        /**//*if(!bInited)
+        if (!bInited)
         {
             //no VR
-            UnityEngine.Application.Quit();
-        }*/
-        if(!bOculusDevicePresent && !bValveDevicePresent) bUserValid = true; //'DebugUser'
+            //bUserValid = true;
+            bNoUser = true;
+            bNoVR = true;
+            Screen.SetResolution(1280, 720, true);
+        }
+        else
+        {
+            Screen.SetResolution(864, 960, false);
+        }
 
         GameLevel.theReplay = oReplay;
         oASMusic = GetComponent<AudioSource>();
@@ -317,14 +326,12 @@ public class GameManager : MonoBehaviour
             if (SteamAPI.RestartAppIfNecessary((AppId_t)1035550))
             {
                 Debug.LogError("[Steamworks.NET] SteamAPI.RestartAppIfNecessary returned false\n", this);
-/**///                UnityEngine.Application.Quit();
                 return false;
             }
         }
         catch (System.DllNotFoundException e)
         {
             Debug.LogError("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. It's likely not in the correct location.\n" + e, this);
-/**///            UnityEngine.Application.Quit();
             return false;
         }
 
@@ -332,7 +339,6 @@ public class GameManager : MonoBehaviour
         if (!bInited)
         {
             Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed.", this);
-/**///            UnityEngine.Application.Quit();
             return false;
         }
 
@@ -597,14 +603,11 @@ public class GameManager : MonoBehaviour
         if (msg.IsError)
         {
             Debug.LogError("No Oculus user");
-//removed quit while developing
-/**///UnityEngine.Application.Quit();
         }
         else
         {
             //save ID, and user name
             iUserID = msg.GetUser().ID;
-            /**///szUser = "o_" + msg.GetUser().OculusID;
             szUser = msg.GetUser().OculusID;
             Debug.Log("You are " + szUser);
             bUserValid = true;
@@ -726,7 +729,7 @@ public class GameManager : MonoBehaviour
 #endif
 #if UNITY_EDITOR
             // Application.Quit() does not work in the editor so
-            // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+            // this need to be set to false to end the game
             UnityEditor.EditorApplication.isPlaying = false;
 #else
             UnityEngine.Application.Quit();
@@ -796,16 +799,22 @@ public class GameManager : MonoBehaviour
                 break;
             case -2:
                 //wait for oculus user id/name to be ready
-                if (bUserValid) iState++;
+                if (bUserValid || bNoUser) iState++;
                 break;
             case -1:
                 //get the progress, to see how many missions are unlocked
-                StartCoroutine(oHigh.GetLimits());
+                if (!bNoInternet)
+                {
+                    StartCoroutine(oHigh.GetLimits());
+                    //set in the above, but since StartCoroutine returns before it has a chanse
+                    // to run we need to set it
+                    oHigh.bIsDone = false;
+                }
+                else
+                {
+                    oHigh.bIsDone = true;
+                }
                 iState++;
-
-                //set in the above, but since StartCoroutine returns before it has a chanse
-                // to run we need to set it
-                oHigh.bIsDone = false;
 
                 break;
             case 0:
@@ -821,9 +830,13 @@ public class GameManager : MonoBehaviour
                             if (stLevel.iScoreMs != -1) iMissionsFinished++;
                         }
                     }
-                    Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + (int)(iMissionsFinished * 1.35f));
-                    Menu.theMenu.SetMissionUnlock((int)(iMissionsFinished * 1.35f) + 1);
-                    Menu.theMenu.InitLevelRanking();
+                    if(oHigh.oLevelList.Count==0) bNoInternet = true; //set this so no further attempts are made at accessing the internet
+
+                    int iToUnlock = (int)(iMissionsFinished * 1.35f) + 1;
+                    if (bNoInternet || bNoUser) iToUnlock = 30; //unlock everything
+                    Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + iToUnlock);
+                    Menu.theMenu.SetMissionUnlock(iToUnlock);
+                    if(!bNoUser) Menu.theMenu.InitLevelRanking();
                     iState++;
                 }
                 break;
@@ -847,16 +860,8 @@ public class GameManager : MonoBehaviour
                         Menu.bLevelSelected = false; //reset when we have seen it
 
                         //goto menu part 2 for the selected level
-                        if (GameManager.bUserValid) //will be and must always be true
-                        {
-                            ///StartCoroutine(oHigh.GetLimits()); 
-                            iState++;
-
-                            //set in the above, but since StartCoroutine returns before it has a chanse
-                            // to run we need to set it
-                            //oHigh.bIsDone = false;
-                            //^we already have the info from state 0
-                        }
+                        iState++;
+                        //^we already have the info from state 0, no need to load it again
                     }
                     break;
                 }
@@ -903,6 +908,7 @@ public class GameManager : MonoBehaviour
                     Menu.theMenu.SetLevelInfo(stLevel, true); //stLevel not used
                 }
 
+                //if bNoInternet is true this will not be possible be design
                 if ((Menu.bWorldBestReplay1 && stLevel.iBestScore1 != -1)
                     || (Menu.bWorldBestReplay2 && stLevel.iBestScore2 != -1)
                     || (Menu.bWorldBestReplay3 && stLevel.iBestScore3 != -1)
@@ -965,7 +971,7 @@ public class GameManager : MonoBehaviour
                     //Debug.Log("Load level 90%");
                     if (GameLevel.theMap.LoadInSegments(iLoadingMap++))
                     {
-                        Debug.Log("LoadSeg Done");
+                        Debug.Log("Load map segments Done");
                         iState++;
                         //oASMusic.volume = 0.09f;
                         /**/oASMusic.volume = 0.00f;
@@ -988,39 +994,42 @@ public class GameManager : MonoBehaviour
                     {
                         bBackToMenu = true;
 
-                        //////start of oculus specific code (achievements)
-                        if (!GameLevel.bRunReplay && bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                        if (!bNoUser && !bNoInternet)
                         {
-                            HandleOculusAchievements();
-                        }
-                        //////end of oculus specific code
-                        //////start of valve specific code
-#if !DISABLESTEAMWORKS
-                        if (!GameLevel.bRunReplay && bValveDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
-                        {
-                            HandleValveAchievements();
-                        }
-#endif
-                        //////end of valve specific code
-
-                        //always update last level played
-                        szLastLevel = GameLevel.szLevel;
-
-                        int iScoreMs;
-                        if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
-                        else iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
-
-                        if (!GameLevel.bRunReplay && (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel))
-                        {
-                            //finished ok, and with a new score or better than before, then send
-                            if (stLevel.iScoreMs == -1 || (!stLevel.bIsTime && iScoreMs> stLevel.iScoreMs) ||
-                                (stLevel.bIsTime && iScoreMs < stLevel.iScoreMs) )
+                            //////start of oculus specific code (achievements)
+                            if (!GameLevel.bRunReplay && bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
                             {
-                                StartCoroutine(oHigh.SendHiscore(szLastLevel.Substring(1), iScoreMs, oReplay));
+                                HandleOculusAchievements();
+                            }
+                            //////end of oculus specific code
+                            //////start of valve specific code
+#if !DISABLESTEAMWORKS
+                            if (!GameLevel.bRunReplay && bValveDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                            {
+                                HandleValveAchievements();
+                            }
+#endif
+                            //////end of valve specific code
 
-                                //set in the above, but since StartCoroutine returns before it has a chanse
-                                // to run we need to set it
-                                oHigh.bIsDone = false;
+                            //always update last level played
+                            szLastLevel = GameLevel.szLevel;
+
+                            int iScoreMs;
+                            if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
+                            else iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
+
+                            if (!GameLevel.bRunReplay && (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel))
+                            {
+                                //finished ok, and with a new score or better than before, then send
+                                if (stLevel.iScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.iScoreMs) ||
+                                    (stLevel.bIsTime && iScoreMs < stLevel.iScoreMs))
+                                {
+                                    StartCoroutine(oHigh.SendHiscore(szLastLevel.Substring(1), iScoreMs, oReplay));
+
+                                    //set in the above, but since StartCoroutine returns before it has a chanse
+                                    // to run we need to set it
+                                    oHigh.bIsDone = false;
+                                }
                             }
                         }
                     }

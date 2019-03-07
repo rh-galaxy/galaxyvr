@@ -10,6 +10,8 @@ public class CameraController : MonoBehaviour
     private Vector3 vCamOffset;
     private Vector3 vMapSize;
 
+    internal static Vector3 vCamPos = new Vector3(0,0,0);
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,5 +42,7 @@ public class CameraController : MonoBehaviour
         if (v.y < fBottomLimit) v.y = fBottomLimit;
         if (v.y > fTopLimit) v.y = fTopLimit;
         transform.position = v;
+
+        vCamPos = v;
     }
 }

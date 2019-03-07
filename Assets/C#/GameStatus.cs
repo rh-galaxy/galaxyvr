@@ -4,6 +4,7 @@ public class GameStatus : MonoBehaviour
 {
     public GameObject oPlayer;
     private Vector3 vOffset = new Vector3(-8, -17, -8);
+    private Vector3 vOffsetNoVR = new Vector3(-9, -5.5f, -8);
 
     public GameLevel oMap;
     private Vector3 vMapSize;
@@ -31,7 +32,12 @@ public class GameStatus : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        transform.Rotate(45, 0, 0);
+        if (!GameManager.bNoVR) transform.Rotate(45, 0, 0);
+        else
+        {
+            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            if (!i_bIsRace) vOffsetNoVR.y = -4.0f;
+        }
 
         string szMaterial = i_bIsRace ? "Status2" : "Status";
         Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
@@ -82,14 +88,23 @@ public class GameStatus : MonoBehaviour
 
     void LateUpdate()
     {
-        //transform.position = oPlayer.transform.position + vOffset;
+        if (GameManager.bNoVR)
+        {
+            Vector3 v = CameraController.vCamPos;
+            v.z = 0;
+            transform.position = v + vOffsetNoVR;
+        }
+        else
+        {
+            //transform.position = oPlayer.transform.position + vOffset;
 
-        //limit left/bottom movement instead:
-        Vector3 v = oPlayer.transform.position + vOffset;
-        float fLeftLimit = -(vMapSize.x / 2.0f) - 3.0f;
-        if (v.x < fLeftLimit) v.x = fLeftLimit;
-        float fBottomLimit = -(vMapSize.y / 2.0f) + 3.0f;
-        if (v.y < fBottomLimit) v.y = fBottomLimit;
-        transform.position = v;
+            //limit left/bottom movement instead:
+            Vector3 v = oPlayer.transform.position + vOffset;
+            float fLeftLimit = -(vMapSize.x / 2.0f) - 3.0f;
+            if (v.x < fLeftLimit) v.x = fLeftLimit;
+            float fBottomLimit = -(vMapSize.y / 2.0f) + 3.0f;
+            if (v.y < fBottomLimit) v.y = fBottomLimit;
+            transform.position = v;
+        }
     }
 }
