@@ -20,16 +20,18 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    float fX = 0, fY = 0, fZ = 0;
+    float fX = 5, fY = 0, fZ = 0;
     void LateUpdate()
     {
         //emulate headset movement
-        if (Input.GetKey(KeyCode.F))
+        if (Input.GetKey(KeyCode.F) || GameManager.bNoVR)
         {
-            if (Input.GetKey(KeyCode.G)) fZ = Input.GetAxisRaw("Mouse X");
-            else fY = Input.GetAxisRaw("Mouse X");
-            fX = -Input.GetAxisRaw("Mouse Y");
-            transform.Rotate(new Vector3(fX * 3.0f, fY * 3.0f, fZ * 3.0f));
+            if (Input.GetKey(KeyCode.G)) fZ += Input.GetAxisRaw("Mouse X") * 3.0f;
+            else fY += Input.GetAxisRaw("Mouse X") * 3.0f;
+            fX -= Input.GetAxisRaw("Mouse Y") * 3.0f;
+            if (Input.GetKey(KeyCode.R)) { fX = 5; fY = 0; fZ = 0; }
+
+            transform.eulerAngles = new Vector3(fX, fY, fZ);
         }
 
         Vector3 v = oPlayer.transform.position + vCamOffset;

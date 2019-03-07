@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,7 +46,7 @@ public class MeshGenerator : MonoBehaviour
 
     public void GenerateMeshInit2(int n)
     {
-float t1 = Time.realtimeSinceStartup;
+//float t1 = Time.realtimeSinceStartup;
         if (n == 0)
         {
             squareGrid.Init(0);
@@ -60,7 +59,7 @@ float t1 = Time.realtimeSinceStartup;
             w = squareGrid.aSquares.GetLength(0);
             h = squareGrid.aSquares.GetLength(1);
         }
-Debug.Log("new SquareGrid2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+//Debug.Log("new SquareGrid2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
     }
 
     public bool GenerateMesh(int n)
@@ -84,9 +83,9 @@ Debug.Log("new SquareGrid2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         if (n <= 11)
         {
             //create and set the walls mesh
-float t1 = Time.realtimeSinceStartup;
+//float t1 = Time.realtimeSinceStartup;
             CalculateMeshOutlines(n);
-Debug.Log("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+//Debug.Log("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
         else if (n == 12)
         {

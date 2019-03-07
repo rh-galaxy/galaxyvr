@@ -921,7 +921,7 @@ public class GameLevel : MonoBehaviour
                     int posy = (int)r.position.y + (int)(y2 * pixelsamplepos + pixelsamplepos / 2);
                     //sample every pixelsamplepos pixel in the tile texture
                     aMapHighres[y * substeps + y2, x * substeps + x2] = oTileTexture.GetPixel(posx, posy) == Color.black ? 0 : iTile;
-                    //aMapHighres[y * substeps + y2, x * substeps + x2] = aMap[y, x];
+                    //aMapHighres[y * substeps + y2, x * substeps + x2] = iTile;
                 }
             }
         }
@@ -953,7 +953,7 @@ public class GameLevel : MonoBehaviour
         else if (n < 1 + iHeight)
         {
             //generate new high res map based on the textures of the tiles
-            float pixelsamplepos = 32 / substeps;
+            float pixelsamplepos = 32.0f / substeps;
 
             //for (int y = 0; y < iHeight; y++)
             //{
