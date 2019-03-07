@@ -188,7 +188,7 @@ public class Menu : MonoBehaviour
         aLevels[36].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[36].szLevelName = "1mission11";
         aLevels[36].szLevelDisplayName = "11";
-        aLevels[36].szLevelDescription = "Mission11 - Lunar gravity";
+        aLevels[36].szLevelDescription = "Mission11 - Stapler";
         aLevels[37].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[37].szLevelName = "1mission12";
         aLevels[37].szLevelDisplayName = "12";
@@ -248,7 +248,7 @@ public class Menu : MonoBehaviour
         aLevels[51].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[51].szLevelName = "1mission26";
         aLevels[51].szLevelDisplayName = "26";
-        aLevels[51].szLevelDescription = "Mission26 - More 06";
+        aLevels[51].szLevelDescription = "Mission26 - Kangaroo";
         aLevels[52].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[52].szLevelName = "1mission27";
         aLevels[52].szLevelDisplayName = "27";

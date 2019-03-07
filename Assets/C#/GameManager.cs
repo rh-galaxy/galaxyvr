@@ -245,7 +245,7 @@ public class GameManager : MonoBehaviour
     internal static ulong iUserID = 1;
     internal static string szUser = "DebugUser"; //use debug user if no VR user
     internal static bool bUserValid = false;
-    internal static bool bNoUser = false;
+    internal static bool bNoHiscore = false;
     internal static bool bNoInternet = false;
     internal static bool bNoVR = false;
 
@@ -287,7 +287,7 @@ public class GameManager : MonoBehaviour
         {
             //no VR
             //bUserValid = true;
-            bNoUser = true;
+            bNoHiscore = true;
             bNoVR = true;
             Screen.SetResolution(1280, 720, true);
         }
@@ -799,7 +799,7 @@ public class GameManager : MonoBehaviour
                 break;
             case -2:
                 //wait for oculus user id/name to be ready
-                if (bUserValid || bNoUser) iState++;
+                if (bUserValid || bNoHiscore) iState++;
                 break;
             case -1:
                 //get the progress, to see how many missions are unlocked
@@ -833,10 +833,10 @@ public class GameManager : MonoBehaviour
                     if(oHigh.oLevelList.Count==0) bNoInternet = true; //set this so no further attempts are made at accessing the internet
 
                     int iToUnlock = (int)(iMissionsFinished * 1.35f) + 1;
-                    if (bNoInternet || bNoUser) iToUnlock = 30; //unlock everything
+                    if (bNoInternet || bNoHiscore) iToUnlock = 30; //unlock everything
                     Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + iToUnlock);
                     Menu.theMenu.SetMissionUnlock(iToUnlock);
-                    if(!bNoUser) Menu.theMenu.InitLevelRanking();
+                    if(!bNoHiscore) Menu.theMenu.InitLevelRanking();
                     iState++;
                 }
                 break;
@@ -994,7 +994,7 @@ public class GameManager : MonoBehaviour
                     {
                         bBackToMenu = true;
 
-                        if (!bNoUser && !bNoInternet)
+                        //if (!bNoInternet)
                         {
                             //////start of oculus specific code (achievements)
                             if (!GameLevel.bRunReplay && bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
@@ -1004,13 +1004,15 @@ public class GameManager : MonoBehaviour
                             //////end of oculus specific code
                             //////start of valve specific code
 #if !DISABLESTEAMWORKS
-                            if (!GameLevel.bRunReplay && bValveDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                            if (!GameLevel.bRunReplay && bUserValid/*&& bValveDevicePresent*/) //allow non VR mode to set steam achievements
                             {
                                 HandleValveAchievements();
                             }
 #endif
                             //////end of valve specific code
-
+                        }
+                        if (!bNoHiscore && !bNoInternet)
+                        {
                             //always update last level played
                             szLastLevel = GameLevel.szLevel;
 
