@@ -9,14 +9,15 @@ public struct LevelInfo
     public string szName;
     public bool bIsTime;
     public int iLimit1, iLimit2, iLimit3;
-    public int iScoreMs;
+    public int iLastScoreMs; //your last
+    public int iBestScoreMs; //your best
 
-    public string szBestName1;
-    public int iBestScore1;
-    public string szBestName2;
-    public int iBestScore2;
-    public string szBestName3;
-    public int iBestScore3;
+    public string szWRName1;
+    public int iWRScore1;
+    public string szWRName2;
+    public int iWRScore2;
+    public string szWRName3;
+    public int iWRScore3;
 }
 
 public class HttpHiscore
@@ -69,14 +70,15 @@ public class HttpHiscore
                 stLevel.iLimit1 = int.Parse(szTokens[2]);
                 stLevel.iLimit2 = int.Parse(szTokens[3]);
                 stLevel.iLimit3 = int.Parse(szTokens[4]);
-                stLevel.iScoreMs = int.Parse(szTokens[5]);
+                stLevel.iBestScoreMs = int.Parse(szTokens[5]);
+                stLevel.iLastScoreMs = -1;
 
-                stLevel.szBestName1 = szTokens[6];
-                stLevel.iBestScore1 = int.Parse(szTokens[7]);
-                stLevel.szBestName2 = szTokens[8];
-                stLevel.iBestScore2 = int.Parse(szTokens[9]);
-                stLevel.szBestName3 = szTokens[10];
-                stLevel.iBestScore3 = int.Parse(szTokens[11]);
+                stLevel.szWRName1 = szTokens[6];
+                stLevel.iWRScore1 = int.Parse(szTokens[7]);
+                stLevel.szWRName2 = szTokens[8];
+                stLevel.iWRScore2 = int.Parse(szTokens[9]);
+                stLevel.szWRName3 = szTokens[10];
+                stLevel.iWRScore3 = int.Parse(szTokens[11]);
 
                 oLevelList.Add(stLevel);
             }

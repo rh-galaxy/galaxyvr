@@ -299,6 +299,9 @@ public class GameManager : MonoBehaviour
         GameLevel.theReplay = oReplay;
         oASMusic = GetComponent<AudioSource>();
         if(bMusicOn) oASMusic.Play();
+
+        //this list keeps the last scores for each level for the entire game session, beginning with no score
+        for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
     }
 
     //////start of valve specific code
@@ -700,6 +703,9 @@ public class GameManager : MonoBehaviour
 
     LevelInfo stLevel;
     internal HttpHiscore oHigh = new HttpHiscore();
+    int[] aLastScore = new int[100]; //a bit of a hack
+    int iLastLevelIndex;
+    bool bAutoSetLevelInfo = false;
 
     bool bStartReplay = false;
     bool bLoadDone = false;
@@ -799,7 +805,15 @@ public class GameManager : MonoBehaviour
                 break;
             case -2:
                 //wait for oculus user id/name to be ready
-                if (bUserValid || bNoHiscore) iState++;
+                if (bUserValid || bNoHiscore)
+                {
+                    szToLoad = "Scenes/GameStart";
+                    bLoadDone = false;
+                    bIsMapScene = false;
+                    StartCoroutine(LoadAsyncScene());
+
+                    iState = 9; //iState++;
+                }
                 break;
             case -1:
                 //get the progress, to see how many missions are unlocked
@@ -827,7 +841,7 @@ public class GameManager : MonoBehaviour
                         stLevel = oHigh.oLevelList[i];
                         if (!stLevel.bIsTime)
                         {
-                            if (stLevel.iScoreMs != -1) iMissionsFinished++;
+                            if (stLevel.iBestScoreMs != -1) iMissionsFinished++;
                         }
                     }
                     if(oHigh.oLevelList.Count==0) bNoInternet = true; //set this so no further attempts are made at accessing the internet
@@ -853,11 +867,10 @@ public class GameManager : MonoBehaviour
                     Menu.bYourBestReplay = false;
                     Menu.bLevelPlay = false;
 
-                    bool bStart = Menu.bLevelSelected;
-
-                    if (bStart)
+                    if (Menu.bLevelSelected || bAutoSetLevelInfo)
                     {
                         Menu.bLevelSelected = false; //reset when we have seen it
+                        bAutoSetLevelInfo = false;
 
                         //goto menu part 2 for the selected level
                         iState++;
@@ -873,15 +886,18 @@ public class GameManager : MonoBehaviour
                     stLevel = new LevelInfo();
                     stLevel.szName = GameLevel.szLevel.Substring(1);
                     stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
-                    stLevel.iScoreMs = stLevel.iBestScore1 = stLevel.iBestScore2 = stLevel.iBestScore3 = -1;
+                    stLevel.iBestScoreMs = stLevel.iLastScoreMs = -1;
+                    stLevel.iWRScore1 = stLevel.iWRScore2 = stLevel.iWRScore3 = -1;
                     stLevel.iLimit1 = stLevel.iLimit2 = stLevel.iLimit3 = -1;
-                    stLevel.szBestName1 = "_None"; stLevel.szBestName2 = "_None"; stLevel.szBestName3 = "_None";
+                    stLevel.szWRName1 = "_None"; stLevel.szWRName2 = "_None"; stLevel.szWRName3 = "_None";
 
                     string szLevelToLoad = GameLevel.szLevel.Substring(1);
                     for (int i = 0; i < oHigh.oLevelList.Count; i++)
                     {
                         if (szLevelToLoad.CompareTo(oHigh.oLevelList[i].szName) == 0) {
                             stLevel = oHigh.oLevelList[i];
+                            stLevel.iLastScoreMs = aLastScore[i];
+                            iLastLevelIndex = i;
                             break;
                         }
                     }
@@ -909,16 +925,16 @@ public class GameManager : MonoBehaviour
                 }
 
                 //if bNoInternet is true this will not be possible be design
-                if ((Menu.bWorldBestReplay1 && stLevel.iBestScore1 != -1)
-                    || (Menu.bWorldBestReplay2 && stLevel.iBestScore2 != -1)
-                    || (Menu.bWorldBestReplay3 && stLevel.iBestScore3 != -1)
-                    || (Menu.bYourBestReplay && stLevel.iScoreMs != -1))
+                if ((Menu.bWorldBestReplay1 && stLevel.iWRScore1 != -1)
+                    || (Menu.bWorldBestReplay2 && stLevel.iWRScore2 != -1)
+                    || (Menu.bWorldBestReplay3 && stLevel.iWRScore3 != -1)
+                    || (Menu.bYourBestReplay && stLevel.iBestScoreMs != -1))
                 {
                     string szReplayName = null;
                     if (Menu.bYourBestReplay) szReplayName = GameManager.szUser;
-                    if (Menu.bWorldBestReplay1) szReplayName = stLevel.szBestName1;
-                    if (Menu.bWorldBestReplay2) szReplayName = stLevel.szBestName2;
-                    if (Menu.bWorldBestReplay3) szReplayName = stLevel.szBestName3;
+                    if (Menu.bWorldBestReplay1) szReplayName = stLevel.szWRName1;
+                    if (Menu.bWorldBestReplay2) szReplayName = stLevel.szWRName2;
+                    if (Menu.bWorldBestReplay3) szReplayName = stLevel.szWRName3;
 
                     StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
                     iState++; //load replay
@@ -993,6 +1009,7 @@ public class GameManager : MonoBehaviour
                     if (GameLevel.theMap.bGameOver)
                     {
                         bBackToMenu = true;
+                        bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level
 
                         //if (!bNoInternet)
                         {
@@ -1011,20 +1028,23 @@ public class GameManager : MonoBehaviour
 #endif
                             //////end of valve specific code
                         }
+
+                        //get score from GameLevel
+                        int iScoreMs;
+                        if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
+                        else iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
+                        aLastScore[iLastLevelIndex] = iScoreMs;
+
                         if (!bNoHiscore && !bNoInternet)
                         {
                             //always update last level played
                             szLastLevel = GameLevel.szLevel;
 
-                            int iScoreMs;
-                            if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
-                            else iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
-
                             if (!GameLevel.bRunReplay && (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel))
                             {
                                 //finished ok, and with a new score or better than before, then send
-                                if (stLevel.iScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.iScoreMs) ||
-                                    (stLevel.bIsTime && iScoreMs < stLevel.iScoreMs))
+                                if (stLevel.iBestScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.iBestScoreMs) ||
+                                    (stLevel.bIsTime && iScoreMs < stLevel.iBestScoreMs))
                                 {
                                     StartCoroutine(oHigh.SendHiscore(szLastLevel.Substring(1), iScoreMs, oReplay));
 
