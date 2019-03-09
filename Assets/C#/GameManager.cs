@@ -14,16 +14,16 @@ public class GameManager : MonoBehaviour
 {
     //VRTK//////////////////////////////////
 #if !DISABLESTEAMWORKS
-    public VRTK_ControllerEvents controllerEvents;
+    VRTK_ControllerEvents controllerEvents;
 
-    public bool bTrigger = false; //accelerate
-    public bool bGrip = false; //fire
-    public bool bButton1 = false; //fire
-    public bool bButton2 = false; 
-    public bool bLeft = false, bRight = false;
-    public bool bUp = false, bDown = false;
-    public bool bStart = false; //back, is this menu button or system menu button?
-    public bool bStartSeen = false;
+    internal bool bTrigger = false; //accelerate
+    internal bool bGrip = false; //fire
+    internal bool bButton1 = false; //fire
+    internal bool bButton2 = false;
+    internal bool bLeft = false, bRight = false;
+    internal bool bUp = false, bDown = false;
+    internal bool bStart = false; //back, is this menu button or system menu button?
+    internal bool bStartSeen = false;
 
     private void OnEnable()
     {
@@ -1033,7 +1033,7 @@ public class GameManager : MonoBehaviour
                         int iScoreMs;
                         if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
                         else iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
-                        aLastScore[iLastLevelIndex] = iScoreMs;
+                        if (!GameLevel.bRunReplay) aLastScore[iLastLevelIndex] = iScoreMs;
 
                         if (!bNoHiscore && !bNoInternet)
                         {

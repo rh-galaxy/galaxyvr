@@ -5,17 +5,22 @@ Map elements
 - Map decorations, red/green house in 3 parts (left, center, right) -
    low poly model (visual, and collision in map)
 Enemies
-- Create them in 3D [enemy 5 only left todo]
-- Implement in code [enemy 5]
+- Create in 3D [enemy 5 only left todo]
+- Implement in code [enemy 5 only left todo]
+Scoring
+- Play each Race level and set bronze/silver/gold limits
+   done 00-04/25
+- Play each Mission level and set bronze/silver/gold limits
+   done 00-00/30
 Website
-- www.galaxy-forces-vr.com exists.
-- Better/more contents (+the hi-scores, but they are implemented)
+- www.galaxy-forces-vr.com - Better/more contents
 Release
 - Images in different sizes for release on the Oculus Store
 - Images in different sizes for release on the Steam Store
 - Make it work with vive input
 - Game play promotion video
-- Test/fix it working on minimum req hardware
+- Test/fix it working on minimum req hardware (probably ok)
+   i5 970GTX
 
 -------
 Known issues/small things undone
