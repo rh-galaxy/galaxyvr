@@ -807,12 +807,7 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
-                    szToLoad = "Scenes/GameStart";
-                    bLoadDone = false;
-                    bIsMapScene = false;
-                    StartCoroutine(LoadAsyncScene());
-
-                    iState = 9; //iState++;
+                    iState++;
                 }
                 break;
             case -1:
