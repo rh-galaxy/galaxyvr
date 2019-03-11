@@ -271,6 +271,8 @@ public class Menu : MonoBehaviour
 
     C_Item2InMenu oMenuQuit, oMenuCredits;
     GameObject oCreditsQuad;
+    C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
+    int iQuality = 1;
 
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     internal Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
@@ -334,6 +336,12 @@ public class Menu : MonoBehaviour
 
         oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Quit", "Quit", 30.0f, 12.0f);
         oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 53, "Credits", "Credits", 30.0f, 9.0f);
+
+        iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
+        QualitySettings.SetQualityLevel(iQuality, true);
+        oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 62, "Medium", "Qual1", 30.0f, 9.0f);
+        oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 69, "High", "Qual2", 30.0f, 9.0f);
+        oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 76, "Ultra", "Qual3", 30.0f, 9.0f);
 
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);
@@ -503,6 +511,10 @@ public class Menu : MonoBehaviour
         if (oMenuQuit != null && oMenuQuit.oLevelQuad != null) oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
         if (oMenuCredits != null && oMenuCredits.oLevelQuad != null) oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
 
+        if (oMenuQuality1 != null && oMenuQuality1.oLevelQuad != null) oMenuQuality1.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 1) ? oMaterialCircleHighlighted : oMaterialCircle;
+        if (oMenuQuality2 != null && oMenuQuality2.oLevelQuad != null) oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 2) ? oMaterialCircleHighlighted : oMaterialCircle;
+        if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 3) ? oMaterialCircleHighlighted : oMaterialCircle;
+        
         bool bHitLevel = false;
         RaycastHit oHitInfo;
         if (Physics.Raycast(vHeadPosition, vGazeDirection, out oHitInfo, 400.0f))
@@ -570,6 +582,18 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
             {
                 oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
+            {
+                oMenuQuality1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
+            {
+                oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
+            {
+                oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
             }
 
             //manage selection
@@ -648,6 +672,27 @@ public class Menu : MonoBehaviour
                         }
                         bAllowSelection = false;
                         bPlaySelectSound = true;
+                    }
+                    else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
+                    {
+                        iQuality = 1;
+                        PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
+                        PlayerPrefs.Save();
+                        QualitySettings.SetQualityLevel(iQuality, true);
+                    }
+                    else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
+                    {
+                        iQuality = 2;
+                        PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
+                        PlayerPrefs.Save();
+                        QualitySettings.SetQualityLevel(iQuality, true);
+                    }
+                    else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
+                    {
+                        iQuality = 3;
+                        PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
+                        PlayerPrefs.Save();
+                        QualitySettings.SetQualityLevel(iQuality, true);
                     }
 
                     if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
