@@ -773,7 +773,7 @@ public class Menu : MonoBehaviour
             //level text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
             //oLevelText.transform.localPosition = new Vector3(vPos.x-3.9f, vPos.y-3.45f, vPos.z - 1.1f);
-            oLevelText.transform.localPosition = new Vector3(vPos.x - 6.3f, vPos.y - 3.45f, vPos.z - 1.6f);
+            oLevelText.transform.localPosition = new Vector3(vPos.x - 6.3f, vPos.y - 3.45f, vPos.z - 1.2f);
             oLevelText.transform.localScale = new Vector3(1.85f, 1.85f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_oLevel.szLevelDisplayName;
@@ -901,24 +901,8 @@ public class Menu : MonoBehaviour
             oLevelQuad.GetComponent<MeshRenderer>().material = Menu.theMenu.oMaterialCircle;
 
             //create text
-            /*            oLevelText = new GameObject();
-                        oLevelText.transform.parent = Menu.theMenu.transform;
-                        oLevelText.name = "TextMesh";
-                        oLevelText.AddComponent<TextMesh>();
-                        oLevelText.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
-                        oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.08f, i_fScaleText * 0.08f, 1.0f);
-                        oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
-
-                        oLevelText.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
-                        oLevelText.GetComponent<TextMesh>().fontSize = 40;
-                        oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
-                        oLevelText.GetComponent<TextMesh>().text = i_szText;*/
-
-
-            //create text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-            oLevelText.transform.localPosition = new Vector3(vPos.x - 6.5f, vPos.y - 1.8f, vPos.z - 1.6f);
-            //oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.2f, i_fScaleText * 0.2f, 1.0f);
+            oLevelText.transform.localPosition = new Vector3(vPos.x - 6.5f, vPos.y - 1.8f, vPos.z - 1.2f);
             oLevelText.transform.localScale = new Vector3(1.7f, 1.7f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;
