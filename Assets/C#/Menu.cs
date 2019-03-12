@@ -272,7 +272,7 @@ public class Menu : MonoBehaviour
     C_Item2InMenu oMenuQuit, oMenuCredits;
     GameObject oCreditsQuad;
     C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
-    int iQuality = 1;
+    int iQuality = 2;
 
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     internal Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
@@ -339,7 +339,7 @@ public class Menu : MonoBehaviour
 
         iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
         QualitySettings.SetQualityLevel(iQuality, true);
-        oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 62, "Medium", "Qual1", 30.0f, 9.0f);
+        oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 62, "Med", "Qual1", 30.0f, 9.0f);
         oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 69, "High", "Qual2", 30.0f, 9.0f);
         oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 76, "Ultra", "Qual3", 30.0f, 9.0f);
 
@@ -513,7 +513,7 @@ public class Menu : MonoBehaviour
 
         if (oMenuQuality1 != null && oMenuQuality1.oLevelQuad != null) oMenuQuality1.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 1) ? oMaterialCircleHighlighted : oMaterialCircle;
         if (oMenuQuality2 != null && oMenuQuality2.oLevelQuad != null) oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 2) ? oMaterialCircleHighlighted : oMaterialCircle;
-        if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 3) ? oMaterialCircleHighlighted : oMaterialCircle;
+        if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 4) ? oMaterialCircleHighlighted : oMaterialCircle;
         
         bool bHitLevel = false;
         RaycastHit oHitInfo;
@@ -689,7 +689,7 @@ public class Menu : MonoBehaviour
                     }
                     else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
                     {
-                        iQuality = 3;
+                        iQuality = 4;
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
@@ -772,7 +772,8 @@ public class Menu : MonoBehaviour
 
             //level text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-            oLevelText.transform.localPosition = new Vector3(vPos.x-3.9f, vPos.y-3.45f, vPos.z - 1.1f);
+            //oLevelText.transform.localPosition = new Vector3(vPos.x-3.9f, vPos.y-3.45f, vPos.z - 1.1f);
+            oLevelText.transform.localPosition = new Vector3(vPos.x - 6.3f, vPos.y - 3.45f, vPos.z - 1.6f);
             oLevelText.transform.localScale = new Vector3(1.85f, 1.85f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_oLevel.szLevelDisplayName;
@@ -900,18 +901,28 @@ public class Menu : MonoBehaviour
             oLevelQuad.GetComponent<MeshRenderer>().material = Menu.theMenu.oMaterialCircle;
 
             //create text
-            oLevelText = new GameObject();
-            oLevelText.transform.parent = Menu.theMenu.transform;
-            oLevelText.name = "TextMesh";
-            oLevelText.AddComponent<TextMesh>();
-            oLevelText.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
-            oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.08f, i_fScaleText * 0.08f, 1.0f);
-            oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
+            /*            oLevelText = new GameObject();
+                        oLevelText.transform.parent = Menu.theMenu.transform;
+                        oLevelText.name = "TextMesh";
+                        oLevelText.AddComponent<TextMesh>();
+                        oLevelText.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
+                        oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.08f, i_fScaleText * 0.08f, 1.0f);
+                        oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
 
-            oLevelText.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
-            oLevelText.GetComponent<TextMesh>().fontSize = 40;
-            oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
-            oLevelText.GetComponent<TextMesh>().text = i_szText;
+                        oLevelText.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
+                        oLevelText.GetComponent<TextMesh>().fontSize = 40;
+                        oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
+                        oLevelText.GetComponent<TextMesh>().text = i_szText;*/
+
+
+            //create text
+            oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
+            oLevelText.transform.localPosition = new Vector3(vPos.x - 6.5f, vPos.y - 1.8f, vPos.z - 1.6f);
+            //oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.2f, i_fScaleText * 0.2f, 1.0f);
+            oLevelText.transform.localScale = new Vector3(1.7f, 1.7f, 1.0f);
+            oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
+            oLevelText.GetComponent<TextMeshPro>().text = i_szText;
+            oLevelText.SetActive(true);
         }
     }
 
