@@ -489,6 +489,8 @@ public class MeshGenerator : MonoBehaviour
         {
             if(n==0)
             {
+                ///////////////////////////////////
+#if true
                 for (int x = 0; x < iNodeCountX; x++)
                 {
                     for (int y = 0; y < iNodeCountY; y++)
@@ -497,11 +499,41 @@ public class MeshGenerator : MonoBehaviour
                         oControlNodes[x, y] = new ControlNode(vPos, oMap[y, x] != 0, fSquareSize);
                     }
                 }
+#endif
+                ///////////////////////////////////
+#if false //!broken code
+                for (int x = 0; x < iNodeCountX; x+=2)
+                {
+                    for (int y = 0; y < iNodeCountY; y+=2)
+                    {
+                        //make big square if all 4 are non borders
+                        if (oMap[y, x] != 0 && oMap[y+1, x] != 0 && oMap[y+1, x+1] != 0 && oMap[y, x+1] != 0 /**/ && oMap[y+2, x] != 0  && oMap[y+2, x+1] != 0  && oMap[y+2, x+2] != 0  && oMap[y, x+2] != 0  && oMap[y+1, x+2] != 0)
+                        {
+                            Vector3 vPos = new Vector3(-fMapWidth / 2 + x * fSquareSize + fSquareSize, -fMapHeight / 2 + y * fSquareSize + fSquareSize);
+                            oControlNodes[x, y] = new ControlNode(vPos, true, fSquareSize*2);
+                        }
+                        else
+                        {
+                            //make 4 squares
+                            for (int x2 = x; x2 < x + 2; x2++)
+                            {
+                                for (int y2 = y; y2 < y + 2; y2++)
+                                {
+                                    Vector3 vPos = new Vector3(-fMapWidth / 2 + x2 * fSquareSize + fSquareSize / 2.0f, -fMapHeight / 2 + y2 * fSquareSize + fSquareSize / 2, 0);
+                                    oControlNodes[x2, y2] = new ControlNode(vPos, oMap[y2, x2] != 0, fSquareSize);
+                                }
+                            }
+                        }
+                    }
+                }
+#endif
+                ///////////////////////////////////
                 aSquares = new Square[iNodeCountX - 1, iNodeCountY - 1];
             }
             else
             {
                 ////////////////////////////////////////////////////////////////////
+#if true
                 for (int x = 0; x < iNodeCountX - 1; x++)
                 {
                     for (int y = 0; y < iNodeCountY - 1; y++)
@@ -509,15 +541,17 @@ public class MeshGenerator : MonoBehaviour
                         aSquares[x, y] = new Square(oControlNodes[x, y + 1], oControlNodes[x + 1, y + 1], oControlNodes[x + 1, y], oControlNodes[x, y]);
                     }
                 }
+#endif
                 ////////////////////////////////////////////////////////////////////
                 //attempt to reduce number of triangles by a factor up to 4 for large "filled" surfaces.
                 //it works but the outline calculation breaks because shared edges cant always be detected
-                /*for (int x = 0; x < iNodeCountX - 3; x+=2)
+#if false
+                for (int x = 0; x < iNodeCountX - 3; x+=2)
                 {
                     for (int y = 0; y < iNodeCountY - 3; y+=2)
                     {
                         //make big square if all 4 are non borders
-                        if(oControlNodes[x, y + 1].bActive && oControlNodes[x + 1, y + 1].bActive && oControlNodes[x + 1, y].bActive && oControlNodes[x, y].bActive && oControlNodes[x+2, y].bActive && oControlNodes[x+2, y + 1].bActive && oControlNodes[x+2, y + 2].bActive && oControlNodes[x, y+2].bActive && oControlNodes[x+1, y + 2].bActive)
+                        if(oControlNodes[x, y + 1]==null && oControlNodes[x + 1, y + 1] == null && oControlNodes[x + 1, y] == null && oControlNodes[x, y].bActive /* && oControlNodes[x+2, y].bActive && oControlNodes[x+2, y + 1].bActive && oControlNodes[x+2, y + 2].bActive && oControlNodes[x, y+2].bActive && oControlNodes[x+1, y + 2].bActive*/)
                         {
                             oControlNodes[x, y].Set(fSquareSize*2);
                             aSquares[x, y] = new Square(oControlNodes[x, y + 2], oControlNodes[x + 2, y + 2], oControlNodes[x + 2, y], oControlNodes[x, y]);
@@ -534,7 +568,8 @@ public class MeshGenerator : MonoBehaviour
                             }
                         }
                     }
-                }*/
+                }
+#endif
                 ////////////////////////////////////////////////////////////////////
             }
         }
