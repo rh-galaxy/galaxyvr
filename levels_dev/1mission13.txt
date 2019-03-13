@@ -90,7 +90,7 @@
   *WAYPOINTSX    1589
   *WAYPOINTSY     797
 *ENEMY 4
-  *ANGLE         270
+  *ANGLE         0
   *FIREINTERVAL  2000 //-1=random
   *SPEED         65
   *NUMWAYPOINTS  2
