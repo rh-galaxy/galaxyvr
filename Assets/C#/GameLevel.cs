@@ -903,6 +903,34 @@ public class GameLevel : MonoBehaviour
                     oDObj.Init(0, vPos);
                     break;
                 }
+            //house
+            case 59:
+            case 73:
+                {
+                    Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f + 18.0f, y * 32.0f + (32.0f + 7.0f)), new Vector2(32.0f, 32.0f));
+                    Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
+                    if (iTile < 73) oDObj.Init(4 + (iTile - 59), vPos);
+                    else oDObj.Init(4 + (iTile - 73), vPos);
+                    break;
+                }
+            case 60:
+            case 74:
+                {
+                    Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f + 0.0f, y * 32.0f + (32.0f + 7.0f)), new Vector2(32.0f, 32.0f));
+                    Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
+                    if (iTile < 73) oDObj.Init(4 + (iTile - 59), vPos);
+                    else oDObj.Init(4 + (iTile - 73), vPos);
+                    break;
+                }
+            case 61:
+            case 75:
+                {
+                    Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f - 18.0f, y * 32.0f + (32.0f + 7.0f)), new Vector2(32.0f, 32.0f));
+                    Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
+                    if (iTile < 73) oDObj.Init(4 + (iTile - 59), vPos);
+                    else oDObj.Init(4 + (iTile - 73), vPos);
+                    break;
+                }
         }
     }
 

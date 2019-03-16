@@ -8,6 +8,9 @@ public class Decoration : MonoBehaviour
     public GameObject oTree;
     public GameObject oTreeBlack;
     public GameObject oTreeWhite;
+    public GameObject oHouseLeft;
+    public GameObject oHouseMid;
+    public GameObject oHouseRight;
 
     void Start()
     {
@@ -21,6 +24,14 @@ public class Decoration : MonoBehaviour
         oTree.SetActive(i_iType == 1);
         oTreeBlack.SetActive(i_iType == 2);
         oTreeWhite.SetActive(i_iType == 3);
+
+        oHouseLeft.SetActive(i_iType == 4 || i_iType == 7);
+        oHouseMid.SetActive(i_iType == 5 || i_iType == 8);
+        oHouseRight.SetActive(i_iType == 6 || i_iType == 9);
+        Material oGreenHouse = Resources.Load("Material_green_house", typeof(Material)) as Material;
+        if (i_iType == 7) oHouseLeft.GetComponent<MeshRenderer>().material = oGreenHouse;
+        if (i_iType == 8) oHouseMid.GetComponent<MeshRenderer>().material = oGreenHouse;
+        if (i_iType == 9) oHouseRight.GetComponent<MeshRenderer>().material = oGreenHouse;
 
         if (i_iType == 0)
         {

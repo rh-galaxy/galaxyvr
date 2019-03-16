@@ -243,7 +243,8 @@ public class Player : MonoBehaviour
         //map or door, or map decorations
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
             szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
-            szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree"))
+            szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
+            szOtherObject.StartsWith("House"))
         {
             //minimum impulse to damage (0 - always damage on map)
             fImpulse -= 0.0f;
@@ -313,7 +314,8 @@ public class Player : MonoBehaviour
         //map or door, or map decorations
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
             szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
-            szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree"))
+            szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
+            szOtherObject.StartsWith("House"))
         {
             fShipHealth -= 0.5f * Time.fixedDeltaTime;
         }
@@ -332,7 +334,8 @@ public class Player : MonoBehaviour
         //map or door, or map decorations
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
             szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
-            szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") )
+            szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
+            szOtherObject.StartsWith("House"))
         {
             bScrapeFadeOut = true;
         }
