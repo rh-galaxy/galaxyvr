@@ -1039,6 +1039,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 807164248}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &324023218 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 4c34e594f493bf2449760bd1d76207cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1505107762}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &370513633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2954,6 +2960,9 @@ MonoBehaviour:
   oHouseLeft: {fileID: 1115935003}
   oHouseMid: {fileID: 409288441}
   oHouseRight: {fileID: 1199992667}
+  oHouseLeftRender: {fileID: 1882823574}
+  oHouseMidRender: {fileID: 324023218}
+  oHouseRightRender: {fileID: 1120533416}
 --- !u!1001 &977760122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8231,6 +8240,12 @@ PolygonCollider2D:
       - {x: -1.0311897, y: -0.022979975}
       - {x: -1.085063, y: -0.7283981}
       - {x: 0.023936033, y: -0.71887785}
+--- !u!1 &1120533416 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: c963df45622f9bc4880d61ae571bc588,
+    type: 3}
+  m_PrefabInstance: {fileID: 2103230600}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1183178900
 GameObject:
   m_ObjectHideFlags: 0
@@ -15200,6 +15215,12 @@ Transform:
   m_Father: {fileID: 799215559}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1882823574 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: cac3ea06e3f56a84cad71e57b4ed0b2d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1994596787}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1931341284
 GameObject:
   m_ObjectHideFlags: 0

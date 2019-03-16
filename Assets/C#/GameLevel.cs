@@ -910,7 +910,7 @@ public class GameLevel : MonoBehaviour
                     Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f + 18.0f, y * 32.0f + (32.0f + 7.0f)), new Vector2(32.0f, 32.0f));
                     Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
                     if (iTile < 73) oDObj.Init(4 + (iTile - 59), vPos);
-                    else oDObj.Init(4 + (iTile - 73), vPos);
+                    else oDObj.Init(7 + (iTile - 73), vPos);
                     break;
                 }
             case 60:
@@ -919,7 +919,7 @@ public class GameLevel : MonoBehaviour
                     Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f + 0.0f, y * 32.0f + (32.0f + 7.0f)), new Vector2(32.0f, 32.0f));
                     Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
                     if (iTile < 73) oDObj.Init(4 + (iTile - 59), vPos);
-                    else oDObj.Init(4 + (iTile - 73), vPos);
+                    else oDObj.Init(7 + (iTile - 73), vPos);
                     break;
                 }
             case 61:
@@ -928,7 +928,7 @@ public class GameLevel : MonoBehaviour
                     Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f - 18.0f, y * 32.0f + (32.0f + 7.0f)), new Vector2(32.0f, 32.0f));
                     Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
                     if (iTile < 73) oDObj.Init(4 + (iTile - 59), vPos);
-                    else oDObj.Init(4 + (iTile - 73), vPos);
+                    else oDObj.Init(7 + (iTile - 73), vPos);
                     break;
                 }
         }
