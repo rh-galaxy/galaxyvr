@@ -151,6 +151,11 @@ public class Player : MonoBehaviour
         }
 
         vLastPosition = vStartPos;
+
+        for (int i = 0; i < fMeanSpeeds.Length; i++)
+        {
+            fMeanSpeeds[i] = 0.0f;
+        }
     }
 
     bool bFireTriggered = false, bFire = false;
@@ -350,14 +355,35 @@ public class Player : MonoBehaviour
     int iLastInput = 0; //bool bitfield
     float fReplayMessageTimer = 0;
     Vector2 vLastPosition;
+    float[] fMeanSpeeds = new float[16];
+    float fMeanSpeed = 0.0f;
+    float fCurrentSpeedSeg = 0;
     void FixedUpdate()
     {
         if (!bInited)
             return;
 
-        fAchieveDistance += (oRb.position - vLastPosition).magnitude;
-        vLastPosition = oRb.position;
+        float fDist = (oRb.position - vLastPosition).magnitude;
 
+        //mean speed calculation
+        int iLastSec = (int)fCurrentSpeedSeg;
+        fCurrentSpeedSeg += Time.fixedDeltaTime;
+        if (fCurrentSpeedSeg >= 16.0f) fCurrentSpeedSeg -= 16.0f;
+        int iCurSec = (int)fCurrentSpeedSeg;
+        if(iCurSec!= iLastSec)
+            fMeanSpeeds[iCurSec] = 0.0f;
+        fMeanSpeeds[iCurSec] += fDist;
+        fMeanSpeed = 0.0f;
+        for(int i=0; i< fMeanSpeeds.Length; i++)
+        {
+            if(i != iCurSec) fMeanSpeed += fMeanSpeeds[i];
+        }
+        fMeanSpeed /= fMeanSpeeds.Length-1;
+
+        //distance achievement
+        fAchieveDistance += fDist;
+
+        vLastPosition = oRb.position;
         fTotalTimeMission += Time.fixedDeltaTime;
 
         //////get input, either from replay or from human player
