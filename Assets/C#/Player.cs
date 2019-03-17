@@ -364,6 +364,7 @@ public class Player : MonoBehaviour
             return;
 
         float fDist = (oRb.position - vLastPosition).magnitude;
+        if (fDist > 8.0f) fDist = 0.0f; //detect when player has jumped to a new position (after death)
 
         //mean speed calculation
         int iLastSec = (int)fCurrentSpeedSeg;
