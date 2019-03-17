@@ -329,7 +329,7 @@ public class Menu : MonoBehaviour
         //change fov if non VR since that default setting shows to wide fov
         // and is not behaving reliably
         if (!XRDevice.isPresent)
-            Camera.main.fieldOfView = 38.0f;
+            Camera.main.fieldOfView = 40.0f;
 
         //prevent selection if trigger was hold when menu is started
         bAllowSelection = !Input.GetButton("Fire1");

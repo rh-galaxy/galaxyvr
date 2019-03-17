@@ -212,7 +212,7 @@ public class GameLevel : MonoBehaviour
         //change fov if non VR since the default setting shows to wide fov
         // and is not behaving reliably
         if (!XRDevice.isPresent)
-            Camera.main.fieldOfView = 38.0f;
+            Camera.main.fieldOfView = 40.0f;
 
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);

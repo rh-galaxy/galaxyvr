@@ -36,6 +36,8 @@ All done in 55 narrow space caves filled with enemies. Featuring stunning intera
 <p>All players may have their best score for each level sent to this website and the top scores and top players are displayed below. The replay of the record scores are possible to view from the game to see how it was done. There are also 19 achievements to unlock.</p>
 
 <p>Available on Oculus Home (for Rift), and Steam (Rift and Vive) at 14th of June 2019 as a preliminary date.</p>
+<p><img align="left" src="images/screen8_860.jpg" title="Galaxy Forces VR screenshot"></p>
+<p><img align="left" src="images/screen7_860.jpg" title="Galaxy Forces VR screenshot"></p>
 
 <table cellspacing="10" cellpadding="0">
 <tr>
