@@ -638,7 +638,6 @@ public class GameLevel : MonoBehaviour
                             }
                             else if (stEnemy.iAngle == 270)
                             {
-                                stEnemy.iAngle = 90;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
                                 stEnemy.vWayPoints[i].y -= 4.0f / 32.0f;
                             }
@@ -649,7 +648,6 @@ public class GameLevel : MonoBehaviour
                             }
                             else if (stEnemy.iAngle == 90)
                             {
-                                stEnemy.iAngle = 270;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
                                 stEnemy.vWayPoints[i].y += 7.0f / 32.0f;
                                 stEnemy.vWayPoints[i].x += 3.0f / 32.0f;
@@ -664,7 +662,6 @@ public class GameLevel : MonoBehaviour
                             }
                             else if (stEnemy.iAngle == 270)
                             {
-                                stEnemy.iAngle = 90;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
                                 stEnemy.vWayPoints[i].y -= 2.5f / 32.0f;
                             }
@@ -675,7 +672,6 @@ public class GameLevel : MonoBehaviour
                             }
                             else if (stEnemy.iAngle == 90)
                             {
-                                stEnemy.iAngle = 270;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
                                 stEnemy.vWayPoints[i].y += 4.0f / 32.0f;
                             }
@@ -691,7 +687,6 @@ public class GameLevel : MonoBehaviour
                             }
                             else if (stEnemy.iAngle == 270)
                             {
-                                stEnemy.iAngle = 90;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
                                 stEnemy.vWayPoints[i].y -= 5.5f / 32.0f;
                             }
@@ -702,7 +697,6 @@ public class GameLevel : MonoBehaviour
                             }
                             else if (stEnemy.iAngle == 90)
                             {
-                                stEnemy.iAngle = 270;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
                                 stEnemy.vWayPoints[i].y += 6.0f / 32.0f;
                             }
@@ -715,7 +709,6 @@ public class GameLevel : MonoBehaviour
                             }
                             else if (stEnemy.iAngle == 270)
                             {
-                                stEnemy.iAngle = 90;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
                                 stEnemy.vWayPoints[i].y -= 6.0f / 32.0f;
                             }
@@ -726,12 +719,19 @@ public class GameLevel : MonoBehaviour
                             }
                             else if (stEnemy.iAngle == 90)
                             {
-                                stEnemy.iAngle = 270;
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
                                 stEnemy.vWayPoints[i].y += 2.0f / 32.0f;
                             }
                             break;
                     }
+                }
+                if (stEnemy.iAngle == 270)
+                {
+                    stEnemy.iAngle = 90;
+                }
+                else if (stEnemy.iAngle == 90)
+                {
+                    stEnemy.iAngle = 270;
                 }
 
                 Enemy oEnemy = Instantiate(oEnemyObjBase, this.transform);
