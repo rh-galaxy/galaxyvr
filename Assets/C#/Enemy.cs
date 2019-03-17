@@ -46,10 +46,10 @@ public class Enemy : MonoBehaviour
         {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },
         {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },
         {new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0) },
-        {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) },
+        {new Vector2(10.0f/32.0f, 13.0f/32.0f), new Vector2(-13.0f/32.0f, 10.0f/32.0f), new Vector2(-10.0f/32.0f, -13.0f/32.0f), new Vector2(13.0f/32.0f, -10.0f/32.0f) },
         {new Vector2(10.0f/32.0f, 0), new Vector2(0, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 0), new Vector2(0, -10.0f/32.0f) } };
     Vector2[] SENEMY5_FIREPOINT2 = {
-        new Vector2(20.0f/32.0f, 0), new Vector2(0, 20.0f/32.0f), new Vector2(-20.0f/32.0f, 0), new Vector2(0, -20.0f/32.0f) };
+        new Vector2(10.0f/32.0f, -13.0f/32.0f), new Vector2(13.0f/32.0f, 10.0f/32.0f), new Vector2(-10.0f/32.0f, 13.0f/32.0f), new Vector2(-13.0f/32.0f, -10.0f/32.0f) };
 
 
     public void Init(S_EnemyInfo i_stInfo, GameLevel i_oMap)
@@ -65,7 +65,7 @@ public class Enemy : MonoBehaviour
         enemy2.SetActive(stInfo.iEnemyType == 2);
         enemy3.SetActive(stInfo.iEnemyType == 3);
         enemy4.SetActive(stInfo.iEnemyType == 4);
-        /**///enemy5.SetActive(false /*stInfo.iEnemyType == 5*/);
+        enemy5.SetActive(stInfo.iEnemyType == 5);
         enemy6.SetActive(stInfo.iEnemyType == 6);
         oExplosion.SetActive(false);
 
@@ -79,7 +79,7 @@ public class Enemy : MonoBehaviour
         if (stInfo.iEnemyType == 2) enemy2.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 3) enemy3.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 4) enemy4.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
-        /**///if (stInfo.iEnemyType == 5) enemy5.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
+        if (stInfo.iEnemyType == 5) enemy5.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 6) enemy6.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         vPos.x = stInfo.vWayPoints[0].x;
         vPos.y = stInfo.vWayPoints[0].y;
@@ -165,13 +165,13 @@ public class Enemy : MonoBehaviour
             //start explosion
             if (bStartExplosion)
             {
-                //set the specific enemytype inactive later
+                //set the specific enemytype inactive
                 enemy0.SetActive(false);
                 enemy1.SetActive(false);
                 enemy2.SetActive(false);
                 enemy3.SetActive(false);
                 enemy4.SetActive(false);
-                /**///enemy5.SetActive(false);
+                enemy5.SetActive(false);
                 enemy6.SetActive(false);
 
                 oExplosion.SetActive(true);
@@ -207,7 +207,6 @@ public class Enemy : MonoBehaviour
                     //send change in movement - m_stMsg1.iMsg |= N_MSG1_MOVEMENT;
                 }
                 vPos += vVel * Time.fixedDeltaTime;
-                //SetCommonInfo(&m_stMsg1);
             }
 
             //fire bullets
@@ -232,7 +231,7 @@ public class Enemy : MonoBehaviour
                         for (int i = 0; i < SENEMY_NUMBULLETS[stInfo.iEnemyType]; i++)
                         {
                             Vector2 vFirePoint = vPos;
-                            if (stInfo.iEnemyType == 5 && i == 1) vFirePoint = SENEMY5_FIREPOINT2[stInfo.iAngle / 90];
+                            if (stInfo.iEnemyType == 5 && i == 1) vFirePoint += SENEMY5_FIREPOINT2[stInfo.iAngle / 90];
                             else vFirePoint += SENEMY_FIREPOINT[stInfo.iEnemyType, stInfo.iAngle / 90];
                             CreateBullet(vFirePoint, fDirection + SENEMY_BULLETANGLE[stInfo.iEnemyType, i], Bullet.BULLETBASEVEL / 2, i);
                         }

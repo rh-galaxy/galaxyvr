@@ -13,12 +13,15 @@ public class LandingZone : MonoBehaviour
     //other
     internal bool bHomeBase;
     internal bool bExtraLife;
-    bool bShowAntenna, bShowHouse;
+    bool bShowTower, bShowHangar, bShowSilo;
     List<int> aCargoList; //array of cargo weights (small = 1..5,6..10,11..15,16..20+ = huge)
 
     public GameObject oZone;
     GameObject[] oZoneCargoList;
     GameObject oZoneAttentionMarker = null;
+
+    public GameObject oHangar, oTower, oSilo;
+    public GameObject oExtraLife;
 
     Material oMaterialZone, oMaterialHome, oMaterialCargo;
 
@@ -28,7 +31,7 @@ public class LandingZone : MonoBehaviour
     }
 
     public void Init(int i_iId, Vector2 i_vPos, int i_iWidth, float i_fDepth, bool i_bHomeBase,
-        bool i_bShowAntenna, bool i_bShowHouse, List<int> i_aCargoList, bool i_bExtraLife)
+        bool i_bShowTower, bool i_bShowHangar, bool i_bShowSilo, List<int> i_aCargoList, bool i_bExtraLife)
     {
         Material oMaterial;
 
@@ -37,17 +40,41 @@ public class LandingZone : MonoBehaviour
         iId = i_iId;
 
         bHomeBase = i_bHomeBase;
-        bShowAntenna = i_bShowAntenna;
-        bShowHouse = i_bShowHouse;
+        bShowTower = i_bShowTower;
+        bShowHangar = i_bShowHangar;
+        bShowSilo = i_bShowSilo;
         aCargoList = i_aCargoList;
         bExtraLife = i_bExtraLife;
 
         oZoneCargoList = new GameObject[aCargoList.Count];
 
         int iAdjustX = (iZoneSize * 32) / 2;
-        int iBaseX = bShowHouse ? -50 + iAdjustX : -78 + iAdjustX;
-        //float[] aBoxSizeX = { 13.0f, 11.0f, 9.0f, 7.0f };
         float[] aBoxSizeX = { 26.0f, 22.0f, 18.0f, 14.0f };
+
+        //extra life
+        oExtraLife.SetActive(bExtraLife);
+        if (bExtraLife)
+        {
+            oExtraLife.transform.position = new Vector3(vPos.x - (iAdjustX - 13) / 32.0f, vPos.y + 13.0f / 32.0f, /**/0.6f);
+        }
+
+        //buildings
+        oHangar.SetActive(bShowHangar);
+        oTower.SetActive(bShowTower);
+        oSilo.SetActive(bShowSilo);
+        if (bShowSilo)
+        {
+            oSilo.transform.position = new Vector3(vPos.x + (iAdjustX - 12) / 32.0f, vPos.y + 16.0f / 32.0f, /**/1.35f);
+        }
+        if (bShowHangar)
+        {
+            //oHangar.transform.position = new Vector3(vPos.x + (iAdjustX - 48) / 32.0f, vPos.y + 3.5f / 32.0f, /**/1.2f);
+            oHangar.transform.position = new Vector3(vPos.x + (iAdjustX - 30) / 32.0f, vPos.y + 3.5f / 32.0f, /**/1.2f);
+        }
+        if (bShowTower)
+        {
+            oTower.transform.position = new Vector3(vPos.x - (iAdjustX - 12) / 32.0f, vPos.y + 3.5f / 32.0f, /**/1.2f);
+        }
 
         //zone cargo
         for (int i = 0; i < aCargoList.Count; i++)
@@ -70,13 +97,12 @@ public class LandingZone : MonoBehaviour
         }
 
         //zone landing pad
-        //oZone = GameObject.CreatePrimitive(PrimitiveType.Cube);
         oZone.transform.parent = GameLevel.theMap.transform;
         MonoBehaviour.DestroyImmediate(oZone.GetComponent<BoxCollider>());
         oZone.AddComponent<BoxCollider2D>();
         oZone.name = "LandingZone" + iId.ToString();
-        oZone.transform.position = new Vector3(vPos.x, vPos.y, 0);
-        oZone.transform.localScale = new Vector3(iZoneSize * 1.0f, 4.0f / 32.0f, i_fDepth);
+        oZone.transform.position = new Vector3(vPos.x, vPos.y, 0.45f);
+        oZone.transform.localScale = new Vector3(iZoneSize * 1.0f, 4.0f / 32.0f, i_fDepth+0.9f);
 
         oMaterialZone = Resources.Load("LandingZone", typeof(Material)) as Material;
         oZone.GetComponent<MeshRenderer>().material = oMaterialZone;
@@ -118,6 +144,7 @@ public class LandingZone : MonoBehaviour
     public void TakeExtraLife()
     {
         bExtraLife = false;
+        oExtraLife.SetActive(false);
     }
 
     public int PopCargo(bool bPeekOnly)

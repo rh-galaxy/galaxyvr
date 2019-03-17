@@ -551,8 +551,8 @@ public class GameLevel : MonoBehaviour
 
                 bool bHomeBase = szTokens[4].CompareTo("HOMEBASE") == 0;
                 bool bExtraLife = szTokens[5].CompareTo("EXTRALIFE") == 0;
-                bool bAntenna = szTokens[6].CompareTo("ANTENNA") == 0;
-                bool bHouse = szTokens[7].CompareTo("WAREHOUSE") == 0;
+                bool bTower = szTokens[6].CompareTo("ANTENNA") == 0;
+                bool bHangar = szTokens[7].CompareTo("WAREHOUSE") == 0;
                 if (szTokens.Length > 8) iNumCargo = int.Parse(szTokens[8]);
 
                 for (int i = 0; i < iNumCargo; i++)
@@ -563,7 +563,7 @@ public class GameLevel : MonoBehaviour
                 Vector2 vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * w, 4));
                 LandingZone oZone = Instantiate(oLandingZoneObjBase, this.transform);
                 oZone.Init(iZoneCounter++, vPos, w, fWallHeight,
-                    bHomeBase, bAntenna, bHouse, aCargoList, bExtraLife);
+                    bHomeBase, bTower, bHangar, !bHangar && (iLevelType != (int)LevelType.MAP_RACE), aCargoList, bExtraLife);
                 aLandingZoneList.Add(oZone);
             }
             else if (szTokens[0].CompareTo("*CHECKPOINTS") == 0)
@@ -684,7 +684,28 @@ public class GameLevel : MonoBehaviour
                             stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(64, 32));
                             break;
                         case 5:
-                            /**/
+                            if (stEnemy.iAngle == 0)
+                            {
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
+                                stEnemy.vWayPoints[i].x -= 5.5f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 270)
+                            {
+                                stEnemy.iAngle = 90;
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
+                                stEnemy.vWayPoints[i].y -= 5.5f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 180)
+                            {
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
+                                stEnemy.vWayPoints[i].x += 5.0f / 32.0f;
+                            }
+                            else if (stEnemy.iAngle == 90)
+                            {
+                                stEnemy.iAngle = 270;
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
+                                stEnemy.vWayPoints[i].y += 6.0f / 32.0f;
+                            }
                             break;
                         case 6:
                             if (stEnemy.iAngle == 0)

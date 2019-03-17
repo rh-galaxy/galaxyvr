@@ -1,10 +1,5 @@
-Map elements
-- Landing zone, hangar - low poly model (only visual)
-- Landing zone, antenna - low poly model (only visual)
-- Landing zone, silo - low poly model (only visual)
-Enemies
-- Create in 3D [enemy 5 only left todo]
-- Implement in code [enemy 5 only left todo]
+Sound
+- Add interactive music
 Scoring
 - Play each Race level and set bronze/silver/gold limits
    done 00-04/25
