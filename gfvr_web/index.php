@@ -29,7 +29,7 @@ square_start("'100%'");
 ?>
 <p>A single player space shooter game in VR. The player is in control of a ship.
 The goal is to race against the clock to get the fastest time (<i>race</i>), or transport cargo to get the best score (<i>mission</i>).
-All done in 55 narrow space caves filled with enemies. Featuring stunning interactive music, realistic physics and challenging game-play.</p>
+All done in 55 narrow space caves filled with enemies. Featuring interactive music, realistic physics and challenging game-play.</p>
 
 <p>The game is inspired by <a href="https://www.mobygames.com/game/amiga/gravity-force">Gravity Force</a> on the Amiga, and by <a href="http://www.galaxy-forces.com">Galaxy Forces V2</a>.</p>
 
@@ -73,23 +73,14 @@ square_end();
 
 
 <?php
-headline("Development");
+headline("Contact");
 ?>
 <br>
 <?php
 square_start("'100%'");
 ?>
 
-<h4>Contact</h4>
 <p>contact@galaxy-forces-vr.com</p>
-<h4>Early development screenshot</h4>
-<p><img align="left" src="images/early_dev_screenshot1_860.jpg" title="Galaxy VR early dev"></p>
-<h4>Development screenshot, enemies and status bar visible</h4>
-<p><img align="left" src="images/early_dev_screenshot3_860.jpg" title="Galaxy VR dev"></p>
-<h4>Development screenshot, space background and planet below</h4>
-<p><img align="left" src="images/dev_screenshot4_860.jpg" title="Galaxy VR dev"></p>
-<h4>Development screenshot, enemies and trees</h4>
-<p><img align="left" src="images/dev_screenshot5_860.jpg" title="Galaxy VR dev"></p>
 
 <?php
 square_end();
