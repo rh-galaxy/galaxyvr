@@ -7,11 +7,12 @@ Scoring
    done 00-00/30
 Website
 - www.galaxy-forces-vr.com - Better/more contents
+Options
+- Implement snap camera movement (on/off)
 Release
-- Images in different sizes for release on the Oculus Store
-- Images in different sizes for release on the Steam Store
-- Make it work with vive input
-- Game play promotion video
+- Make it work better with vive input.
+- Make it work with WMR?
+- Game play promotion video (after music is added)
 - Test/fix it working on minimum req hardware (probably ok)
    i5 970GTX
 
@@ -30,6 +31,9 @@ Known issues/small things undone
 
 Must do:
 - Enable code for Oculus entitlement check (later in Release version)
+- Game Status bars should be a little transparent instead of solid blue, to make
+   the text under show.
+- Replace the 3 part house with new model when it has been created.
 
 -------
 Achievements: (implemented for steam and oculus)
