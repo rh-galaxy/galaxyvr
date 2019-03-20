@@ -7,8 +7,6 @@ Scoring
    done 00-00/30
 Website
 - www.galaxy-forces-vr.com - Better/more contents
-Options
-- Implement snap camera movement (on/off)
 Release
 - Make it work better with vive input.
 - Make it work with WMR?

@@ -273,6 +273,7 @@ public class Menu : MonoBehaviour
     GameObject oCreditsQuad;
     C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
     int iQuality = 2;
+    C_Item2InMenu oMenuSnapMovement;
 
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     internal Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
@@ -336,6 +337,9 @@ public class Menu : MonoBehaviour
 
         oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Quit", "Quit", 30.0f, 12.0f);
         oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 53, "Credits", "Credits", 30.0f, 9.0f);
+
+        CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0)!=0;
+        oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 85, "Snap", "Snap", 30.0f, 9.0f);
 
         iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
         QualitySettings.SetQualityLevel(iQuality, true);
@@ -514,7 +518,9 @@ public class Menu : MonoBehaviour
         if (oMenuQuality1 != null && oMenuQuality1.oLevelQuad != null) oMenuQuality1.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 1) ? oMaterialCircleHighlighted : oMaterialCircle;
         if (oMenuQuality2 != null && oMenuQuality2.oLevelQuad != null) oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 2) ? oMaterialCircleHighlighted : oMaterialCircle;
         if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 4) ? oMaterialCircleHighlighted : oMaterialCircle;
-        
+
+        if (oMenuSnapMovement != null && oMenuSnapMovement.oLevelQuad != null) oMenuSnapMovement.oLevelQuad.GetComponent<MeshRenderer>().material = CameraController.bSnapMovement ? oMaterialCircleHighlighted : oMaterialCircle;
+
         bool bHitLevel = false;
         RaycastHit oHitInfo;
         if (Physics.Raycast(vHeadPosition, vGazeDirection, out oHitInfo, 400.0f))
@@ -594,6 +600,10 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
             {
                 oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
+            {
+                oMenuSnapMovement.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
             }
 
             //manage selection
@@ -679,6 +689,8 @@ public class Menu : MonoBehaviour
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
+                        bAllowSelection = false;
+                        bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
                     {
@@ -686,6 +698,8 @@ public class Menu : MonoBehaviour
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
+                        bAllowSelection = false;
+                        bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
                     {
@@ -693,6 +707,16 @@ public class Menu : MonoBehaviour
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
+                        bAllowSelection = false;
+                        bPlaySelectSound = true;
+                    }
+                    else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
+                    {
+                        CameraController.bSnapMovement = !CameraController.bSnapMovement;
+                        PlayerPrefs.SetInt("MyUseSnapMovement", CameraController.bSnapMovement?1:0);
+                        PlayerPrefs.Save();
+                        bAllowSelection = false;
+                        bPlaySelectSound = true;
                     }
 
                     if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);

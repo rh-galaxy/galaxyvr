@@ -3,8 +3,10 @@
 public class GameStatus : MonoBehaviour
 {
     public GameObject oPlayer;
-    private Vector3 vOffset = new Vector3(-8, -17, -8);
-    private Vector3 vOffsetNoVR = new Vector3(-7.5f, -5.5f, -8);
+    //private Vector3 vOffset = new Vector3(-8, -17, -8); //from player
+    private Vector3 vOffset = new Vector3(-8, -20, -8); //from camera (x,y)
+    private Vector3 vOffsetNoVR = new Vector3(-7.5f, -5.5f, -8); //from camera (x,y)
+
 
     public GameLevel oMap;
     private Vector3 vMapSize;
@@ -88,18 +90,16 @@ public class GameStatus : MonoBehaviour
 
     void LateUpdate()
     {
+        Vector3 v = CameraController.vCamPos;
+        v.z = 0;
         if (GameManager.bNoVR)
         {
-            Vector3 v = CameraController.vCamPos;
-            v.z = 0;
             transform.position = v + vOffsetNoVR;
         }
         else
         {
-            //transform.position = oPlayer.transform.position + vOffset;
-
-            //limit left/bottom movement instead:
-            Vector3 v = oPlayer.transform.position + vOffset;
+            //limit left/bottom movement:
+            v += vOffset;
             float fLeftLimit = -(vMapSize.x / 2.0f) - 3.0f;
             if (v.x < fLeftLimit) v.x = fLeftLimit;
             float fBottomLimit = -(vMapSize.y / 2.0f) + 3.0f;

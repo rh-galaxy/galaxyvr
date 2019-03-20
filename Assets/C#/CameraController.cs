@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     private Vector3 vCamOffset;
     private Vector3 vMapSize;
 
+    internal static bool bSnapMovement = false;
     internal static Vector3 vCamPos = new Vector3(0,0,0);
 
     // Start is called before the first frame update
@@ -43,8 +44,19 @@ public class CameraController : MonoBehaviour
         float fBottomLimit = -(vMapSize.y / 2.0f) + 10;
         if (v.y < fBottomLimit) v.y = fBottomLimit;
         if (v.y > fTopLimit) v.y = fTopLimit;
-        transform.position = v;
 
-        vCamPos = v;
+        if (bSnapMovement)
+        {
+            if((vCamPos-v).magnitude>10.5f)
+            {
+                transform.position = v;
+                vCamPos = v;
+            }
+        }
+        else
+        {
+            transform.position = v;
+            vCamPos = v;
+        }
     }
 }
