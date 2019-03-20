@@ -31,8 +31,6 @@ Known issues/small things undone
 
 Must do:
 - Enable code for Oculus entitlement check (later in Release version)
-- Game Status bars should be a little transparent instead of solid blue, to make
-   the text under show.
 - Replace the 3 part house with new model when it has been created.
 
 -------
