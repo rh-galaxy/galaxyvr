@@ -132,6 +132,19 @@ public class GameLevel : MonoBehaviour
 
     public Enemy oEnemyObjBase;
     internal List<Enemy> aEnemyList;
+    public int GetNumEnemiesNearPlayer(/*Vector2 vPos, float fRadius*/)
+    {
+        int iNumEnemies = 0;
+        for (int i=0; i< aEnemyList.Count; i++)
+        {
+            if (aEnemyList[i] != null)
+            {
+                Vector2 vDist = new Vector2(aEnemyList[i].vPos.x, aEnemyList[i].vPos.y) - this.player.GetPosition();
+                if (vDist.magnitude < (450 / 32.0f)) iNumEnemies++; //~14 tiles, same as fire range
+            }
+        }
+        return iNumEnemies;
+    }
 
     public GameObject oBulletObjBase;
 

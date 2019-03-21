@@ -366,7 +366,7 @@ public class Player : MonoBehaviour
         float fDist = (oRb.position - vLastPosition).magnitude;
         if (fDist > 8.0f) fDist = 0.0f; //detect when player has jumped to a new position (after death)
 
-        //mean speed calculation
+        //mean speed calculation (used in race music)
         int iLastSec = (int)fCurrentSpeedSeg;
         fCurrentSpeedSeg += Time.fixedDeltaTime;
         if (fCurrentSpeedSeg >= 16.0f) fCurrentSpeedSeg -= 16.0f;
@@ -380,6 +380,11 @@ public class Player : MonoBehaviour
             if(i != iCurSec) fMeanSpeed += fMeanSpeeds[i];
         }
         fMeanSpeed /= fMeanSpeeds.Length-1;
+        //...
+
+        //enemies near (used in mission music)
+        int iNumNear = oMap.GetNumEnemiesNearPlayer();
+        //...
 
         //distance achievement
         fAchieveDistance += fDist;

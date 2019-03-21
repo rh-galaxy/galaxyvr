@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour
     public AudioClip oClipExplosion;
     public AudioClip oClipFire;
 
-    Vector3 vPos;
+    internal Vector3 vPos;
     Vector3 vVel;
     int iCurWP;
     float fWPTime;
@@ -128,8 +128,7 @@ public class Enemy : MonoBehaviour
     {
         Vector2 vPlayerPos = thePlayer.GetPosition();
         Vector2 vDist = vPlayerPos - new Vector2(vPos.x, vPos.y);
-        float fDist = Mathf.Sqrt(vDist.x * vDist.x + vDist.y * vDist.y);
-        return (fDist<(450/32.0f)); //~14 tiles, like in the old game
+        return (vDist.magnitude < (450/32.0f)); //~14 tiles, like in the old game
     }
 
     void FixedUpdate()
