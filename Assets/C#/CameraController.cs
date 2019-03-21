@@ -22,6 +22,7 @@ public class CameraController : MonoBehaviour
 
     // Update is called once per frame
     float fX = 5, fY = 0, fZ = 0;
+    float fSnapTimer = 0;
     void LateUpdate()
     {
         //emulate headset movement
@@ -47,8 +48,12 @@ public class CameraController : MonoBehaviour
 
         if (bSnapMovement)
         {
-            if((vCamPos-v).magnitude>10.5f)
+            fSnapTimer += Time.deltaTime;
+            float fDist = (vCamPos - v).magnitude;
+            //move if too far from current pos, or too long time since last move
+            if ((fDist > 10.5f) || (fDist > 5.5f && fSnapTimer > 5.0f))
             {
+                fSnapTimer = 0;
                 transform.position = v;
                 vCamPos = v;
             }
