@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
     float fLastNewLapTime = 0.0f;
     internal float fTotalTime = 0.0f;
     int iTotalLaps = -1;
-    int iScore = 0;
+    internal int iScore = 0;
     float fTotalTimeMission = 0.0f; //always counting
     //achievements
     internal float fAchieveFuelBurnt = 0;

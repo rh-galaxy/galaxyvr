@@ -106,6 +106,7 @@ public class Enemy : MonoBehaviour
                 GetComponent<AudioSource>().PlayOneShot(oClipExplosion);
 
                 oMap.iAchieveEnemiesKilled++;
+                oMap.player.iScore += SENEMY_SCOREPOINTS[stInfo.iEnemyType];
             }
             else
             {
