@@ -152,7 +152,7 @@ public class Enemy : MonoBehaviour
                     GameObject o = Instantiate(oMap.oBulletObjBase, oMap.transform);
                     o.GetComponent<Bullet>().Init(stBulletInfo, 1/*iOwnerID*/);
 
-                    if(rm.iGeneralByte1==1)
+                    if(rm.iGeneralByte1==0)
                         GetComponent<AudioSource>().PlayOneShot(oClipFire);
                 }
             }
