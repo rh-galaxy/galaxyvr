@@ -4,7 +4,7 @@ Scoring
 - Play each Race level and set bronze/silver/gold limits
    done all 25
 - Play each Mission level and set bronze/silver/gold limits
-   done 00-07/30
+   done 00-11/30
 Website
 - www.galaxy-forces-vr.com - Better/more contents
 Release

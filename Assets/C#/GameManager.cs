@@ -1037,15 +1037,19 @@ public class GameManager : MonoBehaviour
 
                             if (!GameLevel.bRunReplay && (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel))
                             {
-                                //finished ok, and with a new score or better than before, then send
-                                if (stLevel.iBestScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.iBestScoreMs) ||
-                                    (stLevel.bIsTime && iScoreMs < stLevel.iBestScoreMs))
+                                //protect against huge replays (medium blob in server db is 16MB but no need to support that large)
+                                if (oReplay.GetSize() < 4 * 1024 * 1024) //at 200 bytes per sec this is ~6 hours, and normal rate is ~100 Bps.
                                 {
-                                    StartCoroutine(oHigh.SendHiscore(szLastLevel.Substring(1), iScoreMs, oReplay));
+                                    //finished ok, and with a new score or better than before, then send
+                                    if (stLevel.iBestScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.iBestScoreMs) ||
+                                        (stLevel.bIsTime && iScoreMs < stLevel.iBestScoreMs))
+                                    {
+                                        StartCoroutine(oHigh.SendHiscore(szLastLevel.Substring(1), iScoreMs, oReplay));
 
-                                    //set in the above, but since StartCoroutine returns before it has a chanse
-                                    // to run we need to set it
-                                    oHigh.bIsDone = false;
+                                        //set in the above, but since StartCoroutine returns before it has a chanse
+                                        // to run we need to set it
+                                        oHigh.bIsDone = false;
+                                    }
                                 }
                             }
                         }

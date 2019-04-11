@@ -102,7 +102,7 @@ public class Replay
             stAction.iID = BitConverter.ToInt32(i_pMem, iOffset + 8);
 
             //scale down the ints by 2^18 to get floats again,
-            // we never have a float bigger that +-8192.0 so
+            // we never have a float bigger than +-8192.0 so
             int px = BitConverter.ToInt32(i_pMem, iOffset + 12);
             int py = BitConverter.ToInt32(i_pMem, iOffset + 16);
             int vx = BitConverter.ToInt32(i_pMem, iOffset + 20);
@@ -138,7 +138,7 @@ public class Replay
             System.Array.Copy(BitConverter.GetBytes(stAction.iID), 0, data, iOffs + 8, 4);
 
             //scale floats with 2^18 to get ints that will fit in 32 bit,
-            // we never have a float bigger that +-8192.0 so
+            // we never have a float bigger than +-8192.0 so
             System.Array.Copy(BitConverter.GetBytes((int)(stAction.vPos.x * (65536 * 4))), 0, data, iOffs + 12, 4);
             System.Array.Copy(BitConverter.GetBytes((int)(stAction.vPos.y * (65536 * 4))), 0, data, iOffs + 16, 4);
             System.Array.Copy(BitConverter.GetBytes((int)(stAction.vVel.x * (65536 * 4))), 0, data, iOffs + 20, 4);
@@ -147,5 +147,9 @@ public class Replay
             iOffs += 32;
         }
         return data;
+    }
+    public int GetSize()
+    {
+        return (oReplayMessages.Count*32);
     }
 }
