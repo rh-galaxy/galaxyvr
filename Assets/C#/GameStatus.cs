@@ -62,7 +62,7 @@ public class GameStatus : MonoBehaviour
 
     public void SetForRace(float i_fHealth, float i_fTime, string i_szLapProgress)
     {
-        if (i_fHealth < 0) i_fHealth = 0;
+        if (i_fHealth < 0.01f) i_fHealth = 0.01f; //done because 0 makes a black quad
         oHealthBar.transform.localPosition = new Vector3(-3 + ((i_fHealth * BAR_LENGTH) / 2), -1.5f, 0);
         oHealthBar.transform.localScale = new Vector3((i_fHealth * BAR_LENGTH), 1, 1);
 
@@ -72,15 +72,17 @@ public class GameStatus : MonoBehaviour
 
     public void SetForMission(float i_fHealth, int i_iNumLives, float i_fCargo, bool i_bCargoFull, float i_fFuel, float i_fScore)
     {
-        if (i_fHealth < 0) i_fHealth = 0;
+        if (i_fHealth < 0.01f) i_fHealth = 0.01f; //done because 0 makes a black quad
         oHealthBar.transform.localPosition = new Vector3(-3 + ((i_fHealth * BAR_LENGTH) / 2), -1.5f, 0);
         oHealthBar.transform.localScale = new Vector3((i_fHealth * BAR_LENGTH), 1, 1);
 
         oTextScore.GetComponent<TextMesh>().text = i_fScore.ToString();
         oTextLives.GetComponent<TextMesh>().text = "x "+i_iNumLives.ToString();
 
+        if (i_fFuel < 0.01f) i_fFuel = 0.01f; //done because 0 makes a black quad
         oFuelBar.transform.localPosition = new Vector3(-3 + ((i_fFuel * BAR_LENGTH) / 2), -2.75f, 0);
         oFuelBar.transform.localScale = new Vector3((i_fFuel * BAR_LENGTH), 1, 1);
+        if (i_fCargo < 0.01f) i_fCargo = 0.01f; //done because 0 makes a black quad
         oCargoBar.transform.localPosition = new Vector3(-3 + ((i_fCargo * BAR_LENGTH) / 2), -4.0f, 0);
         oCargoBar.transform.localScale = new Vector3((i_fCargo * BAR_LENGTH), 1, 1);
 

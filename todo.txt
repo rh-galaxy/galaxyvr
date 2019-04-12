@@ -16,14 +16,12 @@ Release
 
 -------
 Known issues/small things undone
-- Particle system and force field does not work correctly, tried to delete
-   and recreate with no luck... out of ideas. (but it's better than before,
-   will have to be acceptable)
 - Maybe have a "remove bullet"-msg in the replay data.
 - Maybe have a "enemy killed"-msg in the replay data.
 - Maybe have a "door movement"-msg in the replay data.
 - Handle the first few frames in GameLevel.Update better, the game is now paused while loading
    but the level should not show while it is loading, as it is visible that objects "pop up"
+  Hide level with a quad in front of the camera until complete?
 - Checkpoint sounds are not clean... there is some unwanted noise in them
 - Bulletfire sound is not clean... there is some unwanted noise
 
