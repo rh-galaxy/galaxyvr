@@ -1000,6 +1000,7 @@ public class GameManager : MonoBehaviour
                         ) //back to menu
                     {
                         bBackToMenu = true;
+                        bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level
                     }
                     if (GameLevel.theMap.bGameOver)
                     {
