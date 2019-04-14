@@ -4,7 +4,7 @@ Scoring
 - Play each Race level and set bronze/silver/gold limits
    done all 25
 - Play each Mission level and set bronze/silver/gold limits
-   done 00-20/30
+   done 00-20,24-29 /30
 Website
 - www.galaxy-forces-vr.com - Better/more contents
 Release
@@ -28,6 +28,7 @@ Known issues/small things undone
 Must do:
 - Enable code for Oculus entitlement check (later in Release version)
 - Replace the 3 part house with new model when it has been created.
+- Fix bullets barely visible in snowy themed levels.
 
 -------
 Achievements: (implemented for steam and oculus)
