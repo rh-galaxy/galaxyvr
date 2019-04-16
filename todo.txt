@@ -17,8 +17,6 @@ Known issues/small things undone
 - Handle the first few frames in GameLevel.Update better, the game is now paused while loading
    but the level should not show while it is loading, as it is visible that objects "pop up"
   Hide level with a quad in front of the camera until complete?
-- Checkpoint sounds are not clean... there is some unwanted noise in them
-- Bulletfire sound is not clean... there is some unwanted noise
 
 Must do:
 - Enable code for Oculus entitlement check (later in Release version)
