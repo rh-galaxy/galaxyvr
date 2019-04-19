@@ -693,14 +693,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 137214679}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: -0, w: -0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1053819003}
   m_Father: {fileID: 1659469}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
 --- !u!1 &144993627 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 187704, guid: d6a213a5cb6bc7a47a613a88c9279d68,
@@ -17751,36 +17751,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
-        type: 3}
-      propertyPath: oZone
-      value: 
-      objectReference: {fileID: 1687479670}
-    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
-        type: 3}
-      propertyPath: oHangar
-      value: 
-      objectReference: {fileID: 680067463}
-    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
-        type: 3}
-      propertyPath: oTower
-      value: 
-      objectReference: {fileID: 137214679}
-    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
-        type: 3}
-      propertyPath: oSilo
-      value: 
-      objectReference: {fileID: 2094891785}
-    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
-        type: 3}
-      propertyPath: oExtraLife
-      value: 
-      objectReference: {fileID: 940533038}
-    - target: {fileID: 7815318426342726267, guid: 0e1420bfb11438e4792e2dd766f223cb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7815318426948720109, guid: 0e1420bfb11438e4792e2dd766f223cb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -17835,6 +17805,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
+        type: 3}
+      propertyPath: oZone
+      value: 
+      objectReference: {fileID: 1687479670}
+    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
+        type: 3}
+      propertyPath: oHangar
+      value: 
+      objectReference: {fileID: 680067463}
+    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
+        type: 3}
+      propertyPath: oTower
+      value: 
+      objectReference: {fileID: 137214679}
+    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
+        type: 3}
+      propertyPath: oSilo
+      value: 
+      objectReference: {fileID: 2094891785}
+    - target: {fileID: 7815318426948720082, guid: 0e1420bfb11438e4792e2dd766f223cb,
+        type: 3}
+      propertyPath: oExtraLife
+      value: 
+      objectReference: {fileID: 940533038}
+    - target: {fileID: 7815318426342726267, guid: 0e1420bfb11438e4792e2dd766f223cb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e1420bfb11438e4792e2dd766f223cb, type: 3}
