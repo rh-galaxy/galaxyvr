@@ -330,16 +330,16 @@ public class Menu : MonoBehaviour
         //change fov if non VR since that default setting shows to wide fov
         // and is not behaving reliably
         if (!XRDevice.isPresent)
-            Camera.main.fieldOfView = 40.0f;
+            Camera.main.fieldOfView = 45.0f;
 
         //prevent selection if trigger was hold when menu is started
         bAllowSelection = !Input.GetButton("Fire1");
 
-        oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Quit", "Quit", 30.0f, 12.0f);
-        oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 53, "Credits", "Credits", 30.0f, 9.0f);
+        oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 38, "Quit", "Quit", 30.0f, 12.0f);
+        oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Credits", "Credits", 30.0f, 9.0f);
 
         CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0)!=0;
-        oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 85, "Snap", "Snap", 30.0f, 9.0f);
+        oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 53.5f, "Snap", "Snap", 30.0f, 9.0f);
 
         iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
         QualitySettings.SetQualityLevel(iQuality, true);
