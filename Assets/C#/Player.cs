@@ -391,6 +391,7 @@ public class Player : MonoBehaviour
 
         vLastPosition = oRb.position;
         fTotalTimeMission += Time.fixedDeltaTime;
+        if (bTimeCounting) fTotalTime += Time.fixedDeltaTime;
 
         //////get input, either from replay or from human player
         if (GameLevel.bRunReplay)
@@ -751,7 +752,6 @@ public class Player : MonoBehaviour
                 if (oMap.aCheckPointList[i].GetComponent<CheckPoint>().AtCP(vPos)) bTimeCounting = true;
             }
         }
-        if (bTimeCounting) fTotalTime += Time.fixedDeltaTime;
 
         if (bTimeCounting && fAcceleration == 0.0f) bAchieveFullThrottle = false;
 
