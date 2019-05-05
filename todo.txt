@@ -19,6 +19,7 @@ Known issues/small things undone
   Hide level with a quad in front of the camera until complete?
 
 Must do:
+- Test different background textures for the back-plate and borders.
 - Enable code for Oculus entitlement check (later in Release version)
 - Replace the 3 part house with new model when it has been created.
 
