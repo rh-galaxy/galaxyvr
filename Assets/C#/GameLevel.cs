@@ -10,16 +10,18 @@ public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP };
 
 struct S_TilesetInfo
 {
-    public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls, int i_iPlanet, int i_iTree)
+    public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls, string i_szMaterialBox, int i_iPlanet, int i_iTree)
     {
         szMaterial = i_szMaterial;
         bRedBricks = i_bRedBricks;
         szMateralWalls = i_szMaterialWalls;
+        szMateralBox = i_szMaterialBox;
         iPlanet = i_iPlanet;
         iTree = i_iTree;
     }
     public string szMaterial;
     public bool bRedBricks;
+    public string szMateralBox;
     public string szMateralWalls;
     public int iPlanet;
     public int iTree;
@@ -94,12 +96,13 @@ public class GameLevel : MonoBehaviour
 
     int iTilesetInfoIndex = 0;
     S_TilesetInfo[] m_stTilesetInfos = {
-        new S_TilesetInfo("Cave_Alien", true, "Walls_Alien", 5, 1),
-        new S_TilesetInfo("Cave_Evil", true, "Walls_Grey", 3, 1),
-        new S_TilesetInfo("Cave_Cave", true, "Walls_Grey", 5, 1),
-        new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite", 2, 3),
-        new S_TilesetInfo("Cave_Frost", true, "Walls_Frost", 4, 3),
-        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava", 1, 2) };
+        new S_TilesetInfo("Cave_Alien", true, "Walls_Alien", "Walls_Alien", 5, 1),
+        ///**/new S_TilesetInfo("Cave_Alien", true, "Walls_Crack_Test", "Walls_Alien", 5, 1),
+        new S_TilesetInfo("Cave_Evil", true, "Walls_Grey", "Walls_Grey", 3, 1),
+        new S_TilesetInfo("Cave_Cave", true, "Walls_Grey", "Walls_Grey", 5, 1),
+        new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite", "Walls_Cryptonite", 2, 3),
+        new S_TilesetInfo("Cave_Frost", true, "Walls_Frost", "Walls_Frost", 4, 3),
+        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava", "Walls_Lava", 1, 2) };
 
     internal Vector2 vGravity;
     internal float fDrag;
@@ -187,10 +190,11 @@ public class GameLevel : MonoBehaviour
         string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
         player.Init(szUser, 0, stPlayerStartPos[0], this);
 
+        Material oMaterialBox = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralBox, typeof(Material)) as Material;
         //make back plane and border
         backPlane.transform.localPosition = new Vector3(0, 0, 6.0f);
         backPlane.transform.localScale = new Vector3(iWidth / 10.0f, 1.0f, iHeight / 10.0f);
-        backPlane.GetComponent<MeshRenderer>().material = oMaterialWalls; //from when mesh was created
+        backPlane.GetComponent<MeshRenderer>().material = oMaterialBox;
         Vector3 vSize = GetMapSize();
         GameObject oObj;
         //left
@@ -199,28 +203,28 @@ public class GameLevel : MonoBehaviour
         oObj.transform.parent = transform;
         oObj.transform.position = new Vector3(-vSize.x / 2 - 0.5f, 0, 2.0f);
         oObj.transform.localScale = new Vector3(1.0f, vSize.y, vSize.z + 6);
-        oObj.GetComponent<MeshRenderer>().material = oMaterialWalls;
+        oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
         //right
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
         oObj.transform.position = new Vector3(vSize.x / 2 + 0.5f, 0, 2.0f);
         oObj.transform.localScale = new Vector3(1.0f, vSize.y, vSize.z + 6);
-        oObj.GetComponent<MeshRenderer>().material = oMaterialWalls;
+        oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
         //top
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
         oObj.transform.position = new Vector3(0, vSize.y / 2 + 0.5f, 2.0f);
         oObj.transform.localScale = new Vector3(vSize.x + 2.0f, 1.0f, vSize.z + 6);
-        oObj.GetComponent<MeshRenderer>().material = oMaterialWalls;
+        oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
         //bottom
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
         oObj.transform.position = new Vector3(0, -vSize.y / 2 - 0.5f, 2.0f);
         oObj.transform.localScale = new Vector3(vSize.x + 2.0f, 1.0f, vSize.z + 6);
-        oObj.GetComponent<MeshRenderer>().material = oMaterialWalls;
+        oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
 
         //change fov if non VR since the default setting shows to wide fov
         // and is not behaving reliably

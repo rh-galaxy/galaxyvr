@@ -174,7 +174,7 @@ public class MeshGenerator : MonoBehaviour
 
                 //uv for posible texturing (coords from distance along edge)
                 float uvX = uvLastX2;
-                float uvX2 = uvLastX2 + (vertices[outline[i + 1]] - vertices[outline[i]]).magnitude;
+                float uvX2 = uvLastX2 + (vertices[outline[i + 1]] - vertices[outline[i]]).magnitude/6; //about square for 512x256 texture
                 uvLastX2 = uvX2;
                 wallUVs.Add(new Vector2(uvX, 0.0f));
                 wallUVs.Add(new Vector2(uvX2, 0.0f));
