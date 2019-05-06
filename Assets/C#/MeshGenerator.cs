@@ -156,11 +156,13 @@ public class MeshGenerator : MonoBehaviour
     void CreateWallMesh()
     {
         List<Vector3> wallVertices = new List<Vector3>();
+        List<Vector2> wallUVs = new List<Vector2>();
         List<int> wallTriangles = new List<int>();
         Mesh wallMesh = new Mesh();
 
         for(int j=0; j < outlines.Count; j++)
         {
+            float uvLastX2 = 0.0f;
             List<int> outline = outlines[j];
             for (int i = 0; i < outline.Count - 1; i++)
             {
@@ -169,6 +171,15 @@ public class MeshGenerator : MonoBehaviour
                 wallVertices.Add(vertices[outline[i + 1]]); // right
                 wallVertices.Add(vertices[outline[i]] + Vector3.forward * fWallHeight); // bottom left
                 wallVertices.Add(vertices[outline[i + 1]] + Vector3.forward * fWallHeight); // bottom right
+
+                //uv for posible texturing (coords from distance along edge)
+                float uvX = uvLastX2;
+                float uvX2 = uvLastX2 + (vertices[outline[i + 1]] - vertices[outline[i]]).magnitude;
+                uvLastX2 = uvX2;
+                wallUVs.Add(new Vector2(uvX, 0.0f));
+                wallUVs.Add(new Vector2(uvX2, 0.0f));
+                wallUVs.Add(new Vector2(uvX, 1.0f));
+                wallUVs.Add(new Vector2(uvX2, 1.0f));
 
                 //haven't figured out why yet, but the outline around the whole map
                 // (always j==0) must be created in the opposite order
@@ -197,6 +208,7 @@ public class MeshGenerator : MonoBehaviour
         wallMesh.vertices = wallVertices.ToArray();
         wallMesh.triangles = wallTriangles.ToArray();
         wallMesh.RecalculateNormals();
+        wallMesh.uv = wallUVs.ToArray();
 
         walls.mesh = wallMesh;
 
