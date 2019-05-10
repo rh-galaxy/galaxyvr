@@ -31,11 +31,11 @@ public class Decoration : MonoBehaviour
         oHouseLeft.SetActive(i_iType == 4 || i_iType == 7);
         oHouseMid.SetActive(i_iType == 5 || i_iType == 8);
         oHouseRight.SetActive(i_iType == 6 || i_iType == 9);
-        Material oGreenHouse = Resources.Load("Material_green_house", typeof(Material)) as Material;
-        if (i_iType == 7) oHouseLeftRender.GetComponent<MeshRenderer>().material = oGreenHouse;
-        if (i_iType == 8) oHouseMidRender.GetComponent<MeshRenderer>().material = oGreenHouse;
-        if (i_iType == 9) oHouseRightRender.GetComponent<MeshRenderer>().material = oGreenHouse;
-
+        Material oBlueHouse = Resources.Load("Material_house_blue", typeof(Material)) as Material;
+        if (i_iType == 7) oHouseLeftRender.GetComponent<MeshRenderer>().material = oBlueHouse;
+        if (i_iType == 8) oHouseMidRender.GetComponent<MeshRenderer>().material = oBlueHouse;
+        if (i_iType == 9) oHouseRightRender.GetComponent<MeshRenderer>().material = oBlueHouse;
+        
         if (i_iType == 0)
         {
             transform.position = new Vector3(i_vPos.x, i_vPos.y, -0.0f);

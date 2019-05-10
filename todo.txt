@@ -18,6 +18,7 @@ Known issues/small things undone
    but the level should not show while it is loading, as it is visible that objects "pop up"
   Hide level with a quad in front of the camera until complete?
 - Test different textures for the single colored cave edges.
+- Windows on the house is not exactly the same. Texture behaves wrong on the mid section.
 
 Must do:
 - Test different background textures for the back-plate and borders.
