@@ -860,7 +860,7 @@ public class GameLevel : MonoBehaviour
 
             //radio tower
             case 76: aMap[y, x] = 0; break;
-            case 77: aMap[y, x] = 17; break;
+            //case 77: aMap[y, x] = 17; break;
             //parts of brick objects
             case 38: aMap[y, x] = 0; break;
         }
@@ -967,6 +967,13 @@ public class GameLevel : MonoBehaviour
                     Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
                     if (iTile < 73) oDObj.Init(4 + (iTile - 59), vPos);
                     else oDObj.Init(7 + (iTile - 73), vPos);
+                    break;
+                }
+            case 77:
+                {
+                    Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f - 0.0f, y * 32.0f + (32.0f + 12.0f)), new Vector2(32.0f, 64.0f));
+                    Decoration oDObj = Instantiate(oDecorationObjBase, this.transform);
+                    oDObj.Init(10, vPos);
                     break;
                 }
         }

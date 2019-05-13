@@ -14,6 +14,7 @@ public class Decoration : MonoBehaviour
     public GameObject oHouseLeftRender;
     public GameObject oHouseMidRender;
     public GameObject oHouseRightRender;
+    public GameObject oRadioTower;
 
     void Start()
     {
@@ -27,6 +28,7 @@ public class Decoration : MonoBehaviour
         oTree.SetActive(i_iType == 1);
         oTreeBlack.SetActive(i_iType == 2);
         oTreeWhite.SetActive(i_iType == 3);
+        oRadioTower.SetActive(i_iType == 10);
 
         oHouseLeft.SetActive(i_iType == 4 || i_iType == 7);
         oHouseMid.SetActive(i_iType == 5 || i_iType == 8);
@@ -36,14 +38,7 @@ public class Decoration : MonoBehaviour
         if (i_iType == 8) oHouseMidRender.GetComponent<MeshRenderer>().material = oBlueHouse;
         if (i_iType == 9) oHouseRightRender.GetComponent<MeshRenderer>().material = oBlueHouse;
         
-        if (i_iType == 0)
-        {
-            transform.position = new Vector3(i_vPos.x, i_vPos.y, -0.0f);
-        }
-        else
-        {
-            transform.position = new Vector3(i_vPos.x, i_vPos.y, -0.0f);
-        }
+        transform.position = new Vector3(i_vPos.x, i_vPos.y, -0.0f);
     }
 
     void Update()
