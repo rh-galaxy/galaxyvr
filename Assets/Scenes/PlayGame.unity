@@ -2895,7 +2895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &819875880
 Transform:
   m_ObjectHideFlags: 0
@@ -2936,10 +2936,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.16923851, y: 1.2686868}
-      - {x: -0.43002206, y: 1.26875}
-      - {x: -0.5207012, y: -0.6189368}
-      - {x: -0.06337911, y: -0.62180346}
+    - - {x: 0.0054476857, y: 1.2686868}
+      - {x: -0.22845978, y: 1.2553124}
+      - {x: -0.2922638, y: -0.5786244}
+      - {x: 0.12474471, y: -0.59492856}
 --- !u!1001 &849148946
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3395,7 +3395,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &945264715
 Transform:
   m_ObjectHideFlags: 0
@@ -15467,7 +15467,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 8bf269353be604648bfe970949149c4e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.3
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 8bf269353be604648bfe970949149c4e,
         type: 3}
