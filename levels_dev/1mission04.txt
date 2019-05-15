@@ -2,7 +2,7 @@
 *MAPSIZE  28 50
 *MAPFILE  mission04.txt
 *TILESIZE 32
-*TILESET  ts_evil.tga
+*TILESET  ts_desert.tga
 
 *MAXPLAYERS 4
 *PLAYERSTARTPOS   272  1378

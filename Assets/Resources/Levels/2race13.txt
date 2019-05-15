@@ -2,7 +2,7 @@
 *MAPSIZE  32 80
 *MAPFILE  race13.txt
 *TILESIZE 32
-*TILESET  ts_evil.tga
+*TILESET  ts_desert.tga
 
 *MAXPLAYERS 3
 *PLAYERSTARTPOS   201   253

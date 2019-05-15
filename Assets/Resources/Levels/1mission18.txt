@@ -2,7 +2,7 @@
 *MAPSIZE  32 32
 *MAPFILE  mission18.txt
 *TILESIZE 32
-*TILESET  ts_alien.tga
+*TILESET  ts_desert.tga
 
 *GRAVITY    0.00 22.00
 *RESISTANCE 0.10 0.10

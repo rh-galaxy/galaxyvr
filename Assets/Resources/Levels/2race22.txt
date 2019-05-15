@@ -2,7 +2,7 @@
 *MAPSIZE  90 57
 *MAPFILE  race22.txt
 *TILESIZE 32
-*TILESET  ts_lava.tga
+*TILESET  ts_desert.tga
 
 *MAXPLAYERS 6
 *PLAYERSTARTPOS   511  1473

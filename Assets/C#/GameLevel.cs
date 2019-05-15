@@ -102,7 +102,8 @@ public class GameLevel : MonoBehaviour
         new S_TilesetInfo("Cave_Cave", true, "Walls_Grey", "Walls_Grey", 5, 1),
         new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite", "Walls_Cryptonite", 2, 3),
         new S_TilesetInfo("Cave_Frost", true, "Walls_Frost", "Walls_Frost", 4, 3),
-        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava", "Walls_Lava", 1, 2) };
+        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava", "Walls_Lava", 1, 2),
+        new S_TilesetInfo("Cave_Desert", false, "Walls_Desert", "Walls_Desert", 5, 11) };
 
     internal Vector2 vGravity;
     internal float fDrag;
@@ -439,6 +440,7 @@ public class GameLevel : MonoBehaviour
                 else if (szTilefile.CompareTo("ts_cryptonite.tga") == 0) iTilesetInfoIndex = 3;
                 else if (szTilefile.CompareTo("ts_frost.tga") == 0) iTilesetInfoIndex = 4;
                 else if (szTilefile.CompareTo("ts_lava.tga") == 0) iTilesetInfoIndex = 5;
+                else if (szTilefile.CompareTo("ts_desert.tga") == 0) iTilesetInfoIndex = 6;
             }
 
         }
@@ -528,6 +530,7 @@ public class GameLevel : MonoBehaviour
                 else if (szTilefile.CompareTo("ts_cryptonite.tga") == 0) iTilesetInfoIndex = 3;
                 else if (szTilefile.CompareTo("ts_frost.tga") == 0) iTilesetInfoIndex = 4;
                 else if (szTilefile.CompareTo("ts_lava.tga") == 0) iTilesetInfoIndex = 5;
+                else if (szTilefile.CompareTo("ts_desert.tga") == 0) iTilesetInfoIndex = 6;
             }
             else if (szTokens[0].CompareTo("*GRAVITY") == 0)
             {

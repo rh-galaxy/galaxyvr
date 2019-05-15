@@ -15,6 +15,7 @@ public class Decoration : MonoBehaviour
     public GameObject oHouseMidRender;
     public GameObject oHouseRightRender;
     public GameObject oRadioTower;
+    public GameObject oTreeCactus;
 
     void Start()
     {
@@ -29,6 +30,7 @@ public class Decoration : MonoBehaviour
         oTreeBlack.SetActive(i_iType == 2);
         oTreeWhite.SetActive(i_iType == 3);
         oRadioTower.SetActive(i_iType == 10);
+        oTreeCactus.SetActive(i_iType == 11);
 
         oHouseLeft.SetActive(i_iType == 4 || i_iType == 7);
         oHouseMid.SetActive(i_iType == 5 || i_iType == 8);
