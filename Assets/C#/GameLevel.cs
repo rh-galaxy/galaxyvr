@@ -10,7 +10,8 @@ public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP };
 
 struct S_TilesetInfo
 {
-    public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls, string i_szMaterialBox, int i_iPlanet, int i_iTree)
+    public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls,
+        string i_szMaterialBox, int i_iPlanet, int i_iTree)
     {
         szMaterial = i_szMaterial;
         bRedBricks = i_bRedBricks;
@@ -21,8 +22,8 @@ struct S_TilesetInfo
     }
     public string szMaterial;
     public bool bRedBricks;
-    public string szMateralBox;
     public string szMateralWalls;
+    public string szMateralBox;
     public int iPlanet;
     public int iTree;
 }
@@ -193,9 +194,12 @@ public class GameLevel : MonoBehaviour
 
         Material oMaterialBox = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralBox, typeof(Material)) as Material;
         //make back plane and border
-        backPlane.transform.localPosition = new Vector3(0, 0, 6.0f);
+        //        /**/oMeshGen.GenerateMeshBackground(oMaterialBox);
+        /*backPlane.transform.localPosition = new Vector3(0, 0, 6.0f);
         backPlane.transform.localScale = new Vector3(iWidth / 10.0f, 1.0f, iHeight / 10.0f);
-        backPlane.GetComponent<MeshRenderer>().material = oMaterialBox;
+        backPlane.GetComponent<MeshRenderer>().material = oMaterialBox;*/
+        /**///backPlane.GetComponent<MeshRenderer>().material = oMaterialBox;
+        oMeshGen.map0_bk.GetComponent<MeshRenderer>().material = oMaterialBox;
         Vector3 vSize = GetMapSize();
         GameObject oObj;
         //left
@@ -253,6 +257,10 @@ public class GameLevel : MonoBehaviour
             Debug.Log("Loading Level: " + szLevel);
             LoadDesPass1(szLevel);
             oMeshGen = GetComponent<MeshGenerator>();
+
+            //set back plain first of all
+            /**/oMeshGen.GenerateMeshBackground(iWidth, iHeight);
+
             //load and generate map
             string szPngTileset = szTilefile.Remove(szTilefile.LastIndexOf('.')) + ".png";
             LoadTileSet(szPngTileset);

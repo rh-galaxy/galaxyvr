@@ -32,6 +32,55 @@ public class MeshGenerator : MonoBehaviour
         triangles = new List<int>();
     }
 
+    public MeshFilter map0_bk;
+    public void GenerateMeshBackground(int w, int h)
+    {
+        //this uses the same mechanism that produces the fine grained map, but generates a background
+        // lowres grid with ~50 triangles or so.
+        //this must be run before or after fine grained map, cannot be mixed because of shared variables.
+
+        Clear();
+
+        //create map bk mesh in segments of 6 tiles
+        int numStepsX = (int)(w / 6);
+        int numStepsY = (int)(h / 6);
+        float stepX = (float)w / (float)numStepsX;
+        float stepY = (float)h / (float)numStepsY;
+
+        float fMapWidth = w;
+        float fMapHeight = h;
+
+        Node[,] oNodes = new Node[numStepsX+1, numStepsY+1];
+
+        for (int x = 0; x < numStepsX+1; x++)
+        {
+            for (int y = 0; y < numStepsY+1; y++)
+            {
+                Vector3 vPos = new Vector3(-fMapWidth / 2 + x * stepX, -fMapHeight / 2 + y * stepY, 0.0f);
+                /*z bumps was no good*///if (x != 0 && y!=0 && x!= numStepsX && y!= numStepsY) vPos.z = (Random.value * 0.5f);
+                oNodes[x, y] = new Node(vPos);
+            }
+        }
+        for (int x = 0; x < numStepsX; x++)
+        {
+            for (int y = 0; y < numStepsY; y++)
+            {
+                //MeshFromPoints(i_oSquare.oTopLeft, i_oSquare.oTopRight, i_oSquare.oBottomRight, i_oSquare.oBottomLeft);
+                MeshFromPoints(oNodes[x, y + 1], oNodes[x + 1, y + 1], oNodes[x + 1, y], oNodes[x, y]);
+            }
+        }
+
+        //set the map mesh
+        Mesh bkMesh = new Mesh();
+        //bkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; //no need to
+        bkMesh.SetVertices(vertices);
+        bkMesh.SetTriangles(triangles.ToArray(), 0);
+        bkMesh.RecalculateNormals();
+        //bkMesh.uv = uvs; //future: just add them!
+        map0_bk.mesh = bkMesh;
+    }
+
+
     int h, w;
     public void GenerateMeshInit1(int[,] i_aMap, float i_fSquareSize, float i_fWallHeight, float i_fBumpHeight, Material i_oMat, Material i_oMatWalls)
     {
@@ -41,7 +90,7 @@ public class MeshGenerator : MonoBehaviour
         fBumpHeight = i_fBumpHeight;
         oMat = i_oMat;
         oMatWalls = i_oMatWalls;
-        squareGrid = new SquareGrid(aMap, fSquareSize);
+        squareGrid = new SquareGrid(aMap, fSquareSize, fSquareSize);
     }
 
     public void GenerateMeshInit2(int n)
@@ -481,18 +530,19 @@ public class MeshGenerator : MonoBehaviour
         public Square[,] aSquares;
         int iNodeCountX, iNodeCountY;
         float fMapWidth, fMapHeight;
-        float fSquareSize;
+        float fSquareSizeX, fSquareSizeY;
         ControlNode[,] oControlNodes;
         int[,] oMap;
 
-        public SquareGrid(int[,] i_oMap, float i_fSquareSize)
+        public SquareGrid(int[,] i_oMap, float i_fSquareSizeX, float i_fSquareSizeY)
         {
             oMap = i_oMap;
-            fSquareSize = i_fSquareSize;
+            fSquareSizeX = i_fSquareSizeX;
+            fSquareSizeY = i_fSquareSizeY;
             iNodeCountX = i_oMap.GetLength(1);
             iNodeCountY = i_oMap.GetLength(0);
-            fMapWidth = iNodeCountX * fSquareSize;
-            fMapHeight = iNodeCountY * fSquareSize;
+            fMapWidth = iNodeCountX * fSquareSizeX;
+            fMapHeight = iNodeCountY * fSquareSizeY;
 
             oControlNodes = new ControlNode[iNodeCountX, iNodeCountY];
         }
@@ -507,8 +557,8 @@ public class MeshGenerator : MonoBehaviour
                 {
                     for (int y = 0; y < iNodeCountY; y++)
                     {
-                        Vector3 vPos = new Vector3(-fMapWidth / 2 + x * fSquareSize + fSquareSize / 2, -fMapHeight / 2 + y * fSquareSize + fSquareSize / 2, 0);
-                        oControlNodes[x, y] = new ControlNode(vPos, oMap[y, x] != 0, fSquareSize);
+                        Vector3 vPos = new Vector3(-fMapWidth / 2 + x * fSquareSizeX + fSquareSizeX / 2, -fMapHeight / 2 + y * fSquareSizeY + fSquareSizeY / 2, 0);
+                        oControlNodes[x, y] = new ControlNode(vPos, oMap[y, x] != 0, fSquareSizeX, fSquareSizeY);
                     }
                 }
 #endif
@@ -632,17 +682,17 @@ public class MeshGenerator : MonoBehaviour
         public bool bActive;
         public Node oAbove, oRight;
 
-        public void Set(float squareSize)
+        public void Set(float squareSizeX, float squareSizeY)
         {
-            oAbove.vPos = vPos + Vector3.up * squareSize / 2f;
-            oRight.vPos = vPos + Vector3.right * squareSize / 2f;
+            oAbove.vPos = vPos + Vector3.up * squareSizeY / 2f;
+            oRight.vPos = vPos + Vector3.right * squareSizeX / 2f;
         }
 
-        public ControlNode(Vector3 _pos, bool _active, float squareSize) : base(_pos)
+        public ControlNode(Vector3 _pos, bool _active, float squareSizeX, float squareSizeY) : base(_pos)
         {
             bActive = _active;
-            oAbove = new Node(vPos + Vector3.up * squareSize / 2f);
-            oRight = new Node(vPos + Vector3.right * squareSize / 2f);
+            oAbove = new Node(vPos + Vector3.up * squareSizeY / 2f);
+            oRight = new Node(vPos + Vector3.right * squareSizeX / 2f);
         }
     }
 }
