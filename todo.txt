@@ -19,6 +19,7 @@ Known issues/small things undone
   Hide level with a quad in front of the camera until complete?
 - Test different textures for the single colored cave edges.
 - Windows on the house is not exactly the same height.
+- There is no back wall of hangar building. Visible through door.
 
 Must do:
 - Test different background textures for the back-plate and borders.

@@ -62,11 +62,12 @@ public class S_DoorInfo
 
 public class GameLevel : MonoBehaviour
 {
-    //should realy try to get rid of the statics and make the GameManager hold the object instead
+    //should really try to get rid of the statics and make the GameManager hold the object instead
     // for now this means there can be only one GameLevel...
     public static GameLevel theMap = null;
     public static string szLevel;
     public static int iLevelIndex;
+    public static bool bSimpleBk = true;
     public static bool bMapLoaded = false;
     public static Replay theReplay = null;
     public static bool bRunReplay = false;
@@ -188,17 +189,15 @@ public class GameLevel : MonoBehaviour
         LoadDesPass2();
         iFinalizeCounter = 0;
 
-        //(user not currently used in Player)
+        //(user name not currently used in Player)
         string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
         player.Init(szUser, 0, stPlayerStartPos[0], this);
 
         Material oMaterialBox = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralBox, typeof(Material)) as Material;
         //make back plane and border
-        //        /**/oMeshGen.GenerateMeshBackground(oMaterialBox);
         /*backPlane.transform.localPosition = new Vector3(0, 0, 6.0f);
         backPlane.transform.localScale = new Vector3(iWidth / 10.0f, 1.0f, iHeight / 10.0f);
         backPlane.GetComponent<MeshRenderer>().material = oMaterialBox;*/
-        /**///backPlane.GetComponent<MeshRenderer>().material = oMaterialBox;
         oMeshGen.map0_bk.GetComponent<MeshRenderer>().material = oMaterialBox;
         Vector3 vSize = GetMapSize();
         GameObject oObj;
@@ -255,15 +254,18 @@ public class GameLevel : MonoBehaviour
         if (n == 0)
         {
             Debug.Log("Loading Level: " + szLevel);
+///**/float t1 = Time.realtimeSinceStartup;
             LoadDesPass1(szLevel);
             oMeshGen = GetComponent<MeshGenerator>();
 
-            //set back plain first of all
-            /**/oMeshGen.GenerateMeshBackground(iWidth, iHeight);
+            //set background plane first of all
+            if (bSimpleBk) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f); 
+            else oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.00f, 1.25f);
 
             //load and generate map
             string szPngTileset = szTilefile.Remove(szTilefile.LastIndexOf('.')) + ".png";
             LoadTileSet(szPngTileset);
+///**/Debug.Log("LoadMap: " + (Time.realtimeSinceStartup - t1)*1000.0f);
             return false;
         }
         else
@@ -331,7 +333,6 @@ public class GameLevel : MonoBehaviour
                 bPlayClipGameOver = true;
             }
         }
-
 
         if (bRunGameOverTimer) {
             fGameOverTimer += Time.deltaTime;

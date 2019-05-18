@@ -33,17 +33,17 @@ public class MeshGenerator : MonoBehaviour
     }
 
     public MeshFilter map0_bk;
-    public void GenerateMeshBackground(int w, int h)
+    public void GenerateMeshBackground(int w, int h, float i_fTiling, float i_fBumpHeight)
     {
         //this uses the same mechanism that produces the fine grained map, but generates a background
-        // lowres grid with ~50 triangles or so.
+        // lowres grid with fewer triangles.
         //this must be run before or after fine grained map, cannot be mixed because of shared variables.
 
         Clear();
 
-        //create map bk mesh in segments of 6 tiles
-        int numStepsX = (int)(w / 6);
-        int numStepsY = (int)(h / 6);
+        //create map bk mesh in segments of tiling tiles
+        int numStepsX = (int)(w / i_fTiling);
+        int numStepsY = (int)(h / i_fTiling);
         float stepX = (float)w / (float)numStepsX;
         float stepY = (float)h / (float)numStepsY;
 
@@ -57,7 +57,7 @@ public class MeshGenerator : MonoBehaviour
             for (int y = 0; y < numStepsY+1; y++)
             {
                 Vector3 vPos = new Vector3(-fMapWidth / 2 + x * stepX, -fMapHeight / 2 + y * stepY, 0.0f);
-                /*z bumps was no good*///if (x != 0 && y!=0 && x!= numStepsX && y!= numStepsY) vPos.z = (Random.value * 0.5f);
+                if (x != 0 && y!=0 && x!= numStepsX && y!= numStepsY) vPos.z = (Random.value * i_fBumpHeight) - (i_fBumpHeight * 0.5f);
                 oNodes[x, y] = new Node(vPos);
             }
         }
