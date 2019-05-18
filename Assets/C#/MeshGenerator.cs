@@ -32,7 +32,7 @@ public class MeshGenerator : MonoBehaviour
         triangles = new List<int>();
     }
 
-    public MeshFilter map0_bk;
+    public MeshFilter map0_bg;
     public void GenerateMeshBackground(int w, int h, float i_fTiling, float i_fBumpHeight)
     {
         //this uses the same mechanism that produces the fine grained map, but generates a background
@@ -41,7 +41,7 @@ public class MeshGenerator : MonoBehaviour
 
         Clear();
 
-        //create map bk mesh in segments of tiling tiles
+        //create map bg mesh in segments of tiling tiles
         int numStepsX = (int)(w / i_fTiling);
         int numStepsY = (int)(h / i_fTiling);
         float stepX = (float)w / (float)numStepsX;
@@ -70,14 +70,14 @@ public class MeshGenerator : MonoBehaviour
             }
         }
 
-        //set the map mesh
-        Mesh bkMesh = new Mesh();
-        //bkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; //no need to
-        bkMesh.SetVertices(vertices);
-        bkMesh.SetTriangles(triangles.ToArray(), 0);
-        bkMesh.RecalculateNormals();
-        //bkMesh.uv = uvs; //future: just add them!
-        map0_bk.mesh = bkMesh;
+        //set the map bg mesh
+        Mesh bgMesh = new Mesh();
+        //bgMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; //no need to
+        bgMesh.SetVertices(vertices);
+        bgMesh.SetTriangles(triangles.ToArray(), 0);
+        bgMesh.RecalculateNormals();
+        //bgMesh.uv = uvs; //future: just add them!
+        map0_bg.mesh = bgMesh;
     }
 
 

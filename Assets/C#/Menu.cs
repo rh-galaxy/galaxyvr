@@ -274,7 +274,7 @@ public class Menu : MonoBehaviour
     C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
     int iQuality = 2;
     C_Item2InMenu oMenuSnapMovement;
-    C_Item2InMenu oMenuSimpleBk;
+    C_Item2InMenu oMenuSimpleBg;
 
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     internal Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
@@ -339,8 +339,8 @@ public class Menu : MonoBehaviour
         oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 38, "Quit", "Quit", 30.0f, 12.0f);
         oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Credits", "Credits", 30.0f, 9.0f);
 
-        GameLevel.bSimpleBk = PlayerPrefs.GetInt("MySimpleModeBackground", 0) != 0;
-        oMenuSimpleBk = new C_Item2InMenu(new Vector3(0, -48, 12.0f), vAroundPoint, 53.5f, "Simple Bg", "SimpleBg", 30.0f, 6.0f);
+        GameLevel.bSimpleBg = PlayerPrefs.GetInt("MySimpleModeBackground", 0) != 0;
+        oMenuSimpleBg = new C_Item2InMenu(new Vector3(0, -48, 12.0f), vAroundPoint, 53.5f, "Simple Bg", "SimpleBg", 30.0f, 6.0f);
 
         CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0)!=0;
         oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 53.5f, "Snap", "Snap", 30.0f, 9.0f);
@@ -524,7 +524,7 @@ public class Menu : MonoBehaviour
         if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 4) ? oMaterialCircleHighlighted : oMaterialCircle;
 
         if (oMenuSnapMovement != null && oMenuSnapMovement.oLevelQuad != null) oMenuSnapMovement.oLevelQuad.GetComponent<MeshRenderer>().material = CameraController.bSnapMovement ? oMaterialCircleHighlighted : oMaterialCircle;
-        if (oMenuSimpleBk != null && oMenuSimpleBk.oLevelQuad != null) oMenuSimpleBk.oLevelQuad.GetComponent<MeshRenderer>().material = GameLevel.bSimpleBk ? oMaterialCircleHighlighted : oMaterialCircle;
+        if (oMenuSimpleBg != null && oMenuSimpleBg.oLevelQuad != null) oMenuSimpleBg.oLevelQuad.GetComponent<MeshRenderer>().material = GameLevel.bSimpleBg ? oMaterialCircleHighlighted : oMaterialCircle;
 
         bool bHitLevel = false;
         RaycastHit oHitInfo;
@@ -612,7 +612,7 @@ public class Menu : MonoBehaviour
             }
             else if (oHitInfo.collider.name.CompareTo("SimpleBg") == 0)
             {
-                oMenuSimpleBk.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+                oMenuSimpleBg.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
             }
 
             //manage selection
@@ -729,8 +729,8 @@ public class Menu : MonoBehaviour
                     }
                     else if (oHitInfo.collider.name.CompareTo("SimpleBg") == 0)
                     {
-                        GameLevel.bSimpleBk = !GameLevel.bSimpleBk;
-                        PlayerPrefs.SetInt("MySimpleModeBackground", GameLevel.bSimpleBk ? 1 : 0);
+                        GameLevel.bSimpleBg = !GameLevel.bSimpleBg;
+                        PlayerPrefs.SetInt("MySimpleModeBackground", GameLevel.bSimpleBg ? 1 : 0);
                         PlayerPrefs.Save();
                         bAllowSelection = false;
                         bPlaySelectSound = true;

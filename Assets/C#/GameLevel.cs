@@ -67,7 +67,7 @@ public class GameLevel : MonoBehaviour
     public static GameLevel theMap = null;
     public static string szLevel;
     public static int iLevelIndex;
-    public static bool bSimpleBk = true;
+    public static bool bSimpleBg = true;
     public static bool bMapLoaded = false;
     public static Replay theReplay = null;
     public static bool bRunReplay = false;
@@ -198,7 +198,7 @@ public class GameLevel : MonoBehaviour
         /*backPlane.transform.localPosition = new Vector3(0, 0, 6.0f);
         backPlane.transform.localScale = new Vector3(iWidth / 10.0f, 1.0f, iHeight / 10.0f);
         backPlane.GetComponent<MeshRenderer>().material = oMaterialBox;*/
-        oMeshGen.map0_bk.GetComponent<MeshRenderer>().material = oMaterialBox;
+        oMeshGen.map0_bg.GetComponent<MeshRenderer>().material = oMaterialBox;
         Vector3 vSize = GetMapSize();
         GameObject oObj;
         //left
@@ -259,7 +259,7 @@ public class GameLevel : MonoBehaviour
             oMeshGen = GetComponent<MeshGenerator>();
 
             //set background plane first of all
-            if (bSimpleBk) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f); 
+            if (bSimpleBg) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f); 
             else oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.00f, 1.25f);
 
             //load and generate map
