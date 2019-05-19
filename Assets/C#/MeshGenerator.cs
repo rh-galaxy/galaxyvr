@@ -52,6 +52,7 @@ public class MeshGenerator : MonoBehaviour
 
         Node[,] oNodes = new Node[numStepsX+1, numStepsY+1];
 
+        //set squares
         for (int x = 0; x < numStepsX+1; x++)
         {
             for (int y = 0; y < numStepsY+1; y++)
@@ -61,6 +62,7 @@ public class MeshGenerator : MonoBehaviour
                 oNodes[x, y] = new Node(vPos);
             }
         }
+        //create mesh
         for (int x = 0; x < numStepsX; x++)
         {
             for (int y = 0; y < numStepsY; y++)
@@ -69,6 +71,14 @@ public class MeshGenerator : MonoBehaviour
                 MeshFromPoints(oNodes[x, y + 1], oNodes[x + 1, y + 1], oNodes[x + 1, y], oNodes[x, y]);
             }
         }
+        //set uv coords for every vertex
+        uvs = new Vector2[vertices.Count];
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            float percentX = vertices[i].x * 0.25f;
+            float percentY = vertices[i].y * 0.25f;
+            uvs[i] = new Vector2(percentX, percentY);
+        }
 
         //set the map bg mesh
         Mesh bgMesh = new Mesh();
@@ -76,7 +86,7 @@ public class MeshGenerator : MonoBehaviour
         bgMesh.SetVertices(vertices);
         bgMesh.SetTriangles(triangles.ToArray(), 0);
         bgMesh.RecalculateNormals();
-        //bgMesh.uv = uvs; //future: just add them!
+        bgMesh.uv = uvs;
         map0_bg.mesh = bgMesh;
     }
 
@@ -119,7 +129,7 @@ public class MeshGenerator : MonoBehaviour
         {
             for (int y = 0; y < h; y++)
             {
-                /**/if(squareGrid.aSquares[x, y]!=null) TriangulateSquare(squareGrid.aSquares[x, y]);
+                if(squareGrid.aSquares[x, y]!=null) TriangulateSquare(squareGrid.aSquares[x, y]);
             }
             return false;
         }

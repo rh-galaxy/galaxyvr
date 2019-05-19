@@ -2854,7 +2854,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walls: {fileID: 1501603013}
   map0: {fileID: 1836844833}
-  map0_bk: {fileID: 272934105}
+  map0_bg: {fileID: 272934105}
 --- !u!82 &799215561
 AudioSource:
   m_ObjectHideFlags: 0
