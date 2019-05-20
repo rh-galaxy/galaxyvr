@@ -33,7 +33,7 @@ public class MeshGenerator : MonoBehaviour
     }
 
     public MeshFilter map0_bg;
-    public void GenerateMeshBackground(int w, int h, float i_fTiling, float i_fBumpHeight)
+    public void GenerateMeshBackground(int w, int h, float i_fTiling, float i_fBumpHeight, float i_fUVScaling)
     {
         //this uses the same mechanism that produces the fine grained map, but generates a background
         // lowres grid with fewer triangles.
@@ -75,8 +75,8 @@ public class MeshGenerator : MonoBehaviour
         uvs = new Vector2[vertices.Count];
         for (int i = 0; i < vertices.Count; i++)
         {
-            float percentX = vertices[i].x * 0.25f;
-            float percentY = vertices[i].y * 0.25f;
+            float percentX = vertices[i].x / i_fUVScaling;
+            float percentY = vertices[i].y / i_fUVScaling;
             uvs[i] = new Vector2(percentX, percentY);
         }
 
