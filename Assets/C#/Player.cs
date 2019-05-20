@@ -465,7 +465,7 @@ public class Player : MonoBehaviour
             if (Input.GetButton("Fire2")) bThrottle = true; //button 1 (B)
             if (Input.GetButton("Jump")) bThrottle = true;  //button 3 (Y)
 #if !DISABLESTEAMWORKS
-            if (GameManager.theGM.bTrigger) bThrottle = true;
+            if (GameManager.theGM.bTrigger || GameManager.theGM.bGrip2) bThrottle = true;
 #endif
 
             //keyboard and joystick for fire (is a trigger once event)
@@ -476,6 +476,7 @@ public class Player : MonoBehaviour
 #if !DISABLESTEAMWORKS
             if (GameManager.theGM.bButton1) bNewFireState = true;
             if (GameManager.theGM.bGrip) bNewFireState = true;
+            if (GameManager.theGM.bTrigger2) bNewFireState = true;
 #endif
             if (!bFire)
             {

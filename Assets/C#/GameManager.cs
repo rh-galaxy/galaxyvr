@@ -17,7 +17,9 @@ public class GameManager : MonoBehaviour
     VRTK_ControllerEvents controllerEvents;
 
     internal bool bTrigger = false; //accelerate
+    internal bool bTrigger2 = false; //fire
     internal bool bGrip = false; //fire
+    internal bool bGrip2 = false; //accelerate
     internal bool bButton1 = false; //fire
     internal bool bButton2 = false;
     internal bool bLeft = false, bRight = false;
@@ -30,7 +32,7 @@ public class GameManager : MonoBehaviour
         controllerEvents = (controllerEvents == null ? GetComponent<VRTK_ControllerEvents>() : controllerEvents);
         if (controllerEvents == null)
         {
-            VRTK_Logger.Error(VRTK_Logger.GetCommonMessage(VRTK_Logger.CommonMessageKeys.REQUIRED_COMPONENT_MISSING_FROM_GAMEOBJECT, "VRTK_ControllerEvents_ListenerExample", "VRTK_ControllerEvents", "the same"));
+            VRTK_Logger.Error(VRTK_Logger.GetCommonMessage(VRTK_Logger.CommonMessageKeys.REQUIRED_COMPONENT_MISSING_FROM_GAMEOBJECT, "VRTK_ControllerEvents_Listener", "VRTK_ControllerEvents", "the same"));
             return;
         }
 
@@ -101,28 +103,32 @@ public class GameManager : MonoBehaviour
 
     private void DoTriggerPressed(object sender, ControllerInteractionEventArgs e)
     {
-        bTrigger = true;
+        if(VRTK_ControllerReference.GetRealIndex(e.controllerReference)==0) bTrigger = true;
+        else bTrigger2 = true;
 
         DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TRIGGER", "pressed", e);
     }
 
     private void DoTriggerReleased(object sender, ControllerInteractionEventArgs e)
     {
-        bTrigger = false;
+        if (VRTK_ControllerReference.GetRealIndex(e.controllerReference) == 0) bTrigger = false;
+        else bTrigger2 = false;
 
         DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TRIGGER", "released", e);
     }
 
     private void DoGripPressed(object sender, ControllerInteractionEventArgs e)
     {
-        bGrip = true;
+        if (VRTK_ControllerReference.GetRealIndex(e.controllerReference) == 0) bGrip = true;
+        else bGrip2 = true;
 
         DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "GRIP", "pressed", e);
     }
 
     private void DoGripReleased(object sender, ControllerInteractionEventArgs e)
     {
-        bGrip = false;
+        if (VRTK_ControllerReference.GetRealIndex(e.controllerReference) == 0) bGrip = false;
+        else bGrip2 = false;
 
         DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "GRIP", "released", e);
     }
@@ -759,7 +765,8 @@ public class GameManager : MonoBehaviour
         if (bValveDevicePresent)
         {
 #if !DISABLESTEAMWORKS
-            /*if (!bStartSeen && bStart)
+            /**/
+            if (!bStartSeen && bStart)
             {
                 bStartSeen = true;
                 bPauseNow = !bPause;
@@ -767,7 +774,7 @@ public class GameManager : MonoBehaviour
             if (!bStart)
             {
                 bStartSeen = false;
-            }*/
+            }
 #endif
         }
 
