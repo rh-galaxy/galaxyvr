@@ -2,7 +2,7 @@
 *MAPSIZE  48 58
 *MAPFILE  mission22.txt
 *TILESIZE 32
-*TILESET  ts_alien.tga
+*TILESET  ts_cryptonite.tga
 
 *MAXPLAYERS 3
 *PLAYERSTARTPOS   456   736
