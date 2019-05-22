@@ -806,7 +806,8 @@ public class GameManager : MonoBehaviour
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 //and should be active here ("Scenes/GameStart")
                 //Screen.SetResolution(1280, 720, true);
-                //Screen.SetResolution(864, 960, false);
+                Cursor.visible = false;
+                Screen.SetResolution(864, 960, false);
                 //^set 1280x720 when recording video, then run the 864x960 to get the default back to that (bug in unity)
                 iState++;
                 break;

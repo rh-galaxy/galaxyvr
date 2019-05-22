@@ -131,7 +131,7 @@ public class Menu : MonoBehaviour
         aLevels[22].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[22].szLevelName = "2race22";
         aLevels[22].szLevelDisplayName = "22";
-        aLevels[22].szLevelDescription = "Race22 - Hi lava";
+        aLevels[22].szLevelDescription = "Race22 - Hi desert";
         aLevels[23].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[23].szLevelName = "2race23";
         aLevels[23].szLevelDisplayName = "23";

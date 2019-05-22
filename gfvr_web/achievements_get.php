@@ -65,7 +65,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //part 2 (per level) record scores 1st-3rd place
 						$sort = "DESC";
-						if($row["IsTime"] != 0) $sort = "ASC";
+						if($row['IsTime'] != 0) $sort = "ASC";
 						$select_string = "SELECT achievements_t.name AS Name, achievements_t.score AS Score FROM achievements_t WHERE achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
 						$result2 = @mysqli_query($db, $select_string);
 
@@ -73,15 +73,15 @@
 							$num_rows2 = @mysqli_num_rows($result2);
 							for($j=0; $j < 3; $j++) {
 								if($j>=$num_rows2) {
-									echo "_None ";
+									echo "\"_None\" ";
 									echo "-1 ";
 								} else {
 									// a bit slower but easier to read
 									$row2 = @mysqli_fetch_assoc($result2);
 
 									//name, score
-									echo $row2["Name"]." ";
-									echo $row2["Score"]." ";
+									echo "\"".$row2['Name']."\" ";
+									echo $row2['Score']." ";
 								}
 							}
 						}

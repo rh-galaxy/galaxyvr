@@ -63,7 +63,7 @@ public class HttpHiscore
             {
                 char[] szSeparator = { (char)32 };
                 string[] szTokens = szLines[i].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                if (szTokens.Length != 12) continue;
+                if (szTokens.Length < 12) continue;
 
                 stLevel.szName = szTokens[0].Trim('\"');
                 stLevel.bIsTime = szTokens[1].CompareTo("1")==0;
@@ -73,12 +73,28 @@ public class HttpHiscore
                 stLevel.iBestScoreMs = int.Parse(szTokens[5]);
                 stLevel.iLastScoreMs = -1;
 
-                stLevel.szWRName1 = szTokens[6];
-                stLevel.iWRScore1 = int.Parse(szTokens[7]);
-                stLevel.szWRName2 = szTokens[8];
-                stLevel.iWRScore2 = int.Parse(szTokens[9]);
-                stLevel.szWRName3 = szTokens[10];
-                stLevel.iWRScore3 = int.Parse(szTokens[11]);
+                //handle spaces in names
+                //if(szTokens.Length > 12)
+                //{
+                    char[] szSeparator2 = { (char)'\"' };
+                    string[] szWithin = szLines[i].Trim('\r', '\n').Split(szSeparator2, StringSplitOptions.RemoveEmptyEntries);
+
+                    stLevel.szWRName1 = szWithin[2].Trim(' ');
+                    stLevel.iWRScore1 = int.Parse(szWithin[3]);
+                    stLevel.szWRName2 = szWithin[4].Trim(' ');
+                    stLevel.iWRScore2 = int.Parse(szWithin[5]);
+                    stLevel.szWRName3 = szWithin[6].Trim(' ');
+                    stLevel.iWRScore3 = int.Parse(szWithin[7]);
+                /*}
+                else
+                {
+                    stLevel.szWRName1 = szTokens[6].Trim('\"');
+                    stLevel.iWRScore1 = int.Parse(szTokens[7]);
+                    stLevel.szWRName2 = szTokens[8].Trim('\"');
+                    stLevel.iWRScore2 = int.Parse(szTokens[9]);
+                    stLevel.szWRName3 = szTokens[10].Trim('\"');
+                    stLevel.iWRScore3 = int.Parse(szTokens[11]);
+                }*/
 
                 oLevelList.Add(stLevel);
             }
