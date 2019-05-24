@@ -13,6 +13,11 @@ public class CameraController : MonoBehaviour
     internal static bool bSnapMovement = false;
     internal static Vector3 vCamPos = new Vector3(0,0,0);
 
+    //mouse movement smoothing to distribute movement every frame when framerate
+    //is above input rate at the cost of a delay in movement
+    // frame movement example
+    // before: 5 0 0 5 0 0
+    // now: 2 2 1 2 2 1 
     float fCurX = 0, fCurY = 0;
     float fStepX = 0, fStepY = 0;
     public void GetMouseMovementSmooth(out float o_fX, out float o_fY)

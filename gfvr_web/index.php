@@ -73,19 +73,31 @@ square_end();
 
 
 <?php
+headline("Future");
+?>
+<br>
+<?php
+square_start("'100%'");
+?>
+<p>If there is interest, the ability to create and play custom levels will be added later.
+And there may be more official levels with hiscore coming.</p>
+<?php
+square_end();
+?>
+<br><br><br>
+
+
+<?php
 headline("Contact");
 ?>
 <br>
 <?php
 square_start("'100%'");
 ?>
-
 <p>contact@galaxy-forces-vr.com</p>
-
 <?php
 square_end();
 ?>
-
 <br>
 
 </td></tr>

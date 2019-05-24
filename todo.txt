@@ -25,6 +25,12 @@ Known issues/small things undone
 Must do:
 - Enable code for Oculus entitlement check (later in Release version)
 
+Possible future extensions
+- Add external maps directory and present and enable playing the levels there
+ (distribute existing map editor on the web site)
+- Add more official maps/new tilesets (digital world, ?)
+- Add achievements for the extra official maps
+
 -------
 Achievements: (implemented for steam and oculus)
 - Survivor - Finish a mission level without damage [normal unlock]                     Survivor
