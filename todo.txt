@@ -5,9 +5,15 @@ Website
 Release
 - Make it work better with vive input.
 - Make it work with WMR?
-- Game play promotion video (after music is added)
+- Game play promotion video
+ (done except music track mixed in)
 - Test/fix it working on minimum req hardware (probably ok)
    i5 970GTX
+Release for Oculus Quest
+- Get the concept approved by Oculus
+- Buy a headset
+- Port the game
+- Release in Q4
 
 -------
 Known issues/small things undone

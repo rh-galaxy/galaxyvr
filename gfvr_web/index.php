@@ -79,8 +79,9 @@ headline("Future");
 <?php
 square_start("'100%'");
 ?>
-<p>If there is interest, the ability to create and play custom levels will be added later.
-And there may be more official levels with hiscore coming.</p>
+<p>If there is interest, the ability to create and play custom levels will be added later. 
+And there may be more official levels with hiscore coming. After the release on Vive and Rift,
+the plan is to distribute it for the Oculus Quest.</p>
 <?php
 square_end();
 ?>
