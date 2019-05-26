@@ -6,7 +6,7 @@ Release
 - Make it work better with vive input.
 - Make it work with WMR?
 - Game play promotion video
- (done except music track mixed in)
+ (done except music track needs to be mixed in)
 - Test/fix it working on minimum req hardware (probably ok)
    i5 970GTX
 Release for Oculus Quest
