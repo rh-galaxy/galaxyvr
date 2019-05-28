@@ -73,14 +73,27 @@ square_end();
 
 
 <?php
+headline("Level editor");
+?>
+<br>
+<?php
+square_start("'100%'");
+?>
+<p>The ability to create and play custom levels is now added. Use the <a href="MapEditor_for_custom_levels.zip">MapEditor</a> and read editor_readme.txt</p>
+<?php
+square_end();
+?>
+<br><br><br>
+
+
+<?php
 headline("Future");
 ?>
 <br>
 <?php
 square_start("'100%'");
 ?>
-<p>If there is interest, the ability to create and play custom levels will be added later. 
-And there may be more official levels with hiscore coming.
+<p>There may be more official levels with hiscore coming.
 The plan is to also release it for the Oculus Quest.</p>
 <?php
 square_end();

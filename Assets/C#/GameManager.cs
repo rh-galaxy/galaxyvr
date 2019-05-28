@@ -709,7 +709,7 @@ public class GameManager : MonoBehaviour
 
     LevelInfo stLevel;
     internal HttpHiscore oHigh = new HttpHiscore();
-    int[] aLastScore = new int[100]; //a bit of a hack
+    int[] aLastScore = new int[400]; //a bit of a hack
     int iLastLevelIndex;
     bool bAutoSetLevelInfo = false;
 
@@ -887,24 +887,34 @@ public class GameManager : MonoBehaviour
                 {
                     //set default level info (in case we have network error)
                     stLevel = new LevelInfo();
-                    stLevel.szName = GameLevel.szLevel.Substring(1);
-                    stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
+                    if(GameLevel.iLevelIndex>=200) stLevel.szName = GameLevel.szLevel;
+                    else stLevel.szName = GameLevel.szLevel.Substring(1);
+                    //stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
+                    //^this is now set in SetLevelInfo, read from file
                     stLevel.iBestScoreMs = stLevel.iLastScoreMs = -1;
                     stLevel.iWRScore1 = stLevel.iWRScore2 = stLevel.iWRScore3 = -1;
                     stLevel.iLimit1 = stLevel.iLimit2 = stLevel.iLimit3 = -1;
                     stLevel.szWRName1 = "_None"; stLevel.szWRName2 = "_None"; stLevel.szWRName3 = "_None";
 
-                    string szLevelToLoad = GameLevel.szLevel.Substring(1);
-                    for (int i = 0; i < oHigh.oLevelList.Count; i++)
+                    string szLevelToLoad = stLevel.szName;
+                    if (GameLevel.iLevelIndex >= 200)
                     {
-                        if (szLevelToLoad.CompareTo(oHigh.oLevelList[i].szName) == 0) {
-                            stLevel = oHigh.oLevelList[i];
-                            stLevel.iLastScoreMs = aLastScore[i];
-                            iLastLevelIndex = i;
-                            break;
+                        stLevel.iLastScoreMs = aLastScore[GameLevel.iLevelIndex];
+                        iLastLevelIndex = GameLevel.iLevelIndex;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < oHigh.oLevelList.Count; i++)
+                        {
+                            if (szLevelToLoad.CompareTo(oHigh.oLevelList[i].szName) == 0)
+                            {
+                                stLevel = oHigh.oLevelList[i];
+                                stLevel.iLastScoreMs = aLastScore[i];
+                                iLastLevelIndex = i;
+                                break;
+                            }
                         }
                     }
-                    //Debug.Log("http loadinfo: "+stLevel.szName + " isTime " + stLevel.bIsTime.ToString());
 
                     Menu.theMenu.SetLevelInfo(stLevel, false); //set our level info to menu, it will be displayed there
 
@@ -1017,20 +1027,23 @@ public class GameManager : MonoBehaviour
 
                         //if (!bNoInternet)
                         {
-                            //////start of oculus specific code (achievements)
-                            if (!GameLevel.bRunReplay && bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                            if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
-                                HandleOculusAchievements();
-                            }
-                            //////end of oculus specific code
-                            //////start of valve specific code
+                                //////start of oculus specific code (achievements)
+                                if (bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                                {
+                                    HandleOculusAchievements();
+                                }
+                                //////end of oculus specific code
+                                //////start of valve specific code
 #if !DISABLESTEAMWORKS
-                            if (!GameLevel.bRunReplay && bUserValid/*&& bValveDevicePresent*/) //allow non VR mode to set steam achievements
-                            {
-                                HandleValveAchievements();
-                            }
+                                if (bUserValid /*&& bValveDevicePresent*/) //allow non VR mode to set steam achievements
+                                {
+                                    HandleValveAchievements();
+                                }
 #endif
-                            //////end of valve specific code
+                                //////end of valve specific code
+                            }
                         }
 
                         //get score from GameLevel
@@ -1039,7 +1052,7 @@ public class GameManager : MonoBehaviour
                         else iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
                         if (!GameLevel.bRunReplay) aLastScore[iLastLevelIndex] = iScoreMs;
 
-                        if (!bNoHiscore && !bNoInternet)
+                        if (!bNoHiscore && !bNoInternet && iLastLevelIndex<200)
                         {
                             //always update last level played
                             szLastLevel = GameLevel.szLevel;
