@@ -378,11 +378,11 @@ public class Menu : MonoBehaviour
         }
         //level text
         GameObject oCustomPathText;
-        oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj1, Menu.theMenu.transform);
+        oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
         oCustomPathText.transform.localPosition = new Vector3(1000.0f, 30.0f, 12.0f);
         oCustomPathText.transform.localScale = new Vector3(0.9f, 0.9f, 1.0f);
         //oCustomPathText.transform.RotateAround(vAroundPoint, Vector3.up, fStartAngle);
-        oCustomPathText.GetComponent<TextMeshPro>().text = "Custom ("+s+")";
+        oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels ("+s+"), download editor from www.galaxy-forces-vr.com";
         oCustomPathText.SetActive(true);
 
         //change fov if non VR since that default setting shows to wide fov
@@ -416,8 +416,7 @@ public class Menu : MonoBehaviour
     C_ItemInMenu oMenuReplayYR, oMenuPlay;
     Texture2D oMiniMapTex;
 
-    public GameObject oTMProBaseObj;
-    public GameObject oTMProBaseObj1;
+    public GameObject oTMProBaseObj, oTMProBaseObj1, oTMProBaseObj2;
     public GameObject oLevelInfoContainer;
     public GameObject oWRNameText1, oWRNameText2, oWRNameText3;
     public GameObject oWRScoreText1, oWRScoreText2, oWRScoreText3;
