@@ -365,23 +365,26 @@ public class Menu : MonoBehaviour
         FileInfo[] fileInfo = info.GetFiles("*.des");
         aMenuCustomLevels = new C_LevelInMenu[fileInfo.Length];
         vAroundPoint = new Vector3(1000, 0, -90);
-        for (int i=0; i<fileInfo.Length; i++)
+        int iNum = (fileInfo.Length > 9 * 5 ? 9 * 5 : fileInfo.Length); //limit to 45, if its a problem fix later
+        for (int i=0; i< iNum; i++)
         {
-            vPos = new Vector3(1000, (i % 6) * 10.0f + 24.0f, 12.0f);
-            float fRotateAngle = fStartAngle + (i / 6) * 12.0f;
+            vPos = new Vector3(1000, (i % 9) * 10.5f - 47.0f, 12.0f);
+            float fRotateAngle = fStartAngle + (i / 9) * 23.0f;
             S_Levels level = new S_Levels();
             /**/level.iLevelType = (int)LevelType.MAP_MISSION;
             level.szLevelDescription = ""; //set when level info is set
             level.szLevelName = fileInfo[i].Name;
+            int iPos = fileInfo[i].Name.LastIndexOf('.');
             level.szLevelDisplayName = fileInfo[i].Name;
+            if (iPos > 0) level.szLevelDisplayName = fileInfo[i].Name.Remove(iPos);
             aMenuCustomLevels[i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, level, 200+i);
         }
         //level text
         GameObject oCustomPathText;
         oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-        oCustomPathText.transform.localPosition = new Vector3(1000.0f, 30.0f, 12.0f);
-        oCustomPathText.transform.localScale = new Vector3(0.9f, 0.9f, 1.0f);
-        //oCustomPathText.transform.RotateAround(vAroundPoint, Vector3.up, fStartAngle);
+        oCustomPathText.transform.localPosition = new Vector3(1000.0f, fileInfo.Length<22? 0.0f:50.0f, 12.0f);
+        oCustomPathText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        //oCustomPathText.transform.RotateAround(vAroundPoint, Vector3.up, 0.0f);
         oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels ("+s+"), download editor from www.galaxy-forces-vr.com";
         oCustomPathText.SetActive(true);
 
