@@ -597,8 +597,8 @@ public class GameManager : MonoBehaviour
         if (msg.IsError)
         {
             Debug.LogError("Not entitled to play this game");
-//removed quit while developing
-/**///UnityEngine.Application.Quit();
+            
+            UnityEngine.Application.Quit(); //it is possible to remove quit while developing
         }
         else
         {
@@ -727,13 +727,14 @@ public class GameManager : MonoBehaviour
         if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
+    Camera mainCam;
     void Update()
     {
 #if !DISABLESTEAMWORKS
         if (SteamManager.Initialized)
             SteamAPI.RunCallbacks(); //must run every frame for some reason or garbage collector takes something and unity crashes
 #endif
-        if(Menu.bQuit)
+        if (Menu.bQuit)
         {
 #if !DISABLESTEAMWORKS
             if (SteamManager.Initialized)
@@ -753,14 +754,7 @@ public class GameManager : MonoBehaviour
         bool bPauseNow = bPause; //no change below
         if (bOculusDevicePresent)
         {
-            if ((OVRManager.hasInputFocus && OVRManager.hasVrFocus) /**/|| (XRDevice.userPresence!=UserPresenceState.Present))
-            {
-                bPauseNow = false;
-            }
-            else
-            {
-                bPauseNow = true;
-            }
+            bPauseNow = !(OVRManager.hasInputFocus && OVRManager.hasVrFocus) /**//*|| (XRDevice.userPresence!=UserPresenceState.Present)*/;
         }
         if (bValveDevicePresent)
         {
@@ -778,26 +772,37 @@ public class GameManager : MonoBehaviour
 #endif
         }
 
+        //save Camera.main whenever!null, because setting it disabled makes it null
+        if (Camera.main!=null) mainCam = Camera.main;
+
         //pause state change
         if (bPause != bPauseNow)
         {
             bPause = bPauseNow;
             if(bPauseNow)
             {
-                Time.timeScale = 0.0f;
+                Time.timeScale = 0.0f; //stops FixedUpdate
 
                 //also need to stop all sound
                 if (bMusicOn) oASMusic.Pause();
                 if (GameLevel.theMap != null) GameLevel.theMap.player.StopSound();
-                
-                //Update keeps running, but FixedUpdate stops
+
+                //Update keeps running, but 
+                // rendering must also be paused to pass oculus vrc
+                if (bOculusDevicePresent)
+                    mainCam.enabled = false;
             }
             else
             {
                 Time.timeScale = 1.0f;
                 if (bMusicOn) oASMusic.UnPause();
+
+                //start rendering
+                if(bOculusDevicePresent)
+                    mainCam.enabled = true;
             }
         }
+        if (bPause) return; //to ignore input below
 
         //the main state machine
         switch (iState)
@@ -860,6 +865,10 @@ public class GameManager : MonoBehaviour
             case 1:
                 //running menu
                 {
+                    //back at top level should result in this, but not working:
+                    //if (bOculusDevicePresent && Input.GetKey(KeyCode.JoystickButton6))
+                    //    OVRManager.PlatformUIConfirmQuit();
+
                     oASMusic.volume = 0.40f;
                     //oASMusic.volume = 0.00f;
 

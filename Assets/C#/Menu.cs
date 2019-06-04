@@ -274,7 +274,7 @@ public class Menu : MonoBehaviour
 
     public GameObject oCameraHolder;
 
-    C_Item2InMenu oMenuQuit, oMenuCredits;
+    C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
     C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
     int iQuality = 2;
@@ -333,7 +333,8 @@ public class Menu : MonoBehaviour
         }
 
         //menu options
-        oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 38, "Quit", "Quit", 30.0f, 12.0f);
+        oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 31, "Quit", "Quit", 30.0f, 12.0f);
+        oMenuControls = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 38, "Controls", "Controls", 30.0f, 9.0f);
         oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Credits", "Credits", 30.0f, 9.0f);
 
         GameLevel.bSimpleBg = PlayerPrefs.GetInt("MySimpleModeBackground", 0) != 0;
@@ -348,7 +349,7 @@ public class Menu : MonoBehaviour
         oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 69, "High", "Qual2", 30.0f, 9.0f);
         oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 76, "Ultra", "Qual3", 30.0f, 9.0f);
 
-        /**/
+        //next/prev buttons
         vPos = new Vector3(0.0f, 10.0f, -0.1f);
         if (oMenuNext1 != null) oMenuNext1.DestroyObj();
         oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -90), 50, "", "Next1", 18.0f, 9.0f);
@@ -559,6 +560,7 @@ public class Menu : MonoBehaviour
 
         //do a raycast into the world based on the user's
         // head position and orientation
+        if (Camera.main == null) return;
         Vector3 vHeadPosition = Camera.main.transform.position;
         Vector3 vGazeDirection = Camera.main.transform.forward;
 
@@ -569,10 +571,11 @@ public class Menu : MonoBehaviour
         if (oMenuReplayYR != null && oMenuReplayYR.oLevelQuad != null) oMenuReplayYR.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
         if (oMenuPlay != null && oMenuPlay.oLevelQuad != null) oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
 
-        /**/if (oMenuNext1 != null && oMenuNext1.oLevelQuad != null) oMenuNext1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
-        /**/if (oMenuPrev1 != null && oMenuPrev1.oLevelQuad != null) oMenuPrev1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
+        if (oMenuNext1 != null && oMenuNext1.oLevelQuad != null) oMenuNext1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
+        if (oMenuPrev1 != null && oMenuPrev1.oLevelQuad != null) oMenuPrev1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
 
         if (oMenuQuit != null && oMenuQuit.oLevelQuad != null) oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
+        if (oMenuControls != null && oMenuControls.oLevelQuad != null) oMenuControls.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
         if (oMenuCredits != null && oMenuCredits.oLevelQuad != null) oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
         if (oMenuQuality1 != null && oMenuQuality1.oLevelQuad != null) oMenuQuality1.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 1) ? oMaterialCircleHighlighted : oMaterialCircle;
         if (oMenuQuality2 != null && oMenuQuality2.oLevelQuad != null) oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 2) ? oMaterialCircleHighlighted : oMaterialCircle;
@@ -660,6 +663,10 @@ public class Menu : MonoBehaviour
             {
                 oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
             }
+            else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
+            {
+                oMenuControls.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+            }
             else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
             {
                 oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
@@ -684,11 +691,11 @@ public class Menu : MonoBehaviour
             {
                 oMenuSimpleBg.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
             }
-            /**/else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
+            else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
                 oMenuNext1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlayHighlighted;
             }
-            /**/else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
+            else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
             {
                 oMenuPrev1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlayHighlighted;
             }
@@ -735,13 +742,13 @@ public class Menu : MonoBehaviour
                         bAllowSelection = false;
                         bPlaySelectSound = true;
                     }
-                    /**/else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
+                    else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
                     {
                         fAdjust = 1000;
                         bAllowSelection = false;
                         bPlaySelectSound = true;
                     }
-                    /**/else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
+                    else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
                     {
                         fAdjust = -1000;
                         bAllowSelection = false;
@@ -777,6 +784,22 @@ public class Menu : MonoBehaviour
                         bAllowSelection = false;
                         bPlaySelectSound = true;
                     }
+                    else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
+                    {
+                        if (oCreditsQuad == null)
+                        {
+                            oCreditsQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                            oCreditsQuad.transform.parent = Menu.theMenu.transform;
+                            oCreditsQuad.transform.localPosition = new Vector3(0, -15, 12.0f);
+                            oCreditsQuad.transform.localScale = new Vector3(40.0f, 40.0f, 1.0f);
+                            Vector3 vAroundPoint = new Vector3(0, 0, -90);
+                            oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 60);
+                        }
+                        oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
+
+                        bAllowSelection = false;
+                        bPlaySelectSound = true;
+                    }
                     else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
                     {
                         if(oCreditsQuad==null)
@@ -787,8 +810,9 @@ public class Menu : MonoBehaviour
                             oCreditsQuad.transform.localScale = new Vector3(40.0f, 40.0f, 1.0f);
                             Vector3 vAroundPoint = new Vector3(0, 0, -90);
                             oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 60);
-                            oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
                         }
+                        oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
+
                         bAllowSelection = false;
                         bPlaySelectSound = true;
                     }
@@ -1065,8 +1089,8 @@ public class Menu : MonoBehaviour
 
             //create text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-            oLevelText.transform.localPosition = new Vector3(vPos.x - 6.5f, vPos.y - 1.8f, vPos.z - 1.2f);
-            oLevelText.transform.localScale = new Vector3(1.7f, 1.7f, 1.0f);
+            oLevelText.transform.localPosition = new Vector3(vPos.x - 5.8f, vPos.y - 1.7f, vPos.z - 1.2f);
+            oLevelText.transform.localScale = new Vector3(1.6f, 1.6f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;
             oLevelText.SetActive(true);

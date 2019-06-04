@@ -1,6 +1,6 @@
 *MAPTYPE RACE 3
 *MAPSIZE  28 40
-*MAPFILE  race00.map
+*MAPFILE  race00.txt
 *TILESIZE 32
 *TILESET  ts_alien.tga
 
