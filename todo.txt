@@ -3,6 +3,7 @@ Sound
 Website
 - www.galaxy-forces-vr.com - Better/more contents
 Release
+- Make it pass Oculus VRC (TestSubmitFramesWhenNotVisible fails).
 - Make it work better with vive input.
 - Make it work with WMR?
 - Game play promotion video
@@ -10,10 +11,7 @@ Release
 - Test/fix it working on minimum req hardware (probably ok)
    i5 970GTX
 Release for Oculus Quest
-- Get the concept approved by Oculus
-- Buy a headset
-- Port the game
-- Release in Q4
+- Get the concept approved by Oculus (currently denied)
 
 -------
 Known issues/small things undone
@@ -29,7 +27,7 @@ Known issues/small things undone
 - There is no back wall of hangar building. Visible through door.
 
 Must do:
-- Enable code for Oculus entitlement check (later in Release version)
+- Enable code for Oculus entitlement check (done, and keep it done later in Release version)
 
 Possible future extensions
 - Add more official maps/new tilesets (digital world, ?)

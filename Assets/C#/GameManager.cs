@@ -304,7 +304,7 @@ public class GameManager : MonoBehaviour
 
         GameLevel.theReplay = oReplay;
         oASMusic = GetComponent<AudioSource>();
-        if(bMusicOn) oASMusic.Play();
+        /*if(bMusicOn)*/ oASMusic.Play();
 
         //this list keeps the last scores for each level for the entire game session, beginning with no score
         for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
@@ -719,7 +719,7 @@ public class GameManager : MonoBehaviour
     int iState = -3;
 
     bool bPause = false;
-    bool bMusicOn = true;
+    //bool bMusicOn = true;
 
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
     private void FixedUpdate()
@@ -754,7 +754,7 @@ public class GameManager : MonoBehaviour
         bool bPauseNow = bPause; //no change below
         if (bOculusDevicePresent)
         {
-            bPauseNow = !(OVRManager.hasInputFocus && OVRManager.hasVrFocus) /**//*|| (XRDevice.userPresence!=UserPresenceState.Present)*/;
+            bPauseNow = (!OVRManager.hasInputFocus || !OVRManager.hasVrFocus) /**//*|| (XRDevice.userPresence!=UserPresenceState.Present)*/;
         }
         if (bValveDevicePresent)
         {
@@ -784,8 +784,9 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0.0f; //stops FixedUpdate
 
                 //also need to stop all sound
-                if (bMusicOn) oASMusic.Pause();
-                if (GameLevel.theMap != null) GameLevel.theMap.player.StopSound();
+                //if (bMusicOn) oASMusic.Pause();
+                //if (GameLevel.theMap != null) GameLevel.theMap.player.StopSound();
+                AudioListener.pause = true;
 
                 //Update keeps running, but 
                 // rendering must also be paused to pass oculus vrc
@@ -795,10 +796,11 @@ public class GameManager : MonoBehaviour
             else
             {
                 Time.timeScale = 1.0f;
-                if (bMusicOn) oASMusic.UnPause();
+                //if (bMusicOn) oASMusic.UnPause();
+                AudioListener.pause = false;
 
                 //start rendering
-                if(bOculusDevicePresent)
+                if (bOculusDevicePresent)
                     mainCam.enabled = true;
             }
         }
