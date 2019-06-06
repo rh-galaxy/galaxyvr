@@ -25,7 +25,6 @@ Known issues/small things undone
 - Test different background textures for the back-plate and borders.
 - Windows on the house is not exactly the same height.
 - There is no back wall of hangar building. Visible through door.
-- Add damage indication to ship for all kinds of damage (may be hard!).
 
 Must do:
 - Enable code for Oculus entitlement check (done, and keep it done later in Release version)

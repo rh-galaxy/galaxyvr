@@ -75,6 +75,7 @@ public class Player : MonoBehaviour
     //ship status
     internal int iNumLifes = -1; //no limit
     float fShipHealth = FULL_HEALTH;
+    float fLastShipHealth = FULL_HEALTH;
 
     float fFuel;
 
@@ -85,6 +86,7 @@ public class Player : MonoBehaviour
     bool bAlive = true;
     bool bFreeFromBullets = false;
     float fFreeFromBulletsTimer = 0.0f;
+    float fDamageTimer = 1.0f;
     float fExplosionTimer = 0.0f;
 
     bool bInited;
@@ -161,8 +163,9 @@ public class Player : MonoBehaviour
     bool bFireTriggered = false, bFire = false;
     bool bThrottle, bLeft, bRight, bAdjust;
 
+    Color oShipColorDamage = new Color(215 / 255.0f, 0, 0, 1.0f);
     Color oShipColorNormal = new Color(138 / 255.0f, 0, 0, 1.0f);
-    Color oShipColorBlink = new Color(180 / 255.0f, 0, 0, 0.5f);
+    Color oShipColorBlink = new Color(180 / 255.0f, 0, 0, 0.55f);
     MeshRenderer oShipBodyMR;
     void Update()
     {
@@ -172,6 +175,7 @@ public class Player : MonoBehaviour
         //update ship color when blinking
         if (bFreeFromBullets && (((int)(fFreeFromBulletsTimer * 1000)) % 300 > 200))
             oShipMaterial.color = oShipColorBlink;
+        else if(fDamageTimer<0.18f) oShipMaterial.color = oShipColorDamage;
         else oShipMaterial.color = oShipColorNormal;
         oShipBodyMR.material = oShipMaterial;
 
@@ -506,7 +510,10 @@ public class Player : MonoBehaviour
         //////react to input
         if (fShipHealth < 0 && !GameLevel.bRunReplay) Kill(true); //only kill if not in replay
         if (fShipHealth != FULL_HEALTH) bAchieveNoDamage = false;
+        if (fShipHealth < fLastShipHealth) fDamageTimer = 0.0f;
+        fLastShipHealth = fShipHealth;
 
+        fDamageTimer += Time.fixedDeltaTime;
         if (bFreeFromBullets)
         {
             fFreeFromBulletsTimer += Time.fixedDeltaTime;
