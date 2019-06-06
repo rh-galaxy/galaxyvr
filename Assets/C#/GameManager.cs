@@ -263,7 +263,7 @@ public class GameManager : MonoBehaviour
 
     Replay oReplay = new Replay(); //create one replay... this is recycled during the session
 
-    // 
+    //first code to run
     void Awake()
     {
         //singleton
@@ -741,7 +741,7 @@ public class GameManager : MonoBehaviour
                 SteamAPI.Shutdown();
 #endif
 #if UNITY_EDITOR
-            // Application.Quit() does not work in the editor so
+            //Application.Quit() does not work in the editor so
             // this need to be set to false to end the game
             UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -814,8 +814,7 @@ public class GameManager : MonoBehaviour
                 //and should be active here ("Scenes/GameStart")
                 Cursor.visible = false;
                 //Screen.SetResolution(1280, 720, true);
-                Screen.SetResolution(864, 960, false);
-                //^set 1280x720 when recording video, then run the 864x960 to get the default back to that (bug in unity)
+                //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
                 break;
             case -2:
