@@ -175,7 +175,7 @@ public class Player : MonoBehaviour
         //update ship color when blinking
         if (bFreeFromBullets && (((int)(fFreeFromBulletsTimer * 1000)) % 300 > 200))
             oShipMaterial.color = oShipColorBlink;
-        else if(fDamageTimer<0.18f) oShipMaterial.color = oShipColorDamage;
+        else if(fDamageTimer<0.21f) oShipMaterial.color = oShipColorDamage;
         else oShipMaterial.color = oShipColorNormal;
         oShipBodyMR.material = oShipMaterial;
 

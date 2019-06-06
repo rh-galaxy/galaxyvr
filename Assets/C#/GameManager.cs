@@ -304,7 +304,7 @@ public class GameManager : MonoBehaviour
 
         GameLevel.theReplay = oReplay;
         oASMusic = GetComponent<AudioSource>();
-        /*if(bMusicOn)*/ oASMusic.Play();
+        oASMusic.Play();
 
         //this list keeps the last scores for each level for the entire game session, beginning with no score
         for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
@@ -719,7 +719,6 @@ public class GameManager : MonoBehaviour
     int iState = -3;
 
     bool bPause = false;
-    //bool bMusicOn = true;
 
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
     private void FixedUpdate()
@@ -784,7 +783,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0.0f; //stops FixedUpdate
 
                 //also need to stop all sound
-                //if (bMusicOn) oASMusic.Pause();
+                //oASMusic.Pause();
                 //if (GameLevel.theMap != null) GameLevel.theMap.player.StopSound();
                 AudioListener.pause = true;
 
@@ -796,7 +795,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 Time.timeScale = 1.0f;
-                //if (bMusicOn) oASMusic.UnPause();
+                //oASMusic.UnPause();
                 AudioListener.pause = false;
 
                 //start rendering
