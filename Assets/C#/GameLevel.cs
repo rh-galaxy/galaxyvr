@@ -336,13 +336,13 @@ public class GameLevel : MonoBehaviour
         if (bRunGameOverTimer) {
             fGameOverTimer += Time.deltaTime;
 
-            //delay sounds 1.5 sec
-            if(bPlayClipWin && fGameOverTimer > 1.5f)
+            //delay sounds 0.5 sec
+            if(bPlayClipWin && fGameOverTimer > 0.5f)
             {
                 GetComponent<AudioSource>().PlayOneShot(oClipLevelWin);
                 bPlayClipWin = false;
             }
-            if (bPlayClipGameOver && fGameOverTimer > 1.5f)
+            if (bPlayClipGameOver && fGameOverTimer > 0.5f)
             {
                 GetComponent<AudioSource>().PlayOneShot(oClipLevelGameOver);
                 bPlayClipGameOver = false;
