@@ -26,7 +26,6 @@ Known issues/small things undone
 - Windows on the house is not exactly the same height.
 - There is no back wall of hangar building. Visible through door.
 - Add particles when bullets hit the wall.
-- Add particles on the contact points when the ship is taking damage.
 
 Must do:
 - Enable code for Oculus entitlement check (done, and keep it done later in Release version)

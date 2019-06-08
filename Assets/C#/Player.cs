@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public GameObject oShip;
     public ParticleSystem oThruster;
     public GameObject oExplosion;
+    public ParticleSystem oWallsColl;
     public GameObject oShipBody;
     public Material oShipMaterial;
     public GameStatus status;
@@ -93,6 +94,8 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         bInited = false;
+        oThruster.enableEmission = false;
+        oWallsColl.enableEmission = false;
     }
 
     public void Init(string i_szName, int i_iPlayerID, Vector2 i_vStartPos, GameLevel i_oMap)
@@ -104,9 +107,7 @@ public class Player : MonoBehaviour
         fLandTime = 0.0f;
 
         iTotalLaps = oMap.iRaceLaps;
-
         fFuel = MAXFUELINTANK;
-        oThruster.enableEmission = false;
 
         oShipBodyMR = oShipBody.GetComponent<MeshRenderer>();
 
@@ -246,6 +247,13 @@ public class Player : MonoBehaviour
             //unrealistic with bouncing when tilted/half way outside zone
             //so not done
 
+            if (fShipHealth < fLastShipHealth)
+            {
+                c = collision.GetContact(0);
+                oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, 1.5f);
+                oWallsColl.enableEmission = true;
+            }
+
             oASGeneral.PlayOneShot(oClipLand);
         }
 
@@ -264,6 +272,10 @@ public class Player : MonoBehaviour
             bScrapeFadeOut = false;
             oASScrape.volume = 1.0f;
             oASScrape.Play();
+
+            c = collision.GetContact(0);
+            oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, 1.5f);
+            oWallsColl.enableEmission = true;
         }
 
         //collide with enemy body
@@ -308,7 +320,13 @@ public class Player : MonoBehaviour
             if (fDiff > 80)
                 fShipHealth -= 0.5f * Time.fixedDeltaTime;
 
-            //landing stabel
+            //no damage taken any moore
+            if (fShipHealth >= fLastShipHealth)
+            {
+                oWallsColl.enableEmission = false;
+            }
+
+            //landing stable
             if (fDiff < 1)
             {
                 fLandTime += Time.fixedDeltaTime;
@@ -338,6 +356,7 @@ public class Player : MonoBehaviour
         {
             fLandTime = 0.0f;
             bLanded = false;
+            oWallsColl.enableEmission = false;
         }
 
         //map or door, or map decorations
@@ -347,6 +366,7 @@ public class Player : MonoBehaviour
             szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
         {
             bScrapeFadeOut = true;
+            oWallsColl.enableEmission = false;
         }
     }
 

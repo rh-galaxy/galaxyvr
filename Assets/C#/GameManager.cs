@@ -753,7 +753,8 @@ public class GameManager : MonoBehaviour
         bool bPauseNow = bPause; //no change below
         if (bOculusDevicePresent)
         {
-            bPauseNow = (!OVRManager.hasInputFocus || !OVRManager.hasVrFocus) /**//*|| (XRDevice.userPresence!=UserPresenceState.Present)*/;
+            bPauseNow = (!OVRManager.hasInputFocus || !OVRManager.hasVrFocus) /*|| (XRDevice.userPresence!=UserPresenceState.Present)*/;
+            /**///bPauseNow = false; //set to be able to play from editor without VR
         }
         if (bValveDevicePresent)
         {
