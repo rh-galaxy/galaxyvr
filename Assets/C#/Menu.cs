@@ -10,6 +10,7 @@ public class Menu : MonoBehaviour
 {
     public static Menu theMenu = null;
     public static bool bLevelSelected = false;
+    public static bool bLevelUnSelected = false;
     public static bool bLevelPlay = false;
     public static bool bYourBestReplay = false;
     public static bool bWorldBestReplay1 = false;
@@ -859,6 +860,10 @@ public class Menu : MonoBehaviour
                         bAllowSelection = false;
                         bPlaySelectSound = true;
                     }
+                    else if (oHitInfo.collider.name.CompareTo("Back") == 0)
+                    {
+
+                    }
 
                     if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
                 }
@@ -871,6 +876,24 @@ public class Menu : MonoBehaviour
         else
         {
             //no hit, place cursor at max distance
+
+            //first, unselect level if click outside levelinfo
+            if (Input.GetButton("Fire1")
+#if !DISABLESTEAMWORKS
+                || GameManager.theGM.bButton1
+#endif
+            )
+            {
+                if (bAllowSelection)
+                {
+                    bLevelUnSelected = true;
+                    bAllowSelection = false;
+                }
+            }
+            else
+            {
+                bAllowSelection = true;
+            }
 
             //set at max distance
             oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*170.0f;

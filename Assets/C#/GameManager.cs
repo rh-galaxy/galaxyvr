@@ -281,7 +281,7 @@ public class GameManager : MonoBehaviour
         //the rest is done once only...
         DontDestroyOnLoad(gameObject);
 
-        bool bInited;
+        bool bInited = false;
 #if !DISABLESTEAMWORKS
         this.enabled = true;
         bInited = InitValve();
@@ -295,6 +295,7 @@ public class GameManager : MonoBehaviour
             //bUserValid = true;
             bNoHiscore = true;
             bNoVR = true;
+            //XRSettings.enabled = false;
             Screen.SetResolution(1280, 720, true);
         }
         else
@@ -938,11 +939,13 @@ public class GameManager : MonoBehaviour
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
                 if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton1) || Input.GetKey(KeyCode.Escape)
+                    || Menu.bLevelUnSelected
 #if !DISABLESTEAMWORKS
                     || bStart
 #endif
                     )
                 {
+                    Menu.bLevelUnSelected = false;
                     iState = 1; //goto menu part 1 (back)
                     Menu.theMenu.SetLevelInfo(stLevel, true); //stLevel not used
                 }

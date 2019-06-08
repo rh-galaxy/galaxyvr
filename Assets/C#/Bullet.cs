@@ -29,6 +29,11 @@ public class Bullet : MonoBehaviour
     float fTotAlive;
     S_BulletInfo stBullet;
 
+    Rigidbody2D rb;
+
+    public ParticleSystem oBulletHit;
+    public GameObject oCube;
+
     public void Init(S_BulletInfo i_stBulletInfo, int i_iOwnerID)
     {
         iBulletUniqeVal = iUniqeValBase++;
@@ -39,7 +44,7 @@ public class Bullet : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         rb.transform.position = stBullet.vPos;
         rb.velocity = stBullet.vVel;
 
@@ -88,7 +93,14 @@ public class Bullet : MonoBehaviour
 
         //always remove the bullet
         //this removes the object from its parent and from existance
-        Destroy(gameObject);
+        //Destroy(gameObject);
+
+        //new, play particle effect, then destroy object
+        rb.simulated = false;
+        oCube.SetActive(false);
+        oBulletHit.Play();
+        Destroy(gameObject, 0.7f);
+        if(fTotAlive+0.75 > BULLETLIFETIME) Destroy(gameObject); //act on special case where lifetime will not last 0.75 S, delete now
     }
 
     void FixedUpdate()
