@@ -304,6 +304,8 @@ public class Player : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision)
     {
         string szOtherObject = collision.collider.gameObject.name;
+        int iNum = collision.contactCount;
+        ContactPoint2D c = collision.GetContact(0);
 
         if (szOtherObject.StartsWith("LandingZone"))
         {
@@ -320,11 +322,9 @@ public class Player : MonoBehaviour
             if (fDiff > 80)
                 fShipHealth -= 0.5f * Time.fixedDeltaTime;
 
-            //no damage taken any moore
-            if (fShipHealth >= fLastShipHealth)
-            {
-                oWallsColl.enableEmission = false;
-            }
+            //damage taken?
+            oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, 1.5f);
+            oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
 
             //landing stable
             if (fDiff < 1)
