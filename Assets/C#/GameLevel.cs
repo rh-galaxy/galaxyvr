@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -174,7 +175,8 @@ public class GameLevel : MonoBehaviour
     public AudioClip oClipLevelWin;
 
     MeshGenerator oMeshGen;
-    Material oMaterialWalls; //set when walls are created, and used also in creating the map border
+    Material oMaterialWalls; //set when walls are created
+    Material oMaterial;
 
     public GameLevel()
     {
@@ -185,9 +187,12 @@ public class GameLevel : MonoBehaviour
     void Start()
     {
         bGameOver = false;
+/**/float t1 = Time.realtimeSinceStartup;
 
+        //todo: need to split this up, takes 20ms for mission29
         LoadDesPass2();
         iFinalizeCounter = 0;
+/**/Debug.Log("Start: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
 
         //(user name not currently used in Player)
         string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
@@ -245,43 +250,144 @@ public class GameLevel : MonoBehaviour
             case 5: RenderSettings.skybox = oSkyBoxMat5; break;
         }
 
+/**/Debug.Log("Start: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         Debug.Log("Start done");
     }
 
-    public bool LoadInSegments(int n)
+
+    //Mutex mutex;
+    Thread thread;
+    bool bMeshBkReady = false;
+    void LoadThread()
     {
+        //create background plane first of all
+        if (bSimpleBg) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f, 32.0f);
+        else oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 1.05f, 1.0f);
+
+        bMeshBkReady = true;
+        thread.Suspend();
+
+        //generate new high res map based on the textures of the tiles
+        int substeps = 6;
+        float pixelsamplepos = 32.0f / substeps;
+        LoadGrid(substeps, pixelsamplepos);
+
+        //generate final mesh, set tile material
+        oMeshGen.GenerateMeshInit(aMapHighres, 1.0f / substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
+
+        oMeshGen.GenerateMesh();
+
+        bMapLoaded = true;
+    }
+
+    //todo: split this in parts of ~6ms later
+    bool[,] oTileSet;
+    byte[] bytes;
+    public bool LoadBegin(int n)
+    {
+/**/float t1 = Time.realtimeSinceStartup;
+
+        bool bIsCustom = iLevelIndex >= 200;
+        int substeps = 6;
         if (n == 0)
         {
+            bMapLoaded = false;
+
+            //load des pass 1 (unity: must be done from main thread)
             Debug.Log("Loading Level: " + szLevel);
-///**/float t1 = Time.realtimeSinceStartup;
-            LoadDesPass1(szLevel, iLevelIndex >= 200);
+            LoadDesPass1(szLevel, bIsCustom);
             oMeshGen = GetComponent<MeshGenerator>();
-
-            //create background plane first of all
-            if (bSimpleBg) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f, 32.0f);
-            else oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.00f, 1.05f, 1.0f);
-
-            //load and generate map
+        }
+        else if (n == 1)
+        {
+            //load tileset (unity: must be done from main thread)
             string szPngTileset = szTilefile.Remove(szTilefile.LastIndexOf('.')) + ".png";
             LoadTileSet(szPngTileset);
-///**/Debug.Log("LoadMap: " + (Time.realtimeSinceStartup - t1)*1000.0f);
-            return false;
         }
-        else
+        else if (n >= 2 && n<=7)
         {
-///**/float t1 = Time.realtimeSinceStartup;
-            bool bFinished = LoadMap(n - 1, iLevelIndex >= 200);
-///**/Debug.Log("LoadMap: " + (Time.realtimeSinceStartup - t1)*1000.0f);
-            if (bFinished) bMapLoaded = true;
-            return bFinished;
+            //load tileset to bool array (unity: must be done from main thread)
+            // this is to avoid doing GetPixel later (GetPixels instead of GetPixel didn't save time)
+            int segs = oTileTexture.height / 6;
+            int n2 = n - 2;
+
+            if (n2==0) oTileSet = new bool[oTileTexture.height, oTileTexture.width];
+            for (int y = n2*segs; y < (n2<5?(n2+1)*segs:oTileTexture.height); y++)
+            {
+                for (int x = 0; x < oTileTexture.width; x++)
+                {
+                    bool bPixel = oTileTexture.GetPixel(x, y) != Color.black;
+                    oTileSet[y, x] = bPixel;
+                }
+            }
+        }
+        else if (n == 8)
+        {
+            //load materials (unity: must be done from main thread)
+            oMaterial = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMaterial, typeof(Material)) as Material;
+            oMaterialWalls = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralWalls, typeof(Material)) as Material;
+        }
+        else if (n == 9)
+        {
+            //load map file (unity: must be done from main thread)
+            aMap = new int[iHeight, iWidth];
+            //load tile numbers
+            if (!bIsCustom)
+            {
+                string szFilenameNoExt = szMiniMapfile.Remove(szMapfile.LastIndexOf('.'));
+                TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
+                if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
+                //if (f == null) return false;
+                bytes = f.bytes;
+            }
+            else
+            {
+                bytes = File.ReadAllBytes(Application.persistentDataPath + "/" + szMiniMapfile);
+            }
+
+            for (int y = 0; y < iHeight; y++)
+            {
+                for (int x = 0; x < iWidth; x++)
+                {
+                    aMap[iHeight - 1 - y, x] = bytes[y * iWidth + x];
+                }
+            }
+            aMapHighres = new int[iHeight * substeps, iWidth * substeps];
+        }
+        else if (n == 10)
+        {
+            //create thread for all other work that can be done
+            // (before needing work in main thread, handled in LoadDone() and thread)
+            ThreadStart ts = new ThreadStart(LoadThread);
+            thread = new Thread(ts);
+            thread.Priority = System.Threading.ThreadPriority.Lowest;
+            thread.Start();
+
+/**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+            return true;
         }
 
+/**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+        return false;
+    }
+    
+    public bool LoadDone()
+    {
+        if(bMeshBkReady)
+        {
+            oMeshGen.SetGenerateMeshBackgroundToUnity();
+
+            bMeshBkReady = false;
+            thread.Resume();
+        }
+
+        return !thread.IsAlive;
     }
 
     void Update()
     {
         //finalize the loading in the first few frames after Start()
-        if (iFinalizeCounter <= 16)
+        if (iFinalizeCounter <= 44)
         {
 ///**/float t1 = Time.realtimeSinceStartup;
             oMeshGen.GenerateMeshFinalize(iFinalizeCounter);
@@ -291,9 +397,14 @@ public class GameLevel : MonoBehaviour
             //pause physics
             Time.timeScale = 0.0f;
         }
-        else if (iFinalizeCounter == 17)
+        else if (iFinalizeCounter >= 45 && iFinalizeCounter <= 48)
         {
-            for (int y = 0; y < iHeight; y++)
+            int n2 = iFinalizeCounter - 45;
+            int segs = iHeight / 4;
+
+/**/float t1 = Time.realtimeSinceStartup;
+
+            for (int y = n2 * segs; y < (n2 < 3 ? (n2 + 1) * segs : iHeight); y++)
             {
                 for (int x = 0; x < iWidth; x++)
                 {
@@ -302,8 +413,14 @@ public class GameLevel : MonoBehaviour
             }
             iFinalizeCounter++;
 
+/**/Debug.Log("iFinalizeCounter == 45: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+        }
+        else if (iFinalizeCounter == 49)
+        {
             oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
             GetComponent<AudioSource>().PlayOneShot(oClipLevelStart);
+
+            iFinalizeCounter++;
 
             //time back to normal
             Time.timeScale = 1.0f;
@@ -998,86 +1115,28 @@ public class GameLevel : MonoBehaviour
         }
     }
 
-    void LoadRow(int y, int substeps, float pixelsamplepos)
+    void LoadGrid(int substeps, float pixelsamplepos)
     {
-        for (int x = 0; x < iWidth; x++)
+        for (int y = 0; y < iHeight; y++)
         {
-            ReplaceAndAddObjectPass1(x, y);
-            int iTile = aMap[y, x];
-            Rect r = stTileRects[iTile];
-            for (int y2 = 0; y2 < substeps; y2++)
+            for (int x = 0; x < iWidth; x++)
             {
-                for (int x2 = 0; x2 < substeps; x2++)
+                ReplaceAndAddObjectPass1(x, y);
+                int iTile = aMap[y, x];
+                Rect r = stTileRects[iTile];
+                for (int y2 = 0; y2 < substeps; y2++)
                 {
-                    int posx = (int)r.position.x + (int)(x2 * pixelsamplepos + pixelsamplepos / 2);
-                    int posy = (int)r.position.y + (int)(y2 * pixelsamplepos + pixelsamplepos / 2);
-                    //sample every pixelsamplepos pixel in the tile texture
-                    aMapHighres[y * substeps + y2, x * substeps + x2] = oTileTexture.GetPixel(posx, posy) == Color.black ? 0 : iTile;
-                    //aMapHighres[y * substeps + y2, x * substeps + x2] = iTile;
+                    for (int x2 = 0; x2 < substeps; x2++)
+                    {
+                        int posx = (int)r.position.x + (int)(x2 * pixelsamplepos + pixelsamplepos / 2);
+                        int posy = (int)r.position.y + (int)(y2 * pixelsamplepos + pixelsamplepos / 2);
+                        //sample every pixelsamplepos pixel in the tile texture
+                        aMapHighres[y * substeps + y2, x * substeps + x2] = oTileSet[posy, posx] ? iTile : 0;
+                        //aMapHighres[y * substeps + y2, x * substeps + x2] = iTile;
+                    }
                 }
             }
         }
-    }
-
-    bool LoadMap(int n, bool bIsCustom)
-    {
-        int substeps = 6;
-
-        if (n == 0)
-        {
-            aMap = new int[iHeight, iWidth];
-
-            //load tile numbers
-            byte[] bytes;
-            if (!bIsCustom)
-            {
-                string szFilenameNoExt = szMiniMapfile.Remove(szMapfile.LastIndexOf('.'));
-                TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
-                if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
-                if (f == null) return false;
-                bytes = f.bytes;
-            }
-            else
-            {
-                bytes = File.ReadAllBytes(Application.persistentDataPath + "/" + szMiniMapfile);
-            }
-            for (int y = 0; y < iHeight; y++)
-            {
-                for (int x = 0; x < iWidth; x++)
-                {
-                    aMap[iHeight - 1 - y, x] = bytes[y * iWidth + x];
-                }
-            }
-
-            aMapHighres = new int[iHeight * substeps, iWidth * substeps];
-        }
-        else if (n < 1 + iHeight)
-        {
-            //generate new high res map based on the textures of the tiles
-            float pixelsamplepos = 32.0f / substeps;
-
-            //for (int y = 0; y < iHeight; y++)
-            //{
-                LoadRow(n-1, substeps, pixelsamplepos);
-            //}
-        }
-        else if (n == 1 + iHeight)
-        {
-            //generate final mesh, set tile material
-            Material oMaterial = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMaterial, typeof(Material)) as Material;
-            oMaterialWalls = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralWalls, typeof(Material)) as Material;
-            oMeshGen.GenerateMeshInit1(aMapHighres, 1.0f/substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
-        }
-        else if (n <= 3 + iHeight)
-        {
-            oMeshGen.GenerateMeshInit2(n - (2 + iHeight));
-        }
-        else if (n >= 4 + iHeight)
-        {
-            return oMeshGen.GenerateMesh(n - (4 + iHeight));
-        }
-
-        return false;
     }
 
     int iNumTiles;

@@ -180,7 +180,7 @@ public class Player : MonoBehaviour
         else oShipMaterial.color = oShipColorNormal;
         oShipBodyMR.material = oShipMaterial;
 
-
+        //update status gui
         if (oMap.iLevelType == (int)LevelType.MAP_RACE)
             status.SetForRace(fShipHealth / FULL_HEALTH, fTotalTime, "[" + iCurLap.ToString() + "/" + iTotalLaps.ToString() + "] " + iCurCP.ToString());
         else

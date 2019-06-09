@@ -17,6 +17,7 @@ public class Menu : MonoBehaviour
     public static bool bWorldBestReplay2 = false;
     public static bool bWorldBestReplay3 = false;
     public static bool bQuit = false;
+    public static bool bPauseInput = false;
     LevelInfo stLevel;
     bool bAllowSelection;
 
@@ -549,6 +550,9 @@ public class Menu : MonoBehaviour
             Debug.LogError("Update - NULL");
         }
 
+        //exit if input shall be ignored
+        if (Menu.bPauseInput) return;
+
         //get input from joysticks
         float fAxisX = Input.GetAxisRaw("Horizontal");
         float fAdjust = 0;
@@ -561,7 +565,6 @@ public class Menu : MonoBehaviour
 
         //do a raycast into the world based on the user's
         // head position and orientation
-        if (Camera.main == null) return;
         Vector3 vHeadPosition = Camera.main.transform.position;
         Vector3 vGazeDirection = Camera.main.transform.forward;
 

@@ -16,6 +16,8 @@ public class MeshGenerator : MonoBehaviour
     Material oMat;
     Material oMatWalls;
 
+    System.Random random = new System.Random();
+
     List<Vector3> vertices;
     List<int> triangles;
 
@@ -33,6 +35,9 @@ public class MeshGenerator : MonoBehaviour
     }
 
     public MeshFilter map0_bg;
+    int numStepsX, numStepsY;
+    Node[,] oNodes;
+    float fUVScaling;
     public void GenerateMeshBackground(int w, int h, float i_fTiling, float i_fBumpHeight, float i_fUVScaling)
     {
         //this uses the same mechanism that produces the fine grained map, but generates a background
@@ -42,15 +47,16 @@ public class MeshGenerator : MonoBehaviour
         Clear();
 
         //create map bg mesh in segments of tiling tiles
-        int numStepsX = (int)(w / i_fTiling);
-        int numStepsY = (int)(h / i_fTiling);
+        numStepsX = (int)(w / i_fTiling);
+        numStepsY = (int)(h / i_fTiling);
         float stepX = (float)w / (float)numStepsX;
         float stepY = (float)h / (float)numStepsY;
 
+        fUVScaling = i_fUVScaling;
         float fMapWidth = w;
         float fMapHeight = h;
 
-        Node[,] oNodes = new Node[numStepsX+1, numStepsY+1];
+        oNodes = new Node[numStepsX + 1, numStepsY + 1];
 
         //set squares
         for (int x = 0; x < numStepsX+1; x++)
@@ -58,10 +64,11 @@ public class MeshGenerator : MonoBehaviour
             for (int y = 0; y < numStepsY+1; y++)
             {
                 Vector3 vPos = new Vector3(-fMapWidth / 2 + x * stepX, -fMapHeight / 2 + y * stepY, 0.0f);
-                if (x != 0 && y!=0 && x!= numStepsX && y!= numStepsY) vPos.z = (Random.value * i_fBumpHeight) - (i_fBumpHeight * 0.5f);
+                if (x != 0 && y!=0 && x!= numStepsX && y!= numStepsY) vPos.z = ((float)random.NextDouble() * i_fBumpHeight) - (i_fBumpHeight * 0.5f);
                 oNodes[x, y] = new Node(vPos);
             }
         }
+
         //create mesh
         for (int x = 0; x < numStepsX; x++)
         {
@@ -71,15 +78,18 @@ public class MeshGenerator : MonoBehaviour
                 MeshFromPoints(oNodes[x, y + 1], oNodes[x + 1, y + 1], oNodes[x + 1, y], oNodes[x, y]);
             }
         }
+
         //set uv coords for every vertex
         uvs = new Vector2[vertices.Count];
         for (int i = 0; i < vertices.Count; i++)
         {
-            float percentX = vertices[i].x / i_fUVScaling;
-            float percentY = vertices[i].y / i_fUVScaling;
+            float percentX = vertices[i].x / fUVScaling;
+            float percentY = vertices[i].y / fUVScaling;
             uvs[i] = new Vector2(percentX, percentY);
         }
-
+    }
+    public void SetGenerateMeshBackgroundToUnity()
+    {
         //set the map bg mesh
         Mesh bgMesh = new Mesh();
         //bgMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; //no need to
@@ -90,9 +100,8 @@ public class MeshGenerator : MonoBehaviour
         map0_bg.mesh = bgMesh;
     }
 
-
     int h, w;
-    public void GenerateMeshInit1(int[,] i_aMap, float i_fSquareSize, float i_fWallHeight, float i_fBumpHeight, Material i_oMat, Material i_oMatWalls)
+    public void GenerateMeshInit(int[,] i_aMap, float i_fSquareSize, float i_fWallHeight, float i_fBumpHeight, Material i_oMat, Material i_oMatWalls)
     {
         aMap = i_aMap;
         fSquareSize = i_fSquareSize;
@@ -101,57 +110,46 @@ public class MeshGenerator : MonoBehaviour
         oMat = i_oMat;
         oMatWalls = i_oMatWalls;
         squareGrid = new SquareGrid(aMap, fSquareSize, fSquareSize);
+
+        squareGrid.Init();
+
+        Clear();
+        w = squareGrid.aSquares.GetLength(0);
+        h = squareGrid.aSquares.GetLength(1);
     }
 
-    public void GenerateMeshInit2(int n)
-    {
-//float t1 = Time.realtimeSinceStartup;
-        if (n == 0)
-        {
-            squareGrid.Init(0);
-        }
-        else
-        {
-            squareGrid.Init(1);
-
-            Clear();
-            w = squareGrid.aSquares.GetLength(0);
-            h = squareGrid.aSquares.GetLength(1);
-        }
-//Debug.Log("new SquareGrid2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
-    }
-
-    public bool GenerateMesh(int n)
+    public void GenerateMesh()
     {
         //create map mesh in segments
-        int x = n;
-        if (n < w)
+        for (int x = 0; x < w; x++)
         {
             for (int y = 0; y < h; y++)
             {
                 if(squareGrid.aSquares[x, y]!=null) TriangulateSquare(squareGrid.aSquares[x, y]);
             }
-            return false;
         }
-        return true;
     }
 
     Vector2[] uvs;
     public bool GenerateMeshFinalize(int n)
     {
-        if (n <= 11)
+        if (n <= 39)
         {
             //create and set the walls mesh
-//float t1 = Time.realtimeSinceStartup;
+float t1 = Time.realtimeSinceStartup;
             CalculateMeshOutlines(n);
-//Debug.Log("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+Debug.Log("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
-        else if (n == 12)
+        else if (n == 40)
         {
+float t1 = Time.realtimeSinceStartup;
             CreateWallMesh();
+            SetCreateWallMeshToUnity();
+Debug.Log("CreateWallMesh: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
-        else if (n == 13)
+        else if (n == 41)
         {
+float t1 = Time.realtimeSinceStartup;
             //create bumps on non outline vertices in the map mesh
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -164,37 +162,41 @@ public class MeshGenerator : MonoBehaviour
 
                     //only negative bumps on certain brick walls
                     if (iTileNum == 35 || iTileNum == 37)
-                        vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z + (Random.value * 0.5f) * fBumpHeight);
+                        vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z + ((float)random.NextDouble() * 0.5f) * fBumpHeight);
                     //no bumps on certain brick walls
                     else if (iTileNum == 36 || iTileNum == 38 || iTileNum == 39)
                         vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z);
                     //an full bumps on the rest
                     else
-                        vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z + (Random.value - 0.5f) * fBumpHeight);
+                        vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z + ((float)random.NextDouble() - 0.5f) * fBumpHeight);
                 }
             }
+Debug.Log("n == 41: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
-        else if (n == 14)
+        else if (n == 42)
         {
+float t1 = Time.realtimeSinceStartup;
             //create texture coords
             //int tileAmount = 10;
             uvs = new Vector2[vertices.Count];
             for (int i = 0; i < vertices.Count; i++)
             {
-                //float percentX = Mathf.InverseLerp(-map.GetLength(0) / 2 * squareSize, map.GetLength(0) / 2 * squareSize, vertices[i].x) * tileAmount;
-                //float percentY = Mathf.InverseLerp(-map.GetLength(0) / 2 * squareSize, map.GetLength(0) / 2 * squareSize, vertices[i].y) * tileAmount;
                 float percentX = vertices[i].x; // / 32.0f /** tileAmount*/;
                 float percentY = vertices[i].y; // / 32.0f /** tileAmount*/;
                 uvs[i] = new Vector2(percentX, percentY);
             }
+Debug.Log("n == 42: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
-        else if (n == 15)
+        else if (n == 43)
         {
+float t1 = Time.realtimeSinceStartup;
             //generate 2d collission
             Generate2DColliders();
+Debug.Log("n == 43: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
-        else if (n == 16)
+        else if (n == 44)
         {
+float t1 = Time.realtimeSinceStartup;
             //set the map mesh
             Mesh mapMesh = new Mesh();
             mapMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -206,20 +208,19 @@ public class MeshGenerator : MonoBehaviour
             //and material
             map0.GetComponent<MeshRenderer>().material = oMat;
 
+Debug.Log("n == 44: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             return true;
         }
         return false;
     }
 
     //must run CalculateMeshOutlines() before this
+    List<Vector3> wallVertices = new List<Vector3>();
+    List<Vector2> wallUVs = new List<Vector2>();
+    List<int> wallTriangles = new List<int>();
     void CreateWallMesh()
     {
-        List<Vector3> wallVertices = new List<Vector3>();
-        List<Vector2> wallUVs = new List<Vector2>();
-        List<int> wallTriangles = new List<int>();
-        Mesh wallMesh = new Mesh();
-
-        for(int j=0; j < outlines.Count; j++)
+        for (int j=0; j < outlines.Count; j++)
         {
             float uvLastX2 = 0.0f;
             List<int> outline = outlines[j];
@@ -264,6 +265,10 @@ public class MeshGenerator : MonoBehaviour
                 }
             }
         }
+    }
+    public void SetCreateWallMeshToUnity()
+    {
+        Mesh wallMesh = new Mesh();
         wallMesh.vertices = wallVertices.ToArray();
         wallMesh.triangles = wallTriangles.ToArray();
         wallMesh.RecalculateNormals();
@@ -424,8 +429,8 @@ public class MeshGenerator : MonoBehaviour
     {
         int iStart = 0;
         int iCntTo = vertices.Count;
-        int iInterval = vertices.Count / 12;
-        if (n != 11) iCntTo = (1+n) * iInterval;
+        int iInterval = vertices.Count / 40;
+        if (n != 29) iCntTo = (1+n) * iInterval;
         iStart = n*iInterval;
 
         for (int vertexIndex = iStart; vertexIndex < iCntTo; vertexIndex++)
@@ -557,92 +562,25 @@ public class MeshGenerator : MonoBehaviour
             oControlNodes = new ControlNode[iNodeCountX, iNodeCountY];
         }
 
-        public void Init(int n)
+        public void Init()
         {
-            if(n==0)
+            for (int x = 0; x < iNodeCountX; x++)
             {
-                ///////////////////////////////////
-#if true
-                for (int x = 0; x < iNodeCountX; x++)
+                for (int y = 0; y < iNodeCountY; y++)
                 {
-                    for (int y = 0; y < iNodeCountY; y++)
-                    {
-                        Vector3 vPos = new Vector3(-fMapWidth / 2 + x * fSquareSizeX + fSquareSizeX / 2, -fMapHeight / 2 + y * fSquareSizeY + fSquareSizeY / 2, 0);
-                        oControlNodes[x, y] = new ControlNode(vPos, oMap[y, x] != 0, fSquareSizeX, fSquareSizeY);
-                    }
+                    Vector3 vPos = new Vector3(-fMapWidth / 2 + x * fSquareSizeX + fSquareSizeX / 2, -fMapHeight / 2 + y * fSquareSizeY + fSquareSizeY / 2, 0);
+                    oControlNodes[x, y] = new ControlNode(vPos, oMap[y, x] != 0, fSquareSizeX, fSquareSizeY);
                 }
-#endif
-                ///////////////////////////////////
-#if false //!broken code
-                for (int x = 0; x < iNodeCountX; x+=2)
-                {
-                    for (int y = 0; y < iNodeCountY; y+=2)
-                    {
-                        //make big square if all 4 are non borders
-                        if (oMap[y, x] != 0 && oMap[y+1, x] != 0 && oMap[y+1, x+1] != 0 && oMap[y, x+1] != 0 /**/ && oMap[y+2, x] != 0  && oMap[y+2, x+1] != 0  && oMap[y+2, x+2] != 0  && oMap[y, x+2] != 0  && oMap[y+1, x+2] != 0)
-                        {
-                            Vector3 vPos = new Vector3(-fMapWidth / 2 + x * fSquareSize + fSquareSize, -fMapHeight / 2 + y * fSquareSize + fSquareSize);
-                            oControlNodes[x, y] = new ControlNode(vPos, true, fSquareSize*2);
-                        }
-                        else
-                        {
-                            //make 4 squares
-                            for (int x2 = x; x2 < x + 2; x2++)
-                            {
-                                for (int y2 = y; y2 < y + 2; y2++)
-                                {
-                                    Vector3 vPos = new Vector3(-fMapWidth / 2 + x2 * fSquareSize + fSquareSize / 2.0f, -fMapHeight / 2 + y2 * fSquareSize + fSquareSize / 2, 0);
-                                    oControlNodes[x2, y2] = new ControlNode(vPos, oMap[y2, x2] != 0, fSquareSize);
-                                }
-                            }
-                        }
-                    }
-                }
-#endif
-                ///////////////////////////////////
-                aSquares = new Square[iNodeCountX - 1, iNodeCountY - 1];
             }
-            else
+
+            aSquares = new Square[iNodeCountX - 1, iNodeCountY - 1];
+
+            for (int x = 0; x < iNodeCountX - 1; x++)
             {
-                ////////////////////////////////////////////////////////////////////
-#if true
-                for (int x = 0; x < iNodeCountX - 1; x++)
+                for (int y = 0; y < iNodeCountY - 1; y++)
                 {
-                    for (int y = 0; y < iNodeCountY - 1; y++)
-                    {
-                        aSquares[x, y] = new Square(oControlNodes[x, y + 1], oControlNodes[x + 1, y + 1], oControlNodes[x + 1, y], oControlNodes[x, y]);
-                    }
+                    aSquares[x, y] = new Square(oControlNodes[x, y + 1], oControlNodes[x + 1, y + 1], oControlNodes[x + 1, y], oControlNodes[x, y]);
                 }
-#endif
-                ////////////////////////////////////////////////////////////////////
-                //attempt to reduce number of triangles by a factor up to 4 for large "filled" surfaces.
-                //it works but the outline calculation breaks because shared edges cant always be detected
-#if false
-                for (int x = 0; x < iNodeCountX - 3; x+=2)
-                {
-                    for (int y = 0; y < iNodeCountY - 3; y+=2)
-                    {
-                        //make big square if all 4 are non borders
-                        if(oControlNodes[x, y + 1]==null && oControlNodes[x + 1, y + 1] == null && oControlNodes[x + 1, y] == null && oControlNodes[x, y].bActive /* && oControlNodes[x+2, y].bActive && oControlNodes[x+2, y + 1].bActive && oControlNodes[x+2, y + 2].bActive && oControlNodes[x, y+2].bActive && oControlNodes[x+1, y + 2].bActive*/)
-                        {
-                            oControlNodes[x, y].Set(fSquareSize*2);
-                            aSquares[x, y] = new Square(oControlNodes[x, y + 2], oControlNodes[x + 2, y + 2], oControlNodes[x + 2, y], oControlNodes[x, y]);
-                        }
-                        else
-                        {
-                            //make 4 squares
-                            for (int x2 = x; x2 < x+2; x2 ++)
-                            {
-                                for (int y2 = y; y2 < y+2; y2 ++)
-                                {
-                                    aSquares[x2, y2] = new Square(oControlNodes[x2, y2 + 1], oControlNodes[x2 + 1, y2 + 1], oControlNodes[x2 + 1, y2], oControlNodes[x2, y2]);
-                                }
-                            }
-                        }
-                    }
-                }
-#endif
-                ////////////////////////////////////////////////////////////////////
             }
         }
     }
@@ -694,15 +632,15 @@ public class MeshGenerator : MonoBehaviour
 
         public void Set(float squareSizeX, float squareSizeY)
         {
-            oAbove.vPos = vPos + Vector3.up * squareSizeY / 2f;
-            oRight.vPos = vPos + Vector3.right * squareSizeX / 2f;
+            oAbove.vPos = vPos + Vector3.up * squareSizeY * 0.5f;
+            oRight.vPos = vPos + Vector3.right * squareSizeX * 0.5f;
         }
 
         public ControlNode(Vector3 _pos, bool _active, float squareSizeX, float squareSizeY) : base(_pos)
         {
             bActive = _active;
-            oAbove = new Node(vPos + Vector3.up * squareSizeY / 2f);
-            oRight = new Node(vPos + Vector3.right * squareSizeX / 2f);
+            oAbove = new Node(vPos + Vector3.up * squareSizeY * 0.5f);
+            oRight = new Node(vPos + Vector3.right * squareSizeX * 0.5f);
         }
     }
 }

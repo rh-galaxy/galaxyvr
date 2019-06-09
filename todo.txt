@@ -4,6 +4,10 @@ Website
 - www.galaxy-forces-vr.com - Better/more contents
 Release
 - Make it pass Oculus VRC (TestSubmitFramesWhenNotVisible fails).
+- Make XBox-controller not be unresponsive after pause and unpause
+ (after accessing Virtual Desktop)
+- Submit app: set correct supported controllers (need bug fix by Oculus)
+- Less lost frames (during load is possible, but other is hard...)
 - Make it work better with vive input.
 - Make it work with WMR?
 - Game play promotion video

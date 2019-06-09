@@ -587,6 +587,11 @@ public class GameManager : MonoBehaviour
                 Debug.LogException(e);
                 UnityEngine.Application.Quit();
             }
+
+            //observe counteractive effect, enhances dark pixels levels for more banding as i see it
+            //OVRManager.eyeTextureFormat = OVRManager.EyeTextureFormat.R11G11B10_FP;
+            //OVRManager.eyeTextureFormat = OVRManager.EyeTextureFormat.R16G16B16A16_FP;
+
             bOculusDevicePresent = true;
             return true;
         }
@@ -727,7 +732,7 @@ public class GameManager : MonoBehaviour
         if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
-    Camera mainCam;
+//    Camera mainCam;
     void Update()
     {
 #if !DISABLESTEAMWORKS
@@ -774,38 +779,40 @@ public class GameManager : MonoBehaviour
         }
 
         //save Camera.main whenever!null, because setting it disabled makes it null
-        if (Camera.main!=null) mainCam = Camera.main;
+//        if (Camera.main!=null) mainCam = Camera.main;
 
         //pause state change
         if (bPause != bPauseNow)
         {
             bPause = bPauseNow;
-            if(bPauseNow)
+            if (bPauseNow)
             {
                 Time.timeScale = 0.0f; //stops FixedUpdate
 
                 //also need to stop all sound
-                //oASMusic.Pause();
-                //if (GameLevel.theMap != null) GameLevel.theMap.player.StopSound();
                 AudioListener.pause = true;
 
                 //Update keeps running, but 
                 // rendering must also be paused to pass oculus vrc
-                if (bOculusDevicePresent)
-                    mainCam.enabled = false;
+//                if (bOculusDevicePresent)
+//                    mainCam.enabled = false;
+
+                Menu.bPauseInput = true;
             }
             else
             {
                 Time.timeScale = 1.0f;
-                //oASMusic.UnPause();
                 AudioListener.pause = false;
 
                 //start rendering
-                if (bOculusDevicePresent)
-                    mainCam.enabled = true;
+//                if (bOculusDevicePresent)
+//                    mainCam.enabled = true;
+
+                Menu.bPauseInput = false;
             }
         }
-        if (bPause) return; //to ignore input below
+        //to ignore input below, only way back is to unpause
+        if (bPause) return;
 
         //the main state machine
         switch (iState)
@@ -1011,13 +1018,15 @@ public class GameManager : MonoBehaviour
                 if (bBeginMapLoading)
                 {
                     //Debug.Log("Load level 90%");
-                    if (GameLevel.theMap.LoadInSegments(iLoadingMap++))
+                    if (iLoadingMap <= 10) GameLevel.theMap.LoadBegin(iLoadingMap);
+                    else if (GameLevel.theMap.LoadDone())
                     {
                         Debug.Log("Load map segments Done");
                         iState++;
                         //oASMusic.volume = 0.09f;
                         /**/oASMusic.volume = 0.00f;
                     }
+                    iLoadingMap++;
                 }
                 break;
             case 7:
