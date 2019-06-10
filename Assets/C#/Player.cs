@@ -480,30 +480,19 @@ public class Player : MonoBehaviour
             if (fX2 < -0.3f) bLeft = true;
             if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
             if (fY2 < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-/*#if !DISABLESTEAMWORKS
-            if (GameManager.theGM.bLeft) bLeft = true;
-            if (GameManager.theGM.bRight) bRight = true;
-            if (GameManager.theGM.bDown && bLeft == false && bRight == false) bAdjust = true;
-#endif*/
+
+            //there is something wrong here, Oculus Touch A button is swapped with B, making it
+            //not work to have fire on A without having it on B. this does not happen in an empty project
             if (fY2 > 0.5f || fTrg2 > 0.3f) bThrottle = true;
             if (Input.GetButton("Button2")) bThrottle = true; //button 2 (X)
             if (Input.GetButton("Button3")) bThrottle = true; //button 3 (Y)
-/*#if !DISABLESTEAMWORKS
-            if (GameManager.theGM.bTrigger || GameManager.theGM.bGrip2) bThrottle = true;
-#endif
-*/
             //keyboard and joystick for fire (is a trigger once event)
             bool bNewFireState = false;
             if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Space)) bNewFireState = true;
             if (fTrg1 > 0.3f) bNewFireState = true; //left trigger
             if (Input.GetButton("Button0")) bNewFireState = true; //button 0 (A)
             if (Input.GetButton("Button1")) bNewFireState = true; //button 1 (B)
-/*
-#if !DISABLESTEAMWORKS
-            if (GameManager.theGM.bButton1) bNewFireState = true;
-            if (GameManager.theGM.bGrip) bNewFireState = true;
-            if (GameManager.theGM.bTrigger2) bNewFireState = true;
-#endif*/
+
             if (!bFire)
             {
                 if (bNewFireState && !bFireTriggered) bFireTriggered = true;
