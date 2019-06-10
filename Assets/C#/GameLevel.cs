@@ -187,16 +187,8 @@ public class GameLevel : MonoBehaviour
     void Start()
     {
         bGameOver = false;
-/**/float t1 = Time.realtimeSinceStartup;
 
-        //todo: need to split this up, takes 20ms for mission29
-        LoadDesPass2();
         iFinalizeCounter = 0;
-/**/Debug.Log("Start: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
-
-        //(user name not currently used in Player)
-        string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
-        player.Init(szUser, 0, stPlayerStartPos[0], this);
 
         Material oMaterialBox = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralBox, typeof(Material)) as Material;
         //make back plane and border
@@ -250,12 +242,9 @@ public class GameLevel : MonoBehaviour
             case 5: RenderSettings.skybox = oSkyBoxMat5; break;
         }
 
-/**/Debug.Log("Start: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         Debug.Log("Start done");
     }
 
-
-    //Mutex mutex;
     Thread thread;
     bool bMeshBkReady = false;
     void LoadThread()
@@ -277,15 +266,24 @@ public class GameLevel : MonoBehaviour
 
         oMeshGen.GenerateMesh();
 
+        //create and set the walls mesh
+        oMeshGen.CalculateMeshOutlines();
+
+        oMeshGen.CreateWallMesh();
+
+        //create bumps on non outline vertices in the map mesh
+        oMeshGen.CreateBumps();
+
+        oMeshGen.GenerateUvs();
+
         bMapLoaded = true;
     }
 
-    //todo: split this in parts of ~6ms later
     bool[,] oTileSet;
     byte[] bytes;
     public bool LoadBegin(int n)
     {
-/**/float t1 = Time.realtimeSinceStartup;
+///**/float t1 = Time.realtimeSinceStartup;
 
         bool bIsCustom = iLevelIndex >= 200;
         int substeps = 6;
@@ -363,11 +361,11 @@ public class GameLevel : MonoBehaviour
             thread.Priority = System.Threading.ThreadPriority.Lowest;
             thread.Start();
 
-/**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+///**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             return true;
         }
 
-/**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+///**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         return false;
     }
     
@@ -387,24 +385,45 @@ public class GameLevel : MonoBehaviour
     void Update()
     {
         //finalize the loading in the first few frames after Start()
-        if (iFinalizeCounter <= 44)
+        if (iFinalizeCounter == 0)
         {
-///**/float t1 = Time.realtimeSinceStartup;
-            oMeshGen.GenerateMeshFinalize(iFinalizeCounter);
-///**/Debug.Log("GenerateMeshFinalize: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
-            iFinalizeCounter++;
-
             //pause physics
             Time.timeScale = 0.0f;
+
+///**/float t1 = Time.realtimeSinceStartup;
+
+            //todo: need to split this up, takes 20ms for mission29
+            LoadDesPass2Init();
+            LoadDesPass2(false);
+///**/Debug.Log("LoadDesPass2(false): " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+            iFinalizeCounter++;
         }
-        else if (iFinalizeCounter >= 45 && iFinalizeCounter <= 48)
+        else if (iFinalizeCounter == 1)
         {
-            int n2 = iFinalizeCounter - 45;
-            int segs = iHeight / 4;
+///**/float t1 = Time.realtimeSinceStartup;
 
-/**/float t1 = Time.realtimeSinceStartup;
+            //todo: need to split this up, takes 20ms for mission29
+            LoadDesPass2(true);
 
-            for (int y = n2 * segs; y < (n2 < 3 ? (n2 + 1) * segs : iHeight); y++)
+            //(user name not currently used in Player)
+            string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
+            player.Init(szUser, 0, stPlayerStartPos[0], this);
+///**/Debug.Log("LoadDesPass2(true): " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+            iFinalizeCounter++;
+        }
+        else if (iFinalizeCounter >= 2 && iFinalizeCounter <= 4)
+        {
+            oMeshGen.GenerateMeshFinalize(iFinalizeCounter-2);
+            iFinalizeCounter++;
+        }
+        else if (iFinalizeCounter >= 5 && iFinalizeCounter <= 9)
+        {
+            int n2 = iFinalizeCounter - 5;
+            int segs = iHeight / 5;
+
+///**/float t1 = Time.realtimeSinceStartup;
+
+            for (int y = n2 * segs; y < (n2 < 4 ? (n2 + 1) * segs : iHeight); y++)
             {
                 for (int x = 0; x < iWidth; x++)
                 {
@@ -413,9 +432,9 @@ public class GameLevel : MonoBehaviour
             }
             iFinalizeCounter++;
 
-/**/Debug.Log("iFinalizeCounter == 45: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+///**/Debug.Log("ReplaceAndAddObjectPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
-        else if (iFinalizeCounter == 49)
+        else if (iFinalizeCounter == 10)
         {
             oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
             GetComponent<AudioSource>().PlayOneShot(oClipLevelStart);
@@ -583,7 +602,7 @@ public class GameLevel : MonoBehaviour
     }
 
     //creates all objects
-    bool LoadDesPass2()
+    void LoadDesPass2Init()
     {
         //free old map if exists
         iLevelType = (int)LevelType.MAP_MISSION;
@@ -591,8 +610,6 @@ public class GameLevel : MonoBehaviour
         iMinPlayers = 1;
         iMaxPlayers = 1;
         iNumDoors = 0;
-
-        //des file is in szLines after LoadDesPass1()
 
         vGravity = new Vector2(DEFAULT_SHIPGRAVITYBASEX, -DEFAULT_SHIPGRAVITYBASEY);
         fDrag = DEFAULT_SHIPRESISTANCE;
@@ -602,6 +619,10 @@ public class GameLevel : MonoBehaviour
         aEnemyList = new List<Enemy>();
         aDoorList = new List<Door>();
         aDecorationList = new List<GameObject>();
+    }
+    bool LoadDesPass2(bool bEnemies)
+    {
+        //des file is in szLines after LoadDesPass1()
 
         int iLineIndex = -1;
         int iStartPosCounter = 0;
@@ -619,362 +640,368 @@ public class GameLevel : MonoBehaviour
             if (szTokens[0].Length == 0) continue;
             if (!szTokens[0].StartsWith("*")) continue;
 
-            if (szTokens[0].CompareTo("*MAPTYPE") == 0)
+            if(!bEnemies)
             {
-                if (szTokens[1].CompareTo("RACE") == 0)
+                if (szTokens[0].CompareTo("*MAPTYPE") == 0)
                 {
-                    iLevelType = (int)LevelType.MAP_RACE;
-                    iRaceLaps = int.Parse(szTokens[2]);
-                }
-                else if (szTokens[1].CompareTo("MISSION") == 0)
-                {
-                    iLevelType = (int)LevelType.MAP_MISSION;
-                }
-                else if (szTokens[1].CompareTo("MISSION_COOP") == 0)
-                {
-                    iLevelType = (int)LevelType.MAP_MISSION_COOP;
-                }
-                else if (szTokens[1].CompareTo("DOGFIGHT") == 0)
-                {
-                    if (iMinPlayers < 2) iMinPlayers = 2;
-                    iLevelType = (int)LevelType.MAP_DOGFIGHT;
-                }
-            }
-            else if (szTokens[0].CompareTo("*MAPSIZE") == 0)
-            {
-                iWidth = int.Parse(szTokens[1]);
-                iHeight = int.Parse(szTokens[2]);
-            }
-            else if (szTokens[0].CompareTo("*MAPFILE") == 0)
-            {
-                szMapfile = szTokens[1];
-            }
-            else if (szTokens[0].CompareTo("*TILESIZE") == 0)
-            {
-                iTileSize = int.Parse(szTokens[1]);
-            }
-            else if (szTokens[0].CompareTo("*TILESET") == 0)
-            {
-                szTilefile = szTokens[1];
-
-                if (szTilefile.CompareTo("ts_alien.tga") == 0) iTilesetInfoIndex = 0;
-                else if (szTilefile.CompareTo("ts_evil.tga") == 0) iTilesetInfoIndex = 1;
-                else if (szTilefile.CompareTo("ts_cave.tga") == 0) iTilesetInfoIndex = 2;
-                else if (szTilefile.CompareTo("ts_cryptonite.tga") == 0) iTilesetInfoIndex = 3;
-                else if (szTilefile.CompareTo("ts_frost.tga") == 0) iTilesetInfoIndex = 4;
-                else if (szTilefile.CompareTo("ts_lava.tga") == 0) iTilesetInfoIndex = 5;
-                else if (szTilefile.CompareTo("ts_desert.tga") == 0) iTilesetInfoIndex = 6;
-            }
-            else if (szTokens[0].CompareTo("*GRAVITY") == 0)
-            {
-                vGravity.x = float.Parse(szTokens[1], ci.NumberFormat);
-                vGravity.y = -float.Parse(szTokens[2], ci.NumberFormat);
-            }
-            else if (szTokens[0].CompareTo("*RESISTANCE") == 0)
-            {
-                fDrag = float.Parse(szTokens[1], ci.NumberFormat);
-                //m_vDrag.y = float.Parse(szTokens[2]); //no support in physics engine
-            }
-            else if (szTokens[0].CompareTo("*PLAYERSTARTPOS") == 0)
-            {
-                if (iStartPosCounter < 8)
-                {
-                    int x = int.Parse(szTokens[1]);
-                    int y = int.Parse(szTokens[2]);
-                    stPlayerStartPos[iStartPosCounter] = AdjustPosition(new Vector2(x, y), new Vector2(48, 48));
-                }
-                iStartPosCounter++;
-            }
-            else if (szTokens[0].CompareTo("*MAXPLAYERS") == 0)
-            {
-                iMaxPlayers = int.Parse(szTokens[1]);
-            }
-            else if (szTokens[0].CompareTo("*MINPLAYERS") == 0)
-            {
-                iMinPlayers = int.Parse(szTokens[1]);
-            }
-            else if (szTokens[0].CompareTo("*LANDINGZONE") == 0)
-            {
-                int x, y, w, iNumCargo = 0;
-                List<int> aCargoList = new List<int>();
-
-                x = int.Parse(szTokens[1]);
-                y = int.Parse(szTokens[2]);
-                w = int.Parse(szTokens[3]);
-
-                bool bHomeBase = szTokens[4].CompareTo("HOMEBASE") == 0;
-                bool bExtraLife = szTokens[5].CompareTo("EXTRALIFE") == 0;
-                bool bTower = szTokens[6].CompareTo("ANTENNA") == 0;
-                bool bHangar = szTokens[7].CompareTo("WAREHOUSE") == 0;
-                if (szTokens.Length > 8) iNumCargo = int.Parse(szTokens[8]);
-
-                for (int i = 0; i < iNumCargo; i++)
-                {
-                    aCargoList.Add(int.Parse(szTokens[9 + i]));
-                }
-
-                Vector2 vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * w, 4));
-                LandingZone oZone = Instantiate(oLandingZoneObjBase, this.transform);
-                oZone.Init(iZoneCounter++, vPos, w, fWallHeight,
-                    bHomeBase, bTower, bHangar, !bHangar && (iLevelType != (int)LevelType.MAP_RACE), aCargoList, bExtraLife);
-                aLandingZoneList.Add(oZone);
-            }
-            else if (szTokens[0].CompareTo("*CHECKPOINTS") == 0)
-            {
-                int iNumCP = int.Parse(szTokens[1]);
-
-                //read checkpoints
-                for (int i = 0; i < iNumCP; i++)
-                {
-                    iLineIndex++;
-                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-
-                    Vector2 vPos1 = new Vector2(int.Parse(szTokens[1]), int.Parse(szTokens[2]));
-                    Vector2 vPos2 = new Vector2(int.Parse(szTokens[3]), int.Parse(szTokens[4]));
-
-                    Vector2 vPos1Adj = AdjustPosition(vPos1, new Vector2(20, 16));
-                    Vector2 vPos2Adj = AdjustPosition(vPos2, new Vector2(20, 16));
-
-                    CheckPoint oCP = Instantiate(oCheckPointObjBase, this.transform);
-                    oCP.Init(vPos1Adj, vPos2Adj, i);
-                    aCheckPointList.Add(oCP);
-                    if (i == 0) oCP.SetBlinkState(true); //first CP is the one to get first
-                }
-            }
-            else if (szTokens[0].CompareTo("*ENEMY") == 0)
-            {
-                S_EnemyInfo stEnemy = new S_EnemyInfo();
-                stEnemy.iEnemyType = int.Parse(szTokens[1]);
-
-                //command "*ANGLE"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stEnemy.iAngle = int.Parse(szTokens[1]);
-
-                //command "*FIREINTERVAL"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stEnemy.iFireInterval = int.Parse(szTokens[1]);
-
-                //command "*SPEED"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stEnemy.iSpeed = int.Parse(szTokens[1]);
-
-                //command "*NUMWAYPOINTS"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stEnemy.iNumWayPoints = int.Parse(szTokens[1]);
-
-                //command "*WAYPOINTSX"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < stEnemy.iNumWayPoints; i++)
-                    stEnemy.vWayPoints[i].x = int.Parse(szTokens[i + 1]);
-
-                //command "*WAYPOINTSY"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < stEnemy.iNumWayPoints; i++)
-                    stEnemy.vWayPoints[i].y = int.Parse(szTokens[i + 1]);
-
-                for (int i = 0; i < stEnemy.iNumWayPoints; i++)
-                {
-                    switch (stEnemy.iEnemyType)
+                    if (szTokens[1].CompareTo("RACE") == 0)
                     {
-                        case 0:
-                        case 2:
-                            if (stEnemy.iAngle == 0)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(16, 12));
-                                stEnemy.vWayPoints[i].x -= 4.5f/32.0f;
-                            }
-                            else if (stEnemy.iAngle == 270)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
-                                stEnemy.vWayPoints[i].y -= 4.0f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 180)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(16, 12));
-                                stEnemy.vWayPoints[i].x += 9.0f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 90)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
-                                stEnemy.vWayPoints[i].y += 7.0f / 32.0f;
-                                stEnemy.vWayPoints[i].x += 3.0f / 32.0f;
-                            }
-                            break;
-                        case 1:
-                        case 3:
-                            if (stEnemy.iAngle == 0)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
-                                stEnemy.vWayPoints[i].x -= 4.0f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 270)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
-                                stEnemy.vWayPoints[i].y -= 2.5f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 180)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
-                                stEnemy.vWayPoints[i].x += 6.0f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 90)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
-                                stEnemy.vWayPoints[i].y += 4.0f / 32.0f;
-                            }
-                            break;
-                        case 4:
-                            stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(64, 32));
-                            break;
-                        case 5:
-                            if (stEnemy.iAngle == 0)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
-                                stEnemy.vWayPoints[i].x -= 5.5f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 270)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
-                                stEnemy.vWayPoints[i].y -= 5.5f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 180)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
-                                stEnemy.vWayPoints[i].x += 5.0f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 90)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
-                                stEnemy.vWayPoints[i].y += 6.0f / 32.0f;
-                            }
-                            break;
-                        case 6:
-                            if (stEnemy.iAngle == 0)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
-                                stEnemy.vWayPoints[i].x -= 6.0f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 270)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
-                                stEnemy.vWayPoints[i].y -= 6.0f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 180)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
-                                stEnemy.vWayPoints[i].x += 6.0f / 32.0f;
-                            }
-                            else if (stEnemy.iAngle == 90)
-                            {
-                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
-                                stEnemy.vWayPoints[i].y += 2.0f / 32.0f;
-                            }
-                            break;
+                        iLevelType = (int)LevelType.MAP_RACE;
+                        iRaceLaps = int.Parse(szTokens[2]);
+                    }
+                    else if (szTokens[1].CompareTo("MISSION") == 0)
+                    {
+                        iLevelType = (int)LevelType.MAP_MISSION;
+                    }
+                    else if (szTokens[1].CompareTo("MISSION_COOP") == 0)
+                    {
+                        iLevelType = (int)LevelType.MAP_MISSION_COOP;
+                    }
+                    else if (szTokens[1].CompareTo("DOGFIGHT") == 0)
+                    {
+                        if (iMinPlayers < 2) iMinPlayers = 2;
+                        iLevelType = (int)LevelType.MAP_DOGFIGHT;
                     }
                 }
-                if (stEnemy.iAngle == 270)
+                else if (szTokens[0].CompareTo("*MAPSIZE") == 0)
                 {
-                    stEnemy.iAngle = 90;
+                    iWidth = int.Parse(szTokens[1]);
+                    iHeight = int.Parse(szTokens[2]);
                 }
-                else if (stEnemy.iAngle == 90)
+                else if (szTokens[0].CompareTo("*MAPFILE") == 0)
                 {
-                    stEnemy.iAngle = 270;
+                    szMapfile = szTokens[1];
                 }
+                else if (szTokens[0].CompareTo("*TILESIZE") == 0)
+                {
+                    iTileSize = int.Parse(szTokens[1]);
+                }
+                else if (szTokens[0].CompareTo("*TILESET") == 0)
+                {
+                    szTilefile = szTokens[1];
 
-                Enemy oEnemy = Instantiate(oEnemyObjBase, this.transform);
-                oEnemy.Init(stEnemy, this);
-                aEnemyList.Add(oEnemy);
+                    if (szTilefile.CompareTo("ts_alien.tga") == 0) iTilesetInfoIndex = 0;
+                    else if (szTilefile.CompareTo("ts_evil.tga") == 0) iTilesetInfoIndex = 1;
+                    else if (szTilefile.CompareTo("ts_cave.tga") == 0) iTilesetInfoIndex = 2;
+                    else if (szTilefile.CompareTo("ts_cryptonite.tga") == 0) iTilesetInfoIndex = 3;
+                    else if (szTilefile.CompareTo("ts_frost.tga") == 0) iTilesetInfoIndex = 4;
+                    else if (szTilefile.CompareTo("ts_lava.tga") == 0) iTilesetInfoIndex = 5;
+                    else if (szTilefile.CompareTo("ts_desert.tga") == 0) iTilesetInfoIndex = 6;
+                }
+                else if (szTokens[0].CompareTo("*GRAVITY") == 0)
+                {
+                    vGravity.x = float.Parse(szTokens[1], ci.NumberFormat);
+                    vGravity.y = -float.Parse(szTokens[2], ci.NumberFormat);
+                }
+                else if (szTokens[0].CompareTo("*RESISTANCE") == 0)
+                {
+                    fDrag = float.Parse(szTokens[1], ci.NumberFormat);
+                    //m_vDrag.y = float.Parse(szTokens[2]); //no support in physics engine
+                }
+                else if (szTokens[0].CompareTo("*PLAYERSTARTPOS") == 0)
+                {
+                    if (iStartPosCounter < 8)
+                    {
+                        int x = int.Parse(szTokens[1]);
+                        int y = int.Parse(szTokens[2]);
+                        stPlayerStartPos[iStartPosCounter] = AdjustPosition(new Vector2(x, y), new Vector2(48, 48));
+                    }
+                    iStartPosCounter++;
+                }
+                else if (szTokens[0].CompareTo("*MAXPLAYERS") == 0)
+                {
+                    iMaxPlayers = int.Parse(szTokens[1]);
+                }
+                else if (szTokens[0].CompareTo("*MINPLAYERS") == 0)
+                {
+                    iMinPlayers = int.Parse(szTokens[1]);
+                }
+                else if (szTokens[0].CompareTo("*LANDINGZONE") == 0)
+                {
+                    int x, y, w, iNumCargo = 0;
+                    List<int> aCargoList = new List<int>();
+
+                    x = int.Parse(szTokens[1]);
+                    y = int.Parse(szTokens[2]);
+                    w = int.Parse(szTokens[3]);
+
+                    bool bHomeBase = szTokens[4].CompareTo("HOMEBASE") == 0;
+                    bool bExtraLife = szTokens[5].CompareTo("EXTRALIFE") == 0;
+                    bool bTower = szTokens[6].CompareTo("ANTENNA") == 0;
+                    bool bHangar = szTokens[7].CompareTo("WAREHOUSE") == 0;
+                    if (szTokens.Length > 8) iNumCargo = int.Parse(szTokens[8]);
+
+                    for (int i = 0; i < iNumCargo; i++)
+                    {
+                        aCargoList.Add(int.Parse(szTokens[9 + i]));
+                    }
+
+                    Vector2 vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * w, 4));
+                    LandingZone oZone = Instantiate(oLandingZoneObjBase, this.transform);
+                    oZone.Init(iZoneCounter++, vPos, w, fWallHeight,
+                        bHomeBase, bTower, bHangar, !bHangar && (iLevelType != (int)LevelType.MAP_RACE), aCargoList, bExtraLife);
+                    aLandingZoneList.Add(oZone);
+                }
+                else if (szTokens[0].CompareTo("*CHECKPOINTS") == 0)
+                {
+                    int iNumCP = int.Parse(szTokens[1]);
+
+                    //read checkpoints
+                    for (int i = 0; i < iNumCP; i++)
+                    {
+                        iLineIndex++;
+                        szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+
+                        Vector2 vPos1 = new Vector2(int.Parse(szTokens[1]), int.Parse(szTokens[2]));
+                        Vector2 vPos2 = new Vector2(int.Parse(szTokens[3]), int.Parse(szTokens[4]));
+
+                        Vector2 vPos1Adj = AdjustPosition(vPos1, new Vector2(20, 16));
+                        Vector2 vPos2Adj = AdjustPosition(vPos2, new Vector2(20, 16));
+
+                        CheckPoint oCP = Instantiate(oCheckPointObjBase, this.transform);
+                        oCP.Init(vPos1Adj, vPos2Adj, i);
+                        aCheckPointList.Add(oCP);
+                        if (i == 0) oCP.SetBlinkState(true); //first CP is the one to get first
+                    }
+                }
+                else if (szTokens[0].CompareTo("*DOOR") == 0)
+                {
+                    S_DoorInfo stParams = new S_DoorInfo();
+
+                    stParams.vPos.x = int.Parse(szTokens[1]);
+                    stParams.vPos.y = int.Parse(szTokens[2]);
+                    stParams.fLength = (int.Parse(szTokens[3])) / 32.0f;
+
+                    //command "*ANGLE"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stParams.bHorizontal = int.Parse(szTokens[1]) != 90 && int.Parse(szTokens[1]) != 270;
+
+                    if (!stParams.bHorizontal) stParams.vPos = AdjustPosition(stParams.vPos, new Vector2(52, 36));
+                    else stParams.vPos = AdjustPosition(stParams.vPos, new Vector2(36, 52));
+
+                    //command "*OPENTIME"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stParams.fOpenedForTime = (float)(int.Parse(szTokens[1]) / 1000.0f);
+                    //command "*CLOSETIME"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stParams.fClosedForTime = (float)(int.Parse(szTokens[1]) / 1000.0f);
+                    //command "*OPENSPEED"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stParams.fOpeningSpeed = (float)(int.Parse(szTokens[1]) / 32.0f);
+                    //command "*CLOSESPEED"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stParams.fClosingSpeed = (float)(int.Parse(szTokens[1]) / 32.0f);
+                    //command "*NUMBUTTONS"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stParams.iNumButtons = int.Parse(szTokens[1]);
+                    //command "*BUTTONSX"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < stParams.iNumButtons; i++)
+                        stParams.stButtonPos[i].x = int.Parse(szTokens[i + 1]);
+                    //command "*BUTTONSY"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < stParams.iNumButtons; i++)
+                        stParams.stButtonPos[i].y = int.Parse(szTokens[i + 1]);
+                    //make new coords
+                    for (int i = 0; i < stParams.iNumButtons; i++)
+                        stParams.stButtonPos[i] = AdjustPosition(stParams.stButtonPos[i], new Vector2(24, 18));
+
+                    //add door to list
+                    Door oDoor = Instantiate(oDoorObjBase, this.transform);
+                    oDoor.Init(stParams, iNumDoors, this);
+                    aDoorList.Add(oDoor);
+                    iNumDoors++; //id
+                }
+                else if (szTokens[0].CompareTo("*ZOBJECT") == 0)
+                {
+                    int x, y, iAngle, iType;
+                    iType = int.Parse(szTokens[1]);
+                    x = int.Parse(szTokens[2]);
+                    y = int.Parse(szTokens[3]);
+                    iAngle = int.Parse(szTokens[4]);
+
+                    Vector2 vPos = Vector3.zero;
+                    if (iType == 0)
+                    {
+                        if (iAngle == 0 || iAngle == 180) vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * 4, 12));
+                        else vPos = AdjustPosition(new Vector2(x, y), new Vector2(12, 32 * 4));
+                    }
+                    else if (iType == 1)
+                    {
+                        if (iAngle == 0 || iAngle == 180) vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * 8, 12));
+                        else vPos = AdjustPosition(new Vector2(x, y), new Vector2(12, 32 * 8));
+                    }
+                    else //2, 3
+                    {
+                        if (iAngle == 0 || iAngle == 180) vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * 12, 16));
+                        else vPos = AdjustPosition(new Vector2(x, y), new Vector2(16, 32 * 12));
+                    }
+
+                    ZObject oZObj = Instantiate(oZObjBase, this.transform);
+                    oZObj.Init(iType, iAngle, vPos);
+                }
             }
-            else if (szTokens[0].CompareTo("*DOOR") == 0)
+            else
             {
-                S_DoorInfo stParams = new S_DoorInfo();
-
-                stParams.vPos.x = int.Parse(szTokens[1]);
-                stParams.vPos.y = int.Parse(szTokens[2]);
-                stParams.fLength = (int.Parse(szTokens[3]))/32.0f;
-
-                //command "*ANGLE"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stParams.bHorizontal = int.Parse(szTokens[1])!=90 && int.Parse(szTokens[1]) != 270;
-
-                if(!stParams.bHorizontal) stParams.vPos = AdjustPosition(stParams.vPos, new Vector2(52, 36));
-                else stParams.vPos = AdjustPosition(stParams.vPos, new Vector2(36, 52));
-
-                //command "*OPENTIME"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stParams.fOpenedForTime = (float)(int.Parse(szTokens[1]) / 1000.0f);
-                //command "*CLOSETIME"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stParams.fClosedForTime = (float)(int.Parse(szTokens[1]) / 1000.0f);
-                //command "*OPENSPEED"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stParams.fOpeningSpeed = (float)(int.Parse(szTokens[1]) / 32.0f);
-                //command "*CLOSESPEED"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stParams.fClosingSpeed = (float)(int.Parse(szTokens[1]) / 32.0f);
-                //command "*NUMBUTTONS"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stParams.iNumButtons = int.Parse(szTokens[1]);
-                //command "*BUTTONSX"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < stParams.iNumButtons; i++)
-                    stParams.stButtonPos[i].x = int.Parse(szTokens[i + 1]);
-                //command "*BUTTONSY"
-                iLineIndex++;
-                szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < stParams.iNumButtons; i++)
-                    stParams.stButtonPos[i].y = int.Parse(szTokens[i + 1]);
-                //make new coords
-                for (int i = 0; i < stParams.iNumButtons; i++)
-                    stParams.stButtonPos[i] = AdjustPosition(stParams.stButtonPos[i], new Vector2(24, 18));
-
-                //add door to list
-                Door oDoor = Instantiate(oDoorObjBase, this.transform);
-                oDoor.Init(stParams, iNumDoors, this);
-                aDoorList.Add(oDoor);
-                iNumDoors++; //id
-            }
-            else if (szTokens[0].CompareTo("*ZOBJECT") == 0)
-            {
-                int x, y, iAngle, iType;
-                iType = int.Parse(szTokens[1]);
-                x = int.Parse(szTokens[2]);
-                y = int.Parse(szTokens[3]);
-                iAngle = int.Parse(szTokens[4]);
-
-                Vector2 vPos = Vector3.zero;
-                if (iType == 0)
+                if (szTokens[0].CompareTo("*ENEMY") == 0)
                 {
-                    if (iAngle == 0 || iAngle == 180) vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * 4, 12));
-                    else vPos = AdjustPosition(new Vector2(x, y), new Vector2(12, 32 * 4));
-                }
-                else if (iType == 1)
-                {
-                    if (iAngle == 0 || iAngle == 180) vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * 8, 12));
-                    else vPos = AdjustPosition(new Vector2(x, y), new Vector2(12, 32 * 8));
-                }
-                else //2, 3
-                {
-                    if (iAngle == 0 || iAngle == 180) vPos = AdjustPosition(new Vector2(x, y), new Vector2(32 * 12, 16));
-                    else vPos = AdjustPosition(new Vector2(x, y), new Vector2(16, 32 * 12));
+                    S_EnemyInfo stEnemy = new S_EnemyInfo();
+                    stEnemy.iEnemyType = int.Parse(szTokens[1]);
+
+                    //command "*ANGLE"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stEnemy.iAngle = int.Parse(szTokens[1]);
+
+                    //command "*FIREINTERVAL"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stEnemy.iFireInterval = int.Parse(szTokens[1]);
+
+                    //command "*SPEED"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stEnemy.iSpeed = int.Parse(szTokens[1]);
+
+                    //command "*NUMWAYPOINTS"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    stEnemy.iNumWayPoints = int.Parse(szTokens[1]);
+
+                    //command "*WAYPOINTSX"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < stEnemy.iNumWayPoints; i++)
+                        stEnemy.vWayPoints[i].x = int.Parse(szTokens[i + 1]);
+
+                    //command "*WAYPOINTSY"
+                    iLineIndex++;
+                    szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 0; i < stEnemy.iNumWayPoints; i++)
+                        stEnemy.vWayPoints[i].y = int.Parse(szTokens[i + 1]);
+
+                    for (int i = 0; i < stEnemy.iNumWayPoints; i++)
+                    {
+                        switch (stEnemy.iEnemyType)
+                        {
+                            case 0:
+                            case 2:
+                                if (stEnemy.iAngle == 0)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(16, 12));
+                                    stEnemy.vWayPoints[i].x -= 4.5f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 270)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
+                                    stEnemy.vWayPoints[i].y -= 4.0f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 180)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(16, 12));
+                                    stEnemy.vWayPoints[i].x += 9.0f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 90)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
+                                    stEnemy.vWayPoints[i].y += 7.0f / 32.0f;
+                                    stEnemy.vWayPoints[i].x += 3.0f / 32.0f;
+                                }
+                                break;
+                            case 1:
+                            case 3:
+                                if (stEnemy.iAngle == 0)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
+                                    stEnemy.vWayPoints[i].x -= 4.0f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 270)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
+                                    stEnemy.vWayPoints[i].y -= 2.5f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 180)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
+                                    stEnemy.vWayPoints[i].x += 6.0f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 90)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
+                                    stEnemy.vWayPoints[i].y += 4.0f / 32.0f;
+                                }
+                                break;
+                            case 4:
+                                stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(64, 32));
+                                break;
+                            case 5:
+                                if (stEnemy.iAngle == 0)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
+                                    stEnemy.vWayPoints[i].x -= 5.5f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 270)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
+                                    stEnemy.vWayPoints[i].y -= 5.5f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 180)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
+                                    stEnemy.vWayPoints[i].x += 5.0f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 90)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
+                                    stEnemy.vWayPoints[i].y += 6.0f / 32.0f;
+                                }
+                                break;
+                            case 6:
+                                if (stEnemy.iAngle == 0)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
+                                    stEnemy.vWayPoints[i].x -= 6.0f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 270)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
+                                    stEnemy.vWayPoints[i].y -= 6.0f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 180)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
+                                    stEnemy.vWayPoints[i].x += 6.0f / 32.0f;
+                                }
+                                else if (stEnemy.iAngle == 90)
+                                {
+                                    stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
+                                    stEnemy.vWayPoints[i].y += 2.0f / 32.0f;
+                                }
+                                break;
+                        }
+                    }
+                    if (stEnemy.iAngle == 270)
+                    {
+                        stEnemy.iAngle = 90;
+                    }
+                    else if (stEnemy.iAngle == 90)
+                    {
+                        stEnemy.iAngle = 270;
+                    }
+
+                    Enemy oEnemy = Instantiate(oEnemyObjBase, this.transform);
+                    oEnemy.Init(stEnemy, this);
+                    aEnemyList.Add(oEnemy);
                 }
 
-                ZObject oZObj = Instantiate(oZObjBase, this.transform);
-                oZObj.Init(iType, iAngle, vPos);
-                
             }
             //header loaded
         }

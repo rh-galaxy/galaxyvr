@@ -130,73 +130,64 @@ public class MeshGenerator : MonoBehaviour
         }
     }
 
+    public void CreateBumps()
+    {
+        //create bumps on non outline vertices in the map mesh
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            if (!checkedVertices.Contains(i))
+            {
+                //get old tile position and then the tile number 
+                int iTileX = (int)((vertices[i].x / fSquareSize) + (w / 2));
+                int iTileY = (int)((vertices[i].y / fSquareSize) + (h / 2));
+                int iTileNum = aMap[iTileY, iTileX];
+
+                //only negative bumps on certain brick walls
+                if (iTileNum == 35 || iTileNum == 37)
+                    vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z + ((float)random.NextDouble() * 0.5f) * fBumpHeight);
+                //no bumps on certain brick walls
+                else if (iTileNum == 36 || iTileNum == 38 || iTileNum == 39)
+                    vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z);
+                //an full bumps on the rest
+                else
+                    vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z + ((float)random.NextDouble() - 0.5f) * fBumpHeight);
+            }
+        }
+    }
+
     Vector2[] uvs;
+    public void GenerateUvs()
+    {
+        //create texture coords
+        //int tileAmount = 10;
+        uvs = new Vector2[vertices.Count];
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            float percentX = vertices[i].x; // / 32.0f /** tileAmount*/;
+            float percentY = vertices[i].y; // / 32.0f /** tileAmount*/;
+            uvs[i] = new Vector2(percentX, percentY);
+        }
+    }
+
     public bool GenerateMeshFinalize(int n)
     {
-        if (n <= 39)
+        if (n == 0)
         {
-            //create and set the walls mesh
-float t1 = Time.realtimeSinceStartup;
-            CalculateMeshOutlines(n);
-Debug.Log("CalculateMeshOutlines: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
-        }
-        else if (n == 40)
-        {
-float t1 = Time.realtimeSinceStartup;
-            CreateWallMesh();
+//float t1 = Time.realtimeSinceStartup;
+            //CreateWallMesh() must be done before
             SetCreateWallMeshToUnity();
-Debug.Log("CreateWallMesh: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+//Debug.Log("CreateWallMesh: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
-        else if (n == 41)
+        else if (n == 1)
         {
-float t1 = Time.realtimeSinceStartup;
-            //create bumps on non outline vertices in the map mesh
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                if (!checkedVertices.Contains(i))
-                {
-                    //get old tile position and then the tile number 
-                    int iTileX = (int)((vertices[i].x / fSquareSize) + (w / 2));
-                    int iTileY = (int)((vertices[i].y / fSquareSize) + (h / 2));
-                    int iTileNum = aMap[iTileY, iTileX];
-
-                    //only negative bumps on certain brick walls
-                    if (iTileNum == 35 || iTileNum == 37)
-                        vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z + ((float)random.NextDouble() * 0.5f) * fBumpHeight);
-                    //no bumps on certain brick walls
-                    else if (iTileNum == 36 || iTileNum == 38 || iTileNum == 39)
-                        vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z);
-                    //an full bumps on the rest
-                    else
-                        vertices[i] = new Vector3(vertices[i].x, vertices[i].y, vertices[i].z + ((float)random.NextDouble() - 0.5f) * fBumpHeight);
-                }
-            }
-Debug.Log("n == 41: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
-        }
-        else if (n == 42)
-        {
-float t1 = Time.realtimeSinceStartup;
-            //create texture coords
-            //int tileAmount = 10;
-            uvs = new Vector2[vertices.Count];
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                float percentX = vertices[i].x; // / 32.0f /** tileAmount*/;
-                float percentY = vertices[i].y; // / 32.0f /** tileAmount*/;
-                uvs[i] = new Vector2(percentX, percentY);
-            }
-Debug.Log("n == 42: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
-        }
-        else if (n == 43)
-        {
-float t1 = Time.realtimeSinceStartup;
+//float t1 = Time.realtimeSinceStartup;
             //generate 2d collission
             Generate2DColliders();
-Debug.Log("n == 43: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+//Debug.Log("Generate2DColliders: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
-        else if (n == 44)
+        else if (n == 2)
         {
-float t1 = Time.realtimeSinceStartup;
+//float t1 = Time.realtimeSinceStartup;
             //set the map mesh
             Mesh mapMesh = new Mesh();
             mapMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -208,7 +199,7 @@ float t1 = Time.realtimeSinceStartup;
             //and material
             map0.GetComponent<MeshRenderer>().material = oMat;
 
-Debug.Log("n == 44: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+//Debug.Log("SetMeshToUnity: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             return true;
         }
         return false;
@@ -218,7 +209,7 @@ Debug.Log("n == 44: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
     List<Vector3> wallVertices = new List<Vector3>();
     List<Vector2> wallUVs = new List<Vector2>();
     List<int> wallTriangles = new List<int>();
-    void CreateWallMesh()
+    public void CreateWallMesh()
     {
         for (int j=0; j < outlines.Count; j++)
         {
@@ -425,15 +416,11 @@ Debug.Log("n == 44: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
     }
 
-    void CalculateMeshOutlines(int n)
+    public void CalculateMeshOutlines()
     {
-        int iStart = 0;
         int iCntTo = vertices.Count;
-        int iInterval = vertices.Count / 40;
-        if (n != 29) iCntTo = (1+n) * iInterval;
-        iStart = n*iInterval;
 
-        for (int vertexIndex = iStart; vertexIndex < iCntTo; vertexIndex++)
+        for (int vertexIndex = 0; vertexIndex < vertices.Count; vertexIndex++)
         {
             if (!checkedVertices.Contains(vertexIndex))
             {
