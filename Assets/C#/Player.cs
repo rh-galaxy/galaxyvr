@@ -462,8 +462,8 @@ public class Player : MonoBehaviour
             float fY = Input.GetAxisRaw("Vertical");                                            //axis y (y left stick)
             float fX2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickHorizontal"); //axis 4 (x right stick)
             float fY2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");   //axis 5 (y right stick)
-            float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");         //axis 9
-            float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");       //axis 10
+            float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");         //axis 9    must be fire to support   xbox, vive, touch
+            float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");       //axis 10   must be thrust to support xbox, vive, touch
 
             bThrottle = bLeft = bRight = bAdjust = false;
 
@@ -480,28 +480,30 @@ public class Player : MonoBehaviour
             if (fX2 < -0.3f) bLeft = true;
             if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
             if (fY2 < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-#if !DISABLESTEAMWORKS
+/*#if !DISABLESTEAMWORKS
             if (GameManager.theGM.bLeft) bLeft = true;
             if (GameManager.theGM.bRight) bRight = true;
             if (GameManager.theGM.bDown && bLeft == false && bRight == false) bAdjust = true;
-#endif
-            if (fY2 > 0.5f || fTrg1 > 0.3f || fTrg2 > 0.3f) bThrottle = true;
-            if (Input.GetButton("Fire2")) bThrottle = true; //button 1 (B)
-            if (Input.GetButton("Jump")) bThrottle = true;  //button 3 (Y)
-#if !DISABLESTEAMWORKS
+#endif*/
+            if (fY2 > 0.5f || fTrg2 > 0.3f) bThrottle = true;
+            if (Input.GetButton("Button2")) bThrottle = true; //button 2 (X)
+            if (Input.GetButton("Button3")) bThrottle = true; //button 3 (Y)
+/*#if !DISABLESTEAMWORKS
             if (GameManager.theGM.bTrigger || GameManager.theGM.bGrip2) bThrottle = true;
 #endif
-
+*/
             //keyboard and joystick for fire (is a trigger once event)
             bool bNewFireState = false;
             if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Space)) bNewFireState = true;
-            if (Input.GetButton("Fire1")) bNewFireState = true;     //button 0 (A)
-            if (Input.GetButton("Fire3")) bNewFireState = true;     //button 2 (X)
+            if (fTrg1 > 0.3f) bNewFireState = true; //left trigger
+            if (Input.GetButton("Button0")) bNewFireState = true; //button 0 (A)
+            if (Input.GetButton("Button1")) bNewFireState = true; //button 1 (B)
+/*
 #if !DISABLESTEAMWORKS
             if (GameManager.theGM.bButton1) bNewFireState = true;
             if (GameManager.theGM.bGrip) bNewFireState = true;
             if (GameManager.theGM.bTrigger2) bNewFireState = true;
-#endif
+#endif*/
             if (!bFire)
             {
                 if (bNewFireState && !bFireTriggered) bFireTriggered = true;

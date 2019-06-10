@@ -396,7 +396,7 @@ public class Menu : MonoBehaviour
         if (!XRDevice.isPresent)
             Camera.main.fieldOfView = 45.0f;
         //prevent selection if trigger was hold when menu is started
-        bAllowSelection = !Input.GetButton("Fire1");
+        bAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0));
 
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);
@@ -558,10 +558,6 @@ public class Menu : MonoBehaviour
         float fAdjust = 0;
         if (fAxisX > 0.3f) fAdjust = 1000;
         if (fAxisX < -0.3f) fAdjust = -1000;
-#if !DISABLESTEAMWORKS
-        if (GameManager.theGM.bLeft) fAdjust = 1000;
-        if (GameManager.theGM.bRight) fAdjust = -1000;
-#endif
 
         //do a raycast into the world based on the user's
         // head position and orientation
@@ -706,11 +702,7 @@ public class Menu : MonoBehaviour
 
 
             //manage selection
-            if (Input.GetButton("Fire1")
-#if !DISABLESTEAMWORKS
-                || GameManager.theGM.bButton1
-#endif
-                )
+            if (Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0) )
             {
                 if (bAllowSelection)
                 {
@@ -799,7 +791,11 @@ public class Menu : MonoBehaviour
                             Vector3 vAroundPoint = new Vector3(0, 0, -90);
                             oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 60);
                         }
+#if DISABLESTEAMWORKS
                         oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
+#else
+                        oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_valve", typeof(Material)) as Material;
+#endif
 
                         bAllowSelection = false;
                         bPlaySelectSound = true;
@@ -881,11 +877,7 @@ public class Menu : MonoBehaviour
             //no hit, place cursor at max distance
 
             //first, unselect level if click outside levelinfo
-            if (Input.GetButton("Fire1")
-#if !DISABLESTEAMWORKS
-                || GameManager.theGM.bButton1
-#endif
-            )
+            if (Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0))
             {
                 if (bAllowSelection)
                 {

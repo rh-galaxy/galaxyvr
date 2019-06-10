@@ -13,7 +13,7 @@ using VRTK;
 public class GameManager : MonoBehaviour
 {
     //VRTK//////////////////////////////////
-#if !DISABLESTEAMWORKS
+/*#if !DISABLESTEAMWORKS
     VRTK_ControllerEvents controllerEvents;
 
     internal bool bTrigger = false; //accelerate
@@ -241,7 +241,7 @@ public class GameManager : MonoBehaviour
 
         DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "START MENU", "released", e);
     }
-#endif
+#endif*/
     //end VRTK//////////////////////////////
 
     public static GameManager theGM = null;
@@ -313,6 +313,8 @@ public class GameManager : MonoBehaviour
 
     //////start of valve specific code
 #if !DISABLESTEAMWORKS
+    float fBackTimerForViveController = 0.0f;
+
     CGameID gameID;
     bool bSteamStatsValid = false;
     int iSteamStatsTotalRacePlayed;
@@ -760,23 +762,12 @@ public class GameManager : MonoBehaviour
         if (bOculusDevicePresent)
         {
             bPauseNow = (!OVRManager.hasInputFocus || !OVRManager.hasVrFocus) /*|| (XRDevice.userPresence!=UserPresenceState.Present)*/;
-            /**///bPauseNow = false; //set to be able to play from editor without VR
         }
         if (bValveDevicePresent)
         {
-#if !DISABLESTEAMWORKS
-            /**/
-            if (!bStartSeen && bStart)
-            {
-                bStartSeen = true;
-                bPauseNow = !bPause;
-            }
-            if (!bStart)
-            {
-                bStartSeen = false;
-            }
-#endif
+            bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
+        /**///bPauseNow = false; //set to be able to play from editor without VR
 
         //save Camera.main whenever!null, because setting it disabled makes it null
 //        if (Camera.main!=null) mainCam = Camera.main;
@@ -945,12 +936,8 @@ public class GameManager : MonoBehaviour
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
-                if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton1) || Input.GetKey(KeyCode.Escape)
-                    || Menu.bLevelUnSelected
-#if !DISABLESTEAMWORKS
-                    || bStart
-#endif
-                    )
+                if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton7) || Input.GetKey(KeyCode.Escape)
+                    || Menu.bLevelUnSelected )
                 {
                     Menu.bLevelUnSelected = false;
                     iState = 1; //goto menu part 1 (back)
@@ -1033,11 +1020,24 @@ public class GameManager : MonoBehaviour
                 //running game
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
-                    if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)
+
+                    //valve, back is considered when both grip are held for 5 sec
 #if !DISABLESTEAMWORKS
-                        || bStart
+                    float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryHandTrigger");         //axis 11   left grip trigger on valve (and oculus touch)
+                    float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryHandTrigger");       //axis 12   right grip trigger on valve (and oculus touch)
+                    if (fTrg1 > 0.8 && fTrg2 > 0.8)
+                    {
+                        fBackTimerForViveController += Time.deltaTime;
+                        if (fBackTimerForViveController>5.0)
+                        {
+                            fBackTimerForViveController = 0;
+                            bBackToMenu = true;
+                            bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level
+                        }
+                    } else fBackTimerForViveController = 0.0f;
 #endif
-                        ) //back to menu
+
+                    if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)) //back to menu
                     {
                         bBackToMenu = true;
                         bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level

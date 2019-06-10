@@ -9,9 +9,8 @@ Release
 - Submit app: set correct supported controllers (need bug fix by Oculus)
 - Less lost frames (during load is possible, but other is hard...)
 - Make it work better with vive input.
-- Make it work with WMR?
 - Game play promotion video
- (done except music track needs to be mixed in)
+ (done except music track needs to be mixed in, fix: must be less than 2 minutes)
 - Test/fix it working on minimum req hardware (probably ok)
    i5 970GTX
 Release for Oculus Quest
