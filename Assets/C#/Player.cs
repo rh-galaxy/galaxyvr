@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
     bool bScrapeFadeOut = false;
     AudioSource oASGeneral;
 
+    PolygonCollider2D oPolygonCollider2D;
+
     //movement
     Rigidbody2D oRb;
     ConstantForce2D oCustomGravity;
@@ -121,6 +123,7 @@ public class Player : MonoBehaviour
                 oASGeneral = aSource;
         }
 
+        oPolygonCollider2D = GetComponent<PolygonCollider2D>();
         oCustomGravity = GetComponent<ConstantForce2D>();
         oRb = GetComponent<Rigidbody2D>();
         oRb.rotation = fDirection; //happens after next FixedUpdate
@@ -548,7 +551,7 @@ public class Player : MonoBehaviour
 
                     //activate ship
                     oShip.SetActive(true);
-                    GetComponent<PolygonCollider2D>().enabled = true;
+                    oPolygonCollider2D.enabled = true;
 
                     bFreeFromBullets = true;
                     fFreeFromBulletsTimer = 0.0f;
@@ -847,7 +850,7 @@ public class Player : MonoBehaviour
 
         //inactivate ship
         oShip.SetActive(false);
-        GetComponent<PolygonCollider2D>().enabled = false; //make the explosion not moving because of an enemy moving and pushing it
+        oPolygonCollider2D.enabled = false; //make the explosion not moving because of an enemy moving and pushing it
         //start explosion
         oExplosion.SetActive(true);
         fExplosionTimer = 0.0f;

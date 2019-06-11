@@ -21,6 +21,8 @@ public class Enemy : MonoBehaviour
     public AudioClip oClipExplosion;
     public AudioClip oClipFire;
 
+    AudioSource oAudioSource;
+
     internal Vector3 vPos;
     Vector3 vVel;
     int iCurWP;
@@ -69,6 +71,8 @@ public class Enemy : MonoBehaviour
         enemy6.SetActive(stInfo.iEnemyType == 6);
         oExplosion.SetActive(false);
 
+        oAudioSource = GetComponent<AudioSource>();
+
         //init for the current enemy type
         iCurWP = 1;
         fWPTime = 0;
@@ -103,19 +107,19 @@ public class Enemy : MonoBehaviour
                 bStartExplosion = true;
 
                 //play explosion sound
-                GetComponent<AudioSource>().PlayOneShot(oClipExplosion);
+                oAudioSource.PlayOneShot(oClipExplosion);
 
                 oMap.iAchieveEnemiesKilled++;
                 oMap.player.iScore += SENEMY_SCOREPOINTS[stInfo.iEnemyType];
             }
             else
             {
-                GetComponent<AudioSource>().PlayOneShot(oClipHit);
+                oAudioSource.PlayOneShot(oClipHit);
             }
         }
         else
         {
-            GetComponent<AudioSource>().PlayOneShot(oClipHit);
+            oAudioSource.PlayOneShot(oClipHit);
         }
 
         //collision with player, done in player
@@ -220,7 +224,7 @@ public class Enemy : MonoBehaviour
 
                     if (InFireRange())
                     {
-                        GetComponent<AudioSource>().PlayOneShot(oClipFire);
+                        oAudioSource.PlayOneShot(oClipFire);
 
                         float fDirection = stInfo.iAngle;
                         if (SENEMY_RANDOMBULLETANGLE[stInfo.iEnemyType])

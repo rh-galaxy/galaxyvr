@@ -8,7 +8,7 @@ using Oculus.Platform;
 using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
 #endif
 
-using VRTK;
+//using VRTK;
 
 public class GameManager : MonoBehaviour
 {
@@ -767,7 +767,7 @@ public class GameManager : MonoBehaviour
         {
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
-        /**///bPauseNow = false; //set to be able to play from editor without VR
+        /**/bPauseNow = false; //set to be able to play from editor without VR
 
         //save Camera.main whenever!null, because setting it disabled makes it null
 //        if (Camera.main!=null) mainCam = Camera.main;
@@ -1132,7 +1132,8 @@ public class GameManager : MonoBehaviour
     IEnumerator LoadAsyncScene()
     {
         //the Application loads the scene in the background as the current scene runs
-        // this is good for not freezing the view... finaly done by splitting the loading of the map mesh in parts
+        // this is good for not freezing the view... done by separating some work to a thread
+        // and having the rest split in ~7ms jobs
 
         asyncLoad = SceneManager.LoadSceneAsync(szToLoad, LoadSceneMode.Single);
         asyncLoad.allowSceneActivation = false;
