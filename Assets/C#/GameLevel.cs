@@ -246,6 +246,7 @@ public class GameLevel : MonoBehaviour
     }
 
     Thread thread;
+    ManualResetEvent oEvent = new ManualResetEvent(false);
     bool bMeshBkReady = false;
     void LoadThread()
     {
@@ -254,7 +255,7 @@ public class GameLevel : MonoBehaviour
         else oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 1.05f, 1.0f);
 
         bMeshBkReady = true;
-        thread.Suspend();
+        oEvent.WaitOne();
 
         //generate new high res map based on the textures of the tiles
         int substeps = 6;
@@ -376,7 +377,7 @@ public class GameLevel : MonoBehaviour
             oMeshGen.SetGenerateMeshBackgroundToUnity();
 
             bMeshBkReady = false;
-            thread.Resume();
+            oEvent.Set();
         }
 
         return !thread.IsAlive;
@@ -629,11 +630,7 @@ public class GameLevel : MonoBehaviour
     bool LoadDesPass2()
     {
         //des file is in szLines after LoadDesPass1()
-/*
-        int iLineIndex = -1;
-        int iStartPosCounter = 0;
-        int iZoneCounter = 0;
-*/
+
         //to parse 0.00 as float on any system
         CultureInfo ci = new CultureInfo("en-US");
         bool bFinished = true;
@@ -646,8 +643,6 @@ public class GameLevel : MonoBehaviour
             if (szTokens.Length == 0) continue;
             if (szTokens[0].Length == 0) continue;
             if (!szTokens[0].StartsWith("*")) continue;
-
-/**/Debug.Log(szTokens[0]);
 
             bFinished = false;
             if (szTokens[0].CompareTo("*MAPTYPE") == 0)
