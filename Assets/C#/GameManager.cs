@@ -309,6 +309,8 @@ public class GameManager : MonoBehaviour
 
         //this list keeps the last scores for each level for the entire game session, beginning with no score
         for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
+
+        UnityEngine.Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
     }
 
     //////start of valve specific code

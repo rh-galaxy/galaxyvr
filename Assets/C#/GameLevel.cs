@@ -391,15 +391,12 @@ public class GameLevel : MonoBehaviour
             //pause physics
             Time.timeScale = 0.0f;
 
-/**/float t1 = Time.realtimeSinceStartup;
-
             LoadDesPass2Init();
-/**/Debug.Log("LoadDesPass2Init: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             iFinalizeCounter++;
         }
         else if (iFinalizeCounter == 1)
         {
-/**/float t1 = Time.realtimeSinceStartup;
+///**/float t1 = Time.realtimeSinceStartup;
 
             //done: LoadDesPass2 is split in one iteration per object that needs loading
             // (max 5 ms each, but there may be variations)
@@ -408,7 +405,7 @@ public class GameLevel : MonoBehaviour
             //(user name not currently used in Player)
             string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
             player.Init(szUser, 0, stPlayerStartPos[0], this);
-/**/Debug.Log("LoadDesPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+///**/Debug.Log("LoadDesPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             if(bFinished) iFinalizeCounter++;
         }
         else if (iFinalizeCounter >= 2 && iFinalizeCounter <= 4)
