@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 516586b24333f2841a52ae74d7b260ac
-timeCreated: 1547850038
+guid: 710d4c3bc8cf3124fa949f08710c7d9a
+timeCreated: 1555100492
 licenseType: Store
 PluginImporter:
   serializedVersion: 2
@@ -11,17 +11,17 @@ PluginImporter:
   platformData:
     data:
       first:
+        '': data
+      second:
+        enabled: 0
+        settings: {}
+    data:
+      first:
         Android: Android
       second:
         enabled: 1
         settings:
           CPU: ARMv7
-    data:
-      first:
-        Any: 
-      second:
-        enabled: 0
-        settings: {}
     data:
       first:
         Editor: Editor

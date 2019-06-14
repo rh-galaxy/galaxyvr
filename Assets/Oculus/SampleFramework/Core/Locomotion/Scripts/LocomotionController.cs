@@ -42,7 +42,7 @@ public class LocomotionController : MonoBehaviour
             CameraRig = FindObjectOfType<OVRCameraRig>();
         }
         Assert.IsNotNull(CameraRig);
-#if UNITY_EDITOR
+#if OVRPLUGIN_UNSUPPORTED_PLATFORM
         OVRPlugin.SendEvent("locomotion_controller", (SceneManager.GetActiveScene().name == "Locomotion").ToString(), "sample_framework");
 #endif
 	}

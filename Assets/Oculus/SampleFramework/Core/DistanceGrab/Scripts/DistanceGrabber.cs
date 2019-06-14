@@ -103,7 +103,7 @@ namespace OculusSampleFramework
             }
             Debug.Assert(m_otherHand != null);
 
-#if UNITY_EDITOR
+#if OVRPLUGIN_UNSUPPORTED_PLATFORM
             OVRPlugin.SendEvent("distance_grabber", (SceneManager.GetActiveScene().name == "DistanceGrabber").ToString(), "sample_framework");
 #endif
     }

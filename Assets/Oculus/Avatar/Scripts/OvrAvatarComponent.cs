@@ -21,9 +21,6 @@ public class OvrAvatarComponent : MonoBehaviour
     private Dictionary<Material, ovrAvatarMaterialState> materialStates = new Dictionary<Material, ovrAvatarMaterialState>();
     public List<OvrAvatarRenderComponent> RenderParts = new List<OvrAvatarRenderComponent>();
 
-    private bool DrawSkeleton = false;
-    private bool FirstMaterialUpdate = true;
-
     public ulong ClothingAlphaTexture = 0;
     public Vector4 ClothingAlphaOffset;
 

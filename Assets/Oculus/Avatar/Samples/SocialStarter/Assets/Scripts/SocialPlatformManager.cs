@@ -1,4 +1,5 @@
 using UnityEngine;
+using AOT;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -29,7 +30,6 @@ public class SocialPlatformManager : MonoBehaviour
     private static readonly Color BLUE = new Color(0.0f, 0.0f, 1.0f);
     private static readonly Color GREEN = new Color(0.0f, 1.0f, 0.0f);
 
-    public Oculus.Platform.CAPI.FilterCallback micFilterDelegate = new Oculus.Platform.CAPI.FilterCallback(SocialPlatformManager.MicFilter);
     private float voiceCurrent = 0.0f;
 
     // Local player
@@ -81,14 +81,28 @@ public class SocialPlatformManager : MonoBehaviour
         // update avatar mouths to match voip volume
         foreach (KeyValuePair<ulong, RemotePlayer> kvp in remoteUsers)
         {
-            float remoteVoiceCurrent = Mathf.Clamp(kvp.Value.voipSource.peakAmplitude * VOIP_SCALE, 0f, 1f);
-            kvp.Value.RemoteAvatar.VoiceAmplitude = remoteVoiceCurrent;
+            if (kvp.Value.voipSource == null)
+            {
+                if (kvp.Value.RemoteAvatar.MouthAnchor != null)
+                {
+                    kvp.Value.voipSource = kvp.Value.RemoteAvatar.MouthAnchor.AddComponent<VoipAudioSourceHiLevel>();
+                    kvp.Value.voipSource.senderID = kvp.Value.remoteUserID;
+                }
+            }
+
+            if (kvp.Value.voipSource != null)
+            {
+                float remoteVoiceCurrent = Mathf.Clamp(kvp.Value.voipSource.peakAmplitude * VOIP_SCALE, 0f, 1f);
+                kvp.Value.RemoteAvatar.VoiceAmplitude = remoteVoiceCurrent;
+            }
         }
 
         if (localAvatar != null)
         {
             localAvatar.VoiceAmplitude = Mathf.Clamp(voiceCurrent * VOIP_SCALE, 0f, 1f);
         }
+
+        Oculus.Platform.Request.RunCallbacks();
     }
 
     #region Initialization and Shutdown
@@ -118,19 +132,32 @@ public class SocialPlatformManager : MonoBehaviour
 
         TransitionToState(State.INITIALIZING);
 
-        Core.Initialize();
+        Core.AsyncInitialize().OnComplete(InitCallback);
 
         roomManager = new RoomManager();
         p2pManager = new P2PManager();
         voipManager = new VoipManager();
     }
 
-    public virtual void Start()
+    void InitCallback(Message<PlatformInitialize> msg)
     {
+        if (msg.IsError)
+        {
+            TerminateWithError(msg);
+            return;
+        }
+
+        LaunchDetails launchDetails = ApplicationLifecycle.GetLaunchDetails();
+        SocialPlatformManager.LogOutput("App launched with LaunchType " + launchDetails.LaunchType);
+
         // First thing we should do is perform an entitlement check to make sure
         // we successfully connected to the Oculus Platform Service.
         Entitlements.IsUserEntitledToApplication().OnComplete(IsEntitledCallback);
-        Oculus.Platform.Request.RunCallbacks();
+    }
+
+    public virtual void Start()
+    {
+        // noop here, but is being overridden in PlayerController
     }
 
     void IsEntitledCallback(Message msg)
@@ -143,7 +170,6 @@ public class SocialPlatformManager : MonoBehaviour
 
         // Next get the identity of the user that launched the Application.
         Users.GetLoggedInUser().OnComplete(GetLoggedInUserCallback);
-        Oculus.Platform.Request.RunCallbacks();
     }
 
     void GetLoggedInUserCallback(Message<User> msg)
@@ -158,6 +184,7 @@ public class SocialPlatformManager : MonoBehaviour
         myOculusID = msg.Data.OculusID;
 
         localAvatar = Instantiate(localAvatarPrefab);
+        localAvatar.CanOwnMicrophone = false;
         localTrackingSpace = this.transform.Find("OVRCameraRig/TrackingSpace").gameObject;
 
         localAvatar.transform.SetParent(localTrackingSpace.transform, false);
@@ -176,7 +203,7 @@ public class SocialPlatformManager : MonoBehaviour
             helpPanel.transform.localPosition = new Vector3(0, 0.2f, 0.2f);
             helpMesh.material = riftMaterial;
         }
-        
+
         localAvatar.oculusUserID = myID.ToString();
         localAvatar.RecordPackets = true;
         localAvatar.PacketRecorded += OnLocalAvatarPacketRecorded;
@@ -222,7 +249,7 @@ public class SocialPlatformManager : MonoBehaviour
             Users.GetLoggedInUserFriendsAndRooms()
                 .OnComplete(GetLoggedInUserFriendsAndRoomsCallback);
         }
-        Voip.SetMicrophoneFilterCallback(micFilterDelegate);
+        Voip.SetMicrophoneFilterCallback(MicFilter);
     }
 
     void GetLoggedInUserFriendsAndRoomsCallback(Message<UserAndRoomList> msg)
@@ -262,7 +289,8 @@ public class SocialPlatformManager : MonoBehaviour
         foreach (KeyValuePair<ulong, RemotePlayer> kvp in remoteUsers)
         {
             //LogOutputLine("Sending avatar Packet to  " + kvp.Key);
-            p2pManager.SendAvatarUpdate(kvp.Key, this.localAvatar.transform, packetSequence, toSend);
+            // Root is local tracking space transform
+            p2pManager.SendAvatarUpdate(kvp.Key, localTrackingSpace.transform, packetSequence, toSend);
         }
 
         packetSequence++;
@@ -496,9 +524,6 @@ public class SocialPlatformManager : MonoBehaviour
         s_instance.p2pManager.ConnectTo(userID);
         s_instance.voipManager.ConnectTo(userID);
 
-        remoteUser.voipSource = remoteUser.RemoteAvatar.gameObject.AddComponent<VoipAudioSourceHiLevel>();
-        remoteUser.voipSource.senderID = userID;
-        
         s_instance.LogOutputLine("Adding User " + userID);
     }
 
@@ -508,7 +533,7 @@ public class SocialPlatformManager : MonoBehaviour
 
         if (s_instance.remoteUsers.TryGetValue(userID, out remoteUser))
         {
-            Destroy(remoteUser.RemoteAvatar.GetComponent<VoipAudioSourceHiLevel>(), 0);
+            Destroy(remoteUser.RemoteAvatar.MouthAnchor.GetComponent<VoipAudioSourceHiLevel>(), 0);
             Destroy(remoteUser.RemoteAvatar.gameObject, 0);
             s_instance.remoteUsers.Remove(userID);
 
@@ -516,8 +541,13 @@ public class SocialPlatformManager : MonoBehaviour
         }
     }
 
-    public void UpdateVoiceData(short[] pcmData)
+    public void UpdateVoiceData(short[] pcmData, int numChannels)
     {
+        if (localAvatar != null)
+        {
+            localAvatar.UpdateVoiceData(pcmData, numChannels);
+        }
+
         float voiceMax = 0.0f;
         float[] floats = new float[pcmData.Length];
         for (int n = 0; n < pcmData.Length; n++)
@@ -531,9 +561,10 @@ public class SocialPlatformManager : MonoBehaviour
         voiceCurrent = voiceMax;
     }
 
+    [MonoPInvokeCallback(typeof(Oculus.Platform.CAPI.FilterCallback))]
     public static void MicFilter(short[] pcmData, System.UIntPtr pcmDataLength, int frequency, int numChannels)
     {
-        s_instance.UpdateVoiceData(pcmData);
+        s_instance.UpdateVoiceData(pcmData, numChannels);
     }
 
 
