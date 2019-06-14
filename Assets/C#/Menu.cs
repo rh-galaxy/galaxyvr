@@ -284,6 +284,10 @@ public class Menu : MonoBehaviour
     C_Item2InMenu oMenuSimpleBg;
     C_Item2InMenu oMenuNext1, oMenuPrev1;//, oMenuNext2, oMenuPrev2;
 
+    Material oMaterialGrey;
+    Material oMiniMapMaterial;
+    MeshRenderer oRankQuadRenderer;
+
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     internal Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
     internal Material oMaterialOctagonPlay, oMaterialOctagonPlayHighlighted;
@@ -306,6 +310,10 @@ public class Menu : MonoBehaviour
         oMaterialRankBronze = Resources.Load("RankBronze", typeof(Material)) as Material;
         oMaterialRankSilver = Resources.Load("RankSilver", typeof(Material)) as Material;
         oMaterialRankGold = Resources.Load("RankGold", typeof(Material)) as Material;
+
+        oMaterialGrey = Resources.Load("LandingZone", typeof(Material)) as Material;
+        oMiniMapMaterial = Resources.Load("MiniMap", typeof(Material)) as Material;
+        oRankQuadRenderer = oRankQuad.GetComponent<MeshRenderer>();
 
         //create a quad a circle for gazeing in VR or mouse cursor in non VR
         oGazeQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -408,6 +416,16 @@ public class Menu : MonoBehaviour
             case 4: RenderSettings.skybox = oSkyBoxMat4; break;
             case 5: RenderSettings.skybox = oSkyBoxMat5; break;
         }
+
+        oWRScoreText1TextMesh = oWRScoreText1.GetComponent<TextMesh>();
+        oWRScoreText2TextMesh = oWRScoreText2.GetComponent<TextMesh>();
+        oWRScoreText3TextMesh = oWRScoreText3.GetComponent<TextMesh>();
+        oWRNameText1TextMesh = oWRNameText1.GetComponent<TextMesh>();
+        oWRNameText2TextMesh = oWRNameText2.GetComponent<TextMesh>();
+        oWRNameText3TextMesh = oWRNameText3.GetComponent<TextMesh>();
+        oYLScoreTextTextMesh = oYLScoreText.GetComponent<TextMesh>();
+        oYRScoreTextTextMesh = oYRScoreText.GetComponent<TextMesh>();
+        oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();
     }
 
     int iMissionsUnlocked = 0;
@@ -425,8 +443,11 @@ public class Menu : MonoBehaviour
     public GameObject oTMProBaseObj, oTMProBaseObj1, oTMProBaseObj2;
     public GameObject oLevelInfoContainer;
     public GameObject oWRNameText1, oWRNameText2, oWRNameText3;
+    public TextMesh oWRNameText1TextMesh, oWRNameText2TextMesh, oWRNameText3TextMesh;
     public GameObject oWRScoreText1, oWRScoreText2, oWRScoreText3;
+    public TextMesh oWRScoreText1TextMesh, oWRScoreText2TextMesh, oWRScoreText3TextMesh;
     public GameObject oYLScoreText, oYRScoreText, oLevelText;
+    public TextMesh oYLScoreTextTextMesh, oYRScoreTextTextMesh, oLevelTextTextMesh;
     public GameObject oRankQuad;
 
     string GetTimeString(int i_iTimeMs)
@@ -452,8 +473,7 @@ public class Menu : MonoBehaviour
         //we rely on GameLevel.szLevel for that
         string szDescription;
         oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel, GameLevel.iLevelIndex>=200, out i_stLevelInfo.bIsTime, out szDescription);
-        Material oMaterial = Resources.Load("MiniMap", typeof(Material)) as Material;
-        oMaterial.mainTexture = oMiniMapTex;
+        oMiniMapMaterial.mainTexture = oMiniMapTex;
 
         Vector3 vHeadPosition = Camera.main.transform.position;
         Vector3 vGazeDirection = Camera.main.transform.forward;
@@ -463,36 +483,36 @@ public class Menu : MonoBehaviour
 
         oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
         oLevelInfoContainer.SetActive(true);
-        if (GameLevel.iLevelIndex >= 200) oLevelText.GetComponent<TextMesh>().text = szDescription; // aMenuCustomLevels[GameLevel.iLevelIndex-200].oLevel.szLevelDescription;
-        else oLevelText.GetComponent<TextMesh>().text = aLevels[GameLevel.iLevelIndex].szLevelDescription;
-        if (i_stLevelInfo.szWRName1.Length <= 17) oWRNameText1.GetComponent<TextMesh>().text = i_stLevelInfo.szWRName1;
-        else oWRNameText1.GetComponent<TextMesh>().text = i_stLevelInfo.szWRName1.Substring(0, 16) + "...";
-        if (i_stLevelInfo.szWRName2.Length <= 17) oWRNameText2.GetComponent<TextMesh>().text = i_stLevelInfo.szWRName2;
-        else oWRNameText2.GetComponent<TextMesh>().text = i_stLevelInfo.szWRName2.Substring(0, 16) + "...";
-        if (i_stLevelInfo.szWRName3.Length <= 17) oWRNameText3.GetComponent<TextMesh>().text = i_stLevelInfo.szWRName3;
-        else oWRNameText3.GetComponent<TextMesh>().text = i_stLevelInfo.szWRName3.Substring(0, 16) + "...";
+        if (GameLevel.iLevelIndex >= 200) oLevelTextTextMesh.text = szDescription; // aMenuCustomLevels[GameLevel.iLevelIndex-200].oLevel.szLevelDescription;
+        else oLevelTextTextMesh.text = aLevels[GameLevel.iLevelIndex].szLevelDescription;
+        if (i_stLevelInfo.szWRName1.Length <= 17) oWRNameText1TextMesh.text = i_stLevelInfo.szWRName1;
+        else oWRNameText1TextMesh.text = i_stLevelInfo.szWRName1.Substring(0, 16) + "...";
+        if (i_stLevelInfo.szWRName2.Length <= 17) oWRNameText2TextMesh.text = i_stLevelInfo.szWRName2;
+        else oWRNameText2TextMesh.text = i_stLevelInfo.szWRName2.Substring(0, 16) + "...";
+        if (i_stLevelInfo.szWRName3.Length <= 17) oWRNameText3TextMesh.text = i_stLevelInfo.szWRName3;
+        else oWRNameText3TextMesh.text = i_stLevelInfo.szWRName3.Substring(0, 16) + "...";
         string szScore = (i_stLevelInfo.iWRScore1 / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore1);
         if (i_stLevelInfo.iWRScore1 == -1) szScore = "--";
-        oWRScoreText1.GetComponent<TextMesh>().text = szScore;
+        oWRScoreText1TextMesh.text = szScore;
         szScore = (i_stLevelInfo.iWRScore2 / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore2);
         if (i_stLevelInfo.iWRScore2 == -1) szScore = "--";
-        oWRScoreText2.GetComponent<TextMesh>().text = szScore;
+        oWRScoreText2TextMesh.text = szScore;
         szScore = (i_stLevelInfo.iWRScore3 / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore3);
         if (i_stLevelInfo.iWRScore3 == -1) szScore = "--";
-        oWRScoreText3.GetComponent<TextMesh>().text = szScore;
+        oWRScoreText3TextMesh.text = szScore;
 
         szScore = (i_stLevelInfo.iLastScoreMs / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iLastScoreMs);
         if (i_stLevelInfo.iLastScoreMs == -1) szScore = "--";
-        oYLScoreText.GetComponent<TextMesh>().text = szScore;
+        oYLScoreTextTextMesh.text = szScore;
 
         szScore = (i_stLevelInfo.iBestScoreMs / 1000.0f).ToString("N3");
         if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iBestScoreMs);
         if (i_stLevelInfo.iBestScoreMs == -1) szScore = "--";
-        oYRScoreText.GetComponent<TextMesh>().text = szScore;
+        oYRScoreTextTextMesh.text = szScore;
 
         int iRank = 5; //no score at all
         if(i_stLevelInfo.iBestScoreMs != -1)
@@ -511,11 +531,12 @@ public class Menu : MonoBehaviour
                 else if (i_stLevelInfo.iBestScoreMs >= i_stLevelInfo.iLimit3) iRank = 3; //bronze
             }
         }
-        if (iRank == 4 || iRank == 5) oMaterial = Resources.Load("LandingZone", typeof(Material)) as Material;
+        Material oMaterial = oMaterialGrey;
+        //if (iRank == 4 || iRank == 5) oMaterial = oMaterialGrey;
         if (iRank == 3) oMaterial = oMaterialRankBronze;
         if (iRank == 2) oMaterial = oMaterialRankSilver;
         if (iRank == 1) oMaterial = oMaterialRankGold;
-        oRankQuad.GetComponent<MeshRenderer>().material = oMaterial;
+        oRankQuadRenderer.material = oMaterial;
 
         Vector3 vPos = new Vector3(-8.9f, 1.5f, -0.1f);
         if (oMenuReplayWR1 != null) oMenuReplayWR1.DestroyObj();
@@ -619,7 +640,7 @@ public class Menu : MonoBehaviour
                         else if (i - iNumRace < iMissionsUnlocked) oMatTemp = oMaterialOctagonUnlocked;
                         //else oMatTemp = oMaterialOctagonLocked;
                     }
-                    aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMatTemp;
+                    aMenuLevels[i].oLevelQuadMeshRenderer.material = oMatTemp;
                 }
                 for (int i = 0; i < aMenuCustomLevels.Length; i++)
                 {
@@ -634,70 +655,70 @@ public class Menu : MonoBehaviour
                     {
                         if (aMenuCustomLevels[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonUnlocked;
                     }
-                    aMenuCustomLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMatTemp;
+                    aMenuCustomLevels[i].oLevelQuadMeshRenderer.material = oMatTemp;
                 }
 
                 bHitLevel = true;
             }
             else if (oHitInfo.collider.name.CompareTo("Play") == 0)
             {
-                oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlayHighlighted;
+                oMenuPlay.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
             {
-                oMenuReplayYR.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+                oMenuReplayYR.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("ReplayWR1") == 0)
             {
-                oMenuReplayWR1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+                oMenuReplayWR1.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("ReplayWR2") == 0)
             {
-                oMenuReplayWR2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+                oMenuReplayWR2.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
             {
-                oMenuReplayWR3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonHighlighted;
+                oMenuReplayWR3.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
             {
-                oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+                oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
             {
-                oMenuControls.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+                oMenuControls.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
             {
-                oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+                oMenuCredits.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
             {
-                oMenuQuality1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+                oMenuQuality1.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
             {
-                oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+                oMenuQuality2.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
             {
-                oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+                oMenuQuality3.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
             {
-                oMenuSnapMovement.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+                oMenuSnapMovement.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("SimpleBg") == 0)
             {
-                oMenuSimpleBg.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircleHighlighted;
+                oMenuSimpleBg.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
-                oMenuNext1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlayHighlighted;
+                oMenuNext1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
             {
-                oMenuPrev1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlayHighlighted;
+                oMenuPrev1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
             }
 
 
@@ -906,12 +927,12 @@ public class Menu : MonoBehaviour
                 if (i < iNumRace) oMatTemp = oMaterialPentagonUnlocked;
                 else if (i - iNumRace < iMissionsUnlocked) oMatTemp = oMaterialOctagonUnlocked;
                 else oMatTemp = oMaterialOctagonLocked;
-                aMenuLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMatTemp;
+                aMenuLevels[i].oLevelQuadMeshRenderer.material = oMatTemp;
             }
             for (int i = 0; i < aMenuCustomLevels.Length; i++)
             {
                 oMatTemp = oMaterialOctagonUnlocked;
-                aMenuCustomLevels[i].oLevelQuad.GetComponent<MeshRenderer>().material = oMatTemp;
+                aMenuCustomLevels[i].oLevelQuadMeshRenderer.material = oMatTemp;
             }
         }
 
@@ -938,6 +959,7 @@ public class Menu : MonoBehaviour
     public class C_LevelInMenu
     {
         public GameObject oLevelQuad;
+        public MeshRenderer oLevelQuadMeshRenderer;
         public GameObject oRankQuad;
         GameObject oLevelText;
 
@@ -962,7 +984,8 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
             oLevelQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value*100.0f); //vary 100 deg around z
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
-            oLevelQuad.GetComponent<MeshRenderer>().material = (i_oLevel.iLevelType == (int)LevelType.MAP_RACE) ?
+            oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
+            oLevelQuadMeshRenderer.material = (i_oLevel.iLevelType == (int)LevelType.MAP_RACE) ?
                 Menu.theMenu.oMaterialPentagonUnlocked : Menu.theMenu.oMaterialPentagonHighlighted;
 
             //quad for level ranking star
@@ -1032,6 +1055,7 @@ public class Menu : MonoBehaviour
     public class C_ItemInMenu
     {
         public GameObject oLevelQuad;
+        public MeshRenderer oLevelQuadMeshRenderer;
         GameObject oLevelText;
 
         Vector3 vPos;
@@ -1054,7 +1078,8 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
-            oLevelQuad.GetComponent<MeshRenderer>().material = Menu.theMenu.oMaterialPentagonUnlocked;
+            oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
+            oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialPentagonUnlocked;
 
             //create text
             oLevelText = new GameObject();
@@ -1064,17 +1089,19 @@ public class Menu : MonoBehaviour
             oLevelText.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
             oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.08f, i_fScaleText * 0.08f, 1.0f);
             oLevelText.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
-            
-            oLevelText.GetComponent<TextMesh>().fontStyle = FontStyle.Bold;
-            oLevelText.GetComponent<TextMesh>().fontSize = 40;
-            oLevelText.GetComponent<TextMesh>().anchor = TextAnchor.MiddleCenter;
-            oLevelText.GetComponent<TextMesh>().text = i_szText;
+
+            TextMesh oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();
+            oLevelTextTextMesh.fontStyle = FontStyle.Bold;
+            oLevelTextTextMesh.fontSize = 40;
+            oLevelTextTextMesh.anchor = TextAnchor.MiddleCenter;
+            oLevelTextTextMesh.text = i_szText;
         }
     }
 
     public class C_Item2InMenu
     {
         public GameObject oLevelQuad;
+        public MeshRenderer oLevelQuadMeshRenderer;
         GameObject oLevelText;
 
         Vector3 vPos;
@@ -1103,7 +1130,8 @@ public class Menu : MonoBehaviour
                 oLevelQuad.transform.Rotate(Vector3.back, 180);
                 i_szText = "";
             }
-            oLevelQuad.GetComponent<MeshRenderer>().material = Menu.theMenu.oMaterialCircle;
+            oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
+            oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialCircle;
 
             //create text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
