@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public bool bMapMode;
     public GameObject oPlayer;
     public GameLevel oMap;
 
@@ -11,7 +12,24 @@ public class CameraController : MonoBehaviour
     private Vector3 vMapSize;
 
     internal static bool bSnapMovement = false;
-    internal static Vector3 vCamPos = new Vector3(0,0,0);
+    internal static Vector3 vCamPos = new Vector3(0, 0, -60);
+
+    public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
+    {
+        bMapMode = true;
+        oPlayer = i_oPlayer;
+        oMap = i_oMap;
+        vCamPos = new Vector3(0, 0, -100); //set it away from the player, transform.position will then be set first Update.
+
+        vCamOffset = new Vector3(0, 3, -10);
+        vMapSize = oMap.GetMapSize();
+    }
+    public void InitForMenu()
+    {
+        bMapMode = false;
+        vCamPos = new Vector3(0, 0, -60);
+        transform.position = vCamPos;
+    }
 
     //mouse movement smoothing to distribute movement every frame when framerate
     //is above input rate at the cost of a delay in movement
@@ -55,11 +73,14 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        //DontDestroyOnLoad(this.gameObject);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        vCamOffset = new Vector3(0,3,-10);
-        vMapSize = oMap.GetMapSize();
     }
 
     // Update is called once per frame
@@ -83,33 +104,36 @@ public class CameraController : MonoBehaviour
             transform.eulerAngles = new Vector3(fX, fY, fZ);
         }
 
-        Vector3 v = oPlayer.transform.position + vCamOffset;
-        float fLeftLimit = -(vMapSize.x / 2.0f) + 5;
-        float fRightLimit = (vMapSize.x / 2.0f) - 5;
-        if (v.x < fLeftLimit) v.x = fLeftLimit;
-        if (v.x > fRightLimit) v.x = fRightLimit;
-        float fTopLimit = (vMapSize.y / 2.0f) - 3;
-        float fBottomLimit = -(vMapSize.y / 2.0f) + 10;
-        if (v.y < fBottomLimit) v.y = fBottomLimit;
-        if (v.y > fTopLimit) v.y = fTopLimit;
-
-        if (bSnapMovement)
+        if(bMapMode)
         {
-            fSnapTimer += Time.deltaTime;
-            float fDist = (vCamPos - v).magnitude;
-            //move if too far from current pos, or too long time since last move
-            if (bFirst || (fDist > 10.5f) || (fDist > 5.5f && fSnapTimer > 5.0f))
+            Vector3 v = oPlayer.transform.position + vCamOffset;
+            float fLeftLimit = -(vMapSize.x / 2.0f) + 5;
+            float fRightLimit = (vMapSize.x / 2.0f) - 5;
+            if (v.x < fLeftLimit) v.x = fLeftLimit;
+            if (v.x > fRightLimit) v.x = fRightLimit;
+            float fTopLimit = (vMapSize.y / 2.0f) - 3;
+            float fBottomLimit = -(vMapSize.y / 2.0f) + 10;
+            if (v.y < fBottomLimit) v.y = fBottomLimit;
+            if (v.y > fTopLimit) v.y = fTopLimit;
+
+            if (bSnapMovement)
             {
-                bFirst = false;
-                fSnapTimer = 0;
+                fSnapTimer += Time.deltaTime;
+                float fDist = (vCamPos - v).magnitude;
+                //move if too far from current pos, or too long time since last move
+                if (bFirst || (fDist > 10.5f) || (fDist > 5.5f && fSnapTimer > 4.7f))
+                {
+                    bFirst = false;
+                    fSnapTimer = 0;
+                    transform.position = v;
+                    vCamPos = v;
+                }
+            }
+            else
+            {
                 transform.position = v;
                 vCamPos = v;
             }
-        }
-        else
-        {
-            transform.position = v;
-            vCamPos = v;
         }
     }
 }

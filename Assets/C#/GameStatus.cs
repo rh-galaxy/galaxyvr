@@ -3,7 +3,6 @@
 public class GameStatus : MonoBehaviour
 {
     public GameObject oPlayer;
-    //private Vector3 vOffset = new Vector3(-8, -17, -8); //from player
     private Vector3 vOffset = new Vector3(-8, -20, -8); //from camera (x,y)
     private Vector3 vOffsetNoVR = new Vector3(-7.5f, -5.5f, -8); //from camera (x,y)
     /*used while recording video*///private Vector3 vOffsetNoVR = new Vector3(-70.5f, -5.5f, -8); //from camera (x,y)

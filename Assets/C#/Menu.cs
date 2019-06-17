@@ -443,11 +443,11 @@ public class Menu : MonoBehaviour
     public GameObject oTMProBaseObj, oTMProBaseObj1, oTMProBaseObj2;
     public GameObject oLevelInfoContainer;
     public GameObject oWRNameText1, oWRNameText2, oWRNameText3;
-    public TextMesh oWRNameText1TextMesh, oWRNameText2TextMesh, oWRNameText3TextMesh;
+    private TextMesh oWRNameText1TextMesh, oWRNameText2TextMesh, oWRNameText3TextMesh;
     public GameObject oWRScoreText1, oWRScoreText2, oWRScoreText3;
-    public TextMesh oWRScoreText1TextMesh, oWRScoreText2TextMesh, oWRScoreText3TextMesh;
+    private TextMesh oWRScoreText1TextMesh, oWRScoreText2TextMesh, oWRScoreText3TextMesh;
     public GameObject oYLScoreText, oYRScoreText, oLevelText;
-    public TextMesh oYLScoreTextTextMesh, oYRScoreTextTextMesh, oLevelTextTextMesh;
+    private TextMesh oYLScoreTextTextMesh, oYRScoreTextTextMesh, oLevelTextTextMesh;
     public GameObject oRankQuad;
 
     string GetTimeString(int i_iTimeMs)

@@ -8,243 +8,11 @@ using Oculus.Platform;
 using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
 #endif
 
-//using VRTK;
-
 public class GameManager : MonoBehaviour
 {
-    //VRTK//////////////////////////////////
-/*#if !DISABLESTEAMWORKS
-    VRTK_ControllerEvents controllerEvents;
-
-    internal bool bTrigger = false; //accelerate
-    internal bool bTrigger2 = false; //fire
-    internal bool bGrip = false; //fire
-    internal bool bGrip2 = false; //accelerate
-    internal bool bButton1 = false; //fire
-    internal bool bButton2 = false;
-    internal bool bLeft = false, bRight = false;
-    internal bool bUp = false, bDown = false;
-    internal bool bStart = false; //back, is this menu button or system menu button?
-    internal bool bStartSeen = false;
-
-    private void OnEnable()
-    {
-        controllerEvents = (controllerEvents == null ? GetComponent<VRTK_ControllerEvents>() : controllerEvents);
-        if (controllerEvents == null)
-        {
-            VRTK_Logger.Error(VRTK_Logger.GetCommonMessage(VRTK_Logger.CommonMessageKeys.REQUIRED_COMPONENT_MISSING_FROM_GAMEOBJECT, "VRTK_ControllerEvents_Listener", "VRTK_ControllerEvents", "the same"));
-            return;
-        }
-
-        //Setup controller event listeners
-        controllerEvents.TriggerPressed += DoTriggerPressed;
-        controllerEvents.TriggerReleased += DoTriggerReleased;
-
-        controllerEvents.GripPressed += DoGripPressed;
-        controllerEvents.GripReleased += DoGripReleased;
-
-        controllerEvents.TouchpadPressed += DoTouchpadPressed;
-        controllerEvents.TouchpadReleased += DoTouchpadReleased;
-        controllerEvents.TouchpadAxisChanged += DoTouchpadAxisChanged;
-        controllerEvents.TouchpadTwoPressed += DoTouchpadTwoPressed;
-        controllerEvents.TouchpadTwoReleased += DoTouchpadTwoReleased;
-        controllerEvents.TouchpadTwoAxisChanged += DoTouchpadTwoAxisChanged;
-        controllerEvents.TouchpadSenseAxisChanged += DoTouchpadSenseAxisChanged;
-
-        controllerEvents.ButtonOnePressed += DoButtonOnePressed;
-        controllerEvents.ButtonOneReleased += DoButtonOneReleased;
-
-        controllerEvents.ButtonTwoPressed += DoButtonTwoPressed;
-        controllerEvents.ButtonTwoReleased += DoButtonTwoReleased;
-
-        controllerEvents.StartMenuPressed += DoStartMenuPressed;
-        controllerEvents.StartMenuReleased += DoStartMenuReleased;
-    }
-
-    private void OnDisable()
-    {
-        if (controllerEvents != null)
-        {
-            controllerEvents.TriggerPressed -= DoTriggerPressed;
-            controllerEvents.TriggerReleased -= DoTriggerReleased;
-
-            controllerEvents.GripPressed -= DoGripPressed;
-            controllerEvents.GripReleased -= DoGripReleased;
-
-            controllerEvents.TouchpadPressed -= DoTouchpadPressed;
-            controllerEvents.TouchpadReleased -= DoTouchpadReleased;
-            controllerEvents.TouchpadAxisChanged -= DoTouchpadAxisChanged;
-            controllerEvents.TouchpadTwoPressed -= DoTouchpadTwoPressed;
-            controllerEvents.TouchpadTwoReleased -= DoTouchpadTwoReleased;
-            controllerEvents.TouchpadTwoAxisChanged -= DoTouchpadTwoAxisChanged;
-            controllerEvents.TouchpadSenseAxisChanged -= DoTouchpadSenseAxisChanged;
-
-            controllerEvents.ButtonOnePressed -= DoButtonOnePressed;
-            controllerEvents.ButtonOneReleased -= DoButtonOneReleased;
-
-            controllerEvents.ButtonTwoPressed -= DoButtonTwoPressed;
-            controllerEvents.ButtonTwoReleased -= DoButtonTwoReleased;
-
-            controllerEvents.StartMenuPressed -= DoStartMenuPressed;
-            controllerEvents.StartMenuReleased -= DoStartMenuReleased;
-        }
-    }
-
-    private void LateUpdate()
-    {
-    }
-
-    private void DebugLogger(uint index, string button, string action, ControllerInteractionEventArgs e)
-    {
-        string debugString = "Controller on index '" + index + "' " + button + " has been " + action
-                             + " with a pressure of " + e.buttonPressure + " / Primary Touchpad axis at: " + e.touchpadAxis + " (" + e.touchpadAngle + " degrees)" + " / Secondary Touchpad axis at: " + e.touchpadTwoAxis + " (" + e.touchpadTwoAngle + " degrees)";
-        VRTK_Logger.Info(debugString);
-    }
-
-    private void DoTriggerPressed(object sender, ControllerInteractionEventArgs e)
-    {
-        if(VRTK_ControllerReference.GetRealIndex(e.controllerReference)==0) bTrigger = true;
-        else bTrigger2 = true;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TRIGGER", "pressed", e);
-    }
-
-    private void DoTriggerReleased(object sender, ControllerInteractionEventArgs e)
-    {
-        if (VRTK_ControllerReference.GetRealIndex(e.controllerReference) == 0) bTrigger = false;
-        else bTrigger2 = false;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TRIGGER", "released", e);
-    }
-
-    private void DoGripPressed(object sender, ControllerInteractionEventArgs e)
-    {
-        if (VRTK_ControllerReference.GetRealIndex(e.controllerReference) == 0) bGrip = true;
-        else bGrip2 = true;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "GRIP", "pressed", e);
-    }
-
-    private void DoGripReleased(object sender, ControllerInteractionEventArgs e)
-    {
-        if (VRTK_ControllerReference.GetRealIndex(e.controllerReference) == 0) bGrip = false;
-        else bGrip2 = false;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "GRIP", "released", e);
-    }
-
-    private void DoTouchpadPressed(object sender, ControllerInteractionEventArgs e)
-    {
-        bLeft = e.touchpadAxis.x < -0.3;
-        bRight = e.touchpadAxis.x > 0.3;
-        bDown = e.touchpadAxis.y > 0.5;
-        //e.touchpadAxis
-        //e.touchpadTwoAxis
-        //bLeft, bRight;
-        //bUp, bDown;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "pressed down", e);
-    }
-
-    private void DoTouchpadReleased(object sender, ControllerInteractionEventArgs e)
-    {
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "released", e);
-    }
-
-    private void DoTouchpadAxisChanged(object sender, ControllerInteractionEventArgs e)
-    {
-        bLeft = e.touchpadAxis.x < -0.3;
-        bRight = e.touchpadAxis.x > 0.3;
-        bDown = e.touchpadAxis.y > 0.5;
-        //e.touchpadAxis
-        //e.touchpadTwoAxis
-        //bLeft, bRight;
-        //bUp, bDown;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "axis changed", e);
-    }
-
-    private void DoTouchpadTwoPressed(object sender, ControllerInteractionEventArgs e)
-    {
-        bLeft = e.touchpadTwoAxis.x < -0.3;
-        bRight = e.touchpadTwoAxis.x > 0.3;
-        bDown = e.touchpadTwoAxis.y > 0.5;
-        //e.touchpadAxis
-        //e.touchpadTwoAxis
-        //bLeft, bRight;
-        //bUp, bDown;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPADTWO", "pressed down", e);
-    }
-
-    private void DoTouchpadTwoReleased(object sender, ControllerInteractionEventArgs e)
-    {
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPADTWO", "released", e);
-    }
-
-    private void DoTouchpadTwoAxisChanged(object sender, ControllerInteractionEventArgs e)
-    {
-        bLeft = e.touchpadTwoAxis.x < -0.3;
-        bRight = e.touchpadTwoAxis.x > 0.3;
-        bDown = e.touchpadTwoAxis.y > 0.5;
-        //e.touchpadAxis
-        //e.touchpadTwoAxis
-        //bLeft, bRight;
-        //bUp, bDown;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPADTWO", "axis changed", e);
-    }
-
-    private void DoTouchpadSenseAxisChanged(object sender, ControllerInteractionEventArgs e)
-    {
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "TOUCHPAD", "sense axis changed", e);
-    }
-
-    private void DoButtonOnePressed(object sender, ControllerInteractionEventArgs e)
-    {
-        bButton1 = true;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON ONE", "pressed down", e);
-    }
-
-    private void DoButtonOneReleased(object sender, ControllerInteractionEventArgs e)
-    {
-        bButton1 = false;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON ONE", "released", e);
-    }
-
-    private void DoButtonTwoPressed(object sender, ControllerInteractionEventArgs e)
-    {
-        bButton2 = true;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON TWO", "pressed down", e);
-    }
-
-    private void DoButtonTwoReleased(object sender, ControllerInteractionEventArgs e)
-    {
-        bButton2 = false;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "BUTTON TWO", "released", e);
-    }
-
-    private void DoStartMenuPressed(object sender, ControllerInteractionEventArgs e)
-    {
-        bStart = true;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "START MENU", "pressed down", e);
-    }
-
-    private void DoStartMenuReleased(object sender, ControllerInteractionEventArgs e)
-    {
-        bStart = false;
-
-        DebugLogger(VRTK_ControllerReference.GetRealIndex(e.controllerReference), "START MENU", "released", e);
-    }
-#endif*/
-    //end VRTK//////////////////////////////
-
     public static GameManager theGM = null;
+
+    public CameraController theCameraHolder;
 
     internal static bool bOculusDevicePresent = false;
     internal static bool bValveDevicePresent = false;
@@ -311,6 +79,8 @@ public class GameManager : MonoBehaviour
         for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
 
         UnityEngine.Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
+
+        theCameraHolder.InitForMenu();
     }
 
     //////start of valve specific code
@@ -822,6 +592,7 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
+                    theCameraHolder.InitForMenu();
                     iState++;
                 }
                 break;
@@ -1030,7 +801,7 @@ public class GameManager : MonoBehaviour
                     if (fTrg1 > 0.8 && fTrg2 > 0.8)
                     {
                         fBackTimerForViveController += Time.deltaTime;
-                        if (fBackTimerForViveController>5.0)
+                        if (fBackTimerForViveController>4.0)
                         {
                             fBackTimerForViveController = 0;
                             bBackToMenu = true;
@@ -1121,7 +892,7 @@ public class GameManager : MonoBehaviour
                 if (bLoadDone)
                 {
                     //restart at running start
-                    iState = -1;
+                    iState = -2;
                     bLoadDone = false;
                 }
                 break;

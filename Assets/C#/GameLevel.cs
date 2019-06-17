@@ -406,11 +406,11 @@ public class GameLevel : MonoBehaviour
             string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
             player.Init(szUser, 0, stPlayerStartPos[0], this);
 ///**/Debug.Log("LoadDesPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
-            if(bFinished) iFinalizeCounter++;
+            if (bFinished) iFinalizeCounter++;
         }
         else if (iFinalizeCounter >= 2 && iFinalizeCounter <= 4)
         {
-            oMeshGen.GenerateMeshFinalize(iFinalizeCounter-2);
+            oMeshGen.GenerateMeshFinalize(iFinalizeCounter - 2);
             iFinalizeCounter++;
         }
         else if (iFinalizeCounter >= 5 && iFinalizeCounter <= 9)
@@ -436,14 +436,27 @@ public class GameLevel : MonoBehaviour
             oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
             GetComponent<AudioSource>().PlayOneShot(oClipLevelStart);
 
-            iFinalizeCounter++;
+            //this must be done after init player (@ iFinalizeCounter == 1)
+            //so best do it the same time as the level has finished popping up
+            GameManager.theGM.theCameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
+            iFinalizeCounter++;
+        }
+        else if (iFinalizeCounter >= 11 && iFinalizeCounter <= 31)
+        {
+            //let the fade in take 0.25 sec (~21 frames)
+            iFinalizeCounter++;
+        }
+        else if (iFinalizeCounter == 32)
+        {
             //time back to normal
             Time.timeScale = 1.0f;
+
+            iFinalizeCounter++;
         }
         //end of init code
 
-        if (!bMapLoaded || iFinalizeCounter<=10) return;
+        if (!bMapLoaded || iFinalizeCounter <= 32) return;
 
         if(!bRunGameOverTimer)
         {
