@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     private Vector3 vMapSize;
 
     internal static bool bSnapMovement = false;
-    internal static Vector3 vCamPos = new Vector3(0, 0, -60);
+    internal static Vector3 vCamPos = new Vector3(0, 0, -50);
 
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
     {
@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour
     public void InitForMenu()
     {
         bMapMode = false;
-        vCamPos = new Vector3(0, 0, -60);
+        vCamPos = new Vector3(0, 0, -50);
         transform.position = vCamPos;
     }
 

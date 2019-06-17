@@ -941,7 +941,7 @@ public class Menu : MonoBehaviour
         {
             float x = oCameraHolder.transform.position.x + fAdjust;
             if (x >= 0.0f && x <= 1000.0f)
-                oCameraHolder.transform.position = new Vector3(x, 0, -60);
+                oCameraHolder.transform.position = new Vector3(x, 0, -50);
         }
 
         //rotate again around Z, not visible on standard cursor, but visible on the waiting cursor
