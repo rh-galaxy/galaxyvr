@@ -506,7 +506,47 @@ public class GameManager : MonoBehaviour
         if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
-//    Camera mainCam;
+    float fFadeFinishTime = 1.0f;
+    float fFadeTimer = 0.0f;
+    int iFade = 0; //0 no, 1 in from black, 2 out to black
+    public Material oFadeMat;
+    public GameObject oFadeBox;
+    void UpdateFade()
+    {
+        if (iFade == 0)
+            return;
+
+        fFadeTimer += Time.deltaTime;
+
+        float fProgress = fFadeTimer / fFadeFinishTime;
+        float fFadeCurAlpha = fProgress;
+        if(iFade == 1) fFadeCurAlpha = 1.0f - fProgress;
+        oFadeMat.color = new Color(0, 0, 0, fFadeCurAlpha); 
+        if (fProgress>0.999f)
+        {
+            iFade = 0;
+            if(fFadeCurAlpha<0.1)
+                oFadeBox.SetActive(false);
+        }
+    }
+    public void StartFadeOut(float fTime)
+    {
+        fFadeFinishTime = fTime;
+        fFadeTimer = 0.0f;
+        iFade = 2;
+        oFadeBox.SetActive(true);
+        UpdateFade();
+    }
+    public void StartFadeIn(float fTime)
+    {
+        fFadeFinishTime = fTime;
+        fFadeTimer = 0.0f;
+        iFade = 1;
+        oFadeBox.SetActive(true);
+        UpdateFade();
+    }
+
+    //    Camera mainCam;
     void Update()
     {
 #if !DISABLESTEAMWORKS
@@ -577,6 +617,8 @@ public class GameManager : MonoBehaviour
         //to ignore input below, only way back is to unpause
         if (bPause) return;
 
+        UpdateFade();
+
         //the main state machine
         switch (iState)
         {
@@ -593,6 +635,7 @@ public class GameManager : MonoBehaviour
                 if (bUserValid || bNoHiscore)
                 {
                     theCameraHolder.InitForMenu();
+                    /**/StartFadeIn(0.5f);
                     iState++;
                 }
                 break;
@@ -771,6 +814,7 @@ public class GameManager : MonoBehaviour
                 }
                 bStartReplay = false; //we have seen it
                 StartCoroutine(LoadAsyncScene());
+                /**/StartFadeOut(0.5f);
                 iState++;
                 break;
             case 6:
@@ -874,20 +918,27 @@ public class GameManager : MonoBehaviour
 
                     if (bBackToMenu)
                     {
-                        szToLoad = "Scenes/GameStart";
-                        bLoadDone = false;
-                        bIsMapScene = false;
-                        StartCoroutine(LoadAsyncScene());
+                        /**/StartFadeOut(0.3f);
                         iState++;
                     }
                     break;
                 }
             case 8:
+                if (iFade==0) //fading done?
+                {
+                    szToLoad = "Scenes/GameStart";
+                    bLoadDone = false;
+                    bIsMapScene = false;
+                    StartCoroutine(LoadAsyncScene());
+                    iState++;
+                }
+                break;
+            case 9:
                 //while hiscore is being sent
                 if (oHigh.bIsDone)
                     iState++;
                 break;
-            case 9:
+            case 10:
                 //while menu is loading
                 if (bLoadDone)
                 {

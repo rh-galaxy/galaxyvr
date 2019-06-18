@@ -441,6 +441,8 @@ public class GameLevel : MonoBehaviour
             GameManager.theGM.theCameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
             iFinalizeCounter++;
+
+            /**/GameManager.theGM.StartFadeIn(0.3f);
         }
         else if (iFinalizeCounter >= 11 && iFinalizeCounter <= 31)
         {

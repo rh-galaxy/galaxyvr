@@ -577,8 +577,8 @@ public class Menu : MonoBehaviour
         //get input from joysticks
         float fAxisX = Input.GetAxisRaw("Horizontal");
         float fAdjust = 0;
-        if (fAxisX > 0.3f) fAdjust = 1000;
-        if (fAxisX < -0.3f) fAdjust = -1000;
+        if (fAxisX > 0.4f) fAdjust = 1000;
+        if (fAxisX < -0.4f) fAdjust = -1000;
 
         //do a raycast into the world based on the user's
         // head position and orientation
