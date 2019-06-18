@@ -579,7 +579,7 @@ public class GameManager : MonoBehaviour
         {
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
-        /**///bPauseNow = false; //set to be able to play from editor without VR
+        /**/bPauseNow = false; //set to be able to play from editor without VR
 
         //save Camera.main whenever!null, because setting it disabled makes it null
 //        if (Camera.main!=null) mainCam = Camera.main;
@@ -774,6 +774,7 @@ public class GameManager : MonoBehaviour
 
                     StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
                     iState++; //load replay
+                    /**/StartFadeOut(0.3f);
 
                     //set in the above, but since StartCoroutine returns before it has a chanse
                     // to run we need to set it
@@ -782,6 +783,7 @@ public class GameManager : MonoBehaviour
                 else if(Menu.bLevelPlay)
                 {
                     iState += 2; //go directly to load level
+                    /**/StartFadeOut(0.3f);
                 }
                 break;
             case 4:
@@ -814,7 +816,6 @@ public class GameManager : MonoBehaviour
                 }
                 bStartReplay = false; //we have seen it
                 StartCoroutine(LoadAsyncScene());
-                /**/StartFadeOut(0.5f);
                 iState++;
                 break;
             case 6:
