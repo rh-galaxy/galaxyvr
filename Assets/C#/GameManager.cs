@@ -579,7 +579,7 @@ public class GameManager : MonoBehaviour
         {
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
-        /**/bPauseNow = false; //set to be able to play from editor without VR
+        /**///bPauseNow = false; //set to be able to play from editor without VR
 
         //save Camera.main whenever!null, because setting it disabled makes it null
 //        if (Camera.main!=null) mainCam = Camera.main;
