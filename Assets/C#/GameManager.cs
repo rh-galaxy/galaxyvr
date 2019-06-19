@@ -634,7 +634,7 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
-                    /**/StartFadeIn(0.5f);
+                    StartFadeIn(0.5f);
                     iState++;
                 }
                 break;
@@ -773,7 +773,7 @@ public class GameManager : MonoBehaviour
 
                     StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
                     iState++; //load replay
-                    /**/StartFadeOut(0.3f);
+                    StartFadeOut(0.3f);
 
                     //set in the above, but since StartCoroutine returns before it has a chanse
                     // to run we need to set it
@@ -782,7 +782,7 @@ public class GameManager : MonoBehaviour
                 else if(Menu.bLevelPlay)
                 {
                     iState += 2; //go directly to load level
-                    /**/StartFadeOut(0.3f);
+                    StartFadeOut(0.3f);
                 }
                 break;
             case 4:
@@ -918,8 +918,7 @@ public class GameManager : MonoBehaviour
 
                     if (bBackToMenu)
                     {
-                        theCameraHolder.InitForMenu();
-                        /**/StartFadeOut(0.3f);
+                        StartFadeOut(0.3f);
                         iState++;
                     }
                     break;
@@ -927,6 +926,7 @@ public class GameManager : MonoBehaviour
             case 8:
                 if (iFade==0) //fading done?
                 {
+                    theCameraHolder.InitForMenu();
                     szToLoad = "Scenes/GameStart";
                     bLoadDone = false;
                     bIsMapScene = false;
