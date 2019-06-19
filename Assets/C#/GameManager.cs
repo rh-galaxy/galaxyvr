@@ -634,7 +634,6 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
-                    theCameraHolder.InitForMenu();
                     /**/StartFadeIn(0.5f);
                     iState++;
                 }
@@ -919,6 +918,7 @@ public class GameManager : MonoBehaviour
 
                     if (bBackToMenu)
                     {
+                        theCameraHolder.InitForMenu();
                         /**/StartFadeOut(0.3f);
                         iState++;
                     }
