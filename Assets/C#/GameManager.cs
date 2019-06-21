@@ -658,21 +658,29 @@ public class GameManager : MonoBehaviour
                 //wait for http reply (achievements_get.php)
                 if (oHigh.bIsDone)
                 {
-                    int iMissionsFinished = 0;
+                    int iMissionFinished = 0;
+                    int iRaceFinished = 0;
                     for (int i = 0; i < oHigh.oLevelList.Count; i++)
                     {
                         stLevel = oHigh.oLevelList[i];
                         if (!stLevel.bIsTime)
                         {
-                            if (stLevel.iBestScoreMs != -1) iMissionsFinished++;
+                            if (stLevel.iBestScoreMs != -1) iMissionFinished++;
+                        }
+                        else
+                        {
+                            if (stLevel.iBestScoreMs != -1) iRaceFinished++;
                         }
                     }
                     if(oHigh.oLevelList.Count==0) bNoInternet = true; //set this so no further attempts are made at accessing the internet
 
-                    int iToUnlock = (int)(iMissionsFinished * 1.35f) + 1;
-                    if (bNoInternet || bNoHiscore) iToUnlock = 30; //unlock everything
-                    Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + iToUnlock);
-                    Menu.theMenu.SetMissionUnlock(iToUnlock);
+                    int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
+                    if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
+                    int iRaceToUnlock = (int)(iRaceFinished * 1.25f) + 1;
+                    if (bNoInternet || bNoHiscore || iRaceToUnlock > 25) iRaceToUnlock = 25; //unlock everything
+                    Debug.Log("http loadinfo: mission finished " + iMissionFinished + " unlocked " + iMissionToUnlock);
+                    Debug.Log("http loadinfo: race finished " + iRaceFinished + " unlocked " + iRaceToUnlock);
+                    Menu.theMenu.SetLevelUnlock(iMissionToUnlock, iRaceToUnlock);
                     if(!bNoHiscore) Menu.theMenu.InitLevelRanking();
                     iState++;
                 }
