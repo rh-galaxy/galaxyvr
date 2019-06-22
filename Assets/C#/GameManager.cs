@@ -520,7 +520,9 @@ public class GameManager : MonoBehaviour
 
         float fProgress = fFadeTimer / fFadeFinishTime;
         float fFadeCurAlpha = fProgress;
-        if(iFade == 1) fFadeCurAlpha = 1.0f - fProgress;
+        if (iFade == 1) fFadeCurAlpha = 1.0f - fProgress;
+        if (fFadeCurAlpha < 0.0f) fFadeCurAlpha = 0.0f;
+        if (fFadeCurAlpha > 1.0f) fFadeCurAlpha = 1.0f;
         oFadeMat.color = new Color(0, 0, 0, fFadeCurAlpha); 
         if (fProgress>0.999f)
         {
