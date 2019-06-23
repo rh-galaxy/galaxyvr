@@ -68,7 +68,6 @@ public class GameLevel : MonoBehaviour
     public static GameLevel theMap = null;
     public static string szLevel;
     public static int iLevelIndex;
-    public static bool bSimpleBg = true;
     public static bool bMapLoaded = false;
     public static Replay theReplay = null;
     public static bool bRunReplay = false;
@@ -251,8 +250,8 @@ public class GameLevel : MonoBehaviour
     void LoadThread()
     {
         //create background plane first of all
-        if (bSimpleBg) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f, 32.0f);
-        else oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 1.05f, 1.0f);
+        //if (bSimpleBg) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f, 32.0f);
+        /*else*/ oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 1.05f, 1.0f);
 
         bMeshBkReady = true;
         oEvent.WaitOne();
