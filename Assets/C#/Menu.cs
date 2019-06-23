@@ -747,7 +747,7 @@ public class Menu : MonoBehaviour
                         string szId = new string(szName, 4, szName.Length - 4);
                         int iIndex = int.Parse(szId);
 
-                        if (iIndex < iRaceUnlocked || (iIndex > iNumRace && iIndex < iNumRace+iMissionUnlocked))
+                        if (iIndex < iRaceUnlocked || (iIndex >= iNumRace && iIndex < iNumRace+iMissionUnlocked))
                         {
                             string szLevel = aLevels[iIndex].szLevelName;
                             GameLevel.iLevelIndex = iIndex;

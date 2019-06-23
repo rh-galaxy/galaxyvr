@@ -678,12 +678,12 @@ public class GameManager : MonoBehaviour
 
                     int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
                     if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
-                    int iRaceToUnlock = (int)(iRaceFinished * 1.25f) + 1;
+                    int iRaceToUnlock = (int)(iRaceFinished * 1.3f) + 1;
                     if (bNoInternet || bNoHiscore || iRaceToUnlock > 25) iRaceToUnlock = 25; //unlock everything
                     Debug.Log("http loadinfo: mission finished " + iMissionFinished + " unlocked " + iMissionToUnlock);
                     Debug.Log("http loadinfo: race finished " + iRaceFinished + " unlocked " + iRaceToUnlock);
                     Menu.theMenu.SetLevelUnlock(iMissionToUnlock, iRaceToUnlock);
-                    if(!bNoHiscore) Menu.theMenu.InitLevelRanking();
+                    if (!bNoHiscore) Menu.theMenu.InitLevelRanking();
                     iState++;
                 }
                 break;
