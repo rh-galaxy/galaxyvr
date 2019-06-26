@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
 
     public GameObject oShip;
     public ParticleSystem oThruster;
-    public GameObject oExplosion;
+    public ParticleSystem oExplosionParticle;
     public ParticleSystem oWallsColl;
     public GameObject oShipBody;
     public Material oShipMaterial;
@@ -567,7 +567,7 @@ public class Player : MonoBehaviour
                     fShipHealth = FULL_HEALTH;
                 }
                 //stop explosion always when it's done
-                oExplosion.SetActive(false);
+                oExplosionParticle.Stop();
             }
         }
         else
@@ -852,7 +852,7 @@ public class Player : MonoBehaviour
         oShip.SetActive(false);
         oPolygonCollider2D.enabled = false; //make the explosion not moving because of an enemy moving and pushing it
         //start explosion
-        oExplosion.SetActive(true);
+        oExplosionParticle.Play();
         fExplosionTimer = 0.0f;
 
         oASGeneral.PlayOneShot(oClipExplosion);

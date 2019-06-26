@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
     public GameObject enemy4_part;
     public GameObject enemy5;
     public GameObject enemy6;
-    public GameObject oExplosion;
+    public ParticleSystem oExplosionParticle;
 
     public AudioClip oClipHit;
     public AudioClip oClipExplosion;
@@ -69,7 +69,7 @@ public class Enemy : MonoBehaviour
         enemy4.SetActive(stInfo.iEnemyType == 4);
         enemy5.SetActive(stInfo.iEnemyType == 5);
         enemy6.SetActive(stInfo.iEnemyType == 6);
-        oExplosion.SetActive(false);
+        oExplosionParticle.Stop();
 
         oAudioSource = GetComponent<AudioSource>();
 
@@ -77,7 +77,7 @@ public class Enemy : MonoBehaviour
         iCurWP = 1;
         fWPTime = 0;
         fFireTime = 0;
-        if (stInfo.iEnemyType != 4) oExplosion.transform.localScale = new Vector3(0.9f, 0.9f, 2.0f); //smaller explosion
+        if (stInfo.iEnemyType != 4) oExplosionParticle.transform.localScale = new Vector3(0.9f, 0.9f, 2.0f); //smaller explosion
         if (stInfo.iEnemyType == 0) enemy0.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 1) enemy1.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 2) enemy2.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
@@ -178,7 +178,7 @@ public class Enemy : MonoBehaviour
                 enemy5.SetActive(false);
                 enemy6.SetActive(false);
 
-                oExplosion.SetActive(true);
+                oExplosionParticle.Play();
                 fExplosionTimer = 0.0f;
                 bStartExplosion = false;
             }
@@ -186,7 +186,7 @@ public class Enemy : MonoBehaviour
             fExplosionTimer += Time.fixedDeltaTime;
             if (fExplosionTimer > 2.0f)
             {
-                oExplosion.SetActive(false);
+                oExplosionParticle.Stop();
                 Destroy(gameObject);
             }
         }
