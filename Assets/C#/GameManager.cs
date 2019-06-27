@@ -583,9 +583,6 @@ public class GameManager : MonoBehaviour
         }
         /**///bPauseNow = false; //set to be able to play from editor without VR
 
-        //save Camera.main whenever!null, because setting it disabled makes it null
-//        if (Camera.main!=null) mainCam = Camera.main;
-
         //pause state change
         if (bPause != bPauseNow)
         {
@@ -597,21 +594,12 @@ public class GameManager : MonoBehaviour
                 //also need to stop all sound
                 AudioListener.pause = true;
 
-                //Update keeps running, but 
-                // rendering must also be paused to pass oculus vrc
-//                if (bOculusDevicePresent)
-//                    mainCam.enabled = false;
-
                 Menu.bPauseInput = true;
             }
             else
             {
                 Time.timeScale = 1.0f;
                 AudioListener.pause = false;
-
-                //start rendering
-//                if (bOculusDevicePresent)
-//                    mainCam.enabled = true;
 
                 Menu.bPauseInput = false;
             }
