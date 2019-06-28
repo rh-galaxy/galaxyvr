@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
+using System.IO;
+using System.Threading;
 using Oculus.Platform;
 #if !DISABLESTEAMWORKS //Add in Edit->Project Settings...->Player.Scripting Define Symbols [DISABLESTEAMWORKS]
 using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
@@ -78,7 +80,9 @@ public class GameManager : MonoBehaviour
         //this list keeps the last scores for each level for the entire game session, beginning with no score
         for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
 
-        UnityEngine.Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
+        UnityEngine.Application.backgroundLoadingPriority = UnityEngine.ThreadPriority.BelowNormal;
+
+        /**/Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 
         theCameraHolder.InitForMenu();
     }
@@ -506,6 +510,29 @@ public class GameManager : MonoBehaviour
         if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
+    /**/
+    //this is insane and totally like nothing else, but to avoid a 6 second freeze when the file is not in cache
+    // this is loaded here once hopefully while the user spend some seconds in the menu before this will be accessed by LoadSceneAsync.
+    //so much for async.
+    byte[] preLoadBytes = new byte[1024 * 1024];
+    string preLoadDataPath;
+    Thread preLoadThread;
+    void PreLoadAssetsToCache()
+    {
+        bool allRead = false;
+        int iChunkSize = preLoadBytes.Length;
+        int iChunkNr = 0;
+        FileStream fs = File.OpenRead(preLoadDataPath + "/sharedassets1.assets.resS");
+        while (!allRead)
+        {
+            int fr = fs.Read(preLoadBytes, 0 + iChunkNr * iChunkSize, iChunkSize);
+            if (fr!= iChunkSize) allRead = true;
+            Thread.Sleep(5);
+        }
+        //preLoadBytes = File.ReadAllBytes(preLoadDataPath + "/sharedassets1.assets.resS");
+    }
+
+    //fading code
     float fFadeFinishTime = 1.0f;
     float fFadeTimer = 0.0f;
     int iFade = 0; //0 no, 1 in from black, 2 out to black
@@ -548,7 +575,7 @@ public class GameManager : MonoBehaviour
         UpdateFade();
     }
 
-    //    Camera mainCam;
+
     void Update()
     {
 #if !DISABLESTEAMWORKS
@@ -619,6 +646,15 @@ public class GameManager : MonoBehaviour
                 //Screen.SetResolution(1280, 720, true);
                 //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
+
+                /**///currently as a test to see if we never get stalls of 5 sec and longer
+                //the first time a level is started after app start
+                preLoadDataPath = UnityEngine.Application.dataPath;
+                ThreadStart ts = new ThreadStart(PreLoadAssetsToCache);
+                preLoadThread = new Thread(ts);
+                preLoadThread.Priority = System.Threading.ThreadPriority.Lowest;
+                preLoadThread.Start();
+
                 break;
             case -2:
                 //wait for oculus user id/name to be ready
@@ -867,7 +903,7 @@ public class GameManager : MonoBehaviour
                             if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
                                 //////start of oculus specific code (achievements)
-                                if (bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                                if (bOculusDevicePresent && XRDevice.userPresence != UserPresenceState.NotPresent) //VR user must be present for achievements
                                 {
                                     HandleOculusAchievements();
                                 }

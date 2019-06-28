@@ -251,7 +251,8 @@ public class GameLevel : MonoBehaviour
     {
         //create background plane first of all
         //if (bSimpleBg) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f, 32.0f);
-        /*else*/ oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 1.05f, 1.0f);
+        //else
+        oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 1.05f, 1.0f);
 
         bMeshBkReady = true;
         oEvent.WaitOne();
@@ -441,7 +442,7 @@ public class GameLevel : MonoBehaviour
 
             iFinalizeCounter++;
 
-            /**/GameManager.theGM.StartFadeIn(0.3f);
+            GameManager.theGM.StartFadeIn(0.3f);
         }
         else if (iFinalizeCounter >= 11 && iFinalizeCounter <= 31)
         {

@@ -1121,7 +1121,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
-            /**/if (i_szText.CompareTo("<") == 0)
+            if (i_szText.CompareTo("<") == 0)
             {
                 //oLevelQuad.transform.eulerAngles = oLevelQuad.transform.eulerAngles + new Vector3(0, 0, 180);
                 oLevelQuad.transform.Rotate(Vector3.back, 180);

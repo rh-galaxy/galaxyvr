@@ -265,7 +265,6 @@ public class Enemy : MonoBehaviour
 
         float fSin = Mathf.Sin(i_fDirection * (Mathf.PI / 180.0f));
         float fCos = Mathf.Cos(i_fDirection * (Mathf.PI / 180.0f));
-        ///**/Debug.DrawLine(new Vector3(pos.x, pos.y, -4.5f), new Vector3(pos.x + fCos * i_fOffset, pos.y + fSin * i_fOffset, -4.5f), Color.black, 2.5f, false);
         stBulletInfo.vPos = i_vFirePoint; // new Vector2(vPos.x + fCos * i_fOffset, vPos.y + fSin * i_fOffset);
         stBulletInfo.vVel = new Vector2(vVel.x + fCos * i_fSpeed, vVel.y + fSin * i_fSpeed);
         stBulletInfo.fDirection = i_fDirection;
