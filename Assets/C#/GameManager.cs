@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour
         /**/Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 
         theCameraHolder.InitForMenu();
+        StartFadeOut(0.01f, 0.0f);
     }
 
     //////start of valve specific code
@@ -535,6 +536,7 @@ public class GameManager : MonoBehaviour
     //fading code
     float fFadeFinishTime = 1.0f;
     float fFadeTimer = 0.0f;
+    float fFadeDelay = 0.0f;
     int iFade = 0; //0 no, 1 in from black, 2 out to black
     public Material oFadeMat;
     public GameObject oFadeBox;
@@ -545,7 +547,10 @@ public class GameManager : MonoBehaviour
 
         fFadeTimer += Time.deltaTime;
 
-        float fProgress = fFadeTimer / fFadeFinishTime;
+        if (fFadeTimer < fFadeDelay)
+            return;
+
+        float fProgress = (fFadeTimer - fFadeDelay) / fFadeFinishTime;
         float fFadeCurAlpha = fProgress;
         if (iFade == 1) fFadeCurAlpha = 1.0f - fProgress;
         if (fFadeCurAlpha < 0.0f) fFadeCurAlpha = 0.0f;
@@ -558,18 +563,20 @@ public class GameManager : MonoBehaviour
                 oFadeBox.SetActive(false);
         }
     }
-    public void StartFadeOut(float fTime)
+    public void StartFadeOut(float fTime, float fDelay)
     {
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
+        fFadeDelay = fDelay;
         iFade = 2;
         oFadeBox.SetActive(true);
         UpdateFade();
     }
-    public void StartFadeIn(float fTime)
+    public void StartFadeIn(float fTime, float fDelay)
     {
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
+        fFadeDelay = fDelay;
         iFade = 1;
         oFadeBox.SetActive(true);
         UpdateFade();
@@ -608,7 +615,7 @@ public class GameManager : MonoBehaviour
         {
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
-        /**/bPauseNow = false; //set to be able to play from editor without VR
+        /**///bPauseNow = false; //set to be able to play from editor without VR
 
         //pause state change
         if (bPause != bPauseNow)
@@ -631,10 +638,11 @@ public class GameManager : MonoBehaviour
                 Menu.bPauseInput = false;
             }
         }
-        //to ignore input below, only way back is to unpause
-        if (bPause) return;
 
         UpdateFade();
+
+        //to ignore input below, only way back is to unpause
+        if (bPause) return;
 
         //the main state machine
         switch (iState)
@@ -660,7 +668,7 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
-                    StartFadeIn(3.5f);
+                    StartFadeIn(2.5f, 1.0f);
                     iState++;
                 }
                 break;
@@ -804,7 +812,7 @@ public class GameManager : MonoBehaviour
 
                     StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
                     iState++; //load replay
-                    StartFadeOut(0.8f);
+                    StartFadeOut(0.3f, 0.0f);
 
                     //set in the above, but since StartCoroutine returns before it has a chanse
                     // to run we need to set it
@@ -813,7 +821,7 @@ public class GameManager : MonoBehaviour
                 else if(Menu.bLevelPlay)
                 {
                     iState += 2; //go directly to load level
-                    StartFadeOut(0.8f);
+                    StartFadeOut(0.3f, 0.0f);
                 }
                 break;
             case 4:
@@ -947,7 +955,7 @@ public class GameManager : MonoBehaviour
 
                     if (bBackToMenu)
                     {
-                        StartFadeOut(0.8f);
+                        StartFadeOut(0.3f, 0.0f);
                         iState++;
                     }
                     break;
