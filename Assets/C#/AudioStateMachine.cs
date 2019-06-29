@@ -78,15 +78,19 @@ public class AudioStateMachine : MonoBehaviour
         //    SetParam(death, Mathf.Lerp(1, 0, 0.1f));
         //}
         FindPlayer();
-        SetLife(player.fShipHealth / Player.FULL_HEALTH);
-        SetFlow(player.fMeanSpeed / 10);
-        SetCargo(player.iCargoNumUsed / Player.MAXSPACEINHOLDUNITS);
-        //SetEnemies()
+        if(player!=null)
+        {
+            SetLife(player.fShipHealth / Player.FULL_HEALTH);
+            SetFlow(player.fMeanSpeed / 10);
+            SetCargo(player.iCargoNumUsed / Player.MAXSPACEINHOLDUNITS);
+            //SetEnemies()
+        }
     }
 
     private void FindPlayer()
     {
-      player = player ?? GameObject.Find("Player").GetComponent<Player>();
+        GameObject p = GameObject.Find("Player");
+        if(p!=null) player = player ?? p.GetComponent<Player>();
     }
 
     void StartSound(FMOD.Studio.EventInstance eventInstance, string eventRef, GameObject sender = null)
