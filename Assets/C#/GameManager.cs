@@ -608,7 +608,7 @@ public class GameManager : MonoBehaviour
         {
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
-        /**///bPauseNow = false; //set to be able to play from editor without VR
+        /**/bPauseNow = false; //set to be able to play from editor without VR
 
         //pause state change
         if (bPause != bPauseNow)
@@ -660,7 +660,7 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
-                    StartFadeIn(0.5f);
+                    StartFadeIn(3.5f);
                     iState++;
                 }
                 break;
@@ -804,7 +804,7 @@ public class GameManager : MonoBehaviour
 
                     StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
                     iState++; //load replay
-                    StartFadeOut(0.3f);
+                    StartFadeOut(0.8f);
 
                     //set in the above, but since StartCoroutine returns before it has a chanse
                     // to run we need to set it
@@ -813,7 +813,7 @@ public class GameManager : MonoBehaviour
                 else if(Menu.bLevelPlay)
                 {
                     iState += 2; //go directly to load level
-                    StartFadeOut(0.3f);
+                    StartFadeOut(0.8f);
                 }
                 break;
             case 4:
@@ -947,7 +947,7 @@ public class GameManager : MonoBehaviour
 
                     if (bBackToMenu)
                     {
-                        StartFadeOut(0.3f);
+                        StartFadeOut(0.8f);
                         iState++;
                     }
                     break;

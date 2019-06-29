@@ -442,7 +442,7 @@ public class GameLevel : MonoBehaviour
 
             iFinalizeCounter++;
 
-            GameManager.theGM.StartFadeIn(0.3f);
+            GameManager.theGM.StartFadeIn(1.0f);
         }
         else if (iFinalizeCounter >= 11 && iFinalizeCounter <= 31)
         {
