@@ -10,6 +10,18 @@ public class AudioStateMachine : MonoBehaviour
     public Player player;
     private int sceneState = 0;
 
+    [Header("Config")]
+
+    [Range(0.0f, 2f)]
+    public float masterVolume = 1.5f;
+
+    [Range(0.2f, 1f)]
+    public float flowEnterLimit;
+
+    [Range(0.0f, 0.8f)]
+    public float flowExitLimit;
+
+
     [Header("Parameter name in Studio")]
     public string transition = "Transition";
     public string death = "Death";
@@ -52,45 +64,71 @@ public class AudioStateMachine : MonoBehaviour
         transitionVal = f;
     }
 
+    public void SetLife(float f, bool overridefade = false)
+    {
+        if (fading && !overridefade)
+            return;
+        SetParam(death, 1 - f);
+        lifeVal = 1 - f;
+    }
+
+    public void SetFlow(float f)
+    {
+        if (f < flowExitLimit)
+        {
+            SetParam(flow, 0);
+        }
+        if (f >= flowEnterLimit)
+        {
+            SetParam(flow, 1);
+        }
+
+        flowVal = f;
+    }
+
     public void SetLife(float f)
     {
         SetParam(death, f - 1);
         lifeVal = f - 1;
     }
 
-    public void SetFlow(float f)
-    {
-        SetParam(flow, f);
-        flowVal = f;
-    }
 
     public void SetCargo(float f)
     {
         SetParam(cargo, f);
-        cargoVal = f; 
+        cargoVal = f;
     }
 
+    float fadeLen = 1;
 
     private void Update()
     {
-        //if(fading)
-        //{
-        //    SetParam(death, Mathf.Lerp(1, 0, 0.1f));
-        //}
+        if (fading)
+        {
+            fadeVal -= (1 * fadeLen) * (Time.deltaTime);
+            SetLife(fadeVal, true);
+            fading &= fadeVal > 0;
+            return;
+        }
+        print("fading done");
+
         FindPlayer();
-        if(player!=null)
+        if (player != null)
         {
             SetLife(player.fShipHealth / Player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
             SetCargo(player.iCargoNumUsed / Player.MAXSPACEINHOLDUNITS);
             //SetEnemies()
         }
+
+        SetVolume();
     }
+
 
     private void FindPlayer()
     {
         GameObject p = GameObject.Find("Player");
-        if(p!=null) player = player ?? p.GetComponent<Player>();
+        if (p != null) player = player ?? p.GetComponent<Player>();
     }
 
     void StartSound(FMOD.Studio.EventInstance eventInstance, string eventRef, GameObject sender = null)
@@ -105,92 +143,78 @@ public class AudioStateMachine : MonoBehaviour
         main.start();
     }
 
-    /// <summary>
-    /// Sets the parameter s to val the current instance
-    /// </summary>
-    /// <param name="s">S.</param>
-    /// <param name="val">Value.</param>
-    void SetParam(string s, float val)
-    {
-        // do not send out of range values, breaks playback
-        float eventValue = Mathf.Clamp01(val);
 
-        main.setParameterValue(s, eventValue);
-    }
-
-    float target = 0;
-    bool fading = false;
-    public void ResetLife()
-    {
-        fading = true;
-    }
-
-    ///// <summary>
-    ///// Initiates a parameter fade 
-    ///// </summary>
-    ///// <param name="param">Parameter.</param>
-    ///// <param name="startVal">Start value.</param>
-    ///// <param name="targetVal">Target value.</param>
-    ///// <param name="time">Time.</param>
-    //void SetParamFade(string param, float startVal, float targetVal, float time)
-    //{
-    //    Fade f = new Fade(param, startVal, targetVal, 0, time, time / Fade.resolution);
-    //    FadeCall(f);
-    //}
-
-    //IEnumerator StepFade(Fade f)
-    //{
-    //    yield return new WaitForSeconds(f.timestep);
-    //    FadeCall(f);
-    //    yield return null;
-    //}
-     
-    //void FadeCall(Fade f) 
-    //{ 
-    //    if(f.currentTime < f.time)
-    //    {
-    //        StartCoroutine(StepFade(f));
-    //        f.currentVal = Mathf.Lerp(f.currentVal, f.targetVal, f.timestep / f.time);
-    //        SetParam(f.name, f.currentVal);
-    //        f.currentTime += f.timestep;
-    //    }
-
-    //    SetParam(f.name, f.targetVal);
-    //}
-
-    public void Transition(string sceneName)
-    {
-        switch(sceneName)
+        /// <summary>
+        /// Sets the parameter s to val the current instance
+        /// </summary>
+        /// <param name="s">S.</param>
+        /// <param name="val">Value.</param>
+        void SetParam(string s, float val)
         {
-            case "Scenes/GameStart":
-                LevelTransition(0.0f);
-                break;
+            // do not send out of range values, breaks playback
+            float eventValue = Mathf.Clamp01(val);
+            main.setParameterValue(s, eventValue);
+        }
 
-            case "Scenes/PlayGame":
-                LevelTransition(1.0f);
-                break;
+        void SetVolume()
+        {
+            main.setVolume(masterVolume);
+        }
+
+        float target = 0;
+        bool fading = false;
+        float fadeVal;
+        public void ResetLife()
+        {
+            fading = true;
+            fadeVal = 1;
+        }
+
+        ///// <summary>
+        ///// Initiates a parameter fade 
+        ///// </summary>
+        ///// <param name="param">Parameter.</param>
+        ///// <param name="startVal">Start value.</param>
+        ///// <param name="targetVal">Target value.</param>
+        ///// <param name="time">Time.</param>
+        //void SetParamFade(string param, float startVal, float targetVal, float time)
+        //{
+        //    Fade f = new Fade(param, startVal, targetVal, 0, time, time / Fade.resolution);
+        //    FadeCall(f);
+        //}
+
+        //IEnumerator StepFade(Fade f)
+        //{
+        //    yield return new WaitForSeconds(f.timestep);
+        //    FadeCall(f);
+        //    yield return null;
+        //}
+
+        //void FadeCall(Fade f) 
+        //{ 
+        //    if(f.currentTime < f.time)
+        //    {
+        //        StartCoroutine(StepFade(f));
+        //        f.currentVal = Mathf.Lerp(f.currentVal, f.targetVal, f.timestep / f.time);
+        //        SetParam(f.name, f.currentVal);
+        //        f.currentTime += f.timestep;
+        //    }
+
+        //    SetParam(f.name, f.targetVal);
+        //}
+
+        public void Transition(string sceneName)
+        {
+            switch (sceneName)
+            {
+                case "Scenes/GameStart":
+                    LevelTransition(0.0f);
+                    break;
+
+                case "Scenes/PlayGame":
+                    LevelTransition(1.0f);
+                    break;
+            }
         }
     }
-}
 
-//class Fade
-//{
-//    public static int resolution = 128;
-//    public string name;
-//    public float currentVal;
-//    public float targetVal;
-
-//    public float currentTime;
-//    public float time;
-//    public float timestep;
-
-//    public Fade(string name, float currentVal, float targetVal, float currentTime, float time, float timestep)
-//    {
-//        this.name = name;
-//        this.currentVal = currentVal;
-//        this.targetVal = targetVal;
-//        this.currentTime = currentTime;
-//        this.time = time;
-//        this.timestep = timestep;
-//    }
-//}
