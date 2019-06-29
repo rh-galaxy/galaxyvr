@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oculus.VR", "Oculus.VR.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{CC3311AE-E3D0-445D-88A9-D4BB8DE54477}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor-firstpass", "Assembly-CSharp-Editor-firstpass.csproj", "{9C990348-2B28-C88A-1149-C479B6F6CFC3}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oculus.VR.Scripts.Editor", "Oculus.VR.Scripts.Editor.csproj", "{8DCB0301-2030-136B-2EF4-4CB083A32E84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oculus.VR.Editor", "Oculus.VR.Editor.csproj", "{C8EE6049-2AB2-B101-53FC-1F75246DDF6D}"
@@ -35,6 +37,10 @@ Global
 		{CC3311AE-E3D0-445D-88A9-D4BB8DE54477}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC3311AE-E3D0-445D-88A9-D4BB8DE54477}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC3311AE-E3D0-445D-88A9-D4BB8DE54477}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C990348-2B28-C88A-1149-C479B6F6CFC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C990348-2B28-C88A-1149-C479B6F6CFC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C990348-2B28-C88A-1149-C479B6F6CFC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C990348-2B28-C88A-1149-C479B6F6CFC3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8DCB0301-2030-136B-2EF4-4CB083A32E84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8DCB0301-2030-136B-2EF4-4CB083A32E84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DCB0301-2030-136B-2EF4-4CB083A32E84}.Release|Any CPU.ActiveCfg = Release|Any CPU
