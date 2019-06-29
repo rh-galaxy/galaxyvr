@@ -55,7 +55,7 @@ public class LandingZone : MonoBehaviour
         oExtraLife.SetActive(bExtraLife);
         if (bExtraLife)
         {
-            oExtraLife.transform.position = new Vector3(vPos.x - (iAdjustX - 13) / 32.0f, vPos.y + 13.0f / 32.0f, /**/0.6f);
+            oExtraLife.transform.position = new Vector3(vPos.x - (iAdjustX - 13) / 32.0f, vPos.y + 13.0f / 32.0f, 0.6f);
         }
 
         //buildings
@@ -64,16 +64,16 @@ public class LandingZone : MonoBehaviour
         oSilo.SetActive(bShowSilo);
         if (bShowSilo)
         {
-            oSilo.transform.position = new Vector3(vPos.x + (iAdjustX - 12) / 32.0f, vPos.y + 16.0f / 32.0f, /**/1.35f);
+            oSilo.transform.position = new Vector3(vPos.x + (iAdjustX - 12) / 32.0f, vPos.y + 16.0f / 32.0f, 1.35f);
         }
         if (bShowHangar)
         {
-            //oHangar.transform.position = new Vector3(vPos.x + (iAdjustX - 48) / 32.0f, vPos.y + 3.5f / 32.0f, /**/1.2f);
-            oHangar.transform.position = new Vector3(vPos.x + (iAdjustX - 30) / 32.0f, vPos.y + 3.5f / 32.0f, /**/1.2f);
+            //oHangar.transform.position = new Vector3(vPos.x + (iAdjustX - 48) / 32.0f, vPos.y + 3.5f / 32.0f, 1.2f);
+            oHangar.transform.position = new Vector3(vPos.x + (iAdjustX - 30) / 32.0f, vPos.y + 3.5f / 32.0f, 1.2f);
         }
         if (bShowTower)
         {
-            oTower.transform.position = new Vector3(vPos.x - (iAdjustX - 12) / 32.0f, vPos.y + 3.5f / 32.0f, /**/1.2f);
+            oTower.transform.position = new Vector3(vPos.x - (iAdjustX - 12) / 32.0f, vPos.y + 3.5f / 32.0f, 1.2f);
         }
 
         //zone cargo
@@ -87,7 +87,7 @@ public class LandingZone : MonoBehaviour
             oBox.transform.parent = GameLevel.theMap.transform;
             MonoBehaviour.DestroyImmediate(oBox.GetComponent<BoxCollider>());
 
-            oBox.transform.position = new Vector3(vPos.x + ((iAdjustX - ((i / 3) * 28)) - 13) / 32.0f, vPos.y + (6 + ((i % 3) * 7)) / 32.0f, /**/0.6f);
+            oBox.transform.position = new Vector3(vPos.x + ((iAdjustX - ((i / 3) * 28)) - 13) / 32.0f, vPos.y + (6 + ((i % 3) * 7)) / 32.0f, 0.6f);
             oBox.transform.localScale = new Vector3(aBoxSizeX[iCargoType] / 32.0f, 6.0f / 32.0f, 0.5f);
 
             oMaterial = Resources.Load("Pickups", typeof(Material)) as Material;
