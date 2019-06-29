@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
+using System.IO;
+using System.Threading;
 using Oculus.Platform;
 #if !DISABLESTEAMWORKS //Add in Edit->Project Settings...->Player.Scripting Define Symbols [DISABLESTEAMWORKS]
 using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
@@ -78,7 +80,9 @@ public class GameManager : MonoBehaviour
         //this list keeps the last scores for each level for the entire game session, beginning with no score
         for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
 
-        UnityEngine.Application.backgroundLoadingPriority = ThreadPriority.BelowNormal;
+        UnityEngine.Application.backgroundLoadingPriority = UnityEngine.ThreadPriority.BelowNormal;
+
+        /**/Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 
         theCameraHolder.InitForMenu();
     }
@@ -506,6 +510,29 @@ public class GameManager : MonoBehaviour
         if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
+    /**/
+    //this is insane and totally like nothing else, but to avoid a 6 second freeze when the file is not in cache
+    // this is loaded here once hopefully while the user spend some seconds in the menu before this will be accessed by LoadSceneAsync.
+    //so much for async.
+    byte[] preLoadBytes = new byte[1024 * 1024];
+    string preLoadDataPath;
+    Thread preLoadThread;
+    void PreLoadAssetsToCache()
+    {
+        bool allRead = false;
+        int iChunkSize = preLoadBytes.Length;
+        int iChunkNr = 0;
+        FileStream fs = File.OpenRead(preLoadDataPath + "/sharedassets1.assets.resS");
+        while (!allRead)
+        {
+            int fr = fs.Read(preLoadBytes, 0 + iChunkNr * iChunkSize, iChunkSize);
+            if (fr!= iChunkSize) allRead = true;
+            Thread.Sleep(5);
+        }
+        //preLoadBytes = File.ReadAllBytes(preLoadDataPath + "/sharedassets1.assets.resS");
+    }
+
+    //fading code
     float fFadeFinishTime = 1.0f;
     float fFadeTimer = 0.0f;
     int iFade = 0; //0 no, 1 in from black, 2 out to black
@@ -520,7 +547,9 @@ public class GameManager : MonoBehaviour
 
         float fProgress = fFadeTimer / fFadeFinishTime;
         float fFadeCurAlpha = fProgress;
-        if(iFade == 1) fFadeCurAlpha = 1.0f - fProgress;
+        if (iFade == 1) fFadeCurAlpha = 1.0f - fProgress;
+        if (fFadeCurAlpha < 0.0f) fFadeCurAlpha = 0.0f;
+        if (fFadeCurAlpha > 1.0f) fFadeCurAlpha = 1.0f;
         oFadeMat.color = new Color(0, 0, 0, fFadeCurAlpha); 
         if (fProgress>0.999f)
         {
@@ -546,7 +575,7 @@ public class GameManager : MonoBehaviour
         UpdateFade();
     }
 
-    //    Camera mainCam;
+
     void Update()
     {
 #if !DISABLESTEAMWORKS
@@ -581,9 +610,6 @@ public class GameManager : MonoBehaviour
         }
         /**///bPauseNow = false; //set to be able to play from editor without VR
 
-        //save Camera.main whenever!null, because setting it disabled makes it null
-//        if (Camera.main!=null) mainCam = Camera.main;
-
         //pause state change
         if (bPause != bPauseNow)
         {
@@ -595,21 +621,12 @@ public class GameManager : MonoBehaviour
                 //also need to stop all sound
                 AudioListener.pause = true;
 
-                //Update keeps running, but 
-                // rendering must also be paused to pass oculus vrc
-//                if (bOculusDevicePresent)
-//                    mainCam.enabled = false;
-
                 Menu.bPauseInput = true;
             }
             else
             {
                 Time.timeScale = 1.0f;
                 AudioListener.pause = false;
-
-                //start rendering
-//                if (bOculusDevicePresent)
-//                    mainCam.enabled = true;
 
                 Menu.bPauseInput = false;
             }
@@ -629,6 +646,15 @@ public class GameManager : MonoBehaviour
                 //Screen.SetResolution(1280, 720, true);
                 //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
+
+                /**///currently as a test to see if we never get stalls of 5 sec and longer
+                //the first time a level is started after app start
+                preLoadDataPath = UnityEngine.Application.dataPath;
+                ThreadStart ts = new ThreadStart(PreLoadAssetsToCache);
+                preLoadThread = new Thread(ts);
+                preLoadThread.Priority = System.Threading.ThreadPriority.Lowest;
+                preLoadThread.Start();
+
                 break;
             case -2:
                 //wait for oculus user id/name to be ready
@@ -658,22 +684,30 @@ public class GameManager : MonoBehaviour
                 //wait for http reply (achievements_get.php)
                 if (oHigh.bIsDone)
                 {
-                    int iMissionsFinished = 0;
+                    int iMissionFinished = 0;
+                    int iRaceFinished = 0;
                     for (int i = 0; i < oHigh.oLevelList.Count; i++)
                     {
                         stLevel = oHigh.oLevelList[i];
                         if (!stLevel.bIsTime)
                         {
-                            if (stLevel.iBestScoreMs != -1) iMissionsFinished++;
+                            if (stLevel.iBestScoreMs != -1) iMissionFinished++;
+                        }
+                        else
+                        {
+                            if (stLevel.iBestScoreMs != -1) iRaceFinished++;
                         }
                     }
                     if(oHigh.oLevelList.Count==0) bNoInternet = true; //set this so no further attempts are made at accessing the internet
 
-                    int iToUnlock = (int)(iMissionsFinished * 1.35f) + 1;
-                    if (bNoInternet || bNoHiscore) iToUnlock = 30; //unlock everything
-                    Debug.Log("http loadinfo: finished " + iMissionsFinished + " unlocked " + iToUnlock);
-                    Menu.theMenu.SetMissionUnlock(iToUnlock);
-                    if(!bNoHiscore) Menu.theMenu.InitLevelRanking();
+                    int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
+                    if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
+                    int iRaceToUnlock = (int)(iRaceFinished * 1.35f) + 1;
+                    if (bNoInternet || bNoHiscore || iRaceToUnlock > 25) iRaceToUnlock = 25; //unlock everything
+                    Debug.Log("http loadinfo: mission finished " + iMissionFinished + " unlocked " + iMissionToUnlock);
+                    Debug.Log("http loadinfo: race finished " + iRaceFinished + " unlocked " + iRaceToUnlock);
+                    Menu.theMenu.SetLevelUnlock(iMissionToUnlock, iRaceToUnlock);
+                    if (!bNoHiscore) Menu.theMenu.InitLevelRanking();
                     iState++;
                 }
                 break;
@@ -869,7 +903,7 @@ public class GameManager : MonoBehaviour
                             if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
                                 //////start of oculus specific code (achievements)
-                                if (bOculusDevicePresent /**/&& XRDevice.userPresence != UserPresenceState.NotPresent)
+                                if (bOculusDevicePresent && XRDevice.userPresence != UserPresenceState.NotPresent) //VR user must be present for achievements
                                 {
                                     HandleOculusAchievements();
                                 }

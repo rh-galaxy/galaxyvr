@@ -21,9 +21,6 @@ Known issues/small things undone
 - Maybe have a "remove bullet"-msg in the replay data.
 - Maybe have a "enemy killed"-msg in the replay data.
 - Maybe have a "door movement"-msg in the replay data.
-- Handle the first few frames in GameLevel.Update better, the game is now paused while loading
-   but the level should not show while it is loading, as it is visible that objects "pop up"
-  Hide level with a quad in front of the camera until complete?
 - Test different textures for the single colored cave edges.
 - Test different background textures for the back-plate and borders.
 - Windows on the house is not exactly the same height.

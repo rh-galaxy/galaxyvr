@@ -281,7 +281,6 @@ public class Menu : MonoBehaviour
     C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
     int iQuality = 2;
     C_Item2InMenu oMenuSnapMovement;
-    C_Item2InMenu oMenuSimpleBg;
     C_Item2InMenu oMenuNext1, oMenuPrev1;//, oMenuNext2, oMenuPrev2;
 
     Material oMaterialGrey;
@@ -289,7 +288,7 @@ public class Menu : MonoBehaviour
     MeshRenderer oRankQuadRenderer;
 
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
-    internal Material oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
+    internal Material oMaterialPentagonLocked, oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
     internal Material oMaterialOctagonPlay, oMaterialOctagonPlayHighlighted;
     internal Material oMaterialCircle, oMaterialCircleHighlighted;
     internal Material oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
@@ -300,6 +299,7 @@ public class Menu : MonoBehaviour
         oMaterialOctagonLocked = Resources.Load("LevelOctagonGrey", typeof(Material)) as Material;
         oMaterialOctagonUnlocked = Resources.Load("LevelOctagon", typeof(Material)) as Material;
         oMaterialOctagonHighlighted = Resources.Load("LevelOctagonHigh", typeof(Material)) as Material;
+        oMaterialPentagonLocked = Resources.Load("LevelPentagonGrey", typeof(Material)) as Material;
         oMaterialPentagonUnlocked = Resources.Load("LevelPentagon", typeof(Material)) as Material;
         oMaterialPentagonHighlighted = Resources.Load("LevelPentagonHigh", typeof(Material)) as Material;
         oMaterialOctagonPlay = Resources.Load("LevelOctagonPlay", typeof(Material)) as Material;
@@ -346,9 +346,6 @@ public class Menu : MonoBehaviour
         oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 31, "Quit", "Quit", 30.0f, 12.0f);
         oMenuControls = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 38, "Controls", "Controls", 30.0f, 9.0f);
         oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Credits", "Credits", 30.0f, 9.0f);
-
-        GameLevel.bSimpleBg = PlayerPrefs.GetInt("MySimpleModeBackground", 0) != 0;
-        oMenuSimpleBg = new C_Item2InMenu(new Vector3(0, -48, 12.0f), vAroundPoint, 53.5f, "Simple Bg", "SimpleBg", 30.0f, 6.0f);
 
         CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
         oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 53.5f, "Snap", "Snap", 30.0f, 9.0f);
@@ -428,12 +425,16 @@ public class Menu : MonoBehaviour
         oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();
     }
 
-    int iMissionsUnlocked = 0;
-    public void SetMissionUnlock(int i_iMissionsToUnlock)
+    int iMissionUnlocked = 0;
+    int iRaceUnlocked = 0;
+    public void SetLevelUnlock(int i_iMissionToUnlock, int i_iRaceToUnlock)
     {
-        if (i_iMissionsToUnlock <= 0) i_iMissionsToUnlock = 1; //first time, or maybe network error
-        if (i_iMissionsToUnlock > iNumMission) i_iMissionsToUnlock = iNumMission;
-        iMissionsUnlocked = i_iMissionsToUnlock;
+        if (i_iMissionToUnlock <= 0) i_iMissionToUnlock = 1; //first time, or maybe network error
+        if (i_iMissionToUnlock > iNumMission) i_iMissionToUnlock = iNumMission;
+        iMissionUnlocked = i_iMissionToUnlock;
+        if (i_iRaceToUnlock <= 0) i_iRaceToUnlock = 1; //first time, or maybe network error
+        if (i_iRaceToUnlock > iNumRace) i_iRaceToUnlock = iNumRace;
+        iRaceUnlocked = i_iRaceToUnlock;
     }
 
     C_ItemInMenu oMenuReplayWR1, oMenuReplayWR2, oMenuReplayWR3;
@@ -602,7 +603,6 @@ public class Menu : MonoBehaviour
         if (oMenuQuality2 != null && oMenuQuality2.oLevelQuad != null) oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 2) ? oMaterialCircleHighlighted : oMaterialCircle;
         if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 4) ? oMaterialCircleHighlighted : oMaterialCircle;
         if (oMenuSnapMovement != null && oMenuSnapMovement.oLevelQuad != null) oMenuSnapMovement.oLevelQuad.GetComponent<MeshRenderer>().material = CameraController.bSnapMovement ? oMaterialCircleHighlighted : oMaterialCircle;
-        if (oMenuSimpleBg != null && oMenuSimpleBg.oLevelQuad != null) oMenuSimpleBg.oLevelQuad.GetComponent<MeshRenderer>().material = GameLevel.bSimpleBg ? oMaterialCircleHighlighted : oMaterialCircle;
 
         bool bHitLevel = false;
         RaycastHit oHitInfo;
@@ -630,14 +630,22 @@ public class Menu : MonoBehaviour
                     oMatTemp = oMaterialOctagonLocked;
                     if (i == iIndex)
                     {
-                        if (i < iNumRace) oMatTemp = oMaterialPentagonHighlighted;
-                        else if (i - iNumRace < iMissionsUnlocked) oMatTemp = oMaterialOctagonHighlighted;
+                        if (i < iNumRace)
+                        {
+                            oMatTemp = oMaterialPentagonHighlighted;
+                            if (i >= iRaceUnlocked) oMatTemp = oMaterialPentagonLocked;
+                        }
+                        else if (i - iNumRace < iMissionUnlocked) oMatTemp = oMaterialOctagonHighlighted;
                         //else oMatTemp = oMaterialOctagonLocked;
                     }
                     else
                     {
-                        if (i < iNumRace) oMatTemp = oMaterialPentagonUnlocked;
-                        else if (i - iNumRace < iMissionsUnlocked) oMatTemp = oMaterialOctagonUnlocked;
+                        if (i < iNumRace)
+                        {
+                            oMatTemp = oMaterialPentagonUnlocked;
+                            if (i >= iRaceUnlocked) oMatTemp = oMaterialPentagonLocked;
+                        }
+                        else if (i - iNumRace < iMissionUnlocked) oMatTemp = oMaterialOctagonUnlocked;
                         //else oMatTemp = oMaterialOctagonLocked;
                     }
                     aMenuLevels[i].oLevelQuadMeshRenderer.material = oMatTemp;
@@ -708,10 +716,6 @@ public class Menu : MonoBehaviour
             {
                 oMenuSnapMovement.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
-            else if (oHitInfo.collider.name.CompareTo("SimpleBg") == 0)
-            {
-                oMenuSimpleBg.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
-            }
             else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
                 oMenuNext1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
@@ -733,8 +737,8 @@ public class Menu : MonoBehaviour
                         char[] szName = oHitInfo.collider.name.ToCharArray();
                         string szId = new string(szName, 4, szName.Length - 4);
                         int iIndex = int.Parse(szId);
-                        
-                        if(iIndex < iNumRace+iMissionsUnlocked)
+
+                        if (iIndex < iRaceUnlocked || (iIndex >= iNumRace && iIndex < iNumRace+iMissionUnlocked))
                         {
                             string szLevel = aLevels[iIndex].szLevelName;
                             GameLevel.iLevelIndex = iIndex;
@@ -872,14 +876,6 @@ public class Menu : MonoBehaviour
                         bAllowSelection = false;
                         bPlaySelectSound = true;
                     }
-                    else if (oHitInfo.collider.name.CompareTo("SimpleBg") == 0)
-                    {
-                        GameLevel.bSimpleBg = !GameLevel.bSimpleBg;
-                        PlayerPrefs.SetInt("MySimpleModeBackground", GameLevel.bSimpleBg ? 1 : 0);
-                        PlayerPrefs.Save();
-                        bAllowSelection = false;
-                        bPlaySelectSound = true;
-                    }
                     else if (oHitInfo.collider.name.CompareTo("Back") == 0)
                     {
 
@@ -924,8 +920,9 @@ public class Menu : MonoBehaviour
         {
             for (int i = 0; i < iNumRace + iNumMission; i++)
             {
-                if (i < iNumRace) oMatTemp = oMaterialPentagonUnlocked;
-                else if (i - iNumRace < iMissionsUnlocked) oMatTemp = oMaterialOctagonUnlocked;
+                if (i < iRaceUnlocked) oMatTemp = oMaterialPentagonUnlocked;
+                else if (i < iNumRace) oMatTemp = oMaterialPentagonLocked;
+                else if (i - iNumRace < iMissionUnlocked) oMatTemp = oMaterialOctagonUnlocked;
                 else oMatTemp = oMaterialOctagonLocked;
                 aMenuLevels[i].oLevelQuadMeshRenderer.material = oMatTemp;
             }
@@ -986,7 +983,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
             oLevelQuadMeshRenderer.material = (i_oLevel.iLevelType == (int)LevelType.MAP_RACE) ?
-                Menu.theMenu.oMaterialPentagonUnlocked : Menu.theMenu.oMaterialPentagonHighlighted;
+                Menu.theMenu.oMaterialPentagonUnlocked : Menu.theMenu.oMaterialOctagonUnlocked;
 
             //quad for level ranking star
             //set in InitLevelRanking() when received from server
@@ -995,12 +992,12 @@ public class Menu : MonoBehaviour
             if (i_iLevelId >= 200)
             {
                 oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj1, Menu.theMenu.transform);
-                oLevelText.transform.localPosition = new Vector3(vPos.x + 6.3f, vPos.y - 3.45f, vPos.z - 1.2f);
+                oLevelText.transform.localPosition = new Vector3(vPos.x + 6.3f, vPos.y - 3.45f, vPos.z - 1.4f);
             }
             else
             {
                 oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-                oLevelText.transform.localPosition = new Vector3(vPos.x - 6.3f, vPos.y - 3.45f, vPos.z - 1.2f);
+                oLevelText.transform.localPosition = new Vector3(vPos.x - 6.3f, vPos.y - 3.45f, vPos.z - 1.4f);
             }
             oLevelText.transform.localScale = new Vector3(1.85f, 1.85f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
@@ -1124,7 +1121,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
-            /**/if (i_szText.CompareTo("<") == 0)
+            if (i_szText.CompareTo("<") == 0)
             {
                 //oLevelQuad.transform.eulerAngles = oLevelQuad.transform.eulerAngles + new Vector3(0, 0, 180);
                 oLevelQuad.transform.Rotate(Vector3.back, 180);

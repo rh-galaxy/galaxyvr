@@ -116,7 +116,7 @@ public class CheckPoint : MonoBehaviour
         return dist;
     }
 
-    /**/const float CP_RANGE = 0.6f;
+    const float CP_RANGE = 0.6f;
     Vector2 p = Vector2.zero;
     Vector2 l0 = Vector2.zero;
     Vector2 l1 = Vector2.zero;
