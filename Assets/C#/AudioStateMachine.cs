@@ -73,10 +73,10 @@ public class AudioStateMachine : MonoBehaviour
 
     private void Update()
     {
-        if(fading)
-        {
-            SetParam(death, Mathf.Lerp(1, 0, 0.1f));
-        }
+        //if(fading)
+        //{
+        //    SetParam(death, Mathf.Lerp(1, 0, 0.1f));
+        //}
         FindPlayer();
         SetLife(player.fShipHealth / Player.FULL_HEALTH);
         SetFlow(player.fMeanSpeed / 10);

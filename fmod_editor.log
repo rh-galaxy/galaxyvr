@@ -8,7 +8,7 @@
 [LOG] DownMix::init                            : done.
 [LOG] Thread::initThread                       : Init FMOD stream thread. Priority: 2, Stack Size: 65536, Semaphore: No, Sleep Time: 10, Looping: Yes.
 [LOG] Thread::initThread                       : Init FMOD mixer thread. Priority: 3, Stack Size: 49152, Semaphore: Yes, Sleep Time: 0, Looping: Yes.
-[LOG] AsyncManager::init                       : manager 0x7f87f7c26c08 isAsync 0 updatePeriod 0.02
+[LOG] AsyncManager::init                       : manager 0x7fd747cbd408 isAsync 0 updatePeriod 0.02
 [LOG] AsyncManager::init                       : done
 [LOG] PlaybackSystem::init                     : 
 [LOG] Thread::initThread                       : Init FMOD Studio sample load thread. Priority: 0, Stack Size: 65536, Semaphore: No, Sleep Time: 1, Looping: No.
@@ -18,130 +18,63 @@
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
 [LOG] SystemI::createSound                     : filename = GalaxyProject/Build/Desktop/Master Bank.bank : mode 02010082
 [LOG] SystemI::createSound                     : FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
-[LOG] SystemI::createSound                     : setdata soundi = 0x7f87fe0ed4f8 : node = 0x7f87fa153670
-[LOG] SystemI::createSound                     : add node to async list : head = 0x7f87fb1734f8.  list count = 0
+[LOG] SystemI::createSound                     : setdata soundi = 0x7fd762186658 : node = 0x7fd7454ab3b0
+[LOG] SystemI::createSound                     : add node to async list : head = 0x7fd746c6f2a8.  list count = 0
 [LOG] SystemI::createSound                     : filename = GalaxyProject/Build/Desktop/Master Bank.bank : mode 02010082
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7fd762186658
 [LOG] SystemI::createSound                     : FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
-[LOG] SystemI::createSound                     : setdata soundi = 0x7f87de485158 : node = 0x7f87de7e9500
-[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7f87fe0ed4f8
-[LOG] SystemI::createSound                     : add node to async list : head = 0x7f87fb1734f8.  list count = 0
 [LOG] SystemI::createSoundInternal             :     Create name='GalaxyProject/Build/Desktop/Master Bank.bank', mode=0x02010082
+[LOG] SystemI::createSound                     :     setdata soundi = 0x7fd75d7c0028 : node = 0x7fd7454a9c10
 [LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
+[LOG] SystemI::createSound                     :     add node to async list : head = 0x7fd746c6f2a8.  list count = 0
 [LOG] SystemI::createSoundInternal             :     exinfo->length             = 4221088
-[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 35168
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 35840
 [LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
-[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0x7f87fa153788
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0x7fd7454ab4c8
 [LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
 [LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
 [LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 1791
 [LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
 [LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Section1_main_134bpm', format=2, channels=2, frequency=48000, lengthbytes=549312, lengthpcm=2407305, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.503845.
-[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7f87fe0ed4f8
-[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7f87de485158
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7fd762186658
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7fd75d7c0028
 [LOG] SystemI::createSoundInternal             :     Create name='GalaxyProject/Build/Desktop/Master Bank.bank', mode=0x02010082
 [LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
 [LOG] SystemI::createSoundInternal             :     exinfo->length             = 4221088
-[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 35168
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 35840
 [LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
-[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0x7f87de7e9618
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0x7fd7454a9d28
 [LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
 [LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
 [LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 1791
 [LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
 [LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Section1_gtr_134bpm', format=2, channels=2, frequency=48000, lengthbytes=440384, lengthpcm=2235288, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.070953.
-[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7f87de485158
-[LOG] SoundI::getSubSound                      : sound 0x7f87fe0ed4f8.  Subsound index 0 / 1
-[LOG] SoundI::getSubSound                      : sound 0x7f87de485158.  Subsound index 0 / 1
-[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7f87dfb19de8
-[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7f87dfb19de8
-[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7f87dffec1e8
-[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7f87dffec1e8
-[LOG] SoundI::release                          : Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare (0x7f87e0ff56f8)
-[LOG] SoundI::release                          :     Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare (0x7f87fa5037d8)
-[LOG] SoundI::release                          :     Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare (0x7f87fa74fe48)
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7fd75d7c0028
+[LOG] SoundI::getSubSound                      : sound 0x7fd762186658.  Subsound index 0 / 1
+[LOG] SoundI::getSubSound                      : sound 0x7fd75d7c0028.  Subsound index 0 / 1
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7fd747215928
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7fd747215928
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7fd74721f6e8
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7fd74721f6e8
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[WRN] AsyncCommandBuffer::growBuffer           : Growing command buffer to -82520448 bytes. Initial command buffer size can be tuned to avoid dynamic growth using Studio::System::setAdvancedSettings()
-[WRN] AsyncCommandBuffer::growBuffer           : Growing command buffer to -82520448 bytes. Initial command buffer size can be tuned to avoid dynamic growth using Studio::System::setAdvancedSettings()
+[LOG] SoundI::release                          : Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare (0x7fd746c70ec8)
+[LOG] SoundI::release                          :     Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare (0x7fd746c6c808)
+[LOG] SoundI::release                          :     Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare (0x7fd746c6c998)
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
 [LOG] PlaybackSystem::acquireMasterBus         : Setting master channel group format to 6
-[WRN] AsyncCommandBuffer::growBuffer           : Growing command buffer to -82520448 bytes. Initial command buffer size can be tuned to avoid dynamic growth using Studio::System::setAdvancedSettings()
-[LOG] SoundI::release                          : Section1_gtr_134bpm (0x7f87de485158)
-[LOG] SoundI::release                          :     Section1_gtr_134bpm (0x7f87dff184d8)
-[LOG] SoundI::release                          :     Section1_gtr_134bpm (0x7f87dffec1e8)
-[LOG] SoundI::release                          : Section1_main_134bpm (0x7f87fe0ed4f8)
-[LOG] SoundI::release                          :     Section1_main_134bpm (0x7f87dfb920e8)
-[LOG] SoundI::release                          :     Section1_main_134bpm (0x7f87dfb19de8)
-[LOG] SystemI::createSound                     : filename = GalaxyProject/Build/Desktop/Master Bank.bank : mode 02010082
-[LOG] SystemI::createSound                     : FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
-[LOG] SystemI::createSound                     : setdata soundi = 0x7f87e1067f08 : node = 0x7f87e10680c0
-[LOG] SystemI::createSound                     : add node to async list : head = 0x7f87fb1734f8.  list count = 0
-[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7f87e1067f08
-[LOG] SystemI::createSound                     : filename = GalaxyProject/Build/Desktop/Master Bank.bank : mode 02010082
-[LOG] SystemI::createSoundInternal             :     Create name='GalaxyProject/Build/Desktop/Master Bank.bank', mode=0x02010082
-[LOG] SystemI::createSound                     :     FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
-[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
-[LOG] SystemI::createSound                     :     setdata soundi = 0x7f87e16ae388 : node = 0x7f87e16ae540
-[LOG] SystemI::createSoundInternal             :     exinfo->length             = 4221088
-[LOG] SystemI::createSound                     :     add node to async list : head = 0x7f87fb1734f8.  list count = 0
-[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 35168
-[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
-[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0x7f87e10681d8
-[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
-[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
-[LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 1791
-[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
-[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Section1_main_134bpm', format=2, channels=2, frequency=48000, lengthbytes=549312, lengthpcm=2407305, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.503845.
-[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7f87e1067f08
-[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7f87e16ae388
-[LOG] SystemI::createSoundInternal             :     Create name='GalaxyProject/Build/Desktop/Master Bank.bank', mode=0x02010082
-[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
-[LOG] SystemI::createSoundInternal             :     exinfo->length             = 4221088
-[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 35168
-[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
-[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0x7f87e16ae658
-[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
-[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
-[LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 1791
-[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
-[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Section1_gtr_134bpm', format=2, channels=2, frequency=48000, lengthbytes=440384, lengthpcm=2235288, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.070953.
-[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7f87e16ae388
-[LOG] SoundI::getSubSound                      : sound 0x7f87e1067f08.  Subsound index 0 / 1
-[LOG] SoundI::getSubSound                      : sound 0x7f87e16ae388.  Subsound index 0 / 1
-[WRN] AsyncCommandBuffer::growBuffer           : Growing command buffer to -82520448 bytes. Initial command buffer size can be tuned to avoid dynamic growth using Studio::System::setAdvancedSettings()
-[LOG] SystemI::createSound                     : filename = GalaxyProject/Build/Desktop/Master Bank.bank : mode 02010082
-[LOG] SystemI::createSound                     : FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
-[LOG] SystemI::createSound                     : setdata soundi = 0x7f87e0babc58 : node = 0x7f87e0babe10
-[LOG] SystemI::createSound                     : add node to async list : head = 0x7f87fb1734f8.  list count = 0
-[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 0x7f87e0babc58
-[LOG] SystemI::createSoundInternal             :     Create name='GalaxyProject/Build/Desktop/Master Bank.bank', mode=0x02010082
-[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
-[LOG] SystemI::createSoundInternal             :     exinfo->length             = 4221088
-[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 35168
-[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
-[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0x7f87e0babf28
-[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
-[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
-[LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 2000
-[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
-[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare', format=2, channels=2, frequency=48000, lengthbytes=1349536, lengthpcm=4893920, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.999969.
-[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 0x7f87e0babc58
-[LOG] SoundI::getSubSound                      : sound 0x7f87e0babc58.  Subsound index 0 / 1
-[LOG] SoundI::release                          : Section1_gtr_134bpm (0x7f87e16ae388)
-[LOG] SoundI::release                          :     Section1_gtr_134bpm (0x7f87e1069378)
-[LOG] SoundI::release                          :     Section1_gtr_134bpm (0x7f87e10695d8)
-[LOG] SoundI::release                          : Section1_main_134bpm (0x7f87e1067f08)
-[LOG] SoundI::release                          :     Section1_main_134bpm (0x7f87e10689b8)
-[LOG] SoundI::release                          :     Section1_main_134bpm (0x7f87e1068c18)
-[LOG] SoundI::release                          : Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare (0x7f87e0babc58)
-[LOG] SoundI::release                          :     Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare (0x7f87e0de9238)
-[LOG] SoundI::release                          :     Lundberg_Oscar_ElectronicPiece_GalaxyForces_Fanfare (0x7f87e0de93c8)
-[LOG] SoundI::release                          :  (0x7f87fa2b1e68)
-[LOG] SoundI::release                          :     transition_B-A.wav (0x7f87df92b238)
-[LOG] SoundI::release                          :  (0x7f87fa24f1d8)
-[LOG] SoundI::release                          :     transition_A-B (0x7f87fa24f348)
+[LOG] SoundI::release                          : Section1_gtr_134bpm (0x7fd75d7c0028)
+[LOG] SoundI::release                          :     Section1_gtr_134bpm (0x7fd7457ef768)
+[LOG] SoundI::release                          :     Section1_gtr_134bpm (0x7fd74721f6e8)
+[LOG] SoundI::release                          : Section1_main_134bpm (0x7fd762186658)
+[LOG] SoundI::release                          :     Section1_main_134bpm (0x7fd74721ae08)
+[LOG] SoundI::release                          :     Section1_main_134bpm (0x7fd747215928)
+[LOG] SoundI::release                          :  (0x7fd762107408)
+[LOG] SoundI::release                          :     transition_B-A.wav (0x7fd7454d15c8)
+[LOG] SoundI::release                          :  (0x7fd7454ed008)
+[LOG] SoundI::release                          :     transition_A-B (0x7fd75e8cf478)
 [LOG] Thread::callback                         : FMOD Studio update thread finished.
 [LOG] Thread::callback                         : FMOD Studio bank load thread finished.
 [LOG] Thread::callback                         : FMOD Studio sample load thread finished.
