@@ -8,3 +8,4 @@ Assembly-CSharp-Editor.csproj
 Oculus.VR.csproj
 Oculus.VR.Editor.csproj
 Oculus.VR.Scripts.Editor.csproj
+fmod_editor.log
