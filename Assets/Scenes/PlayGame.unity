@@ -19211,6 +19211,9 @@ MonoBehaviour:
   oClipLand: {fileID: 8300000, guid: 9858bdd16c9f2e942b2c1af3ca0b60e5, type: 3}
   oClipLoadCargo: {fileID: 8300000, guid: 0a50f9aeed20a174f9a57c3eb4f3b863, type: 3}
   oClipUnloadCargo: {fileID: 8300000, guid: 2682a0ba84e399540a4b5cd94e59059f, type: 3}
+  iCargoNumUsed: 0
+  fShipHealth: 1.5
+  fMeanSpeed: 0
 --- !u!60 &1347681406
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -19349,7 +19352,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.6
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -19446,7 +19449,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 7f2af30f0380b594591db022c1023c44, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -19543,7 +19546,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 5e242e28711630148939156edfeccd4e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -27391,7 +27394,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.6
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
