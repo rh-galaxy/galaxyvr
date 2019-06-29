@@ -78,6 +78,10 @@ public class AudioStateMachine : MonoBehaviour
         {
             SetParam(flow, 0);
         }
+        if (f >= flowEnterLimit)
+        {
+            SetParam(flow, 1);
+        }
 
         flowVal = f;
     }
