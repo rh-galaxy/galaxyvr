@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
     int iAchievementHellbentCounter = 0;
 
     AsyncOperation asyncLoad;
-    AudioSource oASMusic;
 
     Replay oReplay = new Replay(); //create one replay... this is recycled during the session
 
@@ -74,8 +73,6 @@ public class GameManager : MonoBehaviour
         }
 
         GameLevel.theReplay = oReplay;
-        oASMusic = GetComponent<AudioSource>();
-        oASMusic.Play();
 
         //this list keeps the last scores for each level for the entire game session, beginning with no score
         for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
@@ -644,14 +641,14 @@ public class GameManager : MonoBehaviour
         {
             case -3:
                 //by use of the EditorAutoLoad script the main scene should be loaded first
-                //and should be active here ("Scenes/GameStart")
+                // and should be active here ("Scenes/GameStart")
                 Cursor.visible = false;
                 //Screen.SetResolution(1280, 720, true);
                 //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
 
                 /**///currently as a test to see if we never get stalls of 5 sec and longer
-                //the first time a level is started after app start
+                // the first time a level is started after app start
                 preLoadDataPath = UnityEngine.Application.dataPath;
                 ThreadStart ts = new ThreadStart(PreLoadAssetsToCache);
                 preLoadThread = new Thread(ts);
@@ -720,9 +717,6 @@ public class GameManager : MonoBehaviour
                     //back at top level should result in this, but not working:
                     //if (bOculusDevicePresent && Input.GetKey(KeyCode.JoystickButton6))
                     //    OVRManager.PlatformUIConfirmQuit();
-
-                    oASMusic.volume = 0.40f;
-                    //oASMusic.volume = 0.00f;
 
                     //these 5 are set in menu part 2, reset them here
                     Menu.bWorldBestReplay1 = false;
@@ -864,8 +858,6 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.Log("Load map segments Done");
                         iState++;
-                        //oASMusic.volume = 0.09f;
-                        /**/oASMusic.volume = 0.00f;
                     }
                     iLoadingMap++;
                 }
