@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
     int iAchievementHellbentCounter = 0;
 
     AsyncOperation asyncLoad;
-    AudioSource oASMusic;
 
     Replay oReplay = new Replay(); //create one replay... this is recycled during the session
 
@@ -74,8 +73,6 @@ public class GameManager : MonoBehaviour
         }
 
         GameLevel.theReplay = oReplay;
-        oASMusic = GetComponent<AudioSource>();
-        oASMusic.Play();
 
         //this list keeps the last scores for each level for the entire game session, beginning with no score
         for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
@@ -85,6 +82,7 @@ public class GameManager : MonoBehaviour
         /**/Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 
         theCameraHolder.InitForMenu();
+        StartFadeOut(0.01f, 0.0f);
     }
 
     //////start of valve specific code
@@ -538,6 +536,7 @@ public class GameManager : MonoBehaviour
     //fading code
     float fFadeFinishTime = 1.0f;
     float fFadeTimer = 0.0f;
+    float fFadeDelay = 0.0f;
     int iFade = 0; //0 no, 1 in from black, 2 out to black
     public Material oFadeMat;
     public GameObject oFadeBox;
@@ -548,7 +547,10 @@ public class GameManager : MonoBehaviour
 
         fFadeTimer += Time.deltaTime;
 
-        float fProgress = fFadeTimer / fFadeFinishTime;
+        if (fFadeTimer < fFadeDelay)
+            return;
+
+        float fProgress = (fFadeTimer - fFadeDelay) / fFadeFinishTime;
         float fFadeCurAlpha = fProgress;
         if (iFade == 1) fFadeCurAlpha = 1.0f - fProgress;
         if (fFadeCurAlpha < 0.0f) fFadeCurAlpha = 0.0f;
@@ -561,18 +563,20 @@ public class GameManager : MonoBehaviour
                 oFadeBox.SetActive(false);
         }
     }
-    public void StartFadeOut(float fTime)
+    public void StartFadeOut(float fTime, float fDelay)
     {
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
+        fFadeDelay = fDelay;
         iFade = 2;
         oFadeBox.SetActive(true);
         UpdateFade();
     }
-    public void StartFadeIn(float fTime)
+    public void StartFadeIn(float fTime, float fDelay)
     {
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
+        fFadeDelay = fDelay;
         iFade = 1;
         oFadeBox.SetActive(true);
         UpdateFade();
@@ -634,24 +638,25 @@ public class GameManager : MonoBehaviour
                 Menu.bPauseInput = false;
             }
         }
-        //to ignore input below, only way back is to unpause
-        if (bPause) return;
 
         UpdateFade();
+
+        //to ignore input below, only way back is to unpause
+        if (bPause) return;
 
         //the main state machine
         switch (iState)
         {
             case -3:
                 //by use of the EditorAutoLoad script the main scene should be loaded first
-                //and should be active here ("Scenes/GameStart")
+                // and should be active here ("Scenes/GameStart")
                 Cursor.visible = false;
                 //Screen.SetResolution(1280, 720, true);
                 //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
 
                 /**///currently as a test to see if we never get stalls of 5 sec and longer
-                //the first time a level is started after app start
+                // the first time a level is started after app start
                 preLoadDataPath = UnityEngine.Application.dataPath;
                 ThreadStart ts = new ThreadStart(PreLoadAssetsToCache);
                 preLoadThread = new Thread(ts);
@@ -663,7 +668,7 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
-                    StartFadeIn(0.5f);
+                    StartFadeIn(2.5f, 1.0f);
                     iState++;
                 }
                 break;
@@ -720,9 +725,6 @@ public class GameManager : MonoBehaviour
                     //back at top level should result in this, but not working:
                     //if (bOculusDevicePresent && Input.GetKey(KeyCode.JoystickButton6))
                     //    OVRManager.PlatformUIConfirmQuit();
-
-                    oASMusic.volume = 0.40f;
-                    //oASMusic.volume = 0.00f;
 
                     //these 5 are set in menu part 2, reset them here
                     Menu.bWorldBestReplay1 = false;
@@ -810,7 +812,7 @@ public class GameManager : MonoBehaviour
 
                     StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
                     iState++; //load replay
-                    StartFadeOut(0.3f);
+                    StartFadeOut(0.3f, 0.0f);
 
                     //set in the above, but since StartCoroutine returns before it has a chanse
                     // to run we need to set it
@@ -819,7 +821,7 @@ public class GameManager : MonoBehaviour
                 else if(Menu.bLevelPlay)
                 {
                     iState += 2; //go directly to load level
-                    StartFadeOut(0.3f);
+                    StartFadeOut(0.3f, 0.0f);
                 }
                 break;
             case 4:
@@ -864,8 +866,6 @@ public class GameManager : MonoBehaviour
                     {
                         Debug.Log("Load map segments Done");
                         iState++;
-                        //oASMusic.volume = 0.09f;
-                        /**/oASMusic.volume = 0.00f;
                     }
                     iLoadingMap++;
                 }
@@ -955,7 +955,7 @@ public class GameManager : MonoBehaviour
 
                     if (bBackToMenu)
                     {
-                        StartFadeOut(0.3f);
+                        StartFadeOut(0.3f, 0.0f);
                         iState++;
                     }
                     break;

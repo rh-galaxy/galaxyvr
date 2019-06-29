@@ -10,6 +10,18 @@ public class AudioStateMachine : MonoBehaviour
     public Player player;
     private int sceneState = 0;
 
+    [Header("Config")]
+
+    [Range(0.0f, 2f)]
+    public float masterVolume = 1.5f;
+
+    [Range(0.2f, 1f)]
+    public float flowEnterLimit;
+
+    [Range(0.0f, 0.8f)]
+    public float flowExitLimit;
+
+
     [Header("Parameter name in Studio")]
     public string transition = "Transition";
     public string death = "Death";
@@ -52,6 +64,29 @@ public class AudioStateMachine : MonoBehaviour
         transitionVal = f;
     }
 
+<<<<<<< HEAD
+    public void SetLife(float f, bool overridefade = false)
+    {
+        if (fading && !overridefade)
+            return;
+        SetParam(death, 1 - f);
+        lifeVal = 1 - f;
+    }
+
+    public void SetFlow(float f)
+    {
+        if(f < flowExitLimit)
+        {
+            SetParam(flow, 0);
+        }
+
+        if (f > flowEnterLimit)
+        {
+            SetParam(flow, 1);
+        }
+
+        flowVal = f;
+=======
     public void SetLife(float f)
     {
         SetParam(death, f - 1);
@@ -62,6 +97,7 @@ public class AudioStateMachine : MonoBehaviour
     {
         SetParam(flow, f);
         flowVal = f;
+>>>>>>> cb0ffd0329e0a2537bb015db3b820d6c172c8265
     }
 
     public void SetCargo(float f)
@@ -70,6 +106,22 @@ public class AudioStateMachine : MonoBehaviour
         cargoVal = f; 
     }
 
+<<<<<<< HEAD
+    float fadeVal;
+    float fadeLen = 1;
+
+    private void Update()
+    {
+        if(fading)
+        {
+            fadeVal -= (1 * fadeLen) * (Time.deltaTime);
+            SetLife(fadeVal, true);
+            fading &= fadeVal > 0;
+            return;
+        }
+        print("fading done");
+
+=======
 
     private void Update()
     {
@@ -77,6 +129,7 @@ public class AudioStateMachine : MonoBehaviour
         //{
         //    SetParam(death, Mathf.Lerp(1, 0, 0.1f));
         //}
+>>>>>>> cb0ffd0329e0a2537bb015db3b820d6c172c8265
         FindPlayer();
         if(player!=null)
         {
@@ -85,6 +138,30 @@ public class AudioStateMachine : MonoBehaviour
             SetCargo(player.iCargoNumUsed / Player.MAXSPACEINHOLDUNITS);
             //SetEnemies()
         }
+<<<<<<< HEAD
+
+
+        SetVolume();
+    }
+
+
+    private void FindPlayer()
+    {
+        GameObject p = GameObject.Find("Player");
+        if(p!=null) player = player ?? p.GetComponent<Player>();
+    }
+
+    void StartSound(FMOD.Studio.EventInstance eventInstance, string eventRef, GameObject sender = null)
+    {
+        sender = sender ?? gameObject;
+
+        // Spatialize audio
+        eventInstance = FMODUnity.RuntimeManager.CreateInstance(eventRef);
+        eventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(sender));
+
+        main = eventInstance;
+        main.start();
+=======
     }
 
     private void FindPlayer()
@@ -103,6 +180,7 @@ public class AudioStateMachine : MonoBehaviour
 
         main = eventInstance;
         main.start();
+>>>>>>> cb0ffd0329e0a2537bb015db3b820d6c172c8265
     }
 
     /// <summary>
@@ -118,11 +196,23 @@ public class AudioStateMachine : MonoBehaviour
         main.setParameterValue(s, eventValue);
     }
 
+    void SetVolume() 
+    {
+        main.setVolume(masterVolume);
+    }
+
     float target = 0;
     bool fading = false;
+<<<<<<< HEAD
     public void ResetLife()
     {
         fading = true;
+        fadeVal = 1;
+=======
+    public void ResetLife()
+    {
+        fading = true;
+>>>>>>> cb0ffd0329e0a2537bb015db3b820d6c172c8265
     }
 
     ///// <summary>

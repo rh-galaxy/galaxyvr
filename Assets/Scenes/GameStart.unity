@@ -6225,7 +6225,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  masterVolume: 1.5
+  flowEnterLimit: 0.51
+  flowExitLimit: 0.45
+  transition: Transition
+  death: Death
+  flow: Flow
+  cargo: Cargo
   mainEvent: event:/Main
+  transitionVal: 0
+  lifeVal: 0
+  flowVal: 0
+  cargoVal: 0
 --- !u!4 &634785705
 Transform:
   m_ObjectHideFlags: 0
