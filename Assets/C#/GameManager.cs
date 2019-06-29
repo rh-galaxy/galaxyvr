@@ -918,6 +918,8 @@ public class GameManager : MonoBehaviour
 
                     if (bBackToMenu)
                     {
+
+
                         StartFadeOut(0.3f);
                         iState++;
                     }
@@ -956,6 +958,10 @@ public class GameManager : MonoBehaviour
     string szToLoad = "";
     IEnumerator LoadAsyncScene()
     {
+
+        // Start fading music
+        AudioStateMachine.instance.Transition(szToLoad);
+
         //the Application loads the scene in the background as the current scene runs
         // this is good for not freezing the view... done by separating some work to a thread
         // and having the rest split in ~7ms jobs

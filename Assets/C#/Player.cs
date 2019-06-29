@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     AudioSource oASScrape;
     bool bScrapeFadeOut = false;
     AudioSource oASGeneral;
+    AudioStateMachine asm;
 
     PolygonCollider2D oPolygonCollider2D;
 
@@ -43,15 +44,15 @@ public class Player : MonoBehaviour
     //ship properties
     const float MAXFUELINTANK = 60.0f;
     const float MAXSPACEINHOLDWEIGHT = 50.0f;
-    const int MAXSPACEINHOLDUNITS = 3;
-    const float FULL_HEALTH = 1.5f;
+    public const int MAXSPACEINHOLDUNITS = 3;
+    public const float FULL_HEALTH = 1.5f;
     const float SHIP_MASS = 60.0f;
     const float SHIP_STEERSPEED = 235.0f; //degree/second
     const float SHIP_THRUST = 160.0f;
     const int NUM_LIFES_MISSION = 5;
 
     //cargo
-    int iCargoNumUsed = 0;
+    public int iCargoNumUsed = 0;
     int iCargoSpaceUsed = 0;
     int[] aHold = new int[MAXSPACEINHOLDUNITS];
     int[] aHoldZoneId = new int[MAXSPACEINHOLDUNITS];
@@ -77,7 +78,7 @@ public class Player : MonoBehaviour
 
     //ship status
     internal int iNumLifes = -1; //no limit
-    float fShipHealth = FULL_HEALTH;
+    public float fShipHealth = FULL_HEALTH;
     float fLastShipHealth = FULL_HEALTH;
 
     float fFuel;
@@ -98,6 +99,7 @@ public class Player : MonoBehaviour
         bInited = false;
         oThruster.enableEmission = false;
         oWallsColl.enableEmission = false;
+        asm = GameObject.Find("AudioStateMachineDND").GetComponent<AudioStateMachine>();
     }
 
     public void Init(string i_szName, int i_iPlayerID, Vector2 i_vStartPos, GameLevel i_oMap)
@@ -383,7 +385,7 @@ public class Player : MonoBehaviour
     float fReplayMessageTimer = 0;
     Vector2 vLastPosition;
     float[] fMeanSpeeds = new float[16];
-    float fMeanSpeed = 0.0f;
+    public float fMeanSpeed = 0.0f;
     float fCurrentSpeedSeg = 0;
     void FixedUpdate()
     {
@@ -843,6 +845,9 @@ public class Player : MonoBehaviour
     {
         if (!bAlive) return;
         bAlive = false;
+
+        // Prevent instant change in the music
+        asm.ResetLife();
 
         //take a life if not unlimited
         if (iNumLifes != -1) iNumLifes--;
