@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
     public GameObject enemy4_part;
     public GameObject enemy5;
     public GameObject enemy6;
-    public ParticleSystem oExplosionParticle;
+    public GameObject oExplosion;
 
     public AudioClip oClipHit;
     public AudioClip oClipExplosion;
@@ -69,7 +69,7 @@ public class Enemy : MonoBehaviour
         enemy4.SetActive(stInfo.iEnemyType == 4);
         enemy5.SetActive(stInfo.iEnemyType == 5);
         enemy6.SetActive(stInfo.iEnemyType == 6);
-        oExplosionParticle.Stop();
+        oExplosion.SetActive(false);
 
         oAudioSource = GetComponent<AudioSource>();
 
@@ -77,7 +77,7 @@ public class Enemy : MonoBehaviour
         iCurWP = 1;
         fWPTime = 0;
         fFireTime = 0;
-        if (stInfo.iEnemyType != 4) oExplosionParticle.transform.localScale = new Vector3(0.9f, 0.9f, 2.0f); //smaller explosion
+        if (stInfo.iEnemyType != 4) oExplosion.transform.localScale = new Vector3(0.9f, 0.9f, 2.0f); //smaller explosion
         if (stInfo.iEnemyType == 0) enemy0.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 1) enemy1.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 2) enemy2.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
@@ -178,7 +178,7 @@ public class Enemy : MonoBehaviour
                 enemy5.SetActive(false);
                 enemy6.SetActive(false);
 
-                oExplosionParticle.Play();
+                oExplosion.SetActive(true);
                 fExplosionTimer = 0.0f;
                 bStartExplosion = false;
             }
@@ -186,7 +186,7 @@ public class Enemy : MonoBehaviour
             fExplosionTimer += Time.fixedDeltaTime;
             if (fExplosionTimer > 2.0f)
             {
-                oExplosionParticle.Stop();
+                oExplosion.SetActive(false);
                 Destroy(gameObject);
             }
         }
@@ -265,6 +265,7 @@ public class Enemy : MonoBehaviour
 
         float fSin = Mathf.Sin(i_fDirection * (Mathf.PI / 180.0f));
         float fCos = Mathf.Cos(i_fDirection * (Mathf.PI / 180.0f));
+        ///**/Debug.DrawLine(new Vector3(pos.x, pos.y, -4.5f), new Vector3(pos.x + fCos * i_fOffset, pos.y + fSin * i_fOffset, -4.5f), Color.black, 2.5f, false);
         stBulletInfo.vPos = i_vFirePoint; // new Vector2(vPos.x + fCos * i_fOffset, vPos.y + fSin * i_fOffset);
         stBulletInfo.vVel = new Vector2(vVel.x + fCos * i_fSpeed, vVel.y + fSin * i_fSpeed);
         stBulletInfo.fDirection = i_fDirection;

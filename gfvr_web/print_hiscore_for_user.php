@@ -80,7 +80,7 @@ square_start("'100%'");
 								$is_time = $row2["is_time"];
 
 								//icon
-								$icon = "finished.png";
+								$icon = "-";
 								if($is_time != 0) {
 									if($row2["Score"]<$row2["limit1"]) $icon = "gold.png";
 									else if($row2["Score"]<$row2["limit2"]) $icon = "silver.png";
