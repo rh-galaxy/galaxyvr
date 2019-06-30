@@ -110,7 +110,7 @@ public class AudioStateMachine : MonoBehaviour
             fading &= fadeVal > 0;
             return;
         }
-        print("fading done");
+        //print("fading done");
 
         FindPlayer();
         if (player != null)
