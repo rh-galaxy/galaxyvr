@@ -77,10 +77,11 @@ public class GameManager : MonoBehaviour
         //this list keeps the last scores for each level for the entire game session, beginning with no score
         for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
 
+        //set thread prio
         UnityEngine.Application.backgroundLoadingPriority = UnityEngine.ThreadPriority.BelowNormal;
+        Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 
-        /**/Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
-
+        //init to black
         theCameraHolder.InitForMenu();
         StartFadeOut(0.01f, 0.0f);
     }
@@ -546,7 +547,6 @@ public class GameManager : MonoBehaviour
             return;
 
         fFadeTimer += Time.deltaTime;
-
         if (fFadeTimer < fFadeDelay)
             return;
 
@@ -993,8 +993,7 @@ public class GameManager : MonoBehaviour
     string szToLoad = "";
     IEnumerator LoadAsyncScene()
     {
-
-        // Start fading music
+        //start fading music
         AudioStateMachine.instance.Transition(szToLoad);
 
         //the Application loads the scene in the background as the current scene runs
@@ -1007,7 +1006,7 @@ public class GameManager : MonoBehaviour
         //wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)
         {
-            // scene has loaded as much as possible, the last 10% can't be multi-threaded
+            //scene has loaded as much as possible, the last 10% can't be multi-threaded
             if (asyncLoad.progress >= 0.9f)
             {
                 bBeginMapLoading = true;
