@@ -117,7 +117,7 @@ public class AudioStateMachine : MonoBehaviour
         {
             SetLife(player.fShipHealth / Player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
-            SetCargo(player.iCargoNumUsed / Player.MAXSPACEINHOLDUNITS);
+            SetCargo((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS);
             //SetEnemies()
         }
 
@@ -144,77 +144,77 @@ public class AudioStateMachine : MonoBehaviour
     }
 
 
-        /// <summary>
-        /// Sets the parameter s to val the current instance
-        /// </summary>
-        /// <param name="s">S.</param>
-        /// <param name="val">Value.</param>
-        void SetParam(string s, float val)
+    /// <summary>
+    /// Sets the parameter s to val the current instance
+    /// </summary>
+    /// <param name="s">S.</param>
+    /// <param name="val">Value.</param>
+    void SetParam(string s, float val)
+    {
+        // do not send out of range values, breaks playback
+        float eventValue = Mathf.Clamp01(val);
+        main.setParameterValue(s, eventValue);
+    }
+
+    void SetVolume()
+    {
+        main.setVolume(masterVolume);
+    }
+
+    float target = 0;
+    bool fading = false;
+    float fadeVal;
+    public void ResetLife()
+    {
+        fading = true;
+        fadeVal = 1;
+    }
+
+    ///// <summary>
+    ///// Initiates a parameter fade 
+    ///// </summary>
+    ///// <param name="param">Parameter.</param>
+    ///// <param name="startVal">Start value.</param>
+    ///// <param name="targetVal">Target value.</param>
+    ///// <param name="time">Time.</param>
+    //void SetParamFade(string param, float startVal, float targetVal, float time)
+    //{
+    //    Fade f = new Fade(param, startVal, targetVal, 0, time, time / Fade.resolution);
+    //    FadeCall(f);
+    //}
+
+    //IEnumerator StepFade(Fade f)
+    //{
+    //    yield return new WaitForSeconds(f.timestep);
+    //    FadeCall(f);
+    //    yield return null;
+    //}
+
+    //void FadeCall(Fade f) 
+    //{ 
+    //    if(f.currentTime < f.time)
+    //    {
+    //        StartCoroutine(StepFade(f));
+    //        f.currentVal = Mathf.Lerp(f.currentVal, f.targetVal, f.timestep / f.time);
+    //        SetParam(f.name, f.currentVal);
+    //        f.currentTime += f.timestep;
+    //    }
+
+    //    SetParam(f.name, f.targetVal);
+    //}
+
+    public void Transition(string sceneName)
+    {
+        switch (sceneName)
         {
-            // do not send out of range values, breaks playback
-            float eventValue = Mathf.Clamp01(val);
-            main.setParameterValue(s, eventValue);
-        }
+            case "Scenes/GameStart":
+                LevelTransition(0.0f);
+                break;
 
-        void SetVolume()
-        {
-            main.setVolume(masterVolume);
-        }
-
-        float target = 0;
-        bool fading = false;
-        float fadeVal;
-        public void ResetLife()
-        {
-            fading = true;
-            fadeVal = 1;
-        }
-
-        ///// <summary>
-        ///// Initiates a parameter fade 
-        ///// </summary>
-        ///// <param name="param">Parameter.</param>
-        ///// <param name="startVal">Start value.</param>
-        ///// <param name="targetVal">Target value.</param>
-        ///// <param name="time">Time.</param>
-        //void SetParamFade(string param, float startVal, float targetVal, float time)
-        //{
-        //    Fade f = new Fade(param, startVal, targetVal, 0, time, time / Fade.resolution);
-        //    FadeCall(f);
-        //}
-
-        //IEnumerator StepFade(Fade f)
-        //{
-        //    yield return new WaitForSeconds(f.timestep);
-        //    FadeCall(f);
-        //    yield return null;
-        //}
-
-        //void FadeCall(Fade f) 
-        //{ 
-        //    if(f.currentTime < f.time)
-        //    {
-        //        StartCoroutine(StepFade(f));
-        //        f.currentVal = Mathf.Lerp(f.currentVal, f.targetVal, f.timestep / f.time);
-        //        SetParam(f.name, f.currentVal);
-        //        f.currentTime += f.timestep;
-        //    }
-
-        //    SetParam(f.name, f.targetVal);
-        //}
-
-        public void Transition(string sceneName)
-        {
-            switch (sceneName)
-            {
-                case "Scenes/GameStart":
-                    LevelTransition(0.0f);
-                    break;
-
-                case "Scenes/PlayGame":
-                    LevelTransition(1.0f);
-                    break;
-            }
+            case "Scenes/PlayGame":
+                LevelTransition(1.0f);
+                break;
         }
     }
+}
 
