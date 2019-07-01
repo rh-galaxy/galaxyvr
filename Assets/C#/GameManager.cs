@@ -83,6 +83,8 @@ public class GameManager : MonoBehaviour
 
         //init to black
         theCameraHolder.InitForMenu();
+        oFadeMatCopy = new Material(oFadeMat);
+        oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFadeOut(0.01f, 0.0f);
     }
 
@@ -540,6 +542,7 @@ public class GameManager : MonoBehaviour
     float fFadeDelay = 0.0f;
     int iFade = 0; //0 no, 1 in from black, 2 out to black
     public Material oFadeMat;
+    Material oFadeMatCopy;
     public GameObject oFadeBox;
     void UpdateFade()
     {
@@ -555,7 +558,7 @@ public class GameManager : MonoBehaviour
         if (iFade == 1) fFadeCurAlpha = 1.0f - fProgress;
         if (fFadeCurAlpha < 0.0f) fFadeCurAlpha = 0.0f;
         if (fFadeCurAlpha > 1.0f) fFadeCurAlpha = 1.0f;
-        oFadeMat.color = new Color(0, 0, 0, fFadeCurAlpha); 
+        oFadeMatCopy.color = new Color(0, 0, 0, fFadeCurAlpha); 
         if (fProgress>0.999f)
         {
             iFade = 0;
@@ -668,6 +671,7 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
+                    Menu.theMenu.oCameraHolder = theCameraHolder; //although theCameraHolder is DND the reference is to an old destroyed object the second time Menu is loaded, so we do this as a fix
                     StartFadeIn(2.5f, 1.0f);
                     iState++;
                 }

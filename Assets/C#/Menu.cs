@@ -274,7 +274,7 @@ public class Menu : MonoBehaviour
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
 
-    public GameObject oCameraHolder;
+    public CameraController oCameraHolder;
 
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
