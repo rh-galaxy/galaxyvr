@@ -92,6 +92,9 @@ public class GameManager : MonoBehaviour
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFadeOut(0.01f, 0.0f);
 
+#if DISABLESTEAMWORKS
+        AudioStateMachine.instance.SetOutputByRiftSetting();
+#endif
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
 
 #if LOGPROFILERDATA
@@ -103,9 +106,11 @@ public class GameManager : MonoBehaviour
 
     private void AudioSettings_OnAudioConfigurationChanged(bool deviceWasChanged)
     {
-        /*FMOD.System fmodsystem = FMOD.System;
-        fmodsystem.setOutput(FMOD.OUTPUTTYPE.AUTODETECT);
-        fmodsystem.setDriver(0);*/
+#if !DISABLESTEAMWORKS
+        AudioStateMachine.instance.SetOutput(0);
+#else
+        AudioStateMachine.instance.SetOutputByRiftSetting();
+#endif
     }
 
     //////start of valve specific code

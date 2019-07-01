@@ -58,14 +58,43 @@ public class AudioStateMachine : MonoBehaviour
 
     /// <summary>
     /// Sets the output to # i in the device list
+    /// Device 0 is always default OS device
     /// </summary>
     /// <param name="i">The index.</param>
     public void SetOutput(int i = 0) 
     {
         print("Using device " + i);
-        FMODUnity.RuntimeManager.LowlevelSystem.setDriver(i);
         FMODUnity.RuntimeManager.LowlevelSystem.setOutput(FMOD.OUTPUTTYPE.AUTODETECT);
+        FMODUnity.RuntimeManager.LowlevelSystem.setDriver(i);
     }
+
+    //only to be run when compiled for oculus
+    // setting rift headphones or windows default or both depending on config in Oculus Home
+    public void SetOutputByRiftSetting()
+    {
+        FMOD.System sys;
+        FMODUnity.RuntimeManager.StudioSystem.getLowLevelSystem(out sys);
+
+        int i, driverCount = 0;
+        sys.getNumDrivers(out driverCount);
+
+        string riftId = OVRManager.audioOutId;
+
+        for (i=0; i<driverCount; i++)
+        {
+            System.Guid guid;
+            int rate, channels;
+            FMOD.SPEAKERMODE mode;
+            sys.getDriverInfo(i, out guid, out rate, out mode, out channels);
+
+            if (guid.ToString() == riftId)
+            {
+                sys.setDriver(i);
+                break;
+            }
+        }
+    }
+
 
     public void LevelTransition(float f)
     {
