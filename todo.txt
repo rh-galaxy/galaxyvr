@@ -7,7 +7,6 @@ Release
 - Make XBox-controller not be unresponsive after pause and unpause
  (after accessing Virtual Desktop)
 - Submit app: set correct supported controllers (need bug fix by Oculus)
-- Less lost frames
 - Make it work better with vive input.
 - Game play promotion video
  (done except music track needs to be mixed in)

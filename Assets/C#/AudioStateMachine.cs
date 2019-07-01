@@ -12,7 +12,7 @@ public class AudioStateMachine : MonoBehaviour
     [Header("Config")]
 
     [Range(0.0f, 2f)]
-    public float masterVolume = 1.2f;
+    public float masterVolume;
 
     [Range(0.2f, 1f)]
     public float flowEnterLimit;

@@ -92,11 +92,20 @@ public class GameManager : MonoBehaviour
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFadeOut(0.01f, 0.0f);
 
+        AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
+
 #if LOGPROFILERDATA
         Profiler.logFile = "log" + logProfilerFileCnt.ToString();
         Profiler.enableBinaryLog = true;
         Profiler.enabled = true;
 #endif
+    }
+
+    private void AudioSettings_OnAudioConfigurationChanged(bool deviceWasChanged)
+    {
+        /*FMOD.System fmodsystem = FMOD.System;
+        fmodsystem.setOutput(FMOD.OUTPUTTYPE.AUTODETECT);
+        fmodsystem.setDriver(0);*/
     }
 
     //////start of valve specific code
@@ -662,7 +671,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1.0f;
 
                 AudioListener.pause = false;
-                AudioStateMachine.instance.masterVolume = 0.86f;
+                AudioStateMachine.instance.masterVolume = 1.35f;
 
                 Menu.bPauseInput = false;
             }
