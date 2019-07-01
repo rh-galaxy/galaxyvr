@@ -44,15 +44,15 @@ public class Player : MonoBehaviour
     //ship properties
     const float MAXFUELINTANK = 60.0f;
     const float MAXSPACEINHOLDWEIGHT = 50.0f;
-    public const int MAXSPACEINHOLDUNITS = 3;
-    public const float FULL_HEALTH = 1.5f;
+    internal const int MAXSPACEINHOLDUNITS = 3;
+    internal const float FULL_HEALTH = 1.5f;
     const float SHIP_MASS = 60.0f;
     const float SHIP_STEERSPEED = 235.0f; //degree/second
     const float SHIP_THRUST = 160.0f;
     const int NUM_LIFES_MISSION = 5;
 
     //cargo
-    public int iCargoNumUsed = 0;
+    internal int iCargoNumUsed = 0;
     int iCargoSpaceUsed = 0;
     int[] aHold = new int[MAXSPACEINHOLDUNITS];
     int[] aHoldZoneId = new int[MAXSPACEINHOLDUNITS];
@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
 
     //ship status
     internal int iNumLifes = -1; //no limit
-    public float fShipHealth = FULL_HEALTH;
+    internal float fShipHealth = FULL_HEALTH;
     float fLastShipHealth = FULL_HEALTH;
 
     float fFuel;
@@ -385,7 +385,7 @@ public class Player : MonoBehaviour
     float fReplayMessageTimer = 0;
     Vector2 vLastPosition;
     float[] fMeanSpeeds = new float[16];
-    public float fMeanSpeed = 0.0f;
+    internal float fMeanSpeed = 0.0f;
     float fCurrentSpeedSeg = 0;
     void FixedUpdate()
     {
