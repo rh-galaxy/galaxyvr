@@ -12,7 +12,7 @@ public class AudioStateMachine : MonoBehaviour
     [Header("Config")]
 
     [Range(0.0f, 2f)]
-    public float masterVolume = 1.5f;
+    public float masterVolume = 1.2f;
 
     [Range(0.2f, 1f)]
     public float flowEnterLimit;
@@ -49,7 +49,6 @@ public class AudioStateMachine : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this.gameObject);
             StartSound(main, mainEvent);
-
         }
         else
         {
@@ -110,7 +109,7 @@ public class AudioStateMachine : MonoBehaviour
         }
         //print("fading done");
 
-        //player is now be set to a valid player (or null) before transitioning to in-game music
+        //player is now to be set to a valid player (or null) before transitioning to in-game music
         // in the scene switching code in the end of GameManager.cs
         if (player != null)
         {

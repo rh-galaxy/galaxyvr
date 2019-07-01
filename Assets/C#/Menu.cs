@@ -462,99 +462,156 @@ public class Menu : MonoBehaviour
         return szTime;
     }
 
-    public void SetLevelInfo(LevelInfo i_stLevelInfo, bool i_bOff)
+    public void SetLevelInfoOff()
     {
-        if (i_bOff)
-        {
-            oLevelInfoContainer.SetActive(false);
-            return;
-        }
+        oLevelInfoContainer.SetActive(false);
+    }
+
+    string szLevelInfoDescription;
+    public void SetLevelInfoPass1(LevelInfo i_stLevelInfo)
+    {
+        //float t1 = Time.realtimeSinceStartup;
 
         //i_stLevelInfo.szName is in the form "race00", but we need the filename "2race00"
         //we rely on GameLevel.szLevel for that
-        string szDescription;
-        oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel, GameLevel.iLevelIndex>=200, out i_stLevelInfo.bIsTime, out szDescription);
+        oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel, GameLevel.iLevelIndex >= 200, out i_stLevelInfo.bIsTime, out szLevelInfoDescription);
         oMiniMapMaterial.mainTexture = oMiniMapTex;
 
-        Vector3 vHeadPosition = Camera.main.transform.position;
-        Vector3 vGazeDirection = Camera.main.transform.forward;
-        oLevelInfoContainer.transform.position = (vHeadPosition + vGazeDirection * 59.0f) + new Vector3(0.0f, -4.0f, 0.0f);
-        Vector3 vRotation = Camera.main.transform.eulerAngles; vRotation.z = 0;
-        oLevelInfoContainer.transform.eulerAngles = vRotation;
+        //Debug.Log("SetLevelInfoPass1: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+    }
 
-        oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
-        oLevelInfoContainer.SetActive(true);
-        if (GameLevel.iLevelIndex >= 200) oLevelTextTextMesh.text = szDescription; // aMenuCustomLevels[GameLevel.iLevelIndex-200].oLevel.szLevelDescription;
-        else oLevelTextTextMesh.text = aLevels[GameLevel.iLevelIndex].szLevelDescription;
-        if (i_stLevelInfo.szWRName1.Length <= 17) oWRNameText1TextMesh.text = i_stLevelInfo.szWRName1;
-        else oWRNameText1TextMesh.text = i_stLevelInfo.szWRName1.Substring(0, 16) + "...";
-        if (i_stLevelInfo.szWRName2.Length <= 17) oWRNameText2TextMesh.text = i_stLevelInfo.szWRName2;
-        else oWRNameText2TextMesh.text = i_stLevelInfo.szWRName2.Substring(0, 16) + "...";
-        if (i_stLevelInfo.szWRName3.Length <= 17) oWRNameText3TextMesh.text = i_stLevelInfo.szWRName3;
-        else oWRNameText3TextMesh.text = i_stLevelInfo.szWRName3.Substring(0, 16) + "...";
-        string szScore = (i_stLevelInfo.iWRScore1 / 1000.0f).ToString("N3");
-        if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore1);
-        if (i_stLevelInfo.iWRScore1 == -1) szScore = "--";
-        oWRScoreText1TextMesh.text = szScore;
-        szScore = (i_stLevelInfo.iWRScore2 / 1000.0f).ToString("N3");
-        if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore2);
-        if (i_stLevelInfo.iWRScore2 == -1) szScore = "--";
-        oWRScoreText2TextMesh.text = szScore;
-        szScore = (i_stLevelInfo.iWRScore3 / 1000.0f).ToString("N3");
-        if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore3);
-        if (i_stLevelInfo.iWRScore3 == -1) szScore = "--";
-        oWRScoreText3TextMesh.text = szScore;
+    Vector3 vHeadPosition;
+    Vector3 vGazeDirection;
+    Vector3 vRotation;
+    //float t1 = 0;
+    public bool SetLevelInfoPass2(LevelInfo i_stLevelInfo, int n)
+    {
+        //Debug.Log("SetLevelInfoPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f +" n "+ n.ToString());
+        //t1 = Time.realtimeSinceStartup;
 
-        szScore = (i_stLevelInfo.iLastScoreMs / 1000.0f).ToString("N3");
-        if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iLastScoreMs);
-        if (i_stLevelInfo.iLastScoreMs == -1) szScore = "--";
-        oYLScoreTextTextMesh.text = szScore;
-
-        szScore = (i_stLevelInfo.iBestScoreMs / 1000.0f).ToString("N3");
-        if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iBestScoreMs);
-        if (i_stLevelInfo.iBestScoreMs == -1) szScore = "--";
-        oYRScoreTextTextMesh.text = szScore;
-
-        int iRank = 5; //no score at all
-        if(i_stLevelInfo.iBestScoreMs != -1)
+        if (n == 0)
         {
-            iRank = 4; //a score less than bronze
-            if (i_stLevelInfo.bIsTime)
-            {
-                if (i_stLevelInfo.iBestScoreMs < i_stLevelInfo.iLimit1) iRank = 1; //gold
-                else if (i_stLevelInfo.iBestScoreMs < i_stLevelInfo.iLimit2) iRank = 2; //silver
-                else if (i_stLevelInfo.iBestScoreMs < i_stLevelInfo.iLimit3) iRank = 3; //bronze
-            }
-            else
-            {
-                if (i_stLevelInfo.iBestScoreMs >= i_stLevelInfo.iLimit1) iRank = 1; //gold
-                else if (i_stLevelInfo.iBestScoreMs >= i_stLevelInfo.iLimit2) iRank = 2; //silver
-                else if (i_stLevelInfo.iBestScoreMs >= i_stLevelInfo.iLimit3) iRank = 3; //bronze
-            }
+            vHeadPosition = Camera.main.transform.position;
+            vGazeDirection = Camera.main.transform.forward;
+            oLevelInfoContainer.transform.position = (vHeadPosition + vGazeDirection * 59.0f) + new Vector3(0.0f, -4.0f, 0.0f);
+            vRotation = Camera.main.transform.eulerAngles; vRotation.z = 0;
+            oLevelInfoContainer.transform.eulerAngles = vRotation;
+            oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
+
+            if (GameLevel.iLevelIndex >= 200) oLevelTextTextMesh.text = szLevelInfoDescription; //custom levels have description from .des file
+            else oLevelTextTextMesh.text = aLevels[GameLevel.iLevelIndex].szLevelDescription; //non custom levels have description from hard array above
+            if (i_stLevelInfo.szWRName1.Length <= 17) oWRNameText1TextMesh.text = i_stLevelInfo.szWRName1;
+            else oWRNameText1TextMesh.text = i_stLevelInfo.szWRName1.Substring(0, 16) + "...";
+            if (i_stLevelInfo.szWRName2.Length <= 17) oWRNameText2TextMesh.text = i_stLevelInfo.szWRName2;
+            else oWRNameText2TextMesh.text = i_stLevelInfo.szWRName2.Substring(0, 16) + "...";
+            if (i_stLevelInfo.szWRName3.Length <= 17) oWRNameText3TextMesh.text = i_stLevelInfo.szWRName3;
+            else oWRNameText3TextMesh.text = i_stLevelInfo.szWRName3.Substring(0, 16) + "...";
+            string szScore = (i_stLevelInfo.iWRScore1 / 1000.0f).ToString("N3");
+            if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore1);
+            if (i_stLevelInfo.iWRScore1 == -1) szScore = "--";
+            oWRScoreText1TextMesh.text = szScore;
+            szScore = (i_stLevelInfo.iWRScore2 / 1000.0f).ToString("N3");
+            if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore2);
+            if (i_stLevelInfo.iWRScore2 == -1) szScore = "--";
+            oWRScoreText2TextMesh.text = szScore;
+
+            szScore = (i_stLevelInfo.iWRScore3 / 1000.0f).ToString("N3");
+            if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore3);
+            if (i_stLevelInfo.iWRScore3 == -1) szScore = "--";
+            oWRScoreText3TextMesh.text = szScore;
+
+            szScore = (i_stLevelInfo.iLastScoreMs / 1000.0f).ToString("N3");
+            if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iLastScoreMs);
+            if (i_stLevelInfo.iLastScoreMs == -1) szScore = "--";
+            oYLScoreTextTextMesh.text = szScore;
+
+            szScore = (i_stLevelInfo.iBestScoreMs / 1000.0f).ToString("N3");
+            if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iBestScoreMs);
+            if (i_stLevelInfo.iBestScoreMs == -1) szScore = "--";
+            oYRScoreTextTextMesh.text = szScore;
         }
-        Material oMaterial = oMaterialGrey;
-        //if (iRank == 4 || iRank == 5) oMaterial = oMaterialGrey;
-        if (iRank == 3) oMaterial = oMaterialRankBronze;
-        if (iRank == 2) oMaterial = oMaterialRankSilver;
-        if (iRank == 1) oMaterial = oMaterialRankGold;
-        oRankQuadRenderer.material = oMaterial;
 
-        Vector3 vPos = new Vector3(-8.9f, 1.5f, -0.1f);
-        if (oMenuReplayWR1 != null) oMenuReplayWR1.DestroyObj();
-        if (i_stLevelInfo.iWRScore1 != -1) oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f);
-        vPos = new Vector3(-8.9f, -1.0f, -0.1f);
-        if (oMenuReplayWR2 != null) oMenuReplayWR2.DestroyObj();
-        if (i_stLevelInfo.iWRScore2 != -1) oMenuReplayWR2 = new C_ItemInMenu(vPos, "2", "ReplayWR2", 4.0f, 4.0f);
-        vPos = new Vector3(-8.9f, -3.5f, -0.1f);
-        if (oMenuReplayWR3 != null) oMenuReplayWR3.DestroyObj();
-        if (i_stLevelInfo.iWRScore3 != -1) oMenuReplayWR3 = new C_ItemInMenu(vPos, "3", "ReplayWR3", 4.0f, 4.0f);
+        if (n == 1)
+        {
+            int iRank = 5; //no score at all
+            if (i_stLevelInfo.iBestScoreMs != -1)
+            {
+                iRank = 4; //a score less than bronze
+                if (i_stLevelInfo.bIsTime)
+                {
+                    if (i_stLevelInfo.iBestScoreMs < i_stLevelInfo.iLimit1) iRank = 1; //gold
+                    else if (i_stLevelInfo.iBestScoreMs < i_stLevelInfo.iLimit2) iRank = 2; //silver
+                    else if (i_stLevelInfo.iBestScoreMs < i_stLevelInfo.iLimit3) iRank = 3; //bronze
+                }
+                else
+                {
+                    if (i_stLevelInfo.iBestScoreMs >= i_stLevelInfo.iLimit1) iRank = 1; //gold
+                    else if (i_stLevelInfo.iBestScoreMs >= i_stLevelInfo.iLimit2) iRank = 2; //silver
+                    else if (i_stLevelInfo.iBestScoreMs >= i_stLevelInfo.iLimit3) iRank = 3; //bronze
+                }
+            }
+            Material oMaterial = oMaterialGrey;
+            //if (iRank == 4 || iRank == 5) oMaterial = oMaterialGrey;
+            if (iRank == 3) oMaterial = oMaterialRankBronze;
+            if (iRank == 2) oMaterial = oMaterialRankSilver;
+            if (iRank == 1) oMaterial = oMaterialRankGold;
+            oRankQuadRenderer.material = oMaterial;
+        }
+        //SetActive part 1
+        if (n == 2)
+        {
+            oLevelInfoContainer.SetActive(true);
+        }
 
-        vPos = new Vector3(0.5f, 1.5f, -0.1f);
-        if (oMenuReplayYR != null) oMenuReplayYR.DestroyObj();
-        if(i_stLevelInfo.iBestScoreMs!=-1) oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f);
-        vPos = new Vector3(0.5f, -2.5f, -0.1f);
-        if (oMenuPlay != null) oMenuPlay.DestroyObj();
-        oMenuPlay = new C_ItemInMenu(vPos, "", "Play", 4.0f, 4.0f);
+        //SetActive part 2
+        if (n == 3)
+        {
+            Vector3 vPos = new Vector3(-8.9f, 1.5f, -0.1f);
+            if (oMenuReplayWR1 != null) oMenuReplayWR1.Reinit(vPos, "1", "ReplayWR1", 4.0f, 4.0f);
+            else oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f);
+            oMenuReplayWR1.oLevelQuad.SetActive(i_stLevelInfo.iWRScore1 != -1);
+            oMenuReplayWR1.oLevelText.SetActive(i_stLevelInfo.iWRScore1 != -1);
+
+            vPos = new Vector3(-8.9f, -1.0f, -0.1f);
+            if (oMenuReplayWR2 != null) oMenuReplayWR2.Reinit(vPos, "2", "ReplayWR2", 4.0f, 4.0f);
+            else oMenuReplayWR2 = new C_ItemInMenu(vPos, "2", "ReplayWR2", 4.0f, 4.0f);
+            oMenuReplayWR2.oLevelQuad.SetActive(i_stLevelInfo.iWRScore2 != -1);
+            oMenuReplayWR2.oLevelText.SetActive(i_stLevelInfo.iWRScore2 != -1);
+
+            vPos = new Vector3(-8.9f, -3.5f, -0.1f);
+            if (oMenuReplayWR3 != null) oMenuReplayWR3.Reinit(vPos, "3", "ReplayWR3", 4.0f, 4.0f);
+            else oMenuReplayWR3 = new C_ItemInMenu(vPos, "3", "ReplayWR3", 4.0f, 4.0f);
+            oMenuReplayWR3.oLevelQuad.SetActive(i_stLevelInfo.iWRScore3 != -1);
+            oMenuReplayWR3.oLevelText.SetActive(i_stLevelInfo.iWRScore3 != -1);
+
+            vPos = new Vector3(0.5f, 1.5f, -0.1f);
+            if (oMenuReplayYR != null) oMenuReplayYR.Reinit(vPos, "", "ReplayYR", 4.0f, 4.0f);
+            else oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f);
+            oMenuReplayYR.oLevelQuad.SetActive(i_stLevelInfo.iBestScoreMs != -1);
+            oMenuReplayYR.oLevelText.SetActive(i_stLevelInfo.iBestScoreMs != -1);
+
+            vPos = new Vector3(0.5f, -2.5f, -0.1f);
+            if (oMenuPlay != null) oMenuPlay.Reinit(vPos, "", "Play", 4.0f, 4.0f);
+            else oMenuPlay = new C_ItemInMenu(vPos, "", "Play", 4.0f, 4.0f);
+        }
+
+        //SetActive part 3
+        if (n == 4)
+        {
+            oWRNameText1.SetActive(true); oWRNameText2.SetActive(true); oWRNameText3.SetActive(true);
+            oWRScoreText1.SetActive(true); oWRScoreText2.SetActive(true); oWRScoreText3.SetActive(true);
+            oYLScoreText.SetActive(true); oYRScoreText.SetActive(true); oLevelText.SetActive(true);
+            oRankQuad.SetActive(true);
+            //return true;
+        }
+
+        if (n == 5)
+        {
+            return true;
+        }
+
+        //Debug.Log("SetLevelInfoPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+        return false;
     }
 
     public void InitLevelRanking()
@@ -1053,14 +1110,39 @@ public class Menu : MonoBehaviour
     {
         public GameObject oLevelQuad;
         public MeshRenderer oLevelQuadMeshRenderer;
-        GameObject oLevelText;
+        public GameObject oLevelText;
 
         Vector3 vPos;
 
-        public void DestroyObj()
+        /*public void DestroyObj()
         {
             Destroy(oLevelQuad);
             Destroy(oLevelText);
+        }*/
+
+        public void Reinit(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText)
+        {
+            vPos = i_vPos;
+
+            //create a quad with a text on, in the pos of each menu object
+            oLevelQuad.transform.parent = Menu.theMenu.oLevelInfoContainer.transform;
+            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
+            oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
+            oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
+            oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
+            oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
+            oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialPentagonUnlocked;
+
+            //create text
+            oLevelText.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
+            oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.08f, i_fScaleText * 0.08f, 1.0f);
+            oLevelText.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
+
+            TextMesh oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();
+            /*oLevelTextTextMesh.fontStyle = FontStyle.Bold;
+            oLevelTextTextMesh.fontSize = 40;
+            oLevelTextTextMesh.anchor = TextAnchor.MiddleCenter;*/
+            oLevelTextTextMesh.text = i_szText;
         }
 
         public C_ItemInMenu(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText)

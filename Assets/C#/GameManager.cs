@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
+using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
 using Oculus.Platform;
@@ -32,6 +33,10 @@ public class GameManager : MonoBehaviour
 
     Replay oReplay = new Replay(); //create one replay... this is recycled during the session
 
+#if LOGPROFILERDATA
+    int logProfilerFrameCnt = 0;
+    int logProfilerFileCnt = 0;
+#endif
     //first code to run
     void Awake()
     {
@@ -86,6 +91,12 @@ public class GameManager : MonoBehaviour
         oFadeMatCopy = new Material(oFadeMat);
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFadeOut(0.01f, 0.0f);
+
+#if LOGPROFILERDATA
+        Profiler.logFile = "log" + logProfilerFileCnt.ToString();
+        Profiler.enableBinaryLog = true;
+        Profiler.enabled = true;
+#endif
     }
 
     //////start of valve specific code
@@ -501,6 +512,7 @@ public class GameManager : MonoBehaviour
     bool bStartReplay = false;
     bool bLoadDone = false;
     int iLoadingMap = 0;
+    int iSetLevelInfo = 0;
     int iState = -3;
 
     bool bPause = false;
@@ -508,7 +520,7 @@ public class GameManager : MonoBehaviour
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
     private void FixedUpdate()
     {
-        if (iState == 7) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
+        if (iState == 8) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
     /**/
@@ -588,6 +600,17 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+#if LOGPROFILERDATA
+        //unity profiler log files can only be viewed 300 frames at a time! :(
+        logProfilerFrameCnt++;
+        if(logProfilerFrameCnt>300)
+        {
+            logProfilerFileCnt++;
+            logProfilerFrameCnt = 0;
+            Profiler.logFile = "log" + logProfilerFileCnt.ToString();
+        }
+#endif
+
 #if !DISABLESTEAMWORKS
         if (SteamManager.Initialized)
             SteamAPI.RunCallbacks(); //must run every frame for some reason or garbage collector takes something and unity crashes
@@ -630,13 +653,16 @@ public class GameManager : MonoBehaviour
 
                 //also need to stop all sound
                 AudioListener.pause = true;
+                AudioStateMachine.instance.masterVolume = 0.0f;
 
                 Menu.bPauseInput = true;
             }
             else
             {
                 Time.timeScale = 1.0f;
+
                 AudioListener.pause = false;
+                AudioStateMachine.instance.masterVolume = 0.86f;
 
                 Menu.bPauseInput = false;
             }
@@ -783,12 +809,19 @@ public class GameManager : MonoBehaviour
                         }
                     }
 
-                    Menu.theMenu.SetLevelInfo(stLevel, false); //set our level info to menu, it will be displayed there
+                    Menu.theMenu.SetLevelInfoPass1(stLevel); //set our level info to menu, it will be displayed there
+                    iSetLevelInfo = 0;
 
                     iState++;
                 }
                 break;
             case 3:
+                //must always run after SetLevelInfoPass1
+                if(Menu.theMenu.SetLevelInfoPass2(stLevel, iSetLevelInfo)) //set our level info to menu, it will be displayed there
+                    iState++;
+                iSetLevelInfo++;
+                break;
+            case 4:
                 //menu part 2
                 if(Menu.bLevelSelected)
                 {
@@ -799,7 +832,7 @@ public class GameManager : MonoBehaviour
                 {
                     Menu.bLevelUnSelected = false;
                     iState = 1; //goto menu part 1 (back)
-                    Menu.theMenu.SetLevelInfo(stLevel, true); //stLevel not used
+                    Menu.theMenu.SetLevelInfoOff();
                 }
 
                 //if bNoInternet is true this will not be possible be design
@@ -828,7 +861,7 @@ public class GameManager : MonoBehaviour
                     StartFadeOut(0.3f, 0.0f);
                 }
                 break;
-            case 4:
+            case 5:
                 //menu part 2, while loading replay
                 if (oHigh.bIsDone)
                 {
@@ -836,9 +869,9 @@ public class GameManager : MonoBehaviour
                     iState++;
                 }
                 break;
-            case 5:
-                //begin loading the level (or replay), set this in state 3 later, now state 1
-                //Debug.LogError("Begin load level");
+            case 6:
+                //begin loading the level (or replay)
+                //Debug.Log("Load map Begin");
                 szToLoad = "Scenes/PlayGame";
                 bLoadDone = false;
                 bIsMapScene = true;
@@ -860,7 +893,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(LoadAsyncScene());
                 iState++;
                 break;
-            case 6:
+            case 7:
                 //while loading level
                 if (bBeginMapLoading)
                 {
@@ -868,18 +901,18 @@ public class GameManager : MonoBehaviour
                     if (iLoadingMap <= 10) GameLevel.theMap.LoadBegin(iLoadingMap);
                     else if (GameLevel.theMap.LoadDone())
                     {
-                        Debug.Log("Load map segments Done");
+                        //Debug.Log("Load map segments Done");
                         iState++;
                     }
                     iLoadingMap++;
                 }
                 break;
-            case 7:
+            case 8:
                 //running game
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
 
-                    //valve, back is considered when both grip are held for 5 sec
+                    //valve, back is considered when both grip are held for 4 sec
 #if !DISABLESTEAMWORKS
                     float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryHandTrigger");         //axis 11   left grip trigger on valve (and oculus touch)
                     float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryHandTrigger");       //axis 12   right grip trigger on valve (and oculus touch)
@@ -964,7 +997,7 @@ public class GameManager : MonoBehaviour
                     }
                     break;
                 }
-            case 8:
+            case 9:
                 if (iFade==0) //fading done?
                 {
                     theCameraHolder.InitForMenu();
@@ -975,12 +1008,12 @@ public class GameManager : MonoBehaviour
                     iState++;
                 }
                 break;
-            case 9:
+            case 10:
                 //while hiscore is being sent
                 if (oHigh.bIsDone)
                     iState++;
                 break;
-            case 10:
+            case 11:
                 //while menu is loading
                 if (bLoadDone)
                 {
