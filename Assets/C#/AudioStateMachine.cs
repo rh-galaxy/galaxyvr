@@ -40,9 +40,9 @@ public class AudioStateMachine : MonoBehaviour
     public float flowVal;
     public float cargoVal;
 
-
     void Awake()
     {
+
         //Singleton
         if (instance == null)
         {
@@ -54,6 +54,17 @@ public class AudioStateMachine : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    /// <summary>
+    /// Sets the output to # i in the device list
+    /// </summary>
+    /// <param name="i">The index.</param>
+    public void SetOutput(int i = 0) 
+    {
+        print("Using device " + i);
+        FMODUnity.RuntimeManager.LowlevelSystem.setDriver(i);
+        FMODUnity.RuntimeManager.LowlevelSystem.setOutput(FMOD.OUTPUTTYPE.AUTODETECT);
     }
 
     public void LevelTransition(float f)
