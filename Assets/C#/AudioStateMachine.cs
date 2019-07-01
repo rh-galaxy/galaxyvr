@@ -8,7 +8,6 @@ public class AudioStateMachine : MonoBehaviour
 {
     public static AudioStateMachine instance;
     public Player player;
-    private int sceneState = 0;
 
     [Header("Config")]
 
@@ -92,7 +91,6 @@ public class AudioStateMachine : MonoBehaviour
         lifeVal = f - 1;
     }
 
-
     public void SetCargo(float f)
     {
         SetParam(cargo, f);
@@ -112,7 +110,8 @@ public class AudioStateMachine : MonoBehaviour
         }
         //print("fading done");
 
-        FindPlayer();
+        //player is now be set to a valid player (or null) before transitioning to in-game music
+        // in the scene switching code in the end of GameManager.cs
         if (player != null)
         {
             SetLife(player.fShipHealth / Player.FULL_HEALTH);
@@ -122,13 +121,6 @@ public class AudioStateMachine : MonoBehaviour
         }
 
         SetVolume();
-    }
-
-
-    private void FindPlayer()
-    {
-        GameObject p = GameObject.Find("Player");
-        if (p != null) player = player ?? p.GetComponent<Player>();
     }
 
     void StartSound(FMOD.Studio.EventInstance eventInstance, string eventRef, GameObject sender = null)

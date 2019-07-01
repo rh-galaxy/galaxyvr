@@ -999,6 +999,7 @@ public class GameManager : MonoBehaviour
     {
         //start fading music
         AudioStateMachine.instance.Transition(szToLoad);
+        if (!bIsMapScene) AudioStateMachine.instance.player = null; //set before switching scene
 
         //the Application loads the scene in the background as the current scene runs
         // this is good for not freezing the view... done by separating some work to a thread
@@ -1021,6 +1022,8 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         bLoadDone = asyncLoad.isDone;
+
+        if (bIsMapScene) AudioStateMachine.instance.player = GameLevel.theMap.player; //set after switching scene
     }
 
 }
