@@ -401,7 +401,7 @@ public class Menu : MonoBehaviour
         if (!XRDevice.isPresent)
             Camera.main.fieldOfView = 45.0f;
         //prevent selection if trigger was hold when menu is started
-        iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0:15;
+        iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0:30;
 
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);
@@ -793,7 +793,7 @@ public class Menu : MonoBehaviour
                             GameLevel.iLevelIndex = iIndex;
                             GameLevel.szLevel = szLevel;
                             bLevelSelected = true;
-                            iAllowSelection = 15; //trigger once only...
+                            iAllowSelection = 30; //trigger once only...
                             bPlaySelectSound = true;
                         }
                         else if (iIndex >= 200)
@@ -802,56 +802,56 @@ public class Menu : MonoBehaviour
                             GameLevel.iLevelIndex = iIndex;
                             GameLevel.szLevel = szLevel;
                             bLevelSelected = true;
-                            iAllowSelection = 15; //trigger once only...
+                            iAllowSelection = 30; //trigger once only...
                             bPlaySelectSound = true;
                         }
                     }
                     else if (oHitInfo.collider.name.CompareTo("Play") == 0)
                     {
                         bLevelPlay = true;
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
                     {
                         fAdjust = 1000;
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
                     {
                         fAdjust = -1000;
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
                     {
                         bYourBestReplay = true;
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR1") == 0)
                     {
                         bWorldBestReplay1 = true;
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR2") == 0)
                     {
                         bWorldBestReplay2 = true;
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
                     {
                         bWorldBestReplay3 = true;
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
                     {
                         bQuit = true;
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
@@ -871,7 +871,7 @@ public class Menu : MonoBehaviour
                         oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_valve", typeof(Material)) as Material;
 #endif
 
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
@@ -887,7 +887,7 @@ public class Menu : MonoBehaviour
                         }
                         oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
 
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
@@ -896,7 +896,7 @@ public class Menu : MonoBehaviour
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
@@ -905,7 +905,7 @@ public class Menu : MonoBehaviour
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
@@ -914,7 +914,7 @@ public class Menu : MonoBehaviour
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
@@ -922,7 +922,7 @@ public class Menu : MonoBehaviour
                         CameraController.bSnapMovement = !CameraController.bSnapMovement;
                         PlayerPrefs.SetInt("MyUseSnapMovement", CameraController.bSnapMovement?1:0);
                         PlayerPrefs.Save();
-                        iAllowSelection = 15;
+                        iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Back") == 0)
@@ -948,7 +948,7 @@ public class Menu : MonoBehaviour
                 if (iAllowSelection==0)
                 {
                     bLevelUnSelected = true;
-                    iAllowSelection = 15;
+                    iAllowSelection = 30;
                 }
             }
             else

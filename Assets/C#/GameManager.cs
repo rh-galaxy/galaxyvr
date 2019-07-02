@@ -655,7 +655,7 @@ public class GameManager : MonoBehaviour
         {
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
-        /**/bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
+        /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
         /**///AudioStateMachine.instance.masterVolume = 0.0f; //while recording video without music
 
         //pause state change
@@ -781,6 +781,7 @@ public class GameManager : MonoBehaviour
                     if (Menu.bLevelSelected || bAutoSetLevelInfo)
                     {
                         Menu.bLevelSelected = false; //reset when we have seen it
+                        Menu.bLevelUnSelected = false; //in case unselect was triggered before
                         bAutoSetLevelInfo = false;
 
                         //goto menu part 2 for the selected level
