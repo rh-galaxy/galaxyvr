@@ -655,7 +655,8 @@ public class GameManager : MonoBehaviour
         {
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
-        /**///bPauseNow = false; //set to be able to play from editor without VR
+        /**/bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
+        /**///AudioStateMachine.instance.masterVolume = 0.0f; //while recording video without music
 
         //pause state change
         if (bPause != bPauseNow)
