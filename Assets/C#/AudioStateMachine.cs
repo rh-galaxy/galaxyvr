@@ -124,12 +124,6 @@ public class AudioStateMachine : MonoBehaviour
         flowVal = f;
     }
 
-    public void SetLife(float f)
-    {
-        SetParam(death, f - 1);
-        lifeVal = f - 1;
-    }
-
     public void SetCargo(float f)
     {
         SetParam(cargo, f);
@@ -153,7 +147,9 @@ public class AudioStateMachine : MonoBehaviour
         // in the scene switching code in the end of GameManager.cs
         if (player != null)
         {
-            SetLife(player.fShipHealth / Player.FULL_HEALTH);
+            float fHealthClipped = player.fShipHealth;
+            if (fHealthClipped < 0) fHealthClipped = 0;
+            SetLife(fHealthClipped / Player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
             SetCargo((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS);
             //SetEnemies()
