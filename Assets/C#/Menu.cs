@@ -401,7 +401,7 @@ public class Menu : MonoBehaviour
         if (!XRDevice.isPresent)
             Camera.main.fieldOfView = 45.0f;
         //prevent selection if trigger was hold when menu is started
-        iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0:5;
+        iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0:15;
 
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);
@@ -557,15 +557,11 @@ public class Menu : MonoBehaviour
             if (iRank == 1) oMaterial = oMaterialRankGold;
             oRankQuadRenderer.material = oMaterial;
         }
-        //SetActive part 1
+
         if (n == 2)
         {
             oLevelInfoContainer.SetActive(true);
-        }
 
-        //SetActive part 2
-        if (n == 3)
-        {
             Vector3 vPos = new Vector3(-8.9f, 1.5f, -0.1f);
             if (oMenuReplayWR1 != null) oMenuReplayWR1.Reinit(vPos, "1", "ReplayWR1", 4.0f, 4.0f);
             else oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f);
@@ -593,11 +589,7 @@ public class Menu : MonoBehaviour
             vPos = new Vector3(0.5f, -2.5f, -0.1f);
             if (oMenuPlay != null) oMenuPlay.Reinit(vPos, "", "Play", 4.0f, 4.0f);
             else oMenuPlay = new C_ItemInMenu(vPos, "", "Play", 4.0f, 4.0f);
-        }
 
-        //SetActive part 3
-        if (n == 4)
-        {
             oWRNameText1.SetActive(true); oWRNameText2.SetActive(true); oWRNameText3.SetActive(true);
             oWRScoreText1.SetActive(true); oWRScoreText2.SetActive(true); oWRScoreText3.SetActive(true);
             oYLScoreText.SetActive(true); oYRScoreText.SetActive(true); oLevelText.SetActive(true);
@@ -605,7 +597,7 @@ public class Menu : MonoBehaviour
             //return true;
         }
 
-        if (n == 5)
+        if (n == 3)
         {
             return true;
         }
@@ -801,7 +793,7 @@ public class Menu : MonoBehaviour
                             GameLevel.iLevelIndex = iIndex;
                             GameLevel.szLevel = szLevel;
                             bLevelSelected = true;
-                            iAllowSelection = 5; //trigger once only...
+                            iAllowSelection = 15; //trigger once only...
                             bPlaySelectSound = true;
                         }
                         else if (iIndex >= 200)
@@ -810,56 +802,56 @@ public class Menu : MonoBehaviour
                             GameLevel.iLevelIndex = iIndex;
                             GameLevel.szLevel = szLevel;
                             bLevelSelected = true;
-                            iAllowSelection = 5; //trigger once only...
+                            iAllowSelection = 15; //trigger once only...
                             bPlaySelectSound = true;
                         }
                     }
                     else if (oHitInfo.collider.name.CompareTo("Play") == 0)
                     {
                         bLevelPlay = true;
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
                     {
                         fAdjust = 1000;
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
                     {
                         fAdjust = -1000;
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
                     {
                         bYourBestReplay = true;
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR1") == 0)
                     {
                         bWorldBestReplay1 = true;
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR2") == 0)
                     {
                         bWorldBestReplay2 = true;
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
                     {
                         bWorldBestReplay3 = true;
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
                     {
                         bQuit = true;
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
@@ -879,7 +871,7 @@ public class Menu : MonoBehaviour
                         oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_valve", typeof(Material)) as Material;
 #endif
 
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
@@ -895,7 +887,7 @@ public class Menu : MonoBehaviour
                         }
                         oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
 
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
@@ -904,7 +896,7 @@ public class Menu : MonoBehaviour
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
@@ -913,7 +905,7 @@ public class Menu : MonoBehaviour
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
@@ -922,7 +914,7 @@ public class Menu : MonoBehaviour
                         PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                         PlayerPrefs.Save();
                         QualitySettings.SetQualityLevel(iQuality, true);
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
@@ -930,7 +922,7 @@ public class Menu : MonoBehaviour
                         CameraController.bSnapMovement = !CameraController.bSnapMovement;
                         PlayerPrefs.SetInt("MyUseSnapMovement", CameraController.bSnapMovement?1:0);
                         PlayerPrefs.Save();
-                        iAllowSelection = 5;
+                        iAllowSelection = 15;
                         bPlaySelectSound = true;
                     }
                     else if (oHitInfo.collider.name.CompareTo("Back") == 0)
@@ -956,7 +948,7 @@ public class Menu : MonoBehaviour
                 if (iAllowSelection==0)
                 {
                     bLevelUnSelected = true;
-                    iAllowSelection = 5;
+                    iAllowSelection = 15;
                 }
             }
             else
@@ -968,8 +960,6 @@ public class Menu : MonoBehaviour
             oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*170.0f;
             //rotate the cursor to camera rotation
             oGazeQuad.transform.rotation = Camera.main.transform.rotation;
-
-            bLevelSelected = false;
         }
 
         //nothing highlighted?
