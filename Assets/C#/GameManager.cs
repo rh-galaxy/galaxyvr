@@ -525,7 +525,7 @@ public class GameManager : MonoBehaviour
 
     bool bStartReplay = false;
     bool bLoadDone = false;
-    int iLoadingMap = 0;
+    bool bLoadBeginDone = false;
     int iSetLevelInfo = 0;
     int iState = -3;
 
@@ -706,6 +706,8 @@ public class GameManager : MonoBehaviour
                 preLoadThread = new Thread(ts);
                 preLoadThread.Priority = System.Threading.ThreadPriority.Lowest;
                 preLoadThread.Start();
+
+                StartCoroutine(LoadAsyncTileset());
 
                 break;
             case -2:
@@ -892,7 +894,7 @@ public class GameManager : MonoBehaviour
                 bLoadDone = false;
                 bIsMapScene = true;
                 bBeginMapLoading = false;
-                iLoadingMap = 0;
+                bLoadBeginDone = false;
                 GameLevel.bMapLoaded = false;
                 Menu.theMenu.SetWaiting(true);
                 if (bStartReplay)
@@ -911,16 +913,23 @@ public class GameManager : MonoBehaviour
                 break;
             case 7:
                 //while loading level
-                if (bBeginMapLoading)
+                if (bBeginMapLoading && bTilesetLoaded)
                 {
                     //Debug.Log("Load level 90%");
-                    if (iLoadingMap <= 10) GameLevel.theMap.LoadBegin(iLoadingMap);
+
+                    //this is done here instead of in GameLevel because the loading code does not work from there!
+                    if (!GameLevel.theMap.bTilesetLoaded)
+                    {
+                        GameLevel.theMap.oTileTexture = oTileTexture;
+                        GameLevel.theMap.bTilesetLoaded = true;
+                    }
+
+                    if (!bLoadBeginDone) bLoadBeginDone = GameLevel.theMap.LoadBegin();
                     else if (GameLevel.theMap.LoadDone())
                     {
                         //Debug.Log("Load map segments Done");
                         iState++;
                     }
-                    iLoadingMap++;
                 }
                 break;
             case 8:
@@ -1073,6 +1082,27 @@ public class GameManager : MonoBehaviour
         bLoadDone = asyncLoad.isDone;
 
         if (bIsMapScene) AudioStateMachine.instance.player = GameLevel.theMap.player; //set after switching scene
+    }
+
+    //we only use one tileset for building all maps, so we can load it once here and never again
+    //this is a thing that was unsolvable, StartCoroutine() from GameLevel would not work, had to be done here
+    static string szTilesetPath = "Levels/ts_alien";
+    Texture2D oTileTexture;
+    bool bTilesetLoaded = false;
+    IEnumerator LoadAsyncTileset()
+    {
+        ResourceRequest loadAsync = Resources.LoadAsync<TextAsset>(szTilesetPath);
+
+        while (!loadAsync.isDone)
+        {
+            yield return null;
+        }
+
+        TextAsset f = (TextAsset)loadAsync.asset;
+        oTileTexture = new Texture2D(2, 2);
+        oTileTexture.LoadImage(f.bytes, false);
+
+        bTilesetLoaded = true;
     }
 
 }

@@ -280,15 +280,16 @@ public class GameLevel : MonoBehaviour
         bMapLoaded = true;
     }
 
+    int iLoadBeginState = 0;
     bool[,] oTileSet;
     byte[] bytes;
-    public bool LoadBegin(int n)
+    public bool LoadBegin()
     {
-///**/float t1 = Time.realtimeSinceStartup;
+/**///float t1 = Time.realtimeSinceStartup;
 
         bool bIsCustom = iLevelIndex >= 200;
         int substeps = 6;
-        if (n == 0)
+        if (iLoadBeginState == 0)
         {
             bMapLoaded = false;
 
@@ -296,19 +297,28 @@ public class GameLevel : MonoBehaviour
             Debug.Log("Loading Level: " + szLevel);
             LoadDesPass1(szLevel, bIsCustom);
             oMeshGen = GetComponent<MeshGenerator>();
+
+            iLoadBeginState++;
         }
-        else if (n == 1)
+        else if (iLoadBeginState == 1)
         {
+            //note: not working, loaded from GameManager now because the same code does not work from here!!
             //load tileset (unity: must be done from main thread)
-            string szPngTileset = szTilefile.Remove(szTilefile.LastIndexOf('.')) + ".png";
-            LoadTileSet(szPngTileset);
+            //string szPngTileset = szTilefile.Remove(szTilefile.LastIndexOf('.')) + ".png";
+            //LoadTileSetBegin(szPngTileset);
+
+            iLoadBeginState++;
         }
-        else if (n >= 2 && n<=7)
+        else if(iLoadBeginState == 2)
+        {
+            if (LoadTileSetFinalize()) iLoadBeginState++;
+        }
+        else if (iLoadBeginState >= 3 && iLoadBeginState <= 8)
         {
             //load tileset to bool array (unity: must be done from main thread)
             // this is to avoid doing GetPixel later (GetPixels instead of GetPixel didn't save time)
             int segs = oTileTexture.height / 6;
-            int n2 = n - 2;
+            int n2 = iLoadBeginState - 3;
 
             if (n2==0) oTileSet = new bool[oTileTexture.height, oTileTexture.width];
             for (int y = n2*segs; y < (n2<5?(n2+1)*segs:oTileTexture.height); y++)
@@ -319,14 +329,18 @@ public class GameLevel : MonoBehaviour
                     oTileSet[y, x] = bPixel;
                 }
             }
+
+            iLoadBeginState++;
         }
-        else if (n == 8)
+        else if (iLoadBeginState == 9)
         {
             //load materials (unity: must be done from main thread)
             oMaterial = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMaterial, typeof(Material)) as Material;
             oMaterialWalls = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralWalls, typeof(Material)) as Material;
+
+            iLoadBeginState++;
         }
-        else if (n == 9)
+        else if (iLoadBeginState == 10)
         {
             //load map file (unity: must be done from main thread)
             aMap = new int[iHeight, iWidth];
@@ -352,8 +366,10 @@ public class GameLevel : MonoBehaviour
                 }
             }
             aMapHighres = new int[iHeight * substeps, iWidth * substeps];
+
+            iLoadBeginState++;
         }
-        else if (n == 10)
+        else if (iLoadBeginState == 11)
         {
             //create thread for all other work that can be done
             // (before needing work in main thread, handled in LoadDone() and thread)
@@ -363,6 +379,7 @@ public class GameLevel : MonoBehaviour
             thread.Start();
 
 ///**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
+            iLoadBeginState = 0;
             return true;
         }
 
@@ -1188,24 +1205,38 @@ public class GameLevel : MonoBehaviour
         }
     }
 
+    //not working
+    void LoadTileSetBegin(string i_szFilename)
+    {
+        szTilesetFilename = szLevelPath0 + i_szFilename.Remove(szTilefile.LastIndexOf('.'));
+        StartCoroutine(LoadAsyncTileset());
+    }
+    string szTilesetFilename;
+    public Texture2D oTileTexture;
+    public bool bTilesetLoaded = false;
+    IEnumerator LoadAsyncTileset()
+    {
+        ResourceRequest loadAsync = Resources.LoadAsync<TextAsset>(szTilesetFilename);
+
+        while (!loadAsync.isDone)
+        {
+            yield return null;
+        }
+
+        TextAsset f = (TextAsset)loadAsync.asset;
+        oTileTexture = new Texture2D(2, 2);
+        oTileTexture.LoadImage(f.bytes, false);
+
+        bTilesetLoaded = true;
+    }
     int iNumTiles;
     Rect[] stTileRects;
-    Texture2D oTileTexture;
-
-    bool LoadTileSet(string i_szFilename)
+    bool LoadTileSetFinalize()
     {
-        int i, j;
-
-        string szFilenameNoExt = i_szFilename.Remove(i_szFilename.LastIndexOf('.'));
-        TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
-        if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
-        if (f == null) return false;
-
-        oTileTexture = new Texture2D(2, 2);
-        if(!oTileTexture.LoadImage(f.bytes, false))
-            return false;
+        if (!bTilesetLoaded) return false;
 
         //analyse tileset (get rectangles)
+        int i, j;
         int iNumX, iNumY, iTileNum;
         //iNumX = oTileTexture.width / iTileSize;
         //iNumY = oTileTexture.height / iTileSize;

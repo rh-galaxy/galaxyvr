@@ -599,7 +599,7 @@ public class Player : MonoBehaviour
                 {
                     oThruster.enableEmission = true;
                     bEngineFadeOut = false;
-                    oASEngine.volume = 1.0f;
+                    oASEngine.volume = 0.75f;
                     oASEngine.Play();
                 }
                 else
