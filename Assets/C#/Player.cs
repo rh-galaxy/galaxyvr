@@ -386,6 +386,8 @@ public class Player : MonoBehaviour
     Vector2 vLastPosition;
     float[] fMeanSpeeds = new float[16];
     internal float fMeanSpeed = 0.0f;
+    internal int iNumEnemiesNear = 0;
+    internal int iNumBulletsNear = 0;
     float fCurrentSpeedSeg = 0;
     void FixedUpdate()
     {
@@ -412,7 +414,11 @@ public class Player : MonoBehaviour
         //...
 
         //enemies near (used in mission music)
-        int iNumNear = oMap.GetNumEnemiesNearPlayer();
+        iNumEnemiesNear = oMap.GetNumEnemiesNearPlayer();
+        //...
+
+        //or enemy bullets near (used in mission music)
+        iNumBulletsNear = oMap.GetNumBulletsNearPlayer();
         //...
 
         //distance achievement

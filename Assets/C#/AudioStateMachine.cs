@@ -35,14 +35,14 @@ public class AudioStateMachine : MonoBehaviour
 
     [Header("Debug/Testing")]
     public float transitionVal;
-
     public float lifeVal;
     public float flowVal;
     public float cargoVal;
+    public float enemiesNear;
+    public float bulletsNear;
 
     void Awake()
     {
-
         //Singleton
         if (instance == null)
         {
@@ -147,12 +147,17 @@ public class AudioStateMachine : MonoBehaviour
         // in the scene switching code in the end of GameManager.cs
         if (player != null)
         {
-            float fHealthClipped = player.fShipHealth;
-            if (fHealthClipped < 0) fHealthClipped = 0;
-            SetLife(fHealthClipped / Player.FULL_HEALTH);
+            float fClipped = player.fShipHealth;
+            if (fClipped < 0) fClipped = 0;
+            SetLife(fClipped / Player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
             SetCargo((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS);
-            //SetEnemies()
+            fClipped = (float)player.iNumEnemiesNear / 4.0f;
+            if (fClipped > 1.0) fClipped = 1.0f;
+            enemiesNear = fClipped;
+            fClipped = (float)player.iNumBulletsNear / 10.0f;
+            if (fClipped > 1.0) fClipped = 1.0f;
+            bulletsNear = fClipped;
         }
 
         SetVolume();

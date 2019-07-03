@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         StartFadeOut(0.01f, 0.0f);
 
 #if DISABLESTEAMWORKS
-        AudioStateMachine.instance.SetOutputByRiftSetting();
+        if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
 #endif
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
 
@@ -109,7 +109,8 @@ public class GameManager : MonoBehaviour
 #if !DISABLESTEAMWORKS
         AudioStateMachine.instance.SetOutput(0);
 #else
-        AudioStateMachine.instance.SetOutputByRiftSetting();
+        if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
+        else AudioStateMachine.instance.SetOutput(0);
 #endif
     }
 

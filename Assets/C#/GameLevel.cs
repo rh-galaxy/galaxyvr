@@ -141,6 +141,7 @@ public class GameLevel : MonoBehaviour
     public int GetNumEnemiesNearPlayer(/*Vector2 vPos, float fRadius*/)
     {
         int iNumEnemies = 0;
+
         for (int i=0; i< aEnemyList.Count; i++)
         {
             if (aEnemyList[i] != null)
@@ -150,6 +151,23 @@ public class GameLevel : MonoBehaviour
             }
         }
         return iNumEnemies;
+    }
+    public int GetNumBulletsNearPlayer(/*Vector2 vPos, float fRadius*/)
+    {
+        int iNumBullets = 0;
+
+        Bullet[] aBulletList = GetComponentsInChildren<Bullet>();
+        for (int i = 0; i < aBulletList.Length; i++)
+        {
+            if (aBulletList[i].name.StartsWith("BulletE"))
+            {
+                Vector3 v = aBulletList[i].oCube.transform.position;
+
+                Vector2 vDist = new Vector2(v.x, v.y) - this.player.GetPosition();
+                if (vDist.magnitude < (256 / 32.0f)) iNumBullets++; //~8 tiles, same as fire range
+            }
+        }
+        return iNumBullets;
     }
 
     public GameObject oBulletObjBase;
