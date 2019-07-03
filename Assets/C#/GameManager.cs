@@ -1086,6 +1086,9 @@ public class GameManager : MonoBehaviour
 
     //we only use one tileset for building all maps, so we can load it once here and never again
     //this is a thing that was unsolvable, StartCoroutine() from GameLevel would not work, had to be done here
+    //update: a clue why this doesn't work is that GameLevel.Update() does not yet run when we want to do the loading,
+    // because we have not yet started the level. it affects both coroutines not running and apparently also
+    // loadAsync.isDone does not get updated
     static string szTilesetPath = "Levels/ts_alien";
     Texture2D oTileTexture;
     bool bTilesetLoaded = false;
