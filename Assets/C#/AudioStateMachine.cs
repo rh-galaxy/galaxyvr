@@ -130,6 +130,7 @@ public class AudioStateMachine : MonoBehaviour
     }
 
     bool bLifeFadeOut = false;
+    float fLifeBeforeZero = 0.0f;
     //fading code
     float fFadeFinishTime = 1.0f;
     float fFadeTimer = 1.0f; //init so fade done is true at the start
@@ -183,15 +184,16 @@ public class AudioStateMachine : MonoBehaviour
         {
             float fClipped = player.fShipHealth;
             if (fClipped <= 0) fClipped = 0;
-            if (bFadeDone /**/&& fClipped!=0)
+            else fLifeBeforeZero = fClipped / Player.FULL_HEALTH;
+            if (bFadeDone /**//*&& fClipped!=0*/)
                 SetLife(fClipped / Player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
             SetCargo((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS);
             fClipped = (float)player.iNumEnemiesNear / 4.0f;
-            if (fClipped > 1.0) fClipped = 1.0f;
+            if (fClipped > 1.0f) fClipped = 1.0f;
             enemiesNear = fClipped;
             fClipped = (float)player.iNumBulletsNear / 10.0f;
-            if (fClipped > 1.0) fClipped = 1.0f;
+            if (fClipped > 1.0f) fClipped = 1.0f;
             bulletsNear = fClipped;
         }
 
@@ -232,9 +234,9 @@ public class AudioStateMachine : MonoBehaviour
     {
         bLifeFadeOut = true;
         //StartFade(2.0f, 0.0f, 0.0f, 1.0f);
-        StartFade(0.5f, 0.0f, 1-lifeVal, 0.0f); //begin at current health, go fast to 0
+        StartFade(0.5f, 0.0f, fLifeBeforeZero, 0.0f); //begin at current health, go fast to 0
 
-        print("ResetLife, "+(1 - lifeVal).ToString()+" -> 0");
+        print("ResetLife, "+ fLifeBeforeZero.ToString()+" -> 0");
     }
 
     public void Transition(string sceneName)
