@@ -1,8 +1,10 @@
 Sound
 - Mission: Cargo parameter, more difference in music
-- Mission: Enemy proximity parameter?
+- Mission: Enemy bullet proximity parameter?
 - Mission/Race: Death parameter, not sounding the same.
 - Race: When exit flow, is it done without sound hiccup?
+- Race: Exit flow is sometimes done late
+- Race: Enter flow is sometimes done late, the second time
 Release
 - Game play promotion video
  (done except music track needs to be mixed in)

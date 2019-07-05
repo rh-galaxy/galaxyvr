@@ -102,10 +102,8 @@ public class AudioStateMachine : MonoBehaviour
         transitionVal = f;
     }
 
-    public void SetLife(float f, bool overridefade = false)
+    public void SetLife(float f)
     {
-        if (fading && !overridefade)
-            return;
         SetParam(death, 1 - f);
         lifeVal = 1 - f;
     }
@@ -130,22 +128,56 @@ public class AudioStateMachine : MonoBehaviour
         cargoVal = f;
     }
 
-    float fadeLen = 1;
+    bool bLifeFadeOut = false;
+    //fading code
+    float fFadeFinishTime = 1.0f;
+    float fFadeTimer = 1.0f; //init so fade done is true at the start
+    float fFadeDelay = 0.0f;
+    float fFadeRange, fFadeStart, fFadeStop;
+    bool UpdateFade()
+    {
+        //set progress
+        fFadeTimer += Time.deltaTime;
+        float fProgress = (fFadeTimer - fFadeDelay) / fFadeFinishTime;
+        if (fProgress > 0.999f)
+            return true; //fade done
+
+        if (fFadeTimer < fFadeDelay)
+            return false; //delay not reached
+
+        //calculate new value fcrom progress
+        float fFadeCurVol = fFadeStart + fProgress * fFadeRange;
+        //hard limits
+        if (fFadeCurVol < 0.0f) fFadeCurVol = 0.0f;
+        if (fFadeCurVol > 1.35f) fFadeCurVol = 1.35f;
+        //set value
+        /**/masterVolume = fFadeCurVol; //change this from master volume to some other volume controlling the music
+        return false;
+    }
+    public void StartFade(float fTime, float fDelay, float fStart, float fStop)
+    {
+        fFadeFinishTime = fTime;
+        fFadeTimer = 0.0f;
+        fFadeDelay = fDelay;
+        fFadeStart = fStart;
+        fFadeStop = fStop;
+        fFadeRange = fFadeStop - fFadeStart;
+        UpdateFade();
+    }
 
     private void Update()
     {
-        if (fading)
+        bool bFadeDone = UpdateFade();
+        if(bLifeFadeOut && bFadeDone)
         {
-            fadeVal -= (1 * fadeLen) * (Time.deltaTime);
-            SetLife(fadeVal, true);
-            fading &= fadeVal > 0;
-            return;
+            //fade out just done
+            bLifeFadeOut = false;
+            StartFade(1.5f, 0.7f, 0.0f, 1.35f); //begin fade in again
         }
-        //print("fading done");
 
         //player is now to be set to a valid player (or null) before transitioning to in-game music
         // in the scene switching code in the end of GameManager.cs
-        if (player != null)
+            if (player != null)
         {
             float fClipped = player.fShipHealth;
             if (fClipped < 0) fClipped = 0;
@@ -193,47 +225,11 @@ public class AudioStateMachine : MonoBehaviour
         main.setVolume(masterVolume);
     }
 
-    float target = 0;
-    bool fading = false;
-    float fadeVal;
     public void ResetLife()
     {
-        fading = true;
-        fadeVal = 1;
+        bLifeFadeOut = true;
+        StartFade(1.0f, 0.0f, 1.35f, 0.0f);
     }
-
-    ///// <summary>
-    ///// Initiates a parameter fade 
-    ///// </summary>
-    ///// <param name="param">Parameter.</param>
-    ///// <param name="startVal">Start value.</param>
-    ///// <param name="targetVal">Target value.</param>
-    ///// <param name="time">Time.</param>
-    //void SetParamFade(string param, float startVal, float targetVal, float time)
-    //{
-    //    Fade f = new Fade(param, startVal, targetVal, 0, time, time / Fade.resolution);
-    //    FadeCall(f);
-    //}
-
-    //IEnumerator StepFade(Fade f)
-    //{
-    //    yield return new WaitForSeconds(f.timestep);
-    //    FadeCall(f);
-    //    yield return null;
-    //}
-
-    //void FadeCall(Fade f) 
-    //{ 
-    //    if(f.currentTime < f.time)
-    //    {
-    //        StartCoroutine(StepFade(f));
-    //        f.currentVal = Mathf.Lerp(f.currentVal, f.targetVal, f.timestep / f.time);
-    //        SetParam(f.name, f.currentVal);
-    //        f.currentTime += f.timestep;
-    //    }
-
-    //    SetParam(f.name, f.targetVal);
-    //}
 
     public void Transition(string sceneName)
     {

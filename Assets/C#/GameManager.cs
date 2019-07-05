@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
         theCameraHolder.InitForMenu();
         oFadeMatCopy = new Material(oFadeMat);
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
-        StartFadeOut(0.01f, 0.0f);
+        StartFade(0.01f, 0.0f, true);
 
 #if DISABLESTEAMWORKS
         if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
@@ -593,21 +593,13 @@ public class GameManager : MonoBehaviour
                 oFadeBox.SetActive(false);
         }
     }
-    public void StartFadeOut(float fTime, float fDelay)
+    public void StartFade(float fTime, float fDelay, bool bOut)
     {
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
         fFadeDelay = fDelay;
-        iFade = 2;
-        oFadeBox.SetActive(true);
-        UpdateFade();
-    }
-    public void StartFadeIn(float fTime, float fDelay)
-    {
-        fFadeFinishTime = fTime;
-        fFadeTimer = 0.0f;
-        fFadeDelay = fDelay;
-        iFade = 1;
+        if(bOut) iFade = 2; //out
+        else iFade = 1; //in
         oFadeBox.SetActive(true);
         UpdateFade();
     }
@@ -716,7 +708,7 @@ public class GameManager : MonoBehaviour
                 if (bUserValid || bNoHiscore)
                 {
                     Menu.theMenu.oCameraHolder = theCameraHolder; //although theCameraHolder is DND the reference is to an old destroyed object the second time Menu is loaded, so we do this as a fix
-                    StartFadeIn(2.5f, 1.0f);
+                    StartFade(2.5f, 1.0f, false);
                     iState++;
                 }
                 break;
@@ -868,7 +860,7 @@ public class GameManager : MonoBehaviour
 
                     StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
                     iState++; //load replay
-                    StartFadeOut(0.3f, 0.0f);
+                    StartFade(0.3f, 0.0f, true);
 
                     //set in the above, but since StartCoroutine returns before it has a chanse
                     // to run we need to set it
@@ -877,7 +869,7 @@ public class GameManager : MonoBehaviour
                 else if(Menu.bLevelPlay)
                 {
                     iState += 2; //go directly to load level
-                    StartFadeOut(0.3f, 0.0f);
+                    StartFade(0.3f, 0.0f, true);
                 }
                 break;
             case 5:
@@ -1018,7 +1010,7 @@ public class GameManager : MonoBehaviour
 
                     if (bBackToMenu)
                     {
-                        StartFadeOut(0.3f, 0.0f);
+                        StartFade(0.3f, 0.0f, true);
                         iState++;
                     }
                     break;
