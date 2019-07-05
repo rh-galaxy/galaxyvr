@@ -164,7 +164,7 @@ public class AudioStateMachine : MonoBehaviour
         fFadeStart = fStart;
         fFadeStop = fStop;
         fFadeRange = fFadeStop - fFadeStart;
-        UpdateFade();
+        //UpdateFade();
     }
 
     private void Update()
@@ -174,7 +174,9 @@ public class AudioStateMachine : MonoBehaviour
         {
             //fade out just done
             bLifeFadeOut = false;
-            StartFade(2.5f, 0.0f, 0.0f, 1.00f); //begin fade in again, done over 2.5 sec
+            StartFade(1.6f, 0.95f, 0.0f, 1.00f); //begin fade in again, done over 2.5 sec
+            SetLife(0); //ensure 0 value for a couple of frames
+            bFadeDone = false;
             print("StartFade 0 -> 1");
         }
 
