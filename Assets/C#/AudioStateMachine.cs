@@ -104,6 +104,7 @@ public class AudioStateMachine : MonoBehaviour
 
     public void SetLife(float f)
     {
+        /**///print(f);
         SetParam(death, 1 - f);
         lifeVal = 1 - f;
     }
@@ -149,9 +150,9 @@ public class AudioStateMachine : MonoBehaviour
         float fFadeCurVol = fFadeStart + fProgress * fFadeRange;
         //hard limits
         if (fFadeCurVol < 0.0f) fFadeCurVol = 0.0f;
-        if (fFadeCurVol > 1.35f) fFadeCurVol = 1.35f;
+        if (fFadeCurVol > 1.00f) fFadeCurVol = 1.00f;
         //set value
-        /**/masterVolume = fFadeCurVol; //change this from master volume to some other volume controlling the music
+        SetLife(fFadeCurVol);
         return false;
     }
     public void StartFade(float fTime, float fDelay, float fStart, float fStop)
@@ -168,20 +169,21 @@ public class AudioStateMachine : MonoBehaviour
     private void Update()
     {
         bool bFadeDone = UpdateFade();
-        if(bLifeFadeOut && bFadeDone)
+        if (bLifeFadeOut && bFadeDone)
         {
             //fade out just done
             bLifeFadeOut = false;
-            StartFade(1.5f, 0.7f, 0.0f, 1.35f); //begin fade in again
+            //StartFade(1.5f, 0.7f, 0.0f, 1.00f); //begin fade in again
         }
 
         //player is now to be set to a valid player (or null) before transitioning to in-game music
         // in the scene switching code in the end of GameManager.cs
-            if (player != null)
+        if (player != null)
         {
             float fClipped = player.fShipHealth;
             if (fClipped < 0) fClipped = 0;
-            SetLife(fClipped / Player.FULL_HEALTH);
+            if(bFadeDone)
+                SetLife(fClipped / Player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
             SetCargo((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS);
             fClipped = (float)player.iNumEnemiesNear / 4.0f;
@@ -228,7 +230,7 @@ public class AudioStateMachine : MonoBehaviour
     public void ResetLife()
     {
         bLifeFadeOut = true;
-        StartFade(1.0f, 0.0f, 1.35f, 0.0f);
+        StartFade(2.0f, 0.0f, 0.0f, 1.0f);
     }
 
     public void Transition(string sceneName)
