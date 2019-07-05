@@ -104,7 +104,7 @@ public class AudioStateMachine : MonoBehaviour
 
     public void SetLife(float f)
     {
-        /**///print(f);
+        /**/print(f);
         SetParam(death, 1 - f);
         lifeVal = 1 - f;
     }
@@ -173,7 +173,8 @@ public class AudioStateMachine : MonoBehaviour
         {
             //fade out just done
             bLifeFadeOut = false;
-            //StartFade(1.5f, 0.7f, 0.0f, 1.00f); //begin fade in again
+            StartFade(2.5f, 0.0f, 0.0f, 1.00f); //begin fade in again, done over 2.5 sec
+            print("StartFade 0 -> 1");
         }
 
         //player is now to be set to a valid player (or null) before transitioning to in-game music
@@ -181,8 +182,8 @@ public class AudioStateMachine : MonoBehaviour
         if (player != null)
         {
             float fClipped = player.fShipHealth;
-            if (fClipped < 0) fClipped = 0;
-            if(bFadeDone)
+            if (fClipped <= 0) fClipped = 0;
+            if (bFadeDone /**/&& fClipped!=0)
                 SetLife(fClipped / Player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
             SetCargo((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS);
@@ -230,7 +231,10 @@ public class AudioStateMachine : MonoBehaviour
     public void ResetLife()
     {
         bLifeFadeOut = true;
-        StartFade(2.0f, 0.0f, 0.0f, 1.0f);
+        //StartFade(2.0f, 0.0f, 0.0f, 1.0f);
+        StartFade(0.5f, 0.0f, 1-lifeVal, 0.0f); //begin at current health, go fast to 0
+
+        print("ResetLife, "+(1 - lifeVal).ToString()+" -> 0");
     }
 
     public void Transition(string sceneName)
