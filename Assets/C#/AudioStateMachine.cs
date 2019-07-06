@@ -151,7 +151,7 @@ public class AudioStateMachine : MonoBehaviour
         float fFadeCurVol = fFadeStart + fProgress * fFadeRange;
         //hard limits
         if (fFadeCurVol < 0.0f) fFadeCurVol = 0.0f;
-        if (fFadeCurVol > 1.00f) fFadeCurVol = 1.00f;
+        if (fFadeCurVol > 1.0f) fFadeCurVol = 1.0f;
         //set value
         SetLife(fFadeCurVol);
         return false;
@@ -172,10 +172,10 @@ public class AudioStateMachine : MonoBehaviour
         bool bFadeDone = UpdateFade();
         if (bLifeFadeOut && bFadeDone)
         {
-            //fade out just done
+            //fade out just done (currently not active)
             bLifeFadeOut = false;
-            StartFade(1.6f, 0.95f, 0.0f, 1.00f); //begin fade in again, done over 2.5 sec
-            SetLife(0); //ensure 0 value for a couple of frames
+            StartFade(6.0f, 0.75f, 0.0f, 1.00f); //begin fade in again, done over 6.75 sec
+            SetLife(0); //ensure 0 value during the delay part 0.75 sec
             bFadeDone = false;
             print("StartFade 0 -> 1");
         }
