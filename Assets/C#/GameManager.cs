@@ -535,7 +535,7 @@ public class GameManager : MonoBehaviour
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
     private void FixedUpdate()
     {
-        if (iState == 8) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
+        if (iState == 9) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
     /**/
@@ -604,7 +604,7 @@ public class GameManager : MonoBehaviour
         UpdateFade();
     }
 
-
+    //float t1;
     void Update()
     {
 #if LOGPROFILERDATA
@@ -881,6 +881,11 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case 6:
+                //wait for fade done
+                if (iFade == 0)
+                    iState++;
+                break;
+            case 7:
                 //begin loading the level (or replay)
                 //Debug.Log("Load map Begin");
                 szToLoad = "Scenes/PlayGame";
@@ -904,7 +909,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(LoadAsyncScene());
                 iState++;
                 break;
-            case 7:
+            case 8:
                 //while loading level
                 if (bBeginMapLoading && bTilesetLoaded)
                 {
@@ -925,7 +930,7 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 break;
-            case 8:
+            case 9:
                 //running game
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
@@ -1015,7 +1020,7 @@ public class GameManager : MonoBehaviour
                     }
                     break;
                 }
-            case 9:
+            case 10:
                 if (iFade==0) //fading done?
                 {
                     theCameraHolder.InitForMenu();
@@ -1026,12 +1031,12 @@ public class GameManager : MonoBehaviour
                     iState++;
                 }
                 break;
-            case 10:
+            case 11:
                 //while hiscore is being sent
                 if (oHigh.bIsDone)
                     iState++;
                 break;
-            case 11:
+            case 12:
                 //while menu is loading
                 if (bLoadDone)
                 {
@@ -1041,6 +1046,8 @@ public class GameManager : MonoBehaviour
                 }
                 break;
         }
+        //if (((Time.realtimeSinceStartup - t1) * 1000.0f) > 20) Debug.Log("GMUpdate: " + ((Time.realtimeSinceStartup - t1) * 1000.0f) + " State " + iState.ToString());
+        //t1 = Time.realtimeSinceStartup;
     }
 
     bool bIsMapScene = false;
