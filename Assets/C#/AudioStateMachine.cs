@@ -182,7 +182,7 @@ public class AudioStateMachine : MonoBehaviour
             print("StartFade 0 -> 1");
         }
 
-        SetParam("Enemy", Mathf.Floor((player.iNumBulletsNear + player.iNumEnemiesNear) / nearbyEnemyDiv));
+        SetParam("Enemy", (player.iNumBulletsNear + player.iNumEnemiesNear) / nearbyEnemyDiv);
     
 
         //player is now to be set to a valid player (or null) before transitioning to in-game music
