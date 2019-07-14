@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    GameLevel oMap;
+    public GameLevel oMap;
 
     public GameObject oShip;
     public ParticleSystem oThruster;

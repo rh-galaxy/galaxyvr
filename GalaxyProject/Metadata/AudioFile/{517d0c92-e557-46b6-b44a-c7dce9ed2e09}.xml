@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{517d0c92-e557-46b6-b44a-c7dce9ed2e09}">
+        <property name="assetPath">
+            <value>thump_2_03.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>48</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>0.56377083333333333</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{86c6b44a-9842-4bbe-aeac-fca1b4d72b59}</destination>
+        </relationship>
+    </object>
+</objects>

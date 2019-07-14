@@ -40,6 +40,8 @@ public class AudioStateMachine : MonoBehaviour
     public float cargoVal;
     public float enemiesNear;
     public float bulletsNear;
+    [Range(10f, 2f)]
+    public float nearbyEnemyDiv = 2;
 
     void Awake()
     {
@@ -180,6 +182,9 @@ public class AudioStateMachine : MonoBehaviour
             print("StartFade 0 -> 1");
         }
 
+        SetParam("Enemy", Mathf.Floor((player.iNumBulletsNear + player.iNumEnemiesNear) / nearbyEnemyDiv));
+    
+
         //player is now to be set to a valid player (or null) before transitioning to in-game music
         // in the scene switching code in the end of GameManager.cs
         if (player != null)
@@ -197,6 +202,17 @@ public class AudioStateMachine : MonoBehaviour
             fClipped = (float)player.iNumBulletsNear / 10.0f;
             if (fClipped > 1.0f) fClipped = 1.0f;
             bulletsNear = fClipped;
+
+            if (player.oMap.iLevelType == (int)LevelType.MAP_RACE)
+            {
+                SetParam("Mission", 0);
+                print("starting race audio");
+            }
+            else if (player.oMap.iLevelType == (int)LevelType.MAP_MISSION)
+            {
+                SetParam("Mission", 1);
+                print("starting mission audio");
+            }
         }
 
         SetVolume();
