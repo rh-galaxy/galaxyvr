@@ -182,7 +182,7 @@ public class AudioStateMachine : MonoBehaviour
             print("StartFade 0 -> 1");
         }
 
-        SetParam("Enemy", (player.iNumBulletsNear + player.iNumEnemiesNear) / nearbyEnemyDiv);
+
     
 
         //player is now to be set to a valid player (or null) before transitioning to in-game music
@@ -213,6 +213,8 @@ public class AudioStateMachine : MonoBehaviour
                 SetParam("Mission", 1);
                 print("starting mission audio");
             }
+
+            SetParam("Enemy", (player.iNumBulletsNear + player.iNumEnemiesNear) / nearbyEnemyDiv);
         }
 
         SetVolume();
