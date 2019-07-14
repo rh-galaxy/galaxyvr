@@ -173,9 +173,6 @@
         <property name="length">
             <value>272.23880597014926</value>
         </property>
-        <property name="totalSounds">
-            <value>18</value>
-        </property>
         <property name="minimumTimeBetweenSounds">
             <value>52</value>
         </property>
