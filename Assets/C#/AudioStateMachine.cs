@@ -176,14 +176,11 @@ public class AudioStateMachine : MonoBehaviour
         {
             //fade out just done (currently not active)
             bLifeFadeOut = false;
-            StartFade(6.0f, 0.75f, 0.0f, 1.00f); //begin fade in again, done over 6.75 sec
+            StartFade(3.0f, 0.75f, 0.0f, 1.00f); //begin fade in again, done over 3.75 sec
             SetLife(0); //ensure 0 value during the delay part 0.75 sec
             bFadeDone = false;
             print("StartFade 0 -> 1");
         }
-
-
-    
 
         //player is now to be set to a valid player (or null) before transitioning to in-game music
         // in the scene switching code in the end of GameManager.cs
@@ -196,7 +193,7 @@ public class AudioStateMachine : MonoBehaviour
                 SetLife(fClipped / Player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
             SetCargo((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS);
-            fClipped = (float)player.iNumEnemiesNear / 4.0f;
+            fClipped = (float)player.iNumEnemiesNear / 5.0f;
             if (fClipped > 1.0f) fClipped = 1.0f;
             enemiesNear = fClipped;
             fClipped = (float)player.iNumBulletsNear / 10.0f;
@@ -214,7 +211,9 @@ public class AudioStateMachine : MonoBehaviour
                 print("starting mission audio");
             }
 
-            SetParam("Enemy", (player.iNumBulletsNear + player.iNumEnemiesNear) / nearbyEnemyDiv);
+            fClipped = (float)(player.iNumBulletsNear+player.iNumEnemiesNear) / nearbyEnemyDiv;
+            if (fClipped > 1.0f) fClipped = 1.0f;
+            SetParam("Enemy", fClipped);
         }
 
         SetVolume();
