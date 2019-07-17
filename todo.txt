@@ -1,8 +1,7 @@
 Sound
-- Mission: Cargo parameter, more difference in music
-- Mission: Enemy bullet proximity parameter?
-- Mission/Race: Death parameter, not sounding the same.
-- Race: When exit flow, is it done without sound hiccup?
+- Mission: Cargo parameter, higher volume.
+- Mission: Enemy parameter, add EnemyVol parameter.
+- Mission/Race: Death parameter/sound, not sounding or fade not working.
 - Race: Exit flow is sometimes done late
 - Race: Enter flow is sometimes done late, the second time
 Release
