@@ -106,7 +106,7 @@ public class AudioStateMachine : MonoBehaviour
 
     public void SetLife(float f)
     {
-        /**/print(f);
+        /**///print(f);
         SetParam(death, 1 - f);
         lifeVal = 1 - f;
     }
@@ -176,10 +176,10 @@ public class AudioStateMachine : MonoBehaviour
         {
             //fade out just done (currently not active)
             bLifeFadeOut = false;
-            StartFade(3.0f, 0.75f, 0.0f, 1.00f); //begin fade in again, done over 3.75 sec
-            SetLife(0); //ensure 0 value during the delay part 0.75 sec
+            StartFade(2.3f, 0.15f, 0.0f, 1.00f); //begin fade in again, done over 2.45 sec
+            SetLife(0); //ensure 0 value during the delay part 0.15 sec
             bFadeDone = false;
-            print("StartFade 0 -> 1");
+            //print("StartFade 0 -> 1");
         }
 
         //player is now to be set to a valid player (or null) before transitioning to in-game music
@@ -203,12 +203,12 @@ public class AudioStateMachine : MonoBehaviour
             if (player.oMap.iLevelType == (int)LevelType.MAP_RACE)
             {
                 SetParam("Mission", 0);
-                print("starting race audio");
+                //print("starting race audio");
             }
             else if (player.oMap.iLevelType == (int)LevelType.MAP_MISSION)
             {
                 SetParam("Mission", 1);
-                print("starting mission audio");
+                //print("starting mission audio");
             }
 
             fClipped = (float)(player.iNumBulletsNear+player.iNumEnemiesNear) / nearbyEnemyDiv;
@@ -252,10 +252,9 @@ public class AudioStateMachine : MonoBehaviour
     public void ResetLife()
     {
         bLifeFadeOut = true;
-        //StartFade(2.0f, 0.0f, 0.0f, 1.0f);
-        StartFade(0.5f, 0.0f, fLifeBeforeZero, 0.0f); //begin at current health, go fast to 0
+        StartFade(1.2f, 0.0f, fLifeBeforeZero, 0.0f); //begin at current health, go to 0
 
-        print("ResetLife, "+ fLifeBeforeZero.ToString()+" -> 0");
+        //print("ResetLife, "+ fLifeBeforeZero.ToString()+" -> 0");
     }
 
     public void Transition(string sceneName)

@@ -849,11 +849,18 @@ public class Player : MonoBehaviour
 
     void Kill(bool bSetToReplay)
     {
+        int i;
+
         if (!bAlive) return;
         bAlive = false;
 
-        // Prevent instant change in the music
+        //prevent instant change in the music
         asm.ResetLife();
+        //set mean speed to 0 to make one always exit flow
+        for (i = 0; i < fMeanSpeeds.Length; i++)
+        {
+            fMeanSpeeds[i] = 0.0f;
+        }
 
         //take a life if not unlimited
         if (iNumLifes != -1) iNumLifes--;
@@ -872,7 +879,6 @@ public class Player : MonoBehaviour
         Stop();
 
         //respawn cargo on landingzone taken from
-        int i;
         for (i = iCargoNumUsed - 1; i >= 0; i--)
         {
             LandingZone oZone = oMap.GetLandingZone(aHoldZoneId[i]);

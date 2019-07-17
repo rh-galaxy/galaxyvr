@@ -1,9 +1,5 @@
 Sound
-- Mission: Cargo parameter, higher volume.
-- Mission: Enemy parameter, add EnemyVol parameter.
-- Mission/Race: Death parameter/sound, not sounding or fade not working.
-- Race: Exit flow is sometimes done late
-- Race: Enter flow is sometimes done late, the second time
+- Enemy parameter, add EnemyVol parameter.
 Release
 - Game play promotion video
  (done except music track needs to be mixed in)
