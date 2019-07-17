@@ -45,8 +45,8 @@ public class AudioStateMachine : MonoBehaviour
     public float enemiesNear;
     public float bulletsNear;
 
-    [Range(10f, 2f)]
-    public float nearbyEnemyDiv = 2;
+    [Range(25f, 2f)]
+    public float nearbyEnemyDiv = 10;
 
     void Awake()
     {
