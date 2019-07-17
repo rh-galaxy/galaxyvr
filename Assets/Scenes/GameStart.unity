@@ -6129,6 +6129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   masterVolume: 1.35
+  enemyVol: 0.65
   flowEnterLimit: 0.51
   flowExitLimit: 0.45
   transition: Transition

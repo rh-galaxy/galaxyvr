@@ -14,6 +14,10 @@ public class AudioStateMachine : MonoBehaviour
     [Range(0.0f, 2f)]
     public float masterVolume;
 
+    [Range(0, 1)]
+    public float enemyVol;
+    private float activeEnemyVol;
+
     [Range(0.2f, 1f)]
     public float flowEnterLimit;
 
@@ -40,6 +44,7 @@ public class AudioStateMachine : MonoBehaviour
     public float cargoVal;
     public float enemiesNear;
     public float bulletsNear;
+
     [Range(10f, 2f)]
     public float nearbyEnemyDiv = 2;
 
@@ -211,9 +216,15 @@ public class AudioStateMachine : MonoBehaviour
                 print("starting mission audio");
             }
 
-            fClipped = (float)(player.iNumBulletsNear+player.iNumEnemiesNear) / nearbyEnemyDiv;
+            fClipped = (float)(player.iNumBulletsNear + player.iNumEnemiesNear) / nearbyEnemyDiv;
             if (fClipped > 1.0f) fClipped = 1.0f;
             SetParam("Enemy", fClipped);
+
+            if (Math.Abs(enemyVol - activeEnemyVol) > 0.01f) 
+            { 
+                SetParam("EnemyVol", enemyVol);
+                activeEnemyVol = enemyVol;
+            }
         }
 
         SetVolume();
