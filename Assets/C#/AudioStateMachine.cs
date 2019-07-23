@@ -197,7 +197,9 @@ public class AudioStateMachine : MonoBehaviour
             if (bFadeDone /**//*&& fClipped!=0*/)
                 SetLife(fClipped / Player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
-            SetCargo((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS);
+            fClipped = ((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS) - 0.15f;
+            if (fClipped <= 0) fClipped = 0;
+            SetCargo(fClipped);
             fClipped = (float)player.iNumEnemiesNear / 5.0f;
             if (fClipped > 1.0f) fClipped = 1.0f;
             enemiesNear = fClipped;
@@ -219,6 +221,10 @@ public class AudioStateMachine : MonoBehaviour
             fClipped = (float)(player.iNumBulletsNear + player.iNumEnemiesNear) / nearbyEnemyDiv;
             if (fClipped > 1.0f) fClipped = 1.0f;
             SetParam("Enemy", fClipped);
+            /*fClipped = (float)((player.iNumBulletsNear + player.iNumEnemiesNear) - nearbyEnemyDiv) / 50.0f;
+            if (fClipped < 0) fClipped = 0;
+            if (fClipped > 0.20f) fClipped = 0.20f;
+            enemyVol = 0.5f + fClipped;*/
 
             if (Math.Abs(enemyVol - activeEnemyVol) > 0.01f) 
             { 

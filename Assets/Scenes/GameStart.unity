@@ -6153,9 +6153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  masterVolume: 1.35
+  masterVolume: 1.25
   enemyVol: 0.65
-  flowEnterLimit: 0.51
+  flowEnterLimit: 0.52
   flowExitLimit: 0.45
   transition: Transition
   death: Death
@@ -6168,7 +6168,7 @@ MonoBehaviour:
   cargoVal: 0
   enemiesNear: 0
   bulletsNear: 0
-  nearbyEnemyDiv: 13
+  nearbyEnemyDiv: 15
 --- !u!4 &634785705
 Transform:
   m_ObjectHideFlags: 0
