@@ -518,6 +518,41 @@ public class GameManager : MonoBehaviour
     }
     //////end of oculus specific code
 
+    void UnlockMissionGoldAchievement()
+    {
+#if DISABLESTEAMWORKS
+        if (bOculusDevicePresent)
+        {
+            Achievements.Unlock("CargoGold30");
+        }
+#else
+        if (bUserValid)
+        {
+            if (!bSteamStatsValid) return;
+            if (GameLevel.theMap.player.bAchieveNoDamage)
+                SteamUserStats.SetAchievement("CargoGold30");
+            bool bSuccess = SteamUserStats.StoreStats();
+        }
+#endif
+    }
+    void UnlockRaceGoldAchievement()
+    {
+#if DISABLESTEAMWORKS
+        if (bOculusDevicePresent)
+        {
+            Achievements.Unlock("RaceGold25");
+        }
+#else
+        if (bUserValid)
+        {
+            if (!bSteamStatsValid) return;
+            if (GameLevel.theMap.player.bAchieveNoDamage)
+                SteamUserStats.SetAchievement("RaceGold25");
+            bool bSuccess = SteamUserStats.StoreStats();
+        }
+#endif
+    }
+
     LevelInfo stLevel;
     internal HttpHiscore oHigh = new HttpHiscore();
     int[] aLastScore = new int[400]; //a bit of a hack
@@ -734,19 +769,39 @@ public class GameManager : MonoBehaviour
                 {
                     int iMissionFinished = 0;
                     int iRaceFinished = 0;
+                    int iMissionFinishedGold = 0;
+                    int iRaceFinishedGold = 0;
                     for (int i = 0; i < oHigh.oLevelList.Count; i++)
                     {
                         stLevel = oHigh.oLevelList[i];
                         if (!stLevel.bIsTime)
                         {
-                            if (stLevel.iBestScoreMs != -1) iMissionFinished++;
+                            if (stLevel.iBestScoreMs != -1)
+                            {
+                                iMissionFinished++;
+                                if (stLevel.iBestScoreMs >= stLevel.iLimit1) iMissionFinishedGold++;
+                            }
                         }
                         else
                         {
-                            if (stLevel.iBestScoreMs != -1) iRaceFinished++;
+                            if (stLevel.iBestScoreMs != -1)
+                            {
+                                iRaceFinished++;
+                                if (stLevel.iBestScoreMs < stLevel.iLimit1) iRaceFinishedGold++;
+                            }
                         }
                     }
                     if(oHigh.oLevelList.Count==0) bNoInternet = true; //set this so no further attempts are made at accessing the internet
+
+                    //handle gold achievements
+                    if (iMissionFinishedGold >= 30)
+                    {
+                        UnlockMissionGoldAchievement();
+                    }
+                    if (iRaceFinishedGold>=25)
+                    {
+                        UnlockRaceGoldAchievement();
+                    }
 
                     int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
                     if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
