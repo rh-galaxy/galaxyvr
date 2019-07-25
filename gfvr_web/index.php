@@ -33,9 +33,9 @@ All done in 55 narrow space caves filled with enemies. Featuring interactive mus
 
 <p>The game is inspired by <a href="https://www.mobygames.com/game/amiga/gravity-force">Gravity Force</a> on the Amiga, and by <a href="http://www.galaxy-forces.com">Galaxy Forces V2</a>.</p>
 
-<p>All players may have their best score for each level sent to this website and the top scores and top players are displayed below. The replay of the record scores are possible to view from the game to see how it was done. There are also 19 achievements to unlock.</p>
+<p>All players may have their best score for each level sent to this website and the top scores and top players are displayed below. The replay of the record scores are possible to view from the game to see how it was done. There are also 21 achievements to unlock.</p>
 
-<p>Available on Oculus Home (for Rift), and Steam (Rift and Vive) at 26th of July 2019 as a preliminary date.</p>
+<p>Available on Oculus Home (for Rift), and Steam (Rift and Vive) at 16th of August 2019 as a preliminary date.</p>
 <p><img align="left" src="images/screen8_860.jpg" title="Galaxy Forces VR screenshot"></p>
 <p><img align="left" src="images/screen7_860.jpg" title="Galaxy Forces VR screenshot"></p>
 

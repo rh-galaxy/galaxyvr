@@ -189,7 +189,7 @@ public class AudioStateMachine : MonoBehaviour
 
         //player is now to be set to a valid player (or null) before transitioning to in-game music
         // in the scene switching code in the end of GameManager.cs
-        if (player != null)
+        if (player != null && player.oMap != null)
         {
             float fClipped = player.fShipHealth;
             if (fClipped <= 0) fClipped = 0;
