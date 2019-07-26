@@ -3,10 +3,9 @@
 public class GameStatus : MonoBehaviour
 {
     public GameObject oPlayer;
-    private Vector3 vOffset = new Vector3(-8, -20, -8); //from camera (x,y)
-    private Vector3 vOffsetNoVR = new Vector3(-7.5f, -5.5f, -8); //from camera (x,y)
-    /**///private Vector3 vOffsetNoVR = new Vector3(-70.5f, -5.5f, -8); //from camera (x,y) used while recording video
-
+    /**/private Vector3 vOffset = new Vector3(-8.0f / 10.0f, -35.0f / 10.0f, -4.0f / 10.0f); //from camera (x,y)
+    /**/private Vector3 vOffsetNoVR = new Vector3(-9.15f / 10.0f, -6.3f / 10.0f, -3.5f / 10.0f); //from camera (x,y)
+    /**///private Vector3 vOffsetNoVR = new Vector3(-90.0f / 10, -6.3f / 10, -3.5f / 10); //from camera (x,y) used while recording video
 
     public GameLevel oMap;
     private Vector3 vMapSize;
@@ -17,7 +16,7 @@ public class GameStatus : MonoBehaviour
     public GameObject oLeft, oRight, oBottom;
     public GameObject oBack;
 
-    float BAR_LENGTH = 5.0f;
+    float BAR_LENGTH = .5f;
 
     Material oMatRed;
     Material oMatOriginal;
@@ -49,22 +48,24 @@ public class GameStatus : MonoBehaviour
         oMatOriginal = oCargoBar.GetComponent<Renderer>().material;
 
         vMapSize = oMap.GetMapSize();
+        /**/vMapSize.x /= 10.0f;
+        /**/vMapSize.y /= 10.0f;
 
-        if(i_bIsRace)
+        if (i_bIsRace)
         {
-            oLeft.transform.localPosition = new Vector3(-3.625f, -1.8f + 1.35f, 0.4f);
-            oLeft.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f);
-            oRight.transform.localPosition = new Vector3(2.625f, -1.8f + 1.35f, 0.4f);
-            oRight.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f);
-            oBottom.transform.localPosition = new Vector3(-0.5f, -4.925f + 2.70f, 0.4f);
+            oLeft.transform.localPosition = new Vector3(-3.625f, -1.8f + 1.35f, 0.4f) / 10.0f;
+            oLeft.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f) / 10.0f;
+            oRight.transform.localPosition = new Vector3(2.625f, -1.8f + 1.35f, 0.4f) / 10.0f;
+            oRight.transform.localScale = new Vector3(0.25f, 3.80f, 0.25f) / 10.0f;
+            oBottom.transform.localPosition = new Vector3(-0.5f, -4.925f + 2.70f, 0.4f) / 10.0f;
         }
     }
 
     public void SetForRace(float i_fHealth, float i_fTime, string i_szLapProgress)
     {
         if (i_fHealth < 0.01f) i_fHealth = 0.01f; //done because 0 makes a black quad
-        oHealthBar.transform.localPosition = new Vector3(-3 + ((i_fHealth * BAR_LENGTH) / 2), -1.5f, 0);
-        oHealthBar.transform.localScale = new Vector3((i_fHealth * BAR_LENGTH), 1, 1);
+        oHealthBar.transform.localPosition = new Vector3(-3 + ((i_fHealth * BAR_LENGTH) / 2), -1.5f, 0) / 10.0f;
+        oHealthBar.transform.localScale = new Vector3((i_fHealth * BAR_LENGTH), 1, 1) / 10.0f;
 
         oTextTime.GetComponent<TextMesh>().text = i_fTime.ToString("N2");
         oTextLapProgress.GetComponent<TextMesh>().text = i_szLapProgress;
@@ -73,18 +74,18 @@ public class GameStatus : MonoBehaviour
     public void SetForMission(float i_fHealth, int i_iNumLives, float i_fCargo, bool i_bCargoFull, float i_fFuel, float i_fScore)
     {
         if (i_fHealth < 0.01f) i_fHealth = 0.01f; //done because 0 makes a black quad
-        oHealthBar.transform.localPosition = new Vector3(-3 + ((i_fHealth * BAR_LENGTH) / 2), -1.5f, 0);
-        oHealthBar.transform.localScale = new Vector3((i_fHealth * BAR_LENGTH), 1, 1);
+        oHealthBar.transform.localPosition = new Vector3(-3 + ((i_fHealth * BAR_LENGTH) / 2), -1.5f, 0) / 10.0f;
+        oHealthBar.transform.localScale = new Vector3((i_fHealth * BAR_LENGTH), 1, 1) / 10.0f;
 
         oTextScore.GetComponent<TextMesh>().text = i_fScore.ToString();
         oTextLives.GetComponent<TextMesh>().text = "x "+i_iNumLives.ToString();
 
         if (i_fFuel < 0.01f) i_fFuel = 0.01f; //done because 0 makes a black quad
-        oFuelBar.transform.localPosition = new Vector3(-3 + ((i_fFuel * BAR_LENGTH) / 2), -2.75f, 0);
-        oFuelBar.transform.localScale = new Vector3((i_fFuel * BAR_LENGTH), 1, 1);
+        oFuelBar.transform.localPosition = new Vector3(-3 + ((i_fFuel * BAR_LENGTH) / 2), -2.75f, 0) / 10.0f;
+        oFuelBar.transform.localScale = new Vector3((i_fFuel * BAR_LENGTH), 1, 1) / 10.0f;
         if (i_fCargo < 0.01f) i_fCargo = 0.01f; //done because 0 makes a black quad
-        oCargoBar.transform.localPosition = new Vector3(-3 + ((i_fCargo * BAR_LENGTH) / 2), -4.0f, 0);
-        oCargoBar.transform.localScale = new Vector3((i_fCargo * BAR_LENGTH), 1, 1);
+        oCargoBar.transform.localPosition = new Vector3(-3 + ((i_fCargo * BAR_LENGTH) / 2), -4.0f, 0) / 10.0f;
+        oCargoBar.transform.localScale = new Vector3((i_fCargo * BAR_LENGTH), 1, 1) / 10.0f;
 
         if (!i_bCargoFull) oCargoBar.GetComponent<Renderer>().material = oMatOriginal;
         else oCargoBar.GetComponent<Renderer>().material = oMatRed;
@@ -102,9 +103,9 @@ public class GameStatus : MonoBehaviour
         {
             //limit left/bottom movement:
             v += vOffset;
-            float fLeftLimit = -(vMapSize.x / 2.0f) - 3.0f;
+            float fLeftLimit = -(vMapSize.x / 2.0f) - .30f;
             if (v.x < fLeftLimit) v.x = fLeftLimit;
-            float fBottomLimit = -(vMapSize.y / 2.0f) + 3.0f;
+            float fBottomLimit = -(vMapSize.y / 2.0f) + .30f;
             if (v.y < fBottomLimit) v.y = fBottomLimit;
             transform.position = v;
         }

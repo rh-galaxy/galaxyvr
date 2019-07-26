@@ -493,7 +493,7 @@ public class Menu : MonoBehaviour
         {
             vHeadPosition = Camera.main.transform.position;
             vGazeDirection = Camera.main.transform.forward;
-            oLevelInfoContainer.transform.position = (vHeadPosition + vGazeDirection * 59.0f) + new Vector3(0.0f, -4.0f, 0.0f);
+            oLevelInfoContainer.transform.position = (vHeadPosition + vGazeDirection * 5.40f) + new Vector3(0.0f, -.40f, 0.0f);
             vRotation = Camera.main.transform.eulerAngles; vRotation.z = 0;
             oLevelInfoContainer.transform.eulerAngles = vRotation;
             oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
@@ -684,48 +684,48 @@ public class Menu : MonoBehaviour
             //original 55 levels
             float fStartAngle = -45;
             float fAngleRange = 90;
-            Vector3 vPos, vAroundPoint = new Vector3(0, 0, -90);
+            Vector3 vPos, vAroundPoint = new Vector3(0, 0, -9.0f);
             for (int i = 0; i < iNumRace; i++)
             {
-                vPos = new Vector3(0, (i % 3) * 10.0f - 24.0f, 12.0f);
+                vPos = new Vector3(0, (i % 3) * 1.00f - 2.40f, 1.20f);
                 float fRotateAngle = fStartAngle + i * (fAngleRange / (iNumRace - 1));
                 aMenuLevels[i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, aLevels[i], i);
             }
             int iStartOffs = iNumRace;
             for (int i = 0; i < iNumMission; i++)
             {
-                vPos = new Vector3(0, (i % 3) * 10.0f + 24.0f, 12.0f);
+                vPos = new Vector3(0, (i % 3) * 1.00f + 2.40f, 1.20f);
                 float fRotateAngle = fStartAngle + i * (fAngleRange / (iNumMission - 1));
                 aMenuLevels[iStartOffs + i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, aLevels[iStartOffs + i], iStartOffs + i);
             }
         }
         if (iIncrementalInit == 7)
         {
-            Vector3 vAroundPoint = new Vector3(0, 0, -90);
+            Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
             //menu options
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 31, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 38, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 31, "Quit", "Quit", 30.0f, 12.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 38, "Controls", "Controls", 30.0f, 9.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 45, "Credits", "Credits", 30.0f, 9.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 53.5f, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 53.5f, "Snap", "Snap", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             QualitySettings.SetQualityLevel(iQuality, true);
-            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 62, "Med", "Qual1", 30.0f, 9.0f);
-            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 69, "High", "Qual2", 30.0f, 9.0f);
-            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 76, "Ultra", "Qual3", 30.0f, 9.0f);
+            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 62, "Med", "Qual1", 30.0f, 9.0f);
+            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 69, "High", "Qual2", 30.0f, 9.0f);
+            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 76, "Ultra", "Qual3", 30.0f, 9.0f);
         }
         if (iIncrementalInit == 8)
         {
             //next/prev buttons
-            Vector3 vPos = new Vector3(0.0f, 10.0f, -0.1f);
+            Vector3 vPos = new Vector3(0.0f, /**/1.0f, -0.1f);
             if (oMenuNext1 != null) oMenuNext1.DestroyObj();
-            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -90), 50, "", "Next1", 18.0f, 9.0f);
-            vPos = new Vector3(1000.0f, 10.0f, -0.1f);
+            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -9.0f), 50, "", "Next1", 18.0f, 9.0f);
+            vPos = new Vector3(1000.0f, /**/1.0f, -0.1f);
             if (oMenuPrev1 != null) oMenuPrev1.DestroyObj();
-            oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -90), -50, "<", "Prev1", 18.0f, 9.0f);
+            oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), -50, "<", "Prev1", 18.0f, 9.0f);
 
             //additional official levels with hiscore
             //...
@@ -738,11 +738,11 @@ public class Menu : MonoBehaviour
             DirectoryInfo info = new DirectoryInfo(s);
             FileInfo[] fileInfo = info.GetFiles("*.des");
             aMenuCustomLevels = new C_LevelInMenu[fileInfo.Length];
-            Vector3 vAroundPoint = new Vector3(1000, 0, -90);
+            Vector3 vAroundPoint = new Vector3(1000, 0, -9.0f);
             int iNum = (fileInfo.Length > 9 * 5 ? 9 * 5 : fileInfo.Length); //limit to 45, if its a problem fix later
             for (int i = 0; i < iNum; i++)
             {
-                Vector3 vPos = new Vector3(1000, (i % 9) * 10.5f - 47.0f, 12.0f);
+                Vector3 vPos = new Vector3(1000, (i % 9) * 1.05f - 4.70f, 1.20f);
                 float fRotateAngle = fStartAngle + (i / 9) * 23.0f;
                 S_Levels level = new S_Levels();
                 level.iLevelType = (int)LevelType.MAP_MISSION;
@@ -757,7 +757,7 @@ public class Menu : MonoBehaviour
             //level text
             GameObject oCustomPathText;
             oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-            oCustomPathText.transform.localPosition = new Vector3(1000.0f, fileInfo.Length < 22 ? 0.0f : 50.0f, 12.0f);
+            oCustomPathText.transform.position = new Vector3(1000.0f, fileInfo.Length < 22 ? 0.0f : 50.0f, 1.20f);
             oCustomPathText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             //oCustomPathText.transform.RotateAround(vAroundPoint, Vector3.up, 0.0f);
             oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels (" + s + "), download editor from www.galaxy-forces-vr.com";
@@ -1117,7 +1117,7 @@ public class Menu : MonoBehaviour
             }
 
             //set at max distance
-            oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*170.0f;
+            oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*17.0f;
             //rotate the cursor to camera rotation
             oGazeQuad.transform.rotation = Camera.main.transform.rotation;
         }
@@ -1145,7 +1145,7 @@ public class Menu : MonoBehaviour
         {
             float x = oCameraHolder.transform.position.x + fAdjust;
             if (x >= 0.0f && x <= 1000.0f)
-                oCameraHolder.transform.position = new Vector3(x, 0, -50);
+                oCameraHolder.transform.position = new Vector3(x, 0, -5.0f);
         }
 
         //rotate again around Z, not visible on standard cursor, but visible on the waiting cursor
@@ -1184,7 +1184,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.parent = Menu.theMenu.transform;
             oLevelQuad.AddComponent<BoxCollider>();
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = "Coll"+i_iLevelId.ToString();
-            oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
+            oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
             oLevelQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value*100.0f); //vary 100 deg around z
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
@@ -1199,12 +1199,12 @@ public class Menu : MonoBehaviour
             if (i_iLevelId >= 200)
             {
                 oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj1, Menu.theMenu.transform);
-                oLevelText.transform.localPosition = new Vector3(vPos.x + 6.3f, vPos.y - 3.45f, vPos.z - 1.4f);
+                oLevelText.transform.position = new Vector3(vPos.x + .63f, vPos.y - .185f, vPos.z - .14f);
             }
             else
             {
                 oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-                oLevelText.transform.localPosition = new Vector3(vPos.x - 6.3f, vPos.y - 3.45f, vPos.z - 1.4f);
+                oLevelText.transform.position = new Vector3(vPos.x - .63f, vPos.y - .345f, vPos.z - .14f);
             }
             oLevelText.transform.localScale = new Vector3(1.85f, 1.85f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
@@ -1246,7 +1246,7 @@ public class Menu : MonoBehaviour
                 {
                     oRankQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
                     oRankQuad.transform.parent = Menu.theMenu.transform;
-                    oRankQuad.transform.localPosition = new Vector3(vPos.x + 3.5f, vPos.y - 3.5f, vPos.z - 1.7f);
+                    oRankQuad.transform.position = new Vector3(vPos.x + .35f, vPos.y - .35f, vPos.z - .17f);
                     oRankQuad.transform.localScale = new Vector3(4.0f, 4.0f, 1.0f);
                     oRankQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value * 100.0f); //vary 100 deg around z
                     oRankQuad.transform.RotateAround(vAroundPoint, Vector3.up, fRotateAngle);
@@ -1350,7 +1350,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.parent = Menu.theMenu.transform;
             oLevelQuad.AddComponent<BoxCollider>();
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
-            oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
+            /**/oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             if (i_szText.CompareTo("<") == 0)
@@ -1364,7 +1364,7 @@ public class Menu : MonoBehaviour
 
             //create text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-            oLevelText.transform.localPosition = new Vector3(vPos.x - 5.8f, vPos.y - 1.7f, vPos.z - 1.2f);
+            /**/oLevelText.transform.position = new Vector3(vPos.x - .58f, vPos.y - .17f, vPos.z - .12f);
             oLevelText.transform.localScale = new Vector3(1.6f, 1.6f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;

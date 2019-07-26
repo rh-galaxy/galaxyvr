@@ -12,22 +12,22 @@ public class CameraController : MonoBehaviour
     private Vector3 vMapSize;
 
     internal static bool bSnapMovement = false;
-    internal static Vector3 vCamPos = new Vector3(0, 0, -50);
+    internal static Vector3 vCamPos = new Vector3(0, 0, -4.5f);
 
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
     {
         bMapMode = true;
         oPlayer = i_oPlayer;
         oMap = i_oMap;
-        vCamPos = new Vector3(0, 0, -100); //set it away from the player, transform.position will then be set first Update.
+        vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update.
 
-        vCamOffset = new Vector3(0, 3, -10);
+        vCamOffset = new Vector3(0, .3f, -0.9f);
         vMapSize = oMap.GetMapSize();
     }
     public void InitForMenu()
     {
         bMapMode = false;
-        vCamPos = new Vector3(0, 0, -50);
+        vCamPos = new Vector3(0, 0, -4.5f);
         transform.position = vCamPos;
     }
 
@@ -107,12 +107,12 @@ public class CameraController : MonoBehaviour
         if(bMapMode)
         {
             Vector3 v = oPlayer.transform.position + vCamOffset;
-            float fLeftLimit = -(vMapSize.x / 2.0f) + 5;
-            float fRightLimit = (vMapSize.x / 2.0f) - 5;
+            float fLeftLimit = -(vMapSize.x / 20.0f) + 1.0f;
+            float fRightLimit = (vMapSize.x / 20.0f) - 1.0f;
             if (v.x < fLeftLimit) v.x = fLeftLimit;
             if (v.x > fRightLimit) v.x = fRightLimit;
-            float fTopLimit = (vMapSize.y / 2.0f) - 3;
-            float fBottomLimit = -(vMapSize.y / 2.0f) + 10;
+            float fTopLimit = (vMapSize.y / 20.0f) - .4f;
+            float fBottomLimit = -(vMapSize.y / 20.0f) + 1.4f;
             if (v.y < fBottomLimit) v.y = fBottomLimit;
             if (v.y > fTopLimit) v.y = fTopLimit;
 
@@ -121,7 +121,7 @@ public class CameraController : MonoBehaviour
                 fSnapTimer += Time.deltaTime;
                 float fDist = (vCamPos - v).magnitude;
                 //move if too far from current pos, or too long time since last move
-                if (bFirst || (fDist > 10.5f) || (fDist > 5.5f && fSnapTimer > 4.7f))
+                if (bFirst || (fDist > 1.05f) || (fDist > .55f && fSnapTimer > 4.7f))
                 {
                     bFirst = false;
                     fSnapTimer = 0;

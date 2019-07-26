@@ -85,8 +85,8 @@ public class GameLevel : MonoBehaviour
     public GameObject backPlane;
     public Player player;
 
-    public float fWallHeight = 3.0f;
-    public float fBumpHeight = 0.25f;
+    public float fWallHeight = .30f;
+    public float fBumpHeight = 0.025f;
 
     static string szLevelPath0 = "Levels/";
     static string szLevelPath1 = "";
@@ -99,7 +99,6 @@ public class GameLevel : MonoBehaviour
     int iTilesetInfoIndex = 0;
     S_TilesetInfo[] m_stTilesetInfos = {
         new S_TilesetInfo("Cave_Alien", true, "Walls_Alien", "Walls_Alien", 5, 1),
-        ///**/new S_TilesetInfo("Cave_Alien", true, "Walls_Crack_Test", "Walls_Alien", 5, 1),
         new S_TilesetInfo("Cave_Evil", true, "Walls_Grey", "Walls_Grey", 3, 1),
         new S_TilesetInfo("Cave_Cave", true, "Walls_Grey", "Walls_Grey", 5, 1),
         new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite", "Walls_Cryptonite", 2, 3),
@@ -123,10 +122,10 @@ public class GameLevel : MonoBehaviour
 
     Vector2[] stPlayerStartPos = new Vector2[8];
 
-    const int DEFAULT_SHIPGRAVITYBASEX = 0;      //pixel/second 2
-    const int DEFAULT_SHIPGRAVITYBASEY = 70;     //pixel/second 2
-    const float DEFAULT_SHIPRESISTANCE = 0.68f;  //constant (velocity dependent)
-    internal const int BULLETBASEVEL = 220;      //pixel/second
+    const float DEFAULT_SHIPGRAVITYBASEX = 0.0f;      //pixel/second 2
+    const float DEFAULT_SHIPGRAVITYBASEY = /**/9.0f;      //pixel/second 2             //70
+    const float DEFAULT_SHIPRESISTANCE = /**/0.68f;  //constant (velocity dependent)  //0.68f
+    internal const float BULLETBASEVEL = /**/22.0f;       //pixel/second
     internal const float BULLETFREETIME = 3.1f;  //sec to be free from bullets when just come alive
 
     //map objects
@@ -147,7 +146,7 @@ public class GameLevel : MonoBehaviour
             if (aEnemyList[i] != null)
             {
                 Vector2 vDist = new Vector2(aEnemyList[i].vPos.x, aEnemyList[i].vPos.y) - this.player.GetPosition();
-                if (vDist.magnitude < (450 / 32.0f)) iNumEnemies++; //~14 tiles, same as fire range
+                /**/if (vDist.magnitude < (450 / 32.0f /10.0f)) iNumEnemies++; //~14 tiles, same as fire range
             }
         }
         return iNumEnemies;
@@ -164,7 +163,7 @@ public class GameLevel : MonoBehaviour
                 Vector3 v = aBulletList[i].oCube.transform.position;
 
                 Vector2 vDist = new Vector2(v.x, v.y) - this.player.GetPosition();
-                if (vDist.magnitude < (256 / 32.0f)) iNumBullets++; //~8 tiles, same as fire range
+                /**/if (vDist.magnitude < (256 / 32.0f /10.0f)) iNumBullets++; //~8 tiles, same as fire range
             }
         }
         return iNumBullets;
@@ -218,29 +217,29 @@ public class GameLevel : MonoBehaviour
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
-        oObj.transform.position = new Vector3(-vSize.x / 2 - 0.5f, 0, 2.0f);
-        oObj.transform.localScale = new Vector3(1.0f, vSize.y, vSize.z + 6);
+        oObj.transform.position = new Vector3(-vSize.x / 20 - 0.05f, 0, .20f);
+        oObj.transform.localScale = new Vector3(.10f, vSize.y/10, vSize.z + .6f);
         oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
         //right
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
-        oObj.transform.position = new Vector3(vSize.x / 2 + 0.5f, 0, 2.0f);
-        oObj.transform.localScale = new Vector3(1.0f, vSize.y, vSize.z + 6);
+        oObj.transform.position = new Vector3(vSize.x / 20 + 0.05f, 0, .20f);
+        oObj.transform.localScale = new Vector3(.10f, vSize.y/10, vSize.z + .6f);
         oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
         //top
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
-        oObj.transform.position = new Vector3(0, vSize.y / 2 + 0.5f, 2.0f);
-        oObj.transform.localScale = new Vector3(vSize.x + 2.0f, 1.0f, vSize.z + 6);
+        oObj.transform.position = new Vector3(0, vSize.y / 20 + 0.05f, .20f);
+        oObj.transform.localScale = new Vector3(vSize.x/10 + .20f, .10f, vSize.z + .6f);
         oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
         //bottom
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
-        oObj.transform.position = new Vector3(0, -vSize.y / 2 - 0.5f, 2.0f);
-        oObj.transform.localScale = new Vector3(vSize.x + 2.0f, 1.0f, vSize.z + 6);
+        oObj.transform.position = new Vector3(0, -vSize.y / 20 - 0.05f, .20f);
+        oObj.transform.localScale = new Vector3(vSize.x/10 + .20f, .10f, vSize.z + .6f);
         oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
 
         //change fov if non VR since the default setting shows to wide fov
@@ -270,7 +269,7 @@ public class GameLevel : MonoBehaviour
         //create background plane first of all
         //if (bSimpleBg) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f, 32.0f);
         //else
-        oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 1.05f, 1.0f);
+        oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, /**/.105f, 1.0f);
 
         bMeshBkReady = true;
         oEvent.WaitOne();
@@ -281,7 +280,7 @@ public class GameLevel : MonoBehaviour
         LoadGrid(substeps, pixelsamplepos);
 
         //generate final mesh, set tile material
-        oMeshGen.GenerateMeshInit(aMapHighres, 1.0f / substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
+        oMeshGen.GenerateMeshInit(aMapHighres, /**/0.10f / substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
 
         oMeshGen.GenerateMesh();
 
@@ -439,7 +438,7 @@ public class GameLevel : MonoBehaviour
 
             //(user name not currently used in Player)
             string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
-            player.Init(szUser, 0, stPlayerStartPos[0], this);
+            /**/player.Init(szUser, 0, stPlayerStartPos[0], this);
 ///**/Debug.Log("LoadDesPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             if (bFinished) iFinalizeCounter++;
         }
@@ -555,13 +554,13 @@ public class GameLevel : MonoBehaviour
     Vector2 AdjustPosition(Vector2 i_vPixelPos, Vector2 i_vPixelSize)
     {
         return new Vector2(i_vPixelPos.x / 32.0f - iWidth * 0.5f + (i_vPixelSize.x / 32.0f) * 0.5f,
-        (iHeight * 32 - i_vPixelPos.y - i_vPixelSize.y * 0.5f) / 32.0f - iHeight * 0.5f);
+            (iHeight * 32.0f - i_vPixelPos.y - i_vPixelSize.y * 0.5f) / 32.0f - iHeight * 0.5f) / 10;
     }
     //old pixels pos (pos from tile position) to new pos
     Vector2 AdjustPositionNoFlip(Vector2 i_vPixelPos, Vector2 i_vPixelSize)
     {
         return new Vector2(i_vPixelPos.x / 32.0f - iWidth * 0.5f + (i_vPixelSize.x / 32.0f) * 0.5f,
-        (i_vPixelPos.y - i_vPixelSize.y * 0.5f) / 32.0f - iHeight * 0.5f);
+            (i_vPixelPos.y - i_vPixelSize.y * 0.5f) / 32.0f - iHeight * 0.5f) / 10;
     }
 
     public LandingZone GetLandingZone(int i_iId)
@@ -740,12 +739,12 @@ public class GameLevel : MonoBehaviour
             }
             else if (szTokens[0].CompareTo("*GRAVITY") == 0)
             {
-                vGravity.x = float.Parse(szTokens[1], ci.NumberFormat);
-                vGravity.y = -float.Parse(szTokens[2], ci.NumberFormat);
+                /**/vGravity.x = float.Parse(szTokens[1], ci.NumberFormat) / 10.0f;
+                /**/vGravity.y = -float.Parse(szTokens[2], ci.NumberFormat) / 10.0f;
             }
             else if (szTokens[0].CompareTo("*RESISTANCE") == 0)
             {
-                fDrag = float.Parse(szTokens[1], ci.NumberFormat);
+                /**/fDrag = float.Parse(szTokens[1], ci.NumberFormat) /10.0f;
                 //m_vDrag.y = float.Parse(szTokens[2]); //no support in physics engine
             }
             else if (szTokens[0].CompareTo("*PLAYERSTARTPOS") == 0)
@@ -951,23 +950,23 @@ public class GameLevel : MonoBehaviour
                             if (stEnemy.iAngle == 0)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(16, 12));
-                                stEnemy.vWayPoints[i].x -= 4.5f / 32.0f;
+                                stEnemy.vWayPoints[i].x -= 4.5f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 270)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
-                                stEnemy.vWayPoints[i].y -= 4.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y -= 4.0f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 180)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(16, 12));
-                                stEnemy.vWayPoints[i].x += 9.0f / 32.0f;
+                                stEnemy.vWayPoints[i].x += 9.0f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 90)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(12, 16));
-                                stEnemy.vWayPoints[i].y += 7.0f / 32.0f;
-                                stEnemy.vWayPoints[i].x += 3.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y += 7.0f / 32.0f /10.0f;
+                                stEnemy.vWayPoints[i].x += 3.0f / 32.0f /10.0f;
                             }
                             break;
                         case 1:
@@ -975,22 +974,22 @@ public class GameLevel : MonoBehaviour
                             if (stEnemy.iAngle == 0)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
-                                stEnemy.vWayPoints[i].x -= 4.0f / 32.0f;
+                                stEnemy.vWayPoints[i].x -= 4.0f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 270)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
-                                stEnemy.vWayPoints[i].y -= 2.5f / 32.0f;
+                                stEnemy.vWayPoints[i].y -= 2.5f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 180)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
-                                stEnemy.vWayPoints[i].x += 6.0f / 32.0f;
+                                stEnemy.vWayPoints[i].x += 6.0f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 90)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
-                                stEnemy.vWayPoints[i].y += 4.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y += 4.0f / 32.0f /10.0f;
                             }
                             break;
                         case 4:
@@ -1000,44 +999,44 @@ public class GameLevel : MonoBehaviour
                             if (stEnemy.iAngle == 0)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
-                                stEnemy.vWayPoints[i].x -= 5.5f / 32.0f;
+                                stEnemy.vWayPoints[i].x -= 5.5f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 270)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
-                                stEnemy.vWayPoints[i].y -= 5.5f / 32.0f;
+                                stEnemy.vWayPoints[i].y -= 5.5f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 180)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 24));
-                                stEnemy.vWayPoints[i].x += 5.0f / 32.0f;
+                                stEnemy.vWayPoints[i].x += 5.0f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 90)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(24, 14));
-                                stEnemy.vWayPoints[i].y += 6.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y += 6.0f / 32.0f /10.0f;
                             }
                             break;
                         case 6:
                             if (stEnemy.iAngle == 0)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
-                                stEnemy.vWayPoints[i].x -= 6.0f / 32.0f;
+                                stEnemy.vWayPoints[i].x -= 6.0f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 270)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
-                                stEnemy.vWayPoints[i].y -= 6.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y -= 6.0f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 180)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
-                                stEnemy.vWayPoints[i].x += 6.0f / 32.0f;
+                                stEnemy.vWayPoints[i].x += 6.0f / 32.0f /10.0f;
                             }
                             else if (stEnemy.iAngle == 90)
                             {
                                 stEnemy.vWayPoints[i] = AdjustPosition(stEnemy.vWayPoints[i], new Vector2(14, 14));
-                                stEnemy.vWayPoints[i].y += 2.0f / 32.0f;
+                                stEnemy.vWayPoints[i].y += 2.0f / 32.0f /10.0f;
                             }
                             break;
                     }
@@ -1104,8 +1103,8 @@ public class GameLevel : MonoBehaviour
                         oMaterial = Resources.Load("RedBricks", typeof(Material)) as Material;
                     else oMaterial = Resources.Load("GreyBricks", typeof(Material)) as Material;
 
-                    oObj.transform.position = new Vector3(vPos.x, vPos.y, -1.5f - fBumpHeight);
-                    oObj.transform.localScale = new Vector3(16.0f / 32.0f, 8.0f / 32.0f, 1.0f);
+                    oObj.transform.position = new Vector3(vPos.x, vPos.y, /**/-.15f - fBumpHeight);
+                    oObj.transform.localScale = new Vector3(16.0f / 320.0f, 8.0f / 320.0f, 1.0f);
                     oObj.GetComponent<MeshRenderer>().material = oMaterial;
 
                     aDecorationList.Add(oObj);
@@ -1138,7 +1137,8 @@ public class GameLevel : MonoBehaviour
 
                     //there are no or only negative bumps in the mesh on these tiles, so we need not offset z by -fBumpHeight,
                     // still we offset it by a little to not collide with the mesh that is under it
-                    oObj.transform.position = new Vector3(vPos.x, vPos.y, -1.5f - 0.08f);
+                    oObj.transform.position = new Vector3(vPos.x, vPos.y, /**/-.15f - 0.008f);
+                    oObj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
                     oObj.GetComponent<MeshRenderer>().material = oMaterial;
 
                     aDecorationList.Add(oObj);

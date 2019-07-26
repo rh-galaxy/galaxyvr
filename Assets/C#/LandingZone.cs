@@ -55,7 +55,7 @@ public class LandingZone : MonoBehaviour
         oExtraLife.SetActive(bExtraLife);
         if (bExtraLife)
         {
-            oExtraLife.transform.position = new Vector3(vPos.x - (iAdjustX - 13) / 32.0f, vPos.y + 13.0f / 32.0f, 0.6f);
+            /**/oExtraLife.transform.position = new Vector3(vPos.x - (iAdjustX - 13) / 320.0f, vPos.y + 13.0f / 320.0f, 0.06f);
         }
 
         //buildings
@@ -64,16 +64,15 @@ public class LandingZone : MonoBehaviour
         oSilo.SetActive(bShowSilo);
         if (bShowSilo)
         {
-            oSilo.transform.position = new Vector3(vPos.x + (iAdjustX - 12) / 32.0f, vPos.y + 16.0f / 32.0f, 1.35f);
+            /**/oSilo.transform.position = new Vector3(vPos.x + (iAdjustX - 12) / 320.0f, vPos.y + 16.0f / 320.0f, .135f);
         }
         if (bShowHangar)
         {
-            //oHangar.transform.position = new Vector3(vPos.x + (iAdjustX - 48) / 32.0f, vPos.y + 3.5f / 32.0f, 1.2f);
-            oHangar.transform.position = new Vector3(vPos.x + (iAdjustX - 30) / 32.0f, vPos.y + 3.5f / 32.0f, 1.2f);
+            /**/oHangar.transform.position = new Vector3(vPos.x + (iAdjustX - 30) / 320.0f, vPos.y + 3.5f / 320.0f, .12f);
         }
         if (bShowTower)
         {
-            oTower.transform.position = new Vector3(vPos.x - (iAdjustX - 12) / 32.0f, vPos.y + 3.5f / 32.0f, 1.2f);
+            /**/oTower.transform.position = new Vector3(vPos.x - (iAdjustX - 12) / 320.0f, vPos.y + 3.5f / 320.0f, .12f);
         }
 
         //zone cargo
@@ -87,8 +86,8 @@ public class LandingZone : MonoBehaviour
             oBox.transform.parent = GameLevel.theMap.transform;
             MonoBehaviour.DestroyImmediate(oBox.GetComponent<BoxCollider>());
 
-            oBox.transform.position = new Vector3(vPos.x + ((iAdjustX - ((i / 3) * 28)) - 13) / 32.0f, vPos.y + (6 + ((i % 3) * 7)) / 32.0f, 0.6f);
-            oBox.transform.localScale = new Vector3(aBoxSizeX[iCargoType] / 32.0f, 6.0f / 32.0f, 0.5f);
+            /**/oBox.transform.position = new Vector3(vPos.x + ((iAdjustX - ((i / 3) * 28)) - 13) / 320.0f, vPos.y + (6 + ((i % 3) * 7)) / 320.0f, 0.06f);
+            /**/oBox.transform.localScale = new Vector3(aBoxSizeX[iCargoType] / 320.0f, 6.0f / 320.0f, 0.05f);
 
             oMaterial = Resources.Load("Pickups", typeof(Material)) as Material;
             oBox.GetComponent<MeshRenderer>().material = oMaterial;
@@ -101,8 +100,8 @@ public class LandingZone : MonoBehaviour
         MonoBehaviour.DestroyImmediate(oZone.GetComponent<BoxCollider>());
         oZone.AddComponent<BoxCollider2D>();
         oZone.name = "LandingZone" + iId.ToString();
-        oZone.transform.position = new Vector3(vPos.x, vPos.y, 0.45f);
-        oZone.transform.localScale = new Vector3(iZoneSize * 1.0f, 4.0f / 32.0f, i_fDepth+0.9f);
+        oZone.transform.position = new Vector3(vPos.x, vPos.y, /**/0.045f);
+        oZone.transform.localScale = new Vector3(iZoneSize * /**/0.10f, 4.0f / /**/320.0f, i_fDepth+/**/0.09f);
 
         oMaterialZone = Resources.Load("LandingZone", typeof(Material)) as Material;
         oZone.GetComponent<MeshRenderer>().material = oMaterialZone;
@@ -113,8 +112,8 @@ public class LandingZone : MonoBehaviour
             oZoneAttentionMarker = GameObject.CreatePrimitive(PrimitiveType.Cube);
             oZoneAttentionMarker.transform.parent = GameLevel.theMap.transform;
             MonoBehaviour.DestroyImmediate(oZoneAttentionMarker.GetComponent<BoxCollider>());
-            oZoneAttentionMarker.transform.position = new Vector3(vPos.x, vPos.y, -((i_fDepth + 0.4f) / 2.0f));
-            oZoneAttentionMarker.transform.localScale = new Vector3(iZoneSize * 1.0f, 4.0f / 32.0f, 0.4f);
+            oZoneAttentionMarker.transform.position = new Vector3(vPos.x, vPos.y, -((i_fDepth + /**/0.04f) / 2.0f));
+            oZoneAttentionMarker.transform.localScale = new Vector3(iZoneSize * /**/.10f, 4.0f / /**/320.0f, /**/0.04f);
 
             oMaterialHome = Resources.Load("LandingZoneHome", typeof(Material)) as Material;
             oMaterialCargo = Resources.Load("LandingZoneCargo", typeof(Material)) as Material;

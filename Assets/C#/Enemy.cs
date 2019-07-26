@@ -204,7 +204,7 @@ public class Enemy : MonoBehaviour
                     vDist = new Vector3(stInfo.vWayPoints[iCurWP].x - vPos.x, stInfo.vWayPoints[iCurWP].y - vPos.y, 0);
 
                     fDist = vDist.magnitude;
-                    fWPTime = fDist / (stInfo.iSpeed / 32.0f);
+                    fWPTime = fDist / (stInfo.iSpeed/**//10.0f / 32.0f);
 
                     vVel = new Vector3(vDist.x / fWPTime, vDist.y / fWPTime, 0);
                     iCurWP = (iCurWP + 1) % stInfo.iNumWayPoints;
@@ -235,8 +235,8 @@ public class Enemy : MonoBehaviour
                         for (int i = 0; i < SENEMY_NUMBULLETS[stInfo.iEnemyType]; i++)
                         {
                             Vector2 vFirePoint = vPos;
-                            if (stInfo.iEnemyType == 5 && i == 1) vFirePoint += SENEMY5_FIREPOINT2[stInfo.iAngle / 90];
-                            else vFirePoint += SENEMY_FIREPOINT[stInfo.iEnemyType, stInfo.iAngle / 90];
+                            if (stInfo.iEnemyType == 5 && i == 1) vFirePoint += SENEMY5_FIREPOINT2[stInfo.iAngle / 90] /**// 10.0f;
+                            else vFirePoint += SENEMY_FIREPOINT[stInfo.iEnemyType, stInfo.iAngle / 90] /**// 10.0f;
                             CreateBullet(vFirePoint, fDirection + SENEMY_BULLETANGLE[stInfo.iEnemyType, i], Bullet.BULLETBASEVEL / 2, i);
                         }
                     }

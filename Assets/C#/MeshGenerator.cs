@@ -49,12 +49,12 @@ public class MeshGenerator : MonoBehaviour
         //create map bg mesh in segments of tiling tiles
         numStepsX = (int)(w / i_fTiling);
         numStepsY = (int)(h / i_fTiling);
-        float stepX = (float)w / (float)numStepsX;
-        float stepY = (float)h / (float)numStepsY;
+        float stepX = (float)w / (float)numStepsX /10.0f;
+        float stepY = (float)h / (float)numStepsY /10.0f;
 
         fUVScaling = i_fUVScaling;
-        float fMapWidth = w;
-        float fMapHeight = h;
+        float fMapWidth = w/10.0f;
+        float fMapHeight = h/10.0f;
 
         oNodes = new Node[numStepsX + 1, numStepsY + 1];
 
@@ -163,8 +163,8 @@ public class MeshGenerator : MonoBehaviour
         uvs = new Vector2[vertices.Count];
         for (int i = 0; i < vertices.Count; i++)
         {
-            float percentX = vertices[i].x; // / 32.0f /** tileAmount*/;
-            float percentY = vertices[i].y; // / 32.0f /** tileAmount*/;
+            /**/float percentX = vertices[i].x*10;
+            /**/float percentY = vertices[i].y*10;
             uvs[i] = new Vector2(percentX, percentY);
         }
     }

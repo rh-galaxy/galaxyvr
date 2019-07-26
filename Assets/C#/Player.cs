@@ -46,9 +46,9 @@ public class Player : MonoBehaviour
     const float MAXSPACEINHOLDWEIGHT = 50.0f;
     internal const int MAXSPACEINHOLDUNITS = 3;
     internal const float FULL_HEALTH = 1.5f;
-    const float SHIP_MASS = 60.0f;
+    const float SHIP_MASS = /**/6.0f;
     const float SHIP_STEERSPEED = 235.0f; //degree/second
-    const float SHIP_THRUST = 160.0f;
+    const float SHIP_THRUST = /**/1.91f;
     const int NUM_LIFES_MISSION = 5;
 
     //cargo
@@ -255,7 +255,7 @@ public class Player : MonoBehaviour
             if (fShipHealth < fLastShipHealth)
             {
                 c = collision.GetContact(0);
-                oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, 1.5f);
+                oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
                 oWallsColl.enableEmission = true;
             }
 
@@ -279,7 +279,7 @@ public class Player : MonoBehaviour
             oASScrape.Play();
 
             c = collision.GetContact(0);
-            oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, 1.5f);
+            oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
             oWallsColl.enableEmission = true;
         }
 
@@ -328,7 +328,7 @@ public class Player : MonoBehaviour
                 fShipHealth -= 0.5f * Time.fixedDeltaTime;
 
             //damage taken?
-            oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, 1.5f);
+            oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
             oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
 
             //landing stable
@@ -350,6 +350,10 @@ public class Player : MonoBehaviour
             szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
         {
             fShipHealth -= 0.5f * Time.fixedDeltaTime;
+
+            //damage taken?
+            /**/oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
+            /**/oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
         }
     }
 
@@ -739,7 +743,7 @@ public class Player : MonoBehaviour
 
         float fSin = Mathf.Sin(fDirection * (Mathf.PI / 180.0f));
         float fCos = Mathf.Cos(fDirection * (Mathf.PI / 180.0f));
-        stBulletInfo.vPos = oRb.position + new Vector2(fCos * 0.82f, fSin * 0.82f);
+        stBulletInfo.vPos = oRb.position + new Vector2(fCos * 0.102f, fSin * 0.102f);
         stBulletInfo.vVel = oRb.velocity + new Vector2(fCos * Bullet.BULLETBASEVEL, fSin * Bullet.BULLETBASEVEL);
         stBulletInfo.fDirection = fDirection;
 
@@ -918,12 +922,11 @@ public class Player : MonoBehaviour
             bCargoLoaded = true;
 
             //new weight
-            oRb.mass += iCargo;
+            oRb.mass += iCargo /**// 10.0f;
             oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //play load cargo sound
             oASGeneral.PlayOneShot(oClipLoadCargo);
-
         }
 
         return bCargoLoaded;
@@ -937,7 +940,7 @@ public class Player : MonoBehaviour
             iCargoSpaceUsed -= aHold[iCargoNumUsed];
 
             //new weight
-            oRb.mass -= aHold[iCargoNumUsed];
+            oRb.mass -= aHold[iCargoNumUsed] /**// 10.0f;
             oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //add score for the cargo moved
