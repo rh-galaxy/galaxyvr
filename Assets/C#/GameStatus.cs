@@ -16,7 +16,7 @@ public class GameStatus : MonoBehaviour
     public GameObject oLeft, oRight, oBottom;
     public GameObject oBack;
 
-    float BAR_LENGTH = .5f;
+    float BAR_LENGTH = 5.0f;
 
     Material oMatRed;
     Material oMatOriginal;

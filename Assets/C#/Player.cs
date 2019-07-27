@@ -46,9 +46,9 @@ public class Player : MonoBehaviour
     const float MAXSPACEINHOLDWEIGHT = 50.0f;
     internal const int MAXSPACEINHOLDUNITS = 3;
     internal const float FULL_HEALTH = 1.5f;
-    const float SHIP_MASS = /**/6.0f;
+    const float SHIP_MASS = /**/4.8f; //6.0
     const float SHIP_STEERSPEED = 235.0f; //degree/second
-    const float SHIP_THRUST = /**/1.91f;
+    const float SHIP_THRUST = /**/1.40f; //1.91
     const int NUM_LIFES_MISSION = 5;
 
     //cargo
@@ -100,6 +100,8 @@ public class Player : MonoBehaviour
         oThruster.enableEmission = false;
         oWallsColl.enableEmission = false;
         asm = GameObject.Find("AudioStateMachineDND").GetComponent<AudioStateMachine>();
+
+        /**///oExplosionParticle.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
     }
 
     public void Init(string i_szName, int i_iPlayerID, Vector2 i_vStartPos, GameLevel i_oMap)
@@ -414,7 +416,7 @@ public class Player : MonoBehaviour
         {
             if(i != iCurSec) fMeanSpeed += fMeanSpeeds[i];
         }
-        fMeanSpeed /= fMeanSpeeds.Length-1;
+        fMeanSpeed = fMeanSpeed/(fMeanSpeeds.Length-1) /**/*10;
         //...
 
         //enemies near (used in mission music)
@@ -743,7 +745,7 @@ public class Player : MonoBehaviour
 
         float fSin = Mathf.Sin(fDirection * (Mathf.PI / 180.0f));
         float fCos = Mathf.Cos(fDirection * (Mathf.PI / 180.0f));
-        stBulletInfo.vPos = oRb.position + new Vector2(fCos * 0.102f, fSin * 0.102f);
+        stBulletInfo.vPos = oRb.position + new Vector2(fCos * 0.094f, fSin * 0.094f);
         stBulletInfo.vVel = oRb.velocity + new Vector2(fCos * Bullet.BULLETBASEVEL, fSin * Bullet.BULLETBASEVEL);
         stBulletInfo.fDirection = fDirection;
 
@@ -922,7 +924,7 @@ public class Player : MonoBehaviour
             bCargoLoaded = true;
 
             //new weight
-            oRb.mass += iCargo /**// 10.0f;
+            oRb.mass += iCargo /**// 11.0f;
             oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //play load cargo sound
@@ -940,7 +942,7 @@ public class Player : MonoBehaviour
             iCargoSpaceUsed -= aHold[iCargoNumUsed];
 
             //new weight
-            oRb.mass -= aHold[iCargoNumUsed] /**// 10.0f;
+            oRb.mass -= aHold[iCargoNumUsed] /**// 11.0f;
             oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //add score for the cargo moved

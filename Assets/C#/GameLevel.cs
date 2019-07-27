@@ -123,8 +123,8 @@ public class GameLevel : MonoBehaviour
     Vector2[] stPlayerStartPos = new Vector2[8];
 
     const float DEFAULT_SHIPGRAVITYBASEX = 0.0f;      //pixel/second 2
-    const float DEFAULT_SHIPGRAVITYBASEY = /**/9.0f;      //pixel/second 2             //70
-    const float DEFAULT_SHIPRESISTANCE = /**/0.68f;  //constant (velocity dependent)  //0.68f
+    const float DEFAULT_SHIPGRAVITYBASEY = /**/7.6f;      //pixel/second 2             //70
+    const float DEFAULT_SHIPRESISTANCE = 0.68f;       //constant (velocity dependent)  //0.68f
     internal const float BULLETBASEVEL = /**/22.0f;       //pixel/second
     internal const float BULLETFREETIME = 3.1f;  //sec to be free from bullets when just come alive
 
@@ -739,13 +739,13 @@ public class GameLevel : MonoBehaviour
             }
             else if (szTokens[0].CompareTo("*GRAVITY") == 0)
             {
-                /**/vGravity.x = float.Parse(szTokens[1], ci.NumberFormat) / 10.0f;
-                /**/vGravity.y = -float.Parse(szTokens[2], ci.NumberFormat) / 10.0f;
+                /**/vGravity.x = float.Parse(szTokens[1], ci.NumberFormat) / 9.2f;
+                /**/vGravity.y = -float.Parse(szTokens[2], ci.NumberFormat) / 9.2f;
             }
             else if (szTokens[0].CompareTo("*RESISTANCE") == 0)
             {
-                /**/fDrag = float.Parse(szTokens[1], ci.NumberFormat) /10.0f;
-                //m_vDrag.y = float.Parse(szTokens[2]); //no support in physics engine
+                /**/fDrag = float.Parse(szTokens[1], ci.NumberFormat);
+                //vDrag.y = float.Parse(szTokens[2]); //no support in physics engine
             }
             else if (szTokens[0].CompareTo("*PLAYERSTARTPOS") == 0)
             {

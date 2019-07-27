@@ -57,7 +57,7 @@ public class Door : MonoBehaviour
 
         gameObject.SetActive(true);
         if (stDoorInfo.bHorizontal) transform.Rotate(Vector3.back, 270, Space.Self);
-        transform.localPosition = new Vector3(stDoorInfo.vPos.x, stDoorInfo.vPos.y, 1.0f);
+        transform.localPosition = new Vector3(stDoorInfo.vPos.x, stDoorInfo.vPos.y, .10f);
 
         //never changes
         oBase1.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
@@ -69,7 +69,7 @@ public class Door : MonoBehaviour
             oButtons[i] = Instantiate(oButtonObjBase, this.transform);
             oButtons[i].SetActive(true);
             oButtons[i].name = "Knapp" + i_iDoorId.ToString();
-            oButtons[i].transform.position = new Vector3(stDoorInfo.stButtonPos[i].x, stDoorInfo.stButtonPos[i].y, -0.2f);
+            oButtons[i].transform.position = new Vector3(stDoorInfo.stButtonPos[i].x, stDoorInfo.stButtonPos[i].y, /**/-0.02f);
         }
 
         oMaterialRed = Resources.Load("ButtonRed", typeof(Material)) as Material;

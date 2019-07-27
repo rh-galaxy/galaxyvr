@@ -77,7 +77,8 @@ public class Enemy : MonoBehaviour
         iCurWP = 1;
         fWPTime = 0;
         fFireTime = 0;
-        if (stInfo.iEnemyType != 4) oExplosionParticle.transform.localScale = new Vector3(0.9f, 0.9f, 2.0f); //smaller explosion
+        /**/if (stInfo.iEnemyType != 4) oExplosionParticle.transform.localScale = new Vector3(1.60f, 1.60f, 1.60f); //smaller explosion
+        /**/else oExplosionParticle.transform.localScale = new Vector3(2.00f, 2.00f, 2.00f); //normal explosion
         if (stInfo.iEnemyType == 0) enemy0.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 1) enemy1.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 2) enemy2.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
@@ -133,7 +134,7 @@ public class Enemy : MonoBehaviour
     {
         Vector2 vPlayerPos = thePlayer.GetPosition();
         Vector2 vDist = vPlayerPos - new Vector2(vPos.x, vPos.y);
-        return (vDist.magnitude < (450/32.0f)); //~14 tiles, like in the old game
+        return (vDist.magnitude < (450/320.0f)); //~14 tiles, like in the old game
     }
 
     void FixedUpdate()

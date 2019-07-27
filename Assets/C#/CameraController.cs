@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
         oMap = i_oMap;
         vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update.
 
-        vCamOffset = new Vector3(0, .3f, -0.9f);
+        vCamOffset = new Vector3(0, 1.2f, -0.8f);
         vMapSize = oMap.GetMapSize();
     }
     public void InitForMenu()
@@ -84,7 +84,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    float fX = 5, fY = 0, fZ = 0;
+    float fX = .5f, fY = 0, fZ = 0;
     float fSnapTimer = 0;
     bool bFirst = true;
     void LateUpdate()
@@ -99,22 +99,23 @@ public class CameraController : MonoBehaviour
             else fY += fMouseX * 3.0f;
             fX -= fMouseY * 3.0f;
 
-            if (Input.GetKey(KeyCode.R)) { fX = 5; fY = 0; fZ = 0; }
+            if (Input.GetKey(KeyCode.R)) { fX = .5f; fY = 0; fZ = 0; }
 
             transform.eulerAngles = new Vector3(fX, fY, fZ);
         }
 
         if(bMapMode)
         {
-            Vector3 v = oPlayer.transform.position + vCamOffset;
-            float fLeftLimit = -(vMapSize.x / 20.0f) + 1.0f;
-            float fRightLimit = (vMapSize.x / 20.0f) - 1.0f;
+            Vector3 v = oPlayer.transform.position;
+            float fLeftLimit = -(vMapSize.x / 20.0f) + 0.5f;
+            float fRightLimit = (vMapSize.x / 20.0f) - 0.5f;
             if (v.x < fLeftLimit) v.x = fLeftLimit;
             if (v.x > fRightLimit) v.x = fRightLimit;
-            float fTopLimit = (vMapSize.y / 20.0f) - .4f;
-            float fBottomLimit = -(vMapSize.y / 20.0f) + 1.4f;
+            float fTopLimit = (vMapSize.y / 20.0f) - 0.3f;
+            float fBottomLimit = -(vMapSize.y / 20.0f) + 0.5f;
             if (v.y < fBottomLimit) v.y = fBottomLimit;
             if (v.y > fTopLimit) v.y = fTopLimit;
+            v += vCamOffset; //add this after limiting
 
             if (bSnapMovement)
             {
