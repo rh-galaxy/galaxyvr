@@ -100,8 +100,6 @@ public class Player : MonoBehaviour
         oThruster.enableEmission = false;
         oWallsColl.enableEmission = false;
         asm = GameObject.Find("AudioStateMachineDND").GetComponent<AudioStateMachine>();
-
-        /**///oExplosionParticle.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
     }
 
     public void Init(string i_szName, int i_iPlayerID, Vector2 i_vStartPos, GameLevel i_oMap)
@@ -208,19 +206,19 @@ public class Player : MonoBehaviour
 
         int iNum = collision.contactCount;
         ContactPoint2D c = collision.GetContact(0);
-        float fImpulse = c.normalImpulse * 1.0f;
-        float fTangentImpulse = c.tangentImpulse * 1.0f; //sliding impact?
-        float fSpeedX = c.relativeVelocity.x;
-        float fSpeedY = c.relativeVelocity.y;
+        float fImpulse = c.normalImpulse * 190.0f;
+        float fTangentImpulse = c.tangentImpulse * 190.0f; //sliding impact?
+        float fSpeedX = c.relativeVelocity.x *10;
+        float fSpeedY = c.relativeVelocity.y *10;
         //then it might be a second impact point (that's all we take into concideration
         // any more and the ship is in deep trouble)
         if (iNum > 1)
         {
             c = collision.GetContact(1);
-            fImpulse += c.normalImpulse * 1.0f;
-            fTangentImpulse += c.tangentImpulse * 1.0f; //sliding impact?
-            fSpeedX += c.relativeVelocity.x;
-            fSpeedY += c.relativeVelocity.y;
+            fImpulse += c.normalImpulse * 190.0f;
+            fTangentImpulse += c.tangentImpulse * 190.0f; //sliding impact?
+            fSpeedX += c.relativeVelocity.x *10;
+            fSpeedY += c.relativeVelocity.y *10;
             fSpeedX /= 2;
             fSpeedY /= 2;
         }
@@ -334,7 +332,7 @@ public class Player : MonoBehaviour
             oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
 
             //landing stable
-            if (fDiff < 1)
+            if (fDiff < 3.0f)
             {
                 fLandTime += Time.fixedDeltaTime;
                 if (fLandTime > 0.3f && !bLanded)

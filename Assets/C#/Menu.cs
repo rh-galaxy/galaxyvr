@@ -294,135 +294,7 @@ public class Menu : MonoBehaviour
     internal Material oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
-/*        aMenuLevels = new C_LevelInMenu[NUM_LEVELS];
-
-        oMaterialOctagonLocked = Resources.Load("LevelOctagonGrey", typeof(Material)) as Material;
-        oMaterialOctagonUnlocked = Resources.Load("LevelOctagon", typeof(Material)) as Material;
-        oMaterialOctagonHighlighted = Resources.Load("LevelOctagonHigh", typeof(Material)) as Material;
-        oMaterialPentagonLocked = Resources.Load("LevelPentagonGrey", typeof(Material)) as Material;
-        oMaterialPentagonUnlocked = Resources.Load("LevelPentagon", typeof(Material)) as Material;
-        oMaterialPentagonHighlighted = Resources.Load("LevelPentagonHigh", typeof(Material)) as Material;
-        oMaterialOctagonPlay = Resources.Load("LevelOctagonPlay", typeof(Material)) as Material;
-        oMaterialOctagonPlayHighlighted = Resources.Load("LevelOctagonPlayHigh", typeof(Material)) as Material;
-        oMaterialCircle = Resources.Load("LevelCircle", typeof(Material)) as Material;
-        oMaterialCircleHighlighted = Resources.Load("LevelCircleHigh", typeof(Material)) as Material;
-
-        oMaterialRankBronze = Resources.Load("RankBronze", typeof(Material)) as Material;
-        oMaterialRankSilver = Resources.Load("RankSilver", typeof(Material)) as Material;
-        oMaterialRankGold = Resources.Load("RankGold", typeof(Material)) as Material;
-
-        oMaterialGrey = Resources.Load("LandingZone", typeof(Material)) as Material;
-        oMiniMapMaterial = Resources.Load("MiniMap", typeof(Material)) as Material;
-        oRankQuadRenderer = oRankQuad.GetComponent<MeshRenderer>();
-
-        //create a quad a circle for gazeing in VR or mouse cursor in non VR
-        oGazeQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        oGazeQuad.transform.parent = transform;
-        MonoBehaviour.DestroyImmediate(oGazeQuad.GetComponent<Collider>());
-        oCursorMaterial = Resources.Load("Cursor", typeof(Material)) as Material;
-        oCursorMaterialWait = Resources.Load("Cursor2", typeof(Material)) as Material;
-        oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
-        oGazeQuad.transform.localScale = new Vector3(3.8f, 3.8f, 1);
-
-        //original 55 levels
-        float fStartAngle = -45;
-        float fAngleRange = 90;
-        Vector3 vPos, vAroundPoint = new Vector3(0, 0, -90);
-        for (int i = 0; i < iNumRace; i++)
-        {
-            vPos = new Vector3(0, (i % 3) * 10.0f - 24.0f, 12.0f);
-            float fRotateAngle = fStartAngle + i * (fAngleRange / (iNumRace - 1));
-            aMenuLevels[i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, aLevels[i], i);
-        }
-        int iStartOffs = iNumRace;
-        for (int i = 0; i < iNumMission; i++)
-        {
-            vPos = new Vector3(0, (i % 3) * 10.0f + 24.0f, 12.0f);
-            float fRotateAngle = fStartAngle + i * (fAngleRange / (iNumMission - 1));
-            aMenuLevels[iStartOffs + i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, aLevels[iStartOffs+i], iStartOffs + i);
-        }
-
-        //menu options
-        oMenuQuit = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 31, "Quit", "Quit", 30.0f, 12.0f);
-        oMenuControls = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 38, "Controls", "Controls", 30.0f, 9.0f);
-        oMenuCredits = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 45, "Credits", "Credits", 30.0f, 9.0f);
-
-        CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-        oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 53.5f, "Snap", "Snap", 30.0f, 9.0f);
-
-        iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
-        QualitySettings.SetQualityLevel(iQuality, true);
-        oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 62, "Med", "Qual1", 30.0f, 9.0f);
-        oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 69, "High", "Qual2", 30.0f, 9.0f);
-        oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -60, 12.0f), vAroundPoint, 76, "Ultra", "Qual3", 30.0f, 9.0f);
-
-        //next/prev buttons
-        vPos = new Vector3(0.0f, 10.0f, -0.1f);
-        if (oMenuNext1 != null) oMenuNext1.DestroyObj();
-        oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -90), 50, "", "Next1", 18.0f, 9.0f);
-        vPos = new Vector3(1000.0f, 10.0f, -0.1f);
-        if (oMenuPrev1 != null) oMenuPrev1.DestroyObj();
-        oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -90), -50, "<", "Prev1", 18.0f, 9.0f);
-
-        //additional official levels with hiscore
-        //...
-
-        //custom levels
-        string s = Application.persistentDataPath;
-        DirectoryInfo info = new DirectoryInfo(s);
-        FileInfo[] fileInfo = info.GetFiles("*.des");
-        aMenuCustomLevels = new C_LevelInMenu[fileInfo.Length];
-        vAroundPoint = new Vector3(1000, 0, -90);
-        int iNum = (fileInfo.Length > 9 * 5 ? 9 * 5 : fileInfo.Length); //limit to 45, if its a problem fix later
-        for (int i=0; i< iNum; i++)
-        {
-            vPos = new Vector3(1000, (i % 9) * 10.5f - 47.0f, 12.0f);
-            float fRotateAngle = fStartAngle + (i / 9) * 23.0f;
-            S_Levels level = new S_Levels();
-            level.iLevelType = (int)LevelType.MAP_MISSION;
-            level.szLevelDescription = ""; //set when level info is set
-            level.szLevelName = fileInfo[i].Name;
-            int iPos = fileInfo[i].Name.LastIndexOf('.');
-            level.szLevelDisplayName = fileInfo[i].Name;
-            if (iPos > 0) level.szLevelDisplayName = fileInfo[i].Name.Remove(iPos);
-            aMenuCustomLevels[i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, level, 200+i);
-        }
-        //level text
-        GameObject oCustomPathText;
-        oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-        oCustomPathText.transform.localPosition = new Vector3(1000.0f, fileInfo.Length<22? 0.0f:50.0f, 12.0f);
-        oCustomPathText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        //oCustomPathText.transform.RotateAround(vAroundPoint, Vector3.up, 0.0f);
-        oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels ("+s+"), download editor from www.galaxy-forces-vr.com";
-        oCustomPathText.SetActive(true);
-
-        //change fov if non VR since that default setting shows to wide fov
-        // and is not behaving reliably
-        if (!XRDevice.isPresent)
-            Camera.main.fieldOfView = 45.0f;
-        //prevent selection if trigger was hold when menu is started
-        iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0:30;
-
-        //set random skybox
-        int iSkyBox = UnityEngine.Random.Range(1, 5);
-        switch (iSkyBox)
-        {
-            case 1: RenderSettings.skybox = oSkyBoxMat1; break;
-            case 2: RenderSettings.skybox = oSkyBoxMat2; break;
-            case 3: RenderSettings.skybox = oSkyBoxMat3; break;
-            case 4: RenderSettings.skybox = oSkyBoxMat4; break;
-            case 5: RenderSettings.skybox = oSkyBoxMat5; break;
-        }
-
-        oWRScoreText1TextMesh = oWRScoreText1.GetComponent<TextMesh>();
-        oWRScoreText2TextMesh = oWRScoreText2.GetComponent<TextMesh>();
-        oWRScoreText3TextMesh = oWRScoreText3.GetComponent<TextMesh>();
-        oWRNameText1TextMesh = oWRNameText1.GetComponent<TextMesh>();
-        oWRNameText2TextMesh = oWRNameText2.GetComponent<TextMesh>();
-        oWRNameText3TextMesh = oWRNameText3.GetComponent<TextMesh>();
-        oYLScoreTextTextMesh = oYLScoreText.GetComponent<TextMesh>();
-        oYRScoreTextTextMesh = oYRScoreText.GetComponent<TextMesh>();
-        oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();*/
+        //done incrementally in Update
     }
 
     int iMissionUnlocked = 0;
@@ -1199,12 +1071,12 @@ public class Menu : MonoBehaviour
             if (i_iLevelId >= 200)
             {
                 oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj1, Menu.theMenu.transform);
-                oLevelText.transform.position = new Vector3(vPos.x + .63f, vPos.y - .185f, vPos.z - .14f);
+                oLevelText.transform.position = new Vector3(vPos.x + .63f, vPos.y - .185f, vPos.z - .16f);
             }
             else
             {
                 oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-                oLevelText.transform.position = new Vector3(vPos.x - .63f, vPos.y - .345f, vPos.z - .14f);
+                oLevelText.transform.position = new Vector3(vPos.x - .63f, vPos.y - .345f, vPos.z - .16f);
             }
             oLevelText.transform.localScale = new Vector3(1.85f, 1.85f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
