@@ -1,12 +1,7 @@
 Release
-- Game play promotion video
- (done except music track needs to be mixed in)
-- Test/fix it working on minimum req hardware (probably ok)
-   i5 970GTX
-- Make it pass Oculus VRC (TestSubmitFramesWhenNotVisible fails).
- Might be that the test passes while manually tested.
-- Use Unity non beta (might be a requirement)
+- Use Unity non beta (not a requirement)
 - Submit app: set correct supported controllers (need bug fix by Oculus)
+- Trailer: Seems only 30fps is shown not 60 (need fix by Oculus)
 Release for Oculus Quest
 - Get the concept approved by Oculus (currently denied)
 
