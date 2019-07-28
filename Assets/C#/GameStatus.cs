@@ -3,7 +3,7 @@
 public class GameStatus : MonoBehaviour
 {
     public GameObject oPlayer;
-    /**/private Vector3 vOffset = new Vector3(-8.0f / 10.0f, -35.0f / 10.0f, -4.0f / 10.0f); //from camera (x,y)
+    /**/private Vector3 vOffset = new Vector3(-8.0f / 10.0f, -30.0f / 10.0f, -4.0f / 10.0f); //from camera (x,y)
     /**/private Vector3 vOffsetNoVR = new Vector3(-9.15f / 10.0f, -6.3f / 10.0f, -3.5f / 10.0f); //from camera (x,y)
     /**///private Vector3 vOffsetNoVR = new Vector3(-90.0f / 10, -6.3f / 10, -3.5f / 10); //from camera (x,y) used while recording video
 
@@ -37,7 +37,7 @@ public class GameStatus : MonoBehaviour
         else
         {
             transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            if (!i_bIsRace) vOffsetNoVR.y = -4.0f;
+            if (!i_bIsRace) vOffsetNoVR.y = -0.4f;
         }
 
         string szMaterial = i_bIsRace ? "Status2" : "Status";

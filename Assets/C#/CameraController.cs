@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
         oMap = i_oMap;
         vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update.
 
-        vCamOffset = new Vector3(0, 0.3f, -0.70f);
+        vCamOffset = new Vector3(0, 0.2f, -0.70f);
         vMapSize = oMap.GetMapSize();
     }
     public void InitForMenu()
@@ -84,7 +84,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    float fX = .5f, fY = 0, fZ = 0;
+    float fX = 5.0f, fY = 0, fZ = 0;
     float fSnapTimer = 0;
     bool bFirst = true;
     void LateUpdate()
@@ -99,7 +99,7 @@ public class CameraController : MonoBehaviour
             else fY += fMouseX * 3.0f;
             fX -= fMouseY * 3.0f;
 
-            if (Input.GetKey(KeyCode.R)) { fX = .5f; fY = 0; fZ = 0; }
+            if (Input.GetKey(KeyCode.R)) { fX = 5.0f; fY = 0; fZ = 0; }
 
             transform.eulerAngles = new Vector3(fX, fY, fZ);
         }
@@ -122,7 +122,7 @@ public class CameraController : MonoBehaviour
                 fSnapTimer += Time.deltaTime;
                 float fDist = (vCamPos - v).magnitude;
                 //move if too far from current pos, or too long time since last move
-                if (bFirst || (fDist > 1.05f) || (fDist > .55f && fSnapTimer > 4.7f))
+                if (bFirst || (fDist > 0.80f) || (fDist > 0.43f && fSnapTimer > 4.4f))
                 {
                     bFirst = false;
                     fSnapTimer = 0;
