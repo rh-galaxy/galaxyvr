@@ -892,10 +892,10 @@ public class Menu : MonoBehaviour
                         {
                             oCreditsQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
                             oCreditsQuad.transform.parent = Menu.theMenu.transform;
-                            oCreditsQuad.transform.localPosition = new Vector3(0, -15, 12.0f);
+                            oCreditsQuad.transform.localPosition = new Vector3(0, -1.5f, 1.20f);
                             oCreditsQuad.transform.localScale = new Vector3(40.0f, 40.0f, 1.0f);
-                            Vector3 vAroundPoint = new Vector3(0, 0, -90);
-                            oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 60);
+                            Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
+                            oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 68);
                         }
 #if DISABLESTEAMWORKS
                         oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
@@ -912,10 +912,10 @@ public class Menu : MonoBehaviour
                         {
                             oCreditsQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
                             oCreditsQuad.transform.parent = Menu.theMenu.transform;
-                            oCreditsQuad.transform.localPosition = new Vector3(0, -15, 12.0f);
+                            oCreditsQuad.transform.localPosition = new Vector3(0, -1.5f, 1.20f);
                             oCreditsQuad.transform.localScale = new Vector3(40.0f, 40.0f, 1.0f);
-                            Vector3 vAroundPoint = new Vector3(0, 0, -90);
-                            oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 60);
+                            Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
+                            oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 68);
                         }
                         oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
 

@@ -206,8 +206,8 @@ public class Player : MonoBehaviour
 
         int iNum = collision.contactCount;
         ContactPoint2D c = collision.GetContact(0);
-        float fImpulse = c.normalImpulse * 140.0f;
-        float fTangentImpulse = c.tangentImpulse * 140.0f; //sliding impact?
+        float fImpulse = c.normalImpulse * 100.0f;
+        float fTangentImpulse = c.tangentImpulse * 100.0f; //sliding impact?
         float fSpeedX = c.relativeVelocity.x *10;
         float fSpeedY = c.relativeVelocity.y *10;
         //then it might be a second impact point (that's all we take into concideration
@@ -215,8 +215,8 @@ public class Player : MonoBehaviour
         if (iNum > 1)
         {
             c = collision.GetContact(1);
-            fImpulse += c.normalImpulse * 140.0f;
-            fTangentImpulse += c.tangentImpulse * 140.0f; //sliding impact?
+            fImpulse += c.normalImpulse * 100.0f;
+            fTangentImpulse += c.tangentImpulse * 100.0f; //sliding impact?
             fSpeedX += c.relativeVelocity.x *10;
             fSpeedY += c.relativeVelocity.y *10;
             fSpeedX /= 2;
