@@ -97,6 +97,8 @@ public class GameManager : MonoBehaviour
 #endif
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
 
+        /**///XRDevice.SetTrackingSpaceType(TrackingSpaceType.Stationary);
+
 #if LOGPROFILERDATA
         Profiler.logFile = "log" + logProfilerFileCnt.ToString();
         Profiler.enableBinaryLog = true;
@@ -683,6 +685,10 @@ public class GameManager : MonoBehaviour
         {
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
+#if !DISABLESTEAMWORKS
+        if(Input.GetKey(KeyCode.JoystickButton7))
+            SteamFriends.ActivateGameOverlay("settings");
+#endif
         /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
         /**///AudioStateMachine.instance.masterVolume = 0.0f; //while recording video without music
 
@@ -893,7 +899,7 @@ public class GameManager : MonoBehaviour
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
-                if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.JoystickButton7) || Input.GetKey(KeyCode.Escape)
+                if (Input.GetKey(KeyCode.JoystickButton6) /*|| Input.GetKey(KeyCode.JoystickButton7)*/ || Input.GetKey(KeyCode.Escape)
                     || Menu.bLevelUnSelected )
                 {
                     Menu.bLevelUnSelected = false;
@@ -981,6 +987,10 @@ public class GameManager : MonoBehaviour
                     else if (GameLevel.theMap.LoadDone())
                     {
                         //Debug.Log("Load map segments Done");
+#if !DISABLESTEAMWORKS
+                        XRDevice.SetTrackingSpaceType(TrackingSpaceType.Stationary);
+                        InputTracking.Recenter();
+#endif
                         iState++;
                     }
                 }
