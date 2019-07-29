@@ -17,6 +17,7 @@ public class Menu : MonoBehaviour
     public static bool bWorldBestReplay2 = false;
     public static bool bWorldBestReplay3 = false;
     public static bool bQuit = false;
+    public static bool bRecenter = false;
     public static bool bPauseInput = false;
     LevelInfo stLevel;
     int iAllowSelection;
@@ -276,6 +277,7 @@ public class Menu : MonoBehaviour
 
     public CameraController oCameraHolder;
 
+    C_Item2InMenu oMenuRecenter;
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
     C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
@@ -576,6 +578,7 @@ public class Menu : MonoBehaviour
             Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
             //menu options
+            oMenuRecenter = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 24, "Re center", "Recenter", 30.0f, 12.0f);
             oMenuQuit = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 31, "Quit", "Quit", 30.0f, 12.0f);
             oMenuControls = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 38, "Controls", "Controls", 30.0f, 9.0f);
             oMenuCredits = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 45, "Credits", "Credits", 30.0f, 9.0f);
@@ -677,6 +680,7 @@ public class Menu : MonoBehaviour
         if (oMenuNext1 != null && oMenuNext1.oLevelQuad != null) oMenuNext1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
         if (oMenuPrev1 != null && oMenuPrev1.oLevelQuad != null) oMenuPrev1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
 
+        if (oMenuRecenter != null && oMenuRecenter.oLevelQuad != null) oMenuRecenter.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
         if (oMenuQuit != null && oMenuQuit.oLevelQuad != null) oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
         if (oMenuControls != null && oMenuControls.oLevelQuad != null) oMenuControls.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
         if (oMenuCredits != null && oMenuCredits.oLevelQuad != null) oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
@@ -768,6 +772,10 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
             {
                 oMenuReplayWR3.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
+            {
+                oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
             {
@@ -877,6 +885,12 @@ public class Menu : MonoBehaviour
                     else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
                     {
                         bWorldBestReplay3 = true;
+                        iAllowSelection = 30;
+                        bPlaySelectSound = true;
+                    }
+                    else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
+                    {
+                        bRecenter = true;
                         iAllowSelection = 30;
                         bPlaySelectSound = true;
                     }

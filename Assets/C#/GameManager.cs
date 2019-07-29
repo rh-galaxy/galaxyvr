@@ -642,6 +642,7 @@ public class GameManager : MonoBehaviour
     }
 
     //float t1;
+    float fRecenterTimer = 0.0f;
     void Update()
     {
 #if LOGPROFILERDATA
@@ -673,6 +674,17 @@ public class GameManager : MonoBehaviour
             UnityEngine.Application.Quit();
 #endif
         }
+        if (Menu.bRecenter)
+        {
+            fRecenterTimer += Time.deltaTime;
+            if (fRecenterTimer > 3.0f)
+            {
+                XRDevice.SetTrackingSpaceType(TrackingSpaceType.Stationary);
+                InputTracking.Recenter();
+                Menu.bRecenter = false;
+                fRecenterTimer = 0.0f;
+            }
+        }
 
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
@@ -686,8 +698,8 @@ public class GameManager : MonoBehaviour
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
         }
 #if !DISABLESTEAMWORKS
-        if(Input.GetKey(KeyCode.JoystickButton7))
-            SteamFriends.ActivateGameOverlay("settings");
+        //if(Input.GetKey(KeyCode.JoystickButton7))
+        //    SteamFriends.ActivateGameOverlay("settings");
 #endif
         /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
         /**///AudioStateMachine.instance.masterVolume = 0.0f; //while recording video without music
@@ -987,10 +999,6 @@ public class GameManager : MonoBehaviour
                     else if (GameLevel.theMap.LoadDone())
                     {
                         //Debug.Log("Load map segments Done");
-#if !DISABLESTEAMWORKS
-                        XRDevice.SetTrackingSpaceType(TrackingSpaceType.Stationary);
-                        InputTracking.Recenter();
-#endif
                         iState++;
                     }
                 }
