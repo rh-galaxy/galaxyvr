@@ -13,7 +13,7 @@ function print_hiscore()
 			" UNION ALL".
 			" SELECT achievements_t.name AS name, achievements_t.level, achievements_t.score, levels_t.is_time, levels_t.limit3, achievements_t.score AS pos_score FROM achievements_t, levels_t WHERE achievements_t.level = levels_t.level AND levels_t.is_time=0) scr_t".
 			" GROUP BY scr_t.name".
-			" ORDER BY score_sum DESC LIMIT 0,21";
+			" ORDER BY score_sum DESC LIMIT 0,51";
 
 		$result = @mysqli_query($db, $select_string);
 		
@@ -25,9 +25,9 @@ function print_hiscore()
 			// it better be more than 0
 			if($num_rows > 0) {
 			
-				echo "<table class=data width='100%'><tr><td></td><td>Top 21<br>players</td></tr></table>";
+				echo "<table class=data width='100%'><tr><td></td><td>Top 51<br>players</td></tr></table>";
 			
-				$num_per_table = 7;
+				$num_per_table = 17;
 				for ($j=0; $j < floor(($num_rows+($num_per_table-1))/$num_per_table); $j++) {
 					// table header
 					echo "<table class=ranking width='30%' cellspacing=2 cellpadding=0>";

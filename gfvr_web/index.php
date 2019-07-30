@@ -37,7 +37,7 @@ All done in 55 narrow space caves filled with enemies. Featuring interactive mus
 
 <p>Available on Oculus Home (for Rift), and Steam (Rift and Vive) at 16th of August 2019 as a preliminary date.</p>
 <p><img align="left" src="images/screen8_860.jpg" title="Galaxy Forces VR screenshot"></p>
-<p><video width="860" height="484" controls><source src="gfvr16.mp4" type="video/mp4">Your browser does not support the video tag.</video></p>
+<p><video width="860" height="484" controls poster="/images/screen4_race13_860.jpg"><source src="gfvr16.mp4" type="video/mp4">Your browser does not support the video tag.</video></p>
 
 <table cellspacing="10" cellpadding="0">
 <tr>
