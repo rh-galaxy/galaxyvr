@@ -319,6 +319,7 @@ public class Menu : MonoBehaviour
 
     public GameObject oTMProBaseObj, oTMProBaseObj1, oTMProBaseObj2;
     public GameObject oLevelInfoContainer;
+    public GameObject oLevelInfoLimitsContainer;
     public GameObject oWRNameText1, oWRNameText2, oWRNameText3;
     private TextMesh oWRNameText1TextMesh, oWRNameText2TextMesh, oWRNameText3TextMesh;
     public GameObject oWRScoreText1, oWRScoreText2, oWRScoreText3;
@@ -326,14 +327,21 @@ public class Menu : MonoBehaviour
     public GameObject oYLScoreText, oYRScoreText, oLevelText;
     private TextMesh oYLScoreTextTextMesh, oYRScoreTextTextMesh, oLevelTextTextMesh;
     public GameObject oRankQuad;
+    public GameObject oCorner;
 
-    string GetTimeString(int i_iTimeMs)
+    public GameObject oLimitsText1, oLimitsText2, oLimitsText3;
+    /**/private TextMesh oLimitsText1TextMesh, oLimitsText2TextMesh, oLimitsText3TextMesh;
+
+    string GetTimeString(int i_iTimeMs, bool i_bTwoDec = false)
     {
         int iMs = i_iTimeMs % 1000;
+        if (i_bTwoDec) iMs /= 10;
         int iTotalSeconds = i_iTimeMs/1000;
         int iSeconds = iTotalSeconds % 60;
         int iMinutes = iTotalSeconds / 60;
-        string szTime = iMinutes + ":" + iSeconds.ToString("00") + "." + iMs.ToString("000");
+        string szTime = iMinutes + ":" + iSeconds.ToString("00") + ".";
+        if (i_bTwoDec) szTime += iMs.ToString("00");
+        else szTime += iMs.ToString("000");
 
         return szTime;
     }
@@ -341,6 +349,7 @@ public class Menu : MonoBehaviour
     public void SetLevelInfoOff()
     {
         oLevelInfoContainer.SetActive(false);
+        oLevelInfoLimitsContainer.SetActive(false);
     }
 
     string szLevelInfoDescription;
@@ -373,6 +382,9 @@ public class Menu : MonoBehaviour
             vRotation = Camera.main.transform.eulerAngles; vRotation.z = 0;
             oLevelInfoContainer.transform.eulerAngles = vRotation;
             oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
+            /**/oLevelInfoLimitsContainer.transform.position = oCorner.transform.position;
+            /**/oLevelInfoLimitsContainer.transform.eulerAngles = vRotation;
+            /**/oLevelInfoLimitsContainer.transform.localScale = new Vector3(2.5f, 2.5f, 1.0f);
 
             if (GameLevel.iLevelIndex >= 200) oLevelTextTextMesh.text = szLevelInfoDescription; //custom levels have description from .des file
             else oLevelTextTextMesh.text = aLevels[GameLevel.iLevelIndex].szLevelDescription; //non custom levels have description from hard array above
@@ -382,6 +394,7 @@ public class Menu : MonoBehaviour
             else oWRNameText2TextMesh.text = i_stLevelInfo.szWRName2.Substring(0, 16) + "...";
             if (i_stLevelInfo.szWRName3.Length <= 17) oWRNameText3TextMesh.text = i_stLevelInfo.szWRName3;
             else oWRNameText3TextMesh.text = i_stLevelInfo.szWRName3.Substring(0, 16) + "...";
+
             string szScore = (i_stLevelInfo.iWRScore1 / 1000.0f).ToString("N3");
             if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore1);
             if (i_stLevelInfo.iWRScore1 == -1) szScore = "--";
@@ -390,7 +403,6 @@ public class Menu : MonoBehaviour
             if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore2);
             if (i_stLevelInfo.iWRScore2 == -1) szScore = "--";
             oWRScoreText2TextMesh.text = szScore;
-
             szScore = (i_stLevelInfo.iWRScore3 / 1000.0f).ToString("N3");
             if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iWRScore3);
             if (i_stLevelInfo.iWRScore3 == -1) szScore = "--";
@@ -470,10 +482,28 @@ public class Menu : MonoBehaviour
             oWRScoreText1.SetActive(true); oWRScoreText2.SetActive(true); oWRScoreText3.SetActive(true);
             oYLScoreText.SetActive(true); oYRScoreText.SetActive(true); oLevelText.SetActive(true);
             oRankQuad.SetActive(true);
-            //return true;
         }
 
         if (n == 3)
+        {
+            oLevelInfoLimitsContainer.SetActive(true);
+
+            /**/
+            string szScore = (i_stLevelInfo.iLimit1 / 1000.0f).ToString("N3");
+            if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iLimit1, true);
+            if (i_stLevelInfo.iLimit1 == -1) szScore = "--";
+            oLimitsText1TextMesh.text = szScore;
+            szScore = (i_stLevelInfo.iLimit2 / 1000.0f).ToString("N3");
+            if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iLimit2, true);
+            if (i_stLevelInfo.iLimit2 == -1) szScore = "--";
+            oLimitsText2TextMesh.text = szScore;
+            szScore = (i_stLevelInfo.iLimit3 / 1000.0f).ToString("N3");
+            if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iLimit3, true);
+            if (i_stLevelInfo.iLimit3 == -1) szScore = "--";
+            oLimitsText3TextMesh.text = szScore;
+        }
+
+        if (n == 4)
         {
             return true;
         }
@@ -533,6 +563,10 @@ public class Menu : MonoBehaviour
             oYLScoreTextTextMesh = oYLScoreText.GetComponent<TextMesh>();
             oYRScoreTextTextMesh = oYRScoreText.GetComponent<TextMesh>();
             oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();
+
+            oLimitsText1TextMesh = oLimitsText1.GetComponent<TextMesh>();
+            oLimitsText2TextMesh = oLimitsText2.GetComponent<TextMesh>();
+            oLimitsText3TextMesh = oLimitsText3.GetComponent<TextMesh>();
         }
         if (iIncrementalInit == 4)
         {

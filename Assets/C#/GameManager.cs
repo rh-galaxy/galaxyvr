@@ -824,7 +824,6 @@ public class GameManager : MonoBehaviour
                     {
                         UnlockRaceGoldAchievement();
                     }
-
                     int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
                     if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
                     int iRaceToUnlock = (int)(iRaceFinished * 1.35f) + 1;
