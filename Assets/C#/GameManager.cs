@@ -136,6 +136,8 @@ public class GameManager : MonoBehaviour
     protected Callback<UserStatsStored_t> UserStatsStored;
     protected Callback<UserAchievementStored_t> UserAchievementStored;
 
+    protected Callback<GameOverlayActivated_t> GameOverlayActivated;
+
     bool InitValve()
     {
         try
@@ -164,6 +166,7 @@ public class GameManager : MonoBehaviour
         UserStatsReceived = Callback<UserStatsReceived_t>.Create(OnUserStatsReceived);
         UserStatsStored = Callback<UserStatsStored_t>.Create(OnUserStatsStored);
         UserAchievementStored = Callback<UserAchievementStored_t>.Create(OnAchievementStored);
+        //GameOverlayActivated = Callback<GameOverlayActivated_t>.Create(OnGameOverlayActivated);
         bool bSuccess = SteamUserStats.RequestCurrentStats();
 
         // get user name
@@ -187,6 +190,13 @@ public class GameManager : MonoBehaviour
 
         SteamAPI.Shutdown();
     }*/
+
+    bool bSteamOverlayActive = false;
+    private void OnGameOverlayActivated(GameOverlayActivated_t pCallback)
+    {
+        bSteamOverlayActive = pCallback.m_bActive == 1;
+        Debug.Log("Steam overlay active " + pCallback.m_bActive);
+    }
 
     private void OnUserStatsReceived(UserStatsReceived_t pCallback)
     {
@@ -686,11 +696,11 @@ public class GameManager : MonoBehaviour
             }
         }
 #if !DISABLESTEAMWORKS
-        if (Menu.bSteamOverlay)
+        /*if (Menu.bSteamOverlay)
         {
             SteamFriends.ActivateGameOverlay("settings");
             Menu.bSteamOverlay = false;
-        }
+        }*/
 #endif
 
         //pause if in oculus home universal menu
@@ -702,7 +712,7 @@ public class GameManager : MonoBehaviour
         }
         if (bValveDevicePresent)
         {
-            bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent);
+            bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent); //|| bSteamOverlayActive;
         }
 
         /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
