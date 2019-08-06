@@ -9,6 +9,7 @@ using System.Threading;
 using Oculus.Platform;
 #if !DISABLESTEAMWORKS //Add in Edit->Project Settings...->Player.Scripting Define Symbols [DISABLESTEAMWORKS]
 using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
+using Valve.VR;
 #endif
 
 public class GameManager : MonoBehaviour
@@ -16,6 +17,9 @@ public class GameManager : MonoBehaviour
     public static GameManager theGM = null;
 
     public CameraController theCameraHolder;
+
+    /**/public Transform steamCamera;
+    /**/public Transform cameraRig;
 
     internal static bool bOculusDevicePresent = false;
     internal static bool bValveDevicePresent = false;
@@ -689,8 +693,25 @@ public class GameManager : MonoBehaviour
             fRecenterTimer += Time.deltaTime;
             if (fRecenterTimer > 3.0f)
             {
-                XRDevice.SetTrackingSpaceType(TrackingSpaceType.Stationary);
-                InputTracking.Recenter();
+                //Valve.VR.OpenVR.System.ResetSeatedZeroPose();
+                //Valve.VR.OpenVR.Compositor.SetTrackingSpace(Valve.VR.ETrackingUniverseOrigin.TrackingUniverseSeated);
+
+                //XRDevice.SetTrackingSpaceType(TrackingSpaceType.Stationary);
+                //InputTracking.Recenter();
+
+                //ROTATION
+                // Get current head heading in scene (y-only, to avoid tilting the floor)
+                float offsetAngle = steamCamera.rotation.eulerAngles.y;
+                // Now rotate CameraRig in opposite direction to compensate
+                cameraRig.Rotate(0f, -offsetAngle, 0f);
+
+                //POSITION
+                // Calculate positional offset between CameraRig and Camera
+                Vector3 offsetPos = steamCamera.position - cameraRig.position;
+                // Reposition CameraRig to desired position minus offset
+                Vector3 v = new Vector3(0,0,-5.6f);
+                cameraRig.position = (v - offsetPos);
+
                 Menu.bRecenter = false;
                 fRecenterTimer = 0.0f;
             }
@@ -848,10 +869,6 @@ public class GameManager : MonoBehaviour
             case 1:
                 //running menu
                 {
-                    //back at top level should result in this, but not working:
-                    //if (bOculusDevicePresent && Input.GetKey(KeyCode.JoystickButton6))
-                    //    OVRManager.PlatformUIConfirmQuit();
-
                     //these 5 are set in menu part 2, reset them here
                     Menu.bWorldBestReplay1 = false;
                     Menu.bWorldBestReplay2 = false;
@@ -924,8 +941,13 @@ public class GameManager : MonoBehaviour
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
+#if DISABLESTEAMWORKS
                 if (Input.GetKey(KeyCode.JoystickButton6) /*|| Input.GetKey(KeyCode.JoystickButton7)*/ || Input.GetKey(KeyCode.Escape)
                     || Menu.bLevelUnSelected )
+#else
+                if (SteamVR_Actions.default_Back.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKey(KeyCode.Escape)
+                    || Menu.bLevelUnSelected)
+#endif
                 {
                     Menu.bLevelUnSelected = false;
                     iState = 1; //goto menu part 1 (back)
@@ -1021,14 +1043,12 @@ public class GameManager : MonoBehaviour
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
 
-                    //valve, back is considered when both grip are held for 4 sec
+                    //valve, back is considered when default_Back (grip button) is held for 2 sec
 #if !DISABLESTEAMWORKS
-                    float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryHandTrigger");         //axis 11   left grip trigger on valve (and oculus touch)
-                    float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryHandTrigger");       //axis 12   right grip trigger on valve (and oculus touch)
-                    if (fTrg1 > 0.8 && fTrg2 > 0.8)
+                    if (SteamVR_Actions.default_Back.GetState(SteamVR_Input_Sources.Any))
                     {
                         fBackTimerForViveController += Time.deltaTime;
-                        if (fBackTimerForViveController>4.0)
+                        if (fBackTimerForViveController>2.0)
                         {
                             fBackTimerForViveController = 0;
                             bBackToMenu = true;
@@ -1037,7 +1057,11 @@ public class GameManager : MonoBehaviour
                     } else fBackTimerForViveController = 0.0f;
 #endif
 
+#if DISABLESTEAMWORKS
                     if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)) //back to menu
+#else
+                    if (Input.GetKey(KeyCode.Escape)) //back to menu
+#endif
                     {
                         bBackToMenu = true;
                         bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level

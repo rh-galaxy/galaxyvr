@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+#if !DISABLESTEAMWORKS
+using Valve.VR;
+#endif
 
 public class Player : MonoBehaviour
 {
@@ -472,6 +474,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+#if DISABLESTEAMWORKS
             //get input from joysticks
             float fX = Input.GetAxisRaw("Horizontal");                                          //axis x (x left stick)
             float fY = Input.GetAxisRaw("Vertical");                                            //axis y (y left stick)
@@ -481,12 +484,6 @@ public class Player : MonoBehaviour
             float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");       //axis 10   must be thrust to support xbox, vive, touch
 
             bThrottle = bLeft = bRight = bAdjust = false;
-
-            //keyboard
-            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) bThrottle = true;
-            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) bAdjust = true;
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) bLeft = true;
-            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) bRight = true;
 
             //joysticks
             if (fX > 0.3f) bRight = true;
@@ -503,10 +500,34 @@ public class Player : MonoBehaviour
             if (Input.GetButton("Button3")) bThrottle = true; //button 3 (Y)
             //keyboard and joystick for fire (is a trigger once event)
             bool bNewFireState = false;
-            if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Space)) bNewFireState = true;
             if (fTrg1 > 0.3f) bNewFireState = true; //left trigger
             if (Input.GetButton("Button0")) bNewFireState = true; //button 0 (A)
             if (Input.GetButton("Button1")) bNewFireState = true; //button 1 (B)
+#else
+            //get input from joysticks
+            float fX = SteamVR_Actions.default_Steering.axis.x;
+            float fY = SteamVR_Actions.default_Steering.axis.y;
+            float fTrg2 = SteamVR_Actions.default_Throttle.axis;
+
+            bThrottle = bLeft = bRight = bAdjust = false;
+
+            //joysticks
+            if (fX > 0.3f) bRight = true;
+            if (fX < -0.3f) bLeft = true;
+            if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
+
+            if (fTrg2 > 0.3f) bThrottle = true;
+            if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;
+            //keyboard and joystick for fire (is a trigger once event)
+            bool bNewFireState = false;
+            if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
+#endif
+            //keyboard
+            if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Space)) bNewFireState = true;
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) bThrottle = true;
+            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) bAdjust = true;
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) bLeft = true;
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) bRight = true;
 
             if (!bFire)
             {

@@ -4,7 +4,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.XR;
 using TMPro;
-
+#if !DISABLESTEAMWORKS
+using Valve.VR;
+#endif
 
 public class Menu : MonoBehaviour
 {
@@ -299,6 +301,7 @@ public class Menu : MonoBehaviour
     void Start()
     {
         //done incrementally in Update
+
     }
 
     int iMissionUnlocked = 0;
@@ -378,7 +381,7 @@ public class Menu : MonoBehaviour
         {
             vHeadPosition = Camera.main.transform.position;
             vGazeDirection = Camera.main.transform.forward;
-            oLevelInfoContainer.transform.position = (vHeadPosition + vGazeDirection * 5.40f) + new Vector3(0.0f, -.40f, 0.0f);
+            oLevelInfoContainer.transform.position = (vHeadPosition + vGazeDirection * 5.30f) + new Vector3(0.0f, -.40f, 0.0f);
             vRotation = Camera.main.transform.eulerAngles; vRotation.z = 0;
             oLevelInfoContainer.transform.eulerAngles = vRotation;
             oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
@@ -683,8 +686,12 @@ public class Menu : MonoBehaviour
             // and is not behaving reliably
             if (!XRDevice.isPresent)
                 Camera.main.fieldOfView = 45.0f;
-            //prevent selection if trigger was hold when menu is started
+            //prevent selection if trigger was held when menu is started
+#if DISABLESTEAMWORKS
             iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0 : 30;
+#else
+            iAllowSelection = !(SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) ? 0 : 30;
+#endif
         }
         iIncrementalInit++;
         if(iIncrementalInit<11) return;
@@ -699,7 +706,7 @@ public class Menu : MonoBehaviour
         if (Menu.bPauseInput) return;
 
         //get input from joysticks
-        float fAxisX = Input.GetAxisRaw("Horizontal");
+        /**/float fAxisX = 0; //Input.GetAxisRaw("Horizontal");
         float fAdjust = 0;
         if (fAxisX > 0.4f) fAdjust = 1000;
         if (fAxisX < -0.4f) fAdjust = -1000;
@@ -864,7 +871,11 @@ public class Menu : MonoBehaviour
 
 
             //manage selection
+#if DISABLESTEAMWORKS
             if (Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0) )
+#else
+            if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0))
+#endif
             {
                 if (iAllowSelection==0)
                 {
@@ -1045,7 +1056,11 @@ public class Menu : MonoBehaviour
             //no hit, place cursor at max distance
 
             //first, unselect level if click outside levelinfo
+#if DISABLESTEAMWORKS
             if (Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0))
+#else
+            if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0))
+#endif
             {
                 if (iAllowSelection==0)
                 {

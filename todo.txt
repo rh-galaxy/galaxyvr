@@ -1,5 +1,4 @@
 Release
-- Use Unity non beta (not a requirement)
 - Submit app: set correct supported controllers (need bug fix by Oculus)
 - Trailer: Seems only 30fps is shown not 60 (need fix by Oculus)
 Release for Oculus Quest
@@ -25,7 +24,6 @@ Must do:
 
 Possible future extensions
 - www.galaxy-forces-vr.com - Better/more contents
-- Make it work better with vive input.
 - Add more official maps/new tilesets (digital world, ?)
 - Add achievements for the extra official maps
 
