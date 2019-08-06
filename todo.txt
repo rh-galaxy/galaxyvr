@@ -1,5 +1,4 @@
 Release
-- Use Unity non beta (not a requirement)
 - Submit app: set correct supported controllers (need bug fix by Oculus)
 - Trailer: Seems only 30fps is shown not 60 (need fix by Oculus)
 Release for Oculus Quest
