@@ -56,5 +56,13 @@ namespace Valve.VR
                 return SteamVR_Actions.default_Back;
             }
         }
+        
+        public virtual SteamVR_Action_Boolean Recenter
+        {
+            get
+            {
+                return SteamVR_Actions.default_Recenter;
+            }
+        }
     }
 }

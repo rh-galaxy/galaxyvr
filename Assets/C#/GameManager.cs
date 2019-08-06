@@ -688,6 +688,11 @@ public class GameManager : MonoBehaviour
             UnityEngine.Application.Quit();
 #endif
         }
+        if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any))
+        {
+            Menu.bRecenter = true;
+            fRecenterTimer = 3.1f;
+        }
         if (Menu.bRecenter)
         {
             fRecenterTimer += Time.deltaTime;
@@ -805,7 +810,7 @@ public class GameManager : MonoBehaviour
                 if (!bNoInternet)
                 {
                     StartCoroutine(oHigh.GetLimits());
-                    //set in the above, but since StartCoroutine returns before it has a chanse
+                    //set in the above, but since StartCoroutine returns before it has a chance
                     // to run we need to set it
                     oHigh.bIsDone = false;
                 }
@@ -970,7 +975,7 @@ public class GameManager : MonoBehaviour
                     iState++; //load replay
                     StartFade(0.3f, 0.0f, true);
 
-                    //set in the above, but since StartCoroutine returns before it has a chanse
+                    //set in the above, but since StartCoroutine returns before it has a chance
                     // to run we need to set it
                     oHigh.bIsDone = false;
                 }
@@ -1114,7 +1119,7 @@ public class GameManager : MonoBehaviour
                                     {
                                         StartCoroutine(oHigh.SendHiscore(szLastLevel.Substring(1), iScoreMs, oReplay));
 
-                                        //set in the above, but since StartCoroutine returns before it has a chanse
+                                        //set in the above, but since StartCoroutine returns before it has a chance
                                         // to run we need to set it
                                         oHigh.bIsDone = false;
                                     }
