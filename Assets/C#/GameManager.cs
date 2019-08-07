@@ -688,19 +688,17 @@ public class GameManager : MonoBehaviour
             UnityEngine.Application.Quit();
 #endif
         }
-        if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any))
+        if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any) && iState<=4) //for now only recenter if in menu
         {
             Menu.bRecenter = true;
-            fRecenterTimer = 3.1f;
+            fRecenterTimer = 3.1f; //make it instant
         }
         if (Menu.bRecenter)
         {
             fRecenterTimer += Time.deltaTime;
             if (fRecenterTimer > 3.0f)
             {
-                //Valve.VR.OpenVR.System.ResetSeatedZeroPose();
-                //Valve.VR.OpenVR.Compositor.SetTrackingSpace(Valve.VR.ETrackingUniverseOrigin.TrackingUniverseSeated);
-
+                //no effect!
                 //XRDevice.SetTrackingSpaceType(TrackingSpaceType.Stationary);
                 //InputTracking.Recenter();
 
