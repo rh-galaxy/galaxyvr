@@ -67,6 +67,9 @@
                "inputs" : {
                   "click" : {
                      "output" : "/actions/default/in/fire"
+                  },
+                  "long" : {
+                     "output" : "/actions/default/in/recenter"
                   }
                },
                "mode" : "button",

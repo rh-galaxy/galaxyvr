@@ -1,36 +1,14 @@
 {
-   "action_manifest_version" : 0,
-   "alias_info" : {},
    "app_key" : "application.generated.unity.galaxyforcesvr.exe",
    "bindings" : {
       "/actions/default" : {
-         "chords" : [],
          "haptics" : [],
          "poses" : [],
-         "skeleton" : [],
          "sources" : [
             {
                "inputs" : {
-                  "position" : {
-                     "output" : "/actions/default/in/steering"
-                  }
-               },
-               "mode" : "trackpad",
-               "path" : "/user/hand/left/input/trackpad"
-            },
-            {
-               "inputs" : {
-                  "position" : {
-                     "output" : "/actions/default/in/steering"
-                  }
-               },
-               "mode" : "trackpad",
-               "path" : "/user/hand/right/input/trackpad"
-            },
-            {
-               "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/fire"
+                     "output" : "/actions/default/in/throttle"
                   }
                },
                "mode" : "button",
@@ -38,11 +16,11 @@
             },
             {
                "inputs" : {
-                  "value" : {
+                  "click" : {
                      "output" : "/actions/default/in/throttle"
                   }
                },
-               "mode" : "scalar_constant",
+               "mode" : "button",
                "path" : "/user/hand/right/input/trigger"
             },
             {
@@ -66,28 +44,25 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/recenter"
+                     "output" : "/actions/default/in/teleport"
                   }
                },
                "mode" : "button",
-               "path" : "/user/hand/left/input/system"
+               "path" : "/user/hand/left/input/trackpad"
             },
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/recenter"
+                     "output" : "/actions/default/in/teleport"
                   }
                },
                "mode" : "button",
-               "path" : "/user/hand/right/input/system"
+               "path" : "/user/hand/right/input/trackpad"
             }
          ]
       }
    },
-   "category" : "steamvr_input",
-   "controller_type" : "vive_controller",
+   "controller_type" : "holographic_controller",
    "description" : "",
-   "name" : "Galaxy Forces VR [Testing]-configuration for Vive Controller",
-   "options" : {},
-   "simulated_actions" : []
+   "name" : "Default bindings for Windows Mixed Reality Controllers"
 }

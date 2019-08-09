@@ -47,6 +47,10 @@
       "binding_url": "bindings_knuckles.json"
     },
     {
+      "controller_type": "holographic_controller",
+      "binding_url": "bindings_holographic_controller.json"
+    },
+    {
       "controller_type": "vive",
       "binding_url": "binding_vive.json"
     },
