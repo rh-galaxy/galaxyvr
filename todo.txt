@@ -24,7 +24,6 @@ Must do:
 
 Possible future extensions
 - www.galaxy-forces-vr.com - Better/more contents
-- Make it work better with vive input.
 - Add more official maps/new tilesets (digital world, ?)
 - Add achievements for the extra official maps
 
