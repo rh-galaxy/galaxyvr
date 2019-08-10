@@ -715,11 +715,7 @@ public class Menu : MonoBehaviour
             //prevent selection if trigger was hold when menu is started
             iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0 : 30;
 
-#if DISABLESTEAMWORKS
             SetTextInfo(1);
-#else
-            SetTextInfo(2);
-#endif
         }
         iIncrementalInit++;
         if(iIncrementalInit<11) return;
@@ -989,7 +985,7 @@ public class Menu : MonoBehaviour
                 }
                 else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
                 {
-                    SetTextInfo(2);
+                    SetTextInfo(1);
 
                     iAllowSelection = 50;
                     bPlaySelectSound = true;
