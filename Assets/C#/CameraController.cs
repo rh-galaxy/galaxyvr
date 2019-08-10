@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
         oMap = i_oMap;
         vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update.
 
-        vCamOffset = new Vector3(0, 0.1f, -1.80f);
+        vCamOffset = new Vector3(0, 0.3f, -1.80f);
         vMapSize = oMap.GetMapSize();
     }
     public void InitForMenu()

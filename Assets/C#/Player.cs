@@ -515,6 +515,7 @@ public class Player : MonoBehaviour
             if (fX > 0.3f) bRight = true;
             if (fX < -0.3f) bLeft = true;
             if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
+            /**/if (fY < -0.9f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
 
             if (fTrg2 > 0.3f) bThrottle = true;
             if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;

@@ -80,24 +80,6 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/back"
-                  }
-               },
-               "mode" : "button",
-               "path" : "/user/hand/left/input/grip"
-            },
-            {
-               "inputs" : {
-                  "click" : {
-                     "output" : "/actions/default/in/back"
-                  }
-               },
-               "mode" : "button",
-               "path" : "/user/hand/right/input/grip"
-            },
-            {
-               "inputs" : {
-                  "click" : {
                      "output" : "/actions/default/in/fire"
                   }
                },
@@ -173,20 +155,38 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/back"
+                     "output" : "/actions/default/in/back_long"
                   }
                },
                "mode" : "button",
-               "path" : "/user/gamepad/input/back"
+               "path" : "/user/gamepad/input/shoulder_left"
             },
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/back"
+                     "output" : "/actions/default/in/back_long"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/gamepad/input/shoulder_right"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/back_instant"
                   }
                },
                "mode" : "button",
                "path" : "/user/gamepad/input/start"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/back_instant"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/gamepad/input/back"
             }
          ]
       }

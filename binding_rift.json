@@ -12,20 +12,20 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/back"
-                  }
-               },
-               "mode" : "button",
-               "path" : "/user/head/input/remote_back/click"
-            },
-            {
-               "inputs" : {
-                  "click" : {
                      "output" : "/actions/default/in/fire"
                   }
                },
                "mode" : "button",
                "path" : "/user/head/input/remote_dpad/click"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/back_instant"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/head/input/remote_back/click"
             }
          ]
       }

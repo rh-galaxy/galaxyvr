@@ -87,7 +87,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/back"
+                     "output" : "/actions/default/in/back_instant"
                   }
                },
                "mode" : "button",
@@ -96,11 +96,29 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/recenter"
+                     "output" : "/actions/default/in/back_instant"
                   }
                },
                "mode" : "button",
                "path" : "/user/hand/right/input/trackpad"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/back_instant"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/left/input/system"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/back_instant"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/right/input/system"
             }
          ]
       }

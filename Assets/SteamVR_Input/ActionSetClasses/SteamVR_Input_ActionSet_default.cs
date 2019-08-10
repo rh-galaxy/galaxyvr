@@ -49,11 +49,11 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean Back
+        public virtual SteamVR_Action_Boolean Back_long
         {
             get
             {
-                return SteamVR_Actions.default_Back;
+                return SteamVR_Actions.default_Back_long;
             }
         }
         
@@ -62,6 +62,14 @@ namespace Valve.VR
             get
             {
                 return SteamVR_Actions.default_Recenter;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean Back_instant
+        {
+            get
+            {
+                return SteamVR_Actions.default_Back_instant;
             }
         }
     }

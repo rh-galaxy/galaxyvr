@@ -25,9 +25,11 @@ namespace Valve.VR
         
         private static SteamVR_Action_Boolean p_default_Throttle2;
         
-        private static SteamVR_Action_Boolean p_default_Back;
+        private static SteamVR_Action_Boolean p_default_Back_long;
         
         private static SteamVR_Action_Boolean p_default_Recenter;
+        
+        private static SteamVR_Action_Boolean p_default_Back_instant;
         
         public static SteamVR_Action_Vector2 default_Steering
         {
@@ -61,11 +63,11 @@ namespace Valve.VR
             }
         }
         
-        public static SteamVR_Action_Boolean default_Back
+        public static SteamVR_Action_Boolean default_Back_long
         {
             get
             {
-                return SteamVR_Actions.p_default_Back.GetCopy<SteamVR_Action_Boolean>();
+                return SteamVR_Actions.p_default_Back_long.GetCopy<SteamVR_Action_Boolean>();
             }
         }
         
@@ -77,6 +79,14 @@ namespace Valve.VR
             }
         }
         
+        public static SteamVR_Action_Boolean default_Back_instant
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_Back_instant.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
         private static void InitializeActionArrays()
         {
             Valve.VR.SteamVR_Input.actions = new Valve.VR.SteamVR_Action[] {
@@ -84,23 +94,26 @@ namespace Valve.VR
                     SteamVR_Actions.default_Throttle,
                     SteamVR_Actions.default_Fire,
                     SteamVR_Actions.default_Throttle2,
-                    SteamVR_Actions.default_Back,
-                    SteamVR_Actions.default_Recenter};
+                    SteamVR_Actions.default_Back_long,
+                    SteamVR_Actions.default_Recenter,
+                    SteamVR_Actions.default_Back_instant};
             Valve.VR.SteamVR_Input.actionsIn = new Valve.VR.ISteamVR_Action_In[] {
                     SteamVR_Actions.default_Steering,
                     SteamVR_Actions.default_Throttle,
                     SteamVR_Actions.default_Fire,
                     SteamVR_Actions.default_Throttle2,
-                    SteamVR_Actions.default_Back,
-                    SteamVR_Actions.default_Recenter};
+                    SteamVR_Actions.default_Back_long,
+                    SteamVR_Actions.default_Recenter,
+                    SteamVR_Actions.default_Back_instant};
             Valve.VR.SteamVR_Input.actionsOut = new Valve.VR.ISteamVR_Action_Out[0];
             Valve.VR.SteamVR_Input.actionsVibration = new Valve.VR.SteamVR_Action_Vibration[0];
             Valve.VR.SteamVR_Input.actionsPose = new Valve.VR.SteamVR_Action_Pose[0];
             Valve.VR.SteamVR_Input.actionsBoolean = new Valve.VR.SteamVR_Action_Boolean[] {
                     SteamVR_Actions.default_Fire,
                     SteamVR_Actions.default_Throttle2,
-                    SteamVR_Actions.default_Back,
-                    SteamVR_Actions.default_Recenter};
+                    SteamVR_Actions.default_Back_long,
+                    SteamVR_Actions.default_Recenter,
+                    SteamVR_Actions.default_Back_instant};
             Valve.VR.SteamVR_Input.actionsSingle = new Valve.VR.SteamVR_Action_Single[] {
                     SteamVR_Actions.default_Throttle};
             Valve.VR.SteamVR_Input.actionsVector2 = new Valve.VR.SteamVR_Action_Vector2[] {
@@ -112,8 +125,9 @@ namespace Valve.VR
                     SteamVR_Actions.default_Throttle,
                     SteamVR_Actions.default_Fire,
                     SteamVR_Actions.default_Throttle2,
-                    SteamVR_Actions.default_Back,
-                    SteamVR_Actions.default_Recenter};
+                    SteamVR_Actions.default_Back_long,
+                    SteamVR_Actions.default_Recenter,
+                    SteamVR_Actions.default_Back_instant};
         }
         
         private static void PreInitActions()
@@ -122,8 +136,9 @@ namespace Valve.VR
             SteamVR_Actions.p_default_Throttle = ((SteamVR_Action_Single)(SteamVR_Action.Create<SteamVR_Action_Single>("/actions/default/in/Throttle")));
             SteamVR_Actions.p_default_Fire = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Fire")));
             SteamVR_Actions.p_default_Throttle2 = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Throttle2")));
-            SteamVR_Actions.p_default_Back = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Back")));
+            SteamVR_Actions.p_default_Back_long = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Back_long")));
             SteamVR_Actions.p_default_Recenter = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Recenter")));
+            SteamVR_Actions.p_default_Back_instant = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Back_instant")));
         }
     }
 }

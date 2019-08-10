@@ -83,7 +83,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/back"
+                     "output" : "/actions/default/in/back_long"
                   }
                },
                "mode" : "button",
@@ -92,7 +92,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/back"
+                     "output" : "/actions/default/in/back_long"
                   }
                },
                "mode" : "button",

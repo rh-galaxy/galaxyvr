@@ -772,6 +772,7 @@ public class GameManager : MonoBehaviour
         //to ignore input below, only way back is to unpause
         if (bPause) return;
 
+        bool bBack_long = false;
         //the main state machine
         switch (iState)
         {
@@ -944,13 +945,21 @@ public class GameManager : MonoBehaviour
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
-#if DISABLESTEAMWORKS
-                if (Input.GetKey(KeyCode.JoystickButton6) /*|| Input.GetKey(KeyCode.JoystickButton7)*/ || Input.GetKey(KeyCode.Escape)
-                    || Menu.bLevelUnSelected )
-#else
-                if (SteamVR_Actions.default_Back.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKey(KeyCode.Escape)
-                    || Menu.bLevelUnSelected)
-#endif
+
+                //valve, back is considered when default_Back_long (grip button) is held for 2 sec
+                if (SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any))
+                {
+                    fBackTimerForViveController += Time.deltaTime;
+                    if (fBackTimerForViveController > 2.0)
+                    {
+                        fBackTimerForViveController = 0;
+                        bBack_long = true;
+                    }
+                }
+                else fBackTimerForViveController = 0.0f;
+
+                if (SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any) || bBack_long
+                    || Input.GetKey(KeyCode.Escape) || Menu.bLevelUnSelected)
                 {
                     Menu.bLevelUnSelected = false;
                     iState = 1; //goto menu part 1 (back)
@@ -1046,25 +1055,19 @@ public class GameManager : MonoBehaviour
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
 
-                    //valve, back is considered when default_Back (grip button) is held for 2 sec
-#if !DISABLESTEAMWORKS
-                    if (SteamVR_Actions.default_Back.GetState(SteamVR_Input_Sources.Any))
+                    //valve, back is considered when default_Back_long (grip button) is held for 2 sec
+                    if (SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any))
                     {
                         fBackTimerForViveController += Time.deltaTime;
                         if (fBackTimerForViveController>2.0)
                         {
                             fBackTimerForViveController = 0;
-                            bBackToMenu = true;
-                            bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level
+                            bBack_long = true;
                         }
                     } else fBackTimerForViveController = 0.0f;
-#endif
 
-#if DISABLESTEAMWORKS
-                    if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)) //back to menu
-#else
-                    if (Input.GetKey(KeyCode.Escape)) //back to menu
-#endif
+                    if (SteamVR_Actions.default_Back_instant.GetState(SteamVR_Input_Sources.Any) || bBack_long
+                        || Input.GetKey(KeyCode.Escape)) //back to menu
                     {
                         bBackToMenu = true;
                         bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level
