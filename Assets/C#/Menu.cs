@@ -301,7 +301,6 @@ public class Menu : MonoBehaviour
     void Start()
     {
         //done incrementally in Update
-
     }
 
     int iMissionUnlocked = 0;
@@ -334,6 +333,33 @@ public class Menu : MonoBehaviour
 
     public GameObject oLimitsText1, oLimitsText2, oLimitsText3;
     /**/private TextMesh oLimitsText1TextMesh, oLimitsText2TextMesh, oLimitsText3TextMesh;
+
+    public GameObject oTextInfoContainer;
+    bool bTextInfoActive = false;
+
+    public void SetTextInfo(int i_iInfo)
+    {
+        vHeadPosition = Camera.main.transform.position;
+        vGazeDirection = Camera.main.transform.forward;
+        oTextInfoContainer.transform.position = (vHeadPosition + vGazeDirection * 5.30f) + new Vector3(0.0f, -.40f, 0.0f);
+        vRotation = Camera.main.transform.eulerAngles; vRotation.z = 0;
+        oTextInfoContainer.transform.eulerAngles = vRotation;
+        oTextInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
+        bTextInfoActive = i_iInfo != 0;
+        oTextInfoContainer.SetActive(bTextInfoActive);
+
+        if(oCreditsQuad!=null) Destroy(oCreditsQuad);
+        oCreditsQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        oCreditsQuad.transform.parent = oTextInfoContainer.transform;
+        oCreditsQuad.transform.eulerAngles = vRotation;
+        oCreditsQuad.transform.localPosition = new Vector3(0, 0, -1.20f);
+        oCreditsQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
+
+        if(i_iInfo==1) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
+        else if (i_iInfo == 2) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_valve", typeof(Material)) as Material;
+        else if (i_iInfo == 3) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
+        else if (i_iInfo == 0) oCreditsQuad.GetComponent<MeshRenderer>().material = null;
+    }
 
     string GetTimeString(int i_iTimeMs, bool i_bTwoDec = false)
     {
@@ -385,9 +411,9 @@ public class Menu : MonoBehaviour
             vRotation = Camera.main.transform.eulerAngles; vRotation.z = 0;
             oLevelInfoContainer.transform.eulerAngles = vRotation;
             oLevelInfoContainer.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
-            /**/oLevelInfoLimitsContainer.transform.position = oCorner.transform.position;
-            /**/oLevelInfoLimitsContainer.transform.eulerAngles = vRotation;
-            /**/oLevelInfoLimitsContainer.transform.localScale = new Vector3(2.5f, 2.5f, 1.0f);
+            oLevelInfoLimitsContainer.transform.position = oCorner.transform.position;
+            oLevelInfoLimitsContainer.transform.eulerAngles = vRotation;
+            oLevelInfoLimitsContainer.transform.localScale = new Vector3(2.5f, 2.5f, 1.0f);
 
             if (GameLevel.iLevelIndex >= 200) oLevelTextTextMesh.text = szLevelInfoDescription; //custom levels have description from .des file
             else oLevelTextTextMesh.text = aLevels[GameLevel.iLevelIndex].szLevelDescription; //non custom levels have description from hard array above
@@ -687,10 +713,12 @@ public class Menu : MonoBehaviour
             if (!XRDevice.isPresent)
                 Camera.main.fieldOfView = 45.0f;
             //prevent selection if trigger was held when menu is started
+            iAllowSelection = !(SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) ? 0 : 50;
+
 #if DISABLESTEAMWORKS
-            iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0 : 30;
+            SetTextInfo(1);
 #else
-            iAllowSelection = !(SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) ? 0 : 30;
+            SetTextInfo(2);
 #endif
         }
         iIncrementalInit++;
@@ -711,6 +739,12 @@ public class Menu : MonoBehaviour
         if (fAxisX > 0.4f) fAdjust = 1000;
         if (fAxisX < -0.4f) fAdjust = -1000;
 
+        if((bTextInfoActive && iAllowSelection==0) && (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)))
+        {
+            /**/SetTextInfo(0);
+            /**/iAllowSelection = 50;
+        }
+
         //do a raycast into the world based on the user's
         // head position and orientation
         Vector3 vHeadPosition = Camera.main.transform.position;
@@ -726,9 +760,6 @@ public class Menu : MonoBehaviour
         if (oMenuNext1 != null && oMenuNext1.oLevelQuad != null) oMenuNext1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
         if (oMenuPrev1 != null && oMenuPrev1.oLevelQuad != null) oMenuPrev1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
 
-#if !DISABLESTEAMWORKS
-        //if (oMenuSteamOverlay != null && oMenuSteamOverlay.oLevelQuad != null) oMenuSteamOverlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
-#endif
         if (oMenuRecenter != null && oMenuRecenter.oLevelQuad != null) oMenuRecenter.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
         if (oMenuQuit != null && oMenuQuit.oLevelQuad != null) oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
         if (oMenuControls != null && oMenuControls.oLevelQuad != null) oMenuControls.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
@@ -753,7 +784,12 @@ public class Menu : MonoBehaviour
             //find which object we hit
 
             //manage highlighting of viewed object
-            if (oHitInfo.collider.name.StartsWith("Coll"))
+            if (oHitInfo.collider.name.CompareTo("Back") == 0)
+            {
+                //so no others get called below
+                /**/iAllowSelection = 50;
+            }
+            else if (oHitInfo.collider.name.StartsWith("Coll"))
             {
                 char[] szName = oHitInfo.collider.name.ToCharArray();
                 string szId = new string(szName, 4, szName.Length - 4);
@@ -822,12 +858,6 @@ public class Menu : MonoBehaviour
             {
                 oMenuReplayWR3.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
-#if !DISABLESTEAMWORKS
-            /*else if (oHitInfo.collider.name.CompareTo("Steam") == 0)
-            {
-                oMenuSteamOverlay.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
-            }*/
-#endif
             else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
             {
                 oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
@@ -869,182 +899,145 @@ public class Menu : MonoBehaviour
                 oMenuPrev1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
             }
 
-
             //manage selection
-#if DISABLESTEAMWORKS
-            if (Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0) )
-#else
-            if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0))
-#endif
+            if ((SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) && iAllowSelection == 0)
             {
-                if (iAllowSelection==0)
+                bool bPlaySelectSound = false;
+                if (oHitInfo.collider.name.CompareTo("Back") == 0)
                 {
-                    bool bPlaySelectSound = false;
-                    if (oHitInfo.collider.name.StartsWith("Coll"))
-                    {
-                        char[] szName = oHitInfo.collider.name.ToCharArray();
-                        string szId = new string(szName, 4, szName.Length - 4);
-                        int iIndex = int.Parse(szId);
-
-                        if (iIndex < iRaceUnlocked || (iIndex >= iNumRace && iIndex < iNumRace+iMissionUnlocked))
-                        {
-                            string szLevel = aLevels[iIndex].szLevelName;
-                            GameLevel.iLevelIndex = iIndex;
-                            GameLevel.szLevel = szLevel;
-                            bLevelSelected = true;
-                            iAllowSelection = 30; //trigger once only...
-                            bPlaySelectSound = true;
-                        }
-                        else if (iIndex >= 200)
-                        {
-                            string szLevel = aMenuCustomLevels[iIndex-200].oLevel.szLevelName;
-                            GameLevel.iLevelIndex = iIndex;
-                            GameLevel.szLevel = szLevel;
-                            bLevelSelected = true;
-                            iAllowSelection = 30; //trigger once only...
-                            bPlaySelectSound = true;
-                        }
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Play") == 0)
-                    {
-                        bLevelPlay = true;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
-                    {
-                        fAdjust = 1000;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
-                    {
-                        fAdjust = -1000;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
-                    {
-                        bYourBestReplay = true;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("ReplayWR1") == 0)
-                    {
-                        bWorldBestReplay1 = true;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("ReplayWR2") == 0)
-                    {
-                        bWorldBestReplay2 = true;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
-                    {
-                        bWorldBestReplay3 = true;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-#if !DISABLESTEAMWORKS
-                    /*else if (oHitInfo.collider.name.CompareTo("Steam") == 0)
-                    {
-                        bSteamOverlay = true;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }*/
-#endif
-                    else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
-                    {
-                        bRecenter = true;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
-                    {
-                        bQuit = true;
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
-                    {
-                        if (oCreditsQuad == null)
-                        {
-                            oCreditsQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                            oCreditsQuad.transform.parent = Menu.theMenu.transform;
-                            oCreditsQuad.transform.localPosition = new Vector3(0, -1.5f, 1.20f);
-                            oCreditsQuad.transform.localScale = new Vector3(40.0f, 40.0f, 1.0f);
-                            Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
-                            oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 68);
-                        }
-#if DISABLESTEAMWORKS
-                        oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
-#else
-                        oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_valve", typeof(Material)) as Material;
-#endif
-
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
-                    {
-                        if(oCreditsQuad==null)
-                        {
-                            oCreditsQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                            oCreditsQuad.transform.parent = Menu.theMenu.transform;
-                            oCreditsQuad.transform.localPosition = new Vector3(0, -1.5f, 1.20f);
-                            oCreditsQuad.transform.localScale = new Vector3(40.0f, 40.0f, 1.0f);
-                            Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
-                            oCreditsQuad.transform.RotateAround(vAroundPoint, Vector3.up, 68);
-                        }
-                        oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
-
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
-                    {
-                        iQuality = 1;
-                        PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
-                        PlayerPrefs.Save();
-                        QualitySettings.SetQualityLevel(iQuality, true);
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
-                    {
-                        iQuality = 2;
-                        PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
-                        PlayerPrefs.Save();
-                        QualitySettings.SetQualityLevel(iQuality, true);
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
-                    {
-                        iQuality = 4;
-                        PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
-                        PlayerPrefs.Save();
-                        QualitySettings.SetQualityLevel(iQuality, true);
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
-                    {
-                        CameraController.bSnapMovement = !CameraController.bSnapMovement;
-                        PlayerPrefs.SetInt("MyUseSnapMovement", CameraController.bSnapMovement?1:0);
-                        PlayerPrefs.Save();
-                        iAllowSelection = 30;
-                        bPlaySelectSound = true;
-                    }
-                    else if (oHitInfo.collider.name.CompareTo("Back") == 0)
-                    {
-
-                    }
-
-                    if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
+                    //so no others get called below
+                    iAllowSelection = 50;
                 }
+                else if (oHitInfo.collider.name.StartsWith("Coll"))
+                {
+                    char[] szName = oHitInfo.collider.name.ToCharArray();
+                    string szId = new string(szName, 4, szName.Length - 4);
+                    int iIndex = int.Parse(szId);
+
+                    if (iIndex < iRaceUnlocked || (iIndex >= iNumRace && iIndex < iNumRace+iMissionUnlocked))
+                    {
+                        string szLevel = aLevels[iIndex].szLevelName;
+                        GameLevel.iLevelIndex = iIndex;
+                        GameLevel.szLevel = szLevel;
+                        bLevelSelected = true;
+                        iAllowSelection = 50; //trigger once only...
+                        bPlaySelectSound = true;
+                    }
+                    else if (iIndex >= 200)
+                    {
+                        string szLevel = aMenuCustomLevels[iIndex-200].oLevel.szLevelName;
+                        GameLevel.iLevelIndex = iIndex;
+                        GameLevel.szLevel = szLevel;
+                        bLevelSelected = true;
+                        iAllowSelection = 50; //trigger once only...
+                        bPlaySelectSound = true;
+                    }
+                }
+                else if (oHitInfo.collider.name.CompareTo("Play") == 0)
+                {
+                    bLevelPlay = true;
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
+                {
+                    fAdjust = 1000;
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
+                {
+                    fAdjust = -1000;
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
+                {
+                    bYourBestReplay = true;
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("ReplayWR1") == 0)
+                {
+                    bWorldBestReplay1 = true;
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("ReplayWR2") == 0)
+                {
+                    bWorldBestReplay2 = true;
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
+                {
+                    bWorldBestReplay3 = true;
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
+                {
+                    bRecenter = true;
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
+                {
+                    bQuit = true;
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
+                {
+                    SetTextInfo(2);
+
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
+                {
+                    SetTextInfo(3);
+
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
+                {
+                    iQuality = 1;
+                    PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
+                    PlayerPrefs.Save();
+                    QualitySettings.SetQualityLevel(iQuality, true);
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
+                {
+                    iQuality = 2;
+                    PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
+                    PlayerPrefs.Save();
+                    QualitySettings.SetQualityLevel(iQuality, true);
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
+                {
+                    iQuality = 4;
+                    PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
+                    PlayerPrefs.Save();
+                    QualitySettings.SetQualityLevel(iQuality, true);
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
+                {
+                    CameraController.bSnapMovement = !CameraController.bSnapMovement;
+                    PlayerPrefs.SetInt("MyUseSnapMovement", CameraController.bSnapMovement?1:0);
+                    PlayerPrefs.Save();
+                    iAllowSelection = 50;
+                    bPlaySelectSound = true;
+                }
+
+                if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
             }
             else
             {
@@ -1056,16 +1049,12 @@ public class Menu : MonoBehaviour
             //no hit, place cursor at max distance
 
             //first, unselect level if click outside levelinfo
-#if DISABLESTEAMWORKS
-            if (Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0))
-#else
             if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0))
-#endif
             {
                 if (iAllowSelection==0)
                 {
                     bLevelUnSelected = true;
-                    iAllowSelection = 30;
+                    iAllowSelection = 50;
                 }
             }
             else
@@ -1080,7 +1069,7 @@ public class Menu : MonoBehaviour
         }
 
         //nothing highlighted?
-        if(!bHitLevel)
+        if (!bHitLevel)
         {
             for (int i = 0; i < iNumRace + iNumMission; i++)
             {
@@ -1328,5 +1317,4 @@ public class Menu : MonoBehaviour
             oLevelText.SetActive(true);
         }
     }
-
 }
