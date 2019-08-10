@@ -848,10 +848,6 @@ public class GameManager : MonoBehaviour
             case 1:
                 //running menu
                 {
-                    //back at top level should result in this, but not working:
-                    //if (bOculusDevicePresent && Input.GetKey(KeyCode.JoystickButton6))
-                    //    OVRManager.PlatformUIConfirmQuit();
-
                     //these 5 are set in menu part 2, reset them here
                     Menu.bWorldBestReplay1 = false;
                     Menu.bWorldBestReplay2 = false;
@@ -1020,22 +1016,6 @@ public class GameManager : MonoBehaviour
                 //running game
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
-
-                    //valve, back is considered when both grip are held for 4 sec
-#if !DISABLESTEAMWORKS
-                    float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryHandTrigger");         //axis 11   left grip trigger on valve (and oculus touch)
-                    float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryHandTrigger");       //axis 12   right grip trigger on valve (and oculus touch)
-                    if (fTrg1 > 0.8 && fTrg2 > 0.8)
-                    {
-                        fBackTimerForViveController += Time.deltaTime;
-                        if (fBackTimerForViveController>4.0)
-                        {
-                            fBackTimerForViveController = 0;
-                            bBackToMenu = true;
-                            bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level
-                        }
-                    } else fBackTimerForViveController = 0.0f;
-#endif
 
                     if (Input.GetKey(KeyCode.JoystickButton6) || Input.GetKey(KeyCode.Escape)) //back to menu
                     {

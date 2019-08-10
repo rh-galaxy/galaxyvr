@@ -112,6 +112,22 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0
+--- !u!114 &-8858632208631699566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Mission
+  Min: 0
+  Max: 1
+  Default: 0
 --- !u!114 &-8839875765228545388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -573,7 +589,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: GalaxyProject\Build\Desktop\Master Bank.strings.bank
-  lastModified: 636987342763349201
+  lastModified: 637010664990531075
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -624,6 +640,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: EnemyVol
+  Min: 0
+  Max: 1
+  Default: 0
+--- !u!114 &-7114371255034866525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Death
   Min: 0
   Max: 1
   Default: 0
@@ -741,14 +773,14 @@ MonoBehaviour:
   Path: event:/Gameplay
   guid: 5712faf322bfc5478afa3810309fa897
   Banks:
-  - {fileID: -944370942316980447}
+  - {fileID: 4375477524857881349}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: -441941965136411144}
-  - {fileID: -8785853213068561659}
-  - {fileID: -7781181474854139131}
+  - {fileID: 6590421091302415636}
+  - {fileID: -7114371255034866525}
+  - {fileID: 3171134655197207072}
   MinDistance: 0
   MaxDistance: 0
   Length: 321056
@@ -927,12 +959,12 @@ MonoBehaviour:
   Path: event:/Menu
   guid: 782a52200fa6b443bc41106b58eff30c
   Banks:
-  - {fileID: -944370942316980447}
+  - {fileID: 4375477524857881349}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: -1452095622788349968}
+  - {fileID: 3396898130613223628}
   MinDistance: 0
   MaxDistance: 0
   Length: 99956
@@ -2088,6 +2120,22 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0.5
+--- !u!114 &-1230121160894600407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Cargo
+  Min: 0
+  Max: 1
+  Default: 0
 --- !u!114 &-1088654836789892809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2170,7 +2218,7 @@ MonoBehaviour:
   FileSizes:
   - Name: Desktop
     Value: 4330816
-  Exists: 1
+  Exists: 0
 --- !u!114 &-762840957049815489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2266,18 +2314,18 @@ MonoBehaviour:
   Path: event:/Main
   guid: 6575346d80dd7d4b9b7fac4379d4d59d
   Banks:
-  - {fileID: -944370942316980447}
+  - {fileID: 4375477524857881349}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: -9215551010015252942}
-  - {fileID: -7119403097208992447}
-  - {fileID: 4480979911772312335}
-  - {fileID: 5856493587355506409}
-  - {fileID: 5758206163190330819}
-  - {fileID: 959333831134277785}
-  - {fileID: -8548363543252267152}
+  - {fileID: 6163365948015257781}
+  - {fileID: 165388358361292944}
+  - {fileID: 3783658336757327028}
+  - {fileID: -1230121160894600407}
+  - {fileID: 5128022758493908403}
+  - {fileID: -8858632208631699566}
+  - {fileID: 7034810277096543038}
   MinDistance: 0
   MaxDistance: 0
   Length: 6000
@@ -2407,17 +2455,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: -7297197436626965499}
-  - {fileID: -944370942316980447}
+  - {fileID: 4375477524857881349}
   EditorEvents:
   - {fileID: -6580607840534391554}
   - {fileID: -461158814423468103}
   - {fileID: -5848237721851208451}
   - {fileID: 6836304422108530329}
   MasterBanks:
-  - {fileID: -944370942316980447}
+  - {fileID: 4375477524857881349}
   StringsBanks:
   - {fileID: -7297197436626965499}
-  stringsBankWriteTime: 636987342763349201
+  stringsBankWriteTime: 637010664990531075
   cacheVersion: 3
 --- !u!114 &1686745227628764
 MonoBehaviour:
@@ -2515,6 +2563,22 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0.5
+--- !u!114 &165388358361292944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: EnemyVol
+  Min: 0
+  Max: 1
+  Default: 0
 --- !u!114 &225944126249574836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3078,6 +3142,22 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0.5
+--- !u!114 &3171134655197207072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Flow
+  Min: 0
+  Max: 1
+  Default: 0.5
 --- !u!114 &3218690094640620282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3126,6 +3206,22 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0
+--- !u!114 &3396898130613223628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Flow
+  Min: 0
+  Max: 1
+  Default: 0.5
 --- !u!114 &3404493745178750828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3222,6 +3318,22 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0.5
+--- !u!114 &3783658336757327028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Transition
+  Min: 0
+  Max: 1
+  Default: 0
 --- !u!114 &3804668565217840452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3318,6 +3430,25 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0.5
+--- !u!114 &4375477524857881349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: D:\Prog\unity\Galaxy Forces VR_oculus\GalaxyProject\Build\Desktop\Master Bank.bank
+  lastModified: 637010664990520792
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 4330816
+  Exists: 1
 --- !u!114 &4473000121251102692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3475,6 +3606,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Cargo
+  Min: 0
+  Max: 1
+  Default: 0
+--- !u!114 &5128022758493908403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Enemy
   Min: 0
   Max: 1
   Default: 0
@@ -3734,6 +3881,22 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0
+--- !u!114 &6163365948015257781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Death
+  Min: 0
+  Max: 1
+  Default: 0
 --- !u!114 &6281486945099329575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3798,6 +3961,22 @@ MonoBehaviour:
   Min: 0
   Max: 1
   Default: 0
+--- !u!114 &6590421091302415636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Cargo
+  Min: 0
+  Max: 1
+  Default: 0
 --- !u!114 &6836304422108530329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3813,7 +3992,7 @@ MonoBehaviour:
   Path: snapshot:/New Snapshot
   guid: 042d0e0c7f53604ba9897c5c50f1482a
   Banks:
-  - {fileID: -944370942316980447}
+  - {fileID: 4375477524857881349}
   IsStream: 0
   Is3D: 0
   IsOneShot: 0
@@ -3821,6 +4000,22 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 0
+--- !u!114 &7034810277096543038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Flow
+  Min: 0
+  Max: 1
+  Default: 0.5
 --- !u!114 &7134025144093668945
 MonoBehaviour:
   m_ObjectHideFlags: 0
