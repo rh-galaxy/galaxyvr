@@ -337,6 +337,8 @@ public class Menu : MonoBehaviour
     public GameObject oTextInfoContainer;
     bool bTextInfoActive = false;
 
+    static bool bFirstTime = true;
+
     public void SetTextInfo(int i_iInfo)
     {
         vHeadPosition = Camera.main.transform.position;
@@ -715,7 +717,11 @@ public class Menu : MonoBehaviour
             //prevent selection if trigger was held when menu is started
             iAllowSelection = !(SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) ? 0 : 50;
 
-            SetTextInfo(2);
+            if (bFirstTime)
+            {
+                SetTextInfo(2);
+                bFirstTime = false;
+            }
         }
         iIncrementalInit++;
         if(iIncrementalInit<11) return;
