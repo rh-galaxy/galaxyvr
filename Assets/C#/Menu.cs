@@ -337,6 +337,8 @@ public class Menu : MonoBehaviour
     public GameObject oTextInfoContainer;
     bool bTextInfoActive = false;
 
+    static bool bFirstTime = true;
+
     public void SetTextInfo(int i_iInfo)
     {
         vHeadPosition = Camera.main.transform.position;
@@ -715,7 +717,11 @@ public class Menu : MonoBehaviour
             //prevent selection if trigger was hold when menu is started
             iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0 : 30;
 
-            SetTextInfo(1);
+            if (bFirstTime)
+            {
+                SetTextInfo(1);
+                bFirstTime = false;
+            }
         }
         iIncrementalInit++;
         if(iIncrementalInit<11) return;
