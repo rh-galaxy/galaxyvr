@@ -715,11 +715,7 @@ public class Menu : MonoBehaviour
             //prevent selection if trigger was held when menu is started
             iAllowSelection = !(SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) ? 0 : 50;
 
-#if DISABLESTEAMWORKS
-            SetTextInfo(1);
-#else
             SetTextInfo(2);
-#endif
         }
         iIncrementalInit++;
         if(iIncrementalInit<11) return;
