@@ -744,7 +744,7 @@ public class Menu : MonoBehaviour
         if((bTextInfoActive && iAllowSelection==0) && (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)))
         {
             /**/SetTextInfo(0);
-            /**/iAllowSelection = 50;
+            /**/iAllowSelection = 20;
         }
 
         //do a raycast into the world based on the user's
@@ -789,7 +789,7 @@ public class Menu : MonoBehaviour
             if (oHitInfo.collider.name.CompareTo("Back") == 0)
             {
                 //so no others get called below
-                /**/iAllowSelection = 50;
+                iAllowSelection = 20;
             }
             else if (oHitInfo.collider.name.StartsWith("Coll"))
             {
@@ -908,7 +908,7 @@ public class Menu : MonoBehaviour
                 if (oHitInfo.collider.name.CompareTo("Back") == 0)
                 {
                     //so no others get called below
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                 }
                 else if (oHitInfo.collider.name.StartsWith("Coll"))
                 {
@@ -922,7 +922,7 @@ public class Menu : MonoBehaviour
                         GameLevel.iLevelIndex = iIndex;
                         GameLevel.szLevel = szLevel;
                         bLevelSelected = true;
-                        iAllowSelection = 50; //trigger once only...
+                        iAllowSelection = 20; //trigger once only...
                         bPlaySelectSound = true;
                     }
                     else if (iIndex >= 200)
@@ -931,76 +931,76 @@ public class Menu : MonoBehaviour
                         GameLevel.iLevelIndex = iIndex;
                         GameLevel.szLevel = szLevel;
                         bLevelSelected = true;
-                        iAllowSelection = 50; //trigger once only...
+                        iAllowSelection = 20; //trigger once only...
                         bPlaySelectSound = true;
                     }
                 }
                 else if (oHitInfo.collider.name.CompareTo("Play") == 0)
                 {
                     bLevelPlay = true;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
                 {
                     fAdjust = 1000;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
                 {
                     fAdjust = -1000;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("ReplayYR") == 0)
                 {
                     bYourBestReplay = true;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("ReplayWR1") == 0)
                 {
                     bWorldBestReplay1 = true;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("ReplayWR2") == 0)
                 {
                     bWorldBestReplay2 = true;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
                 {
                     bWorldBestReplay3 = true;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
                 {
                     bRecenter = true;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
                 {
                     bQuit = true;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
                 {
                     SetTextInfo(2);
 
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
                 {
                     SetTextInfo(3);
 
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
@@ -1009,7 +1009,7 @@ public class Menu : MonoBehaviour
                     PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                     PlayerPrefs.Save();
                     QualitySettings.SetQualityLevel(iQuality, true);
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
@@ -1018,7 +1018,7 @@ public class Menu : MonoBehaviour
                     PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                     PlayerPrefs.Save();
                     QualitySettings.SetQualityLevel(iQuality, true);
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
@@ -1027,7 +1027,7 @@ public class Menu : MonoBehaviour
                     PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                     PlayerPrefs.Save();
                     QualitySettings.SetQualityLevel(iQuality, true);
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
@@ -1035,7 +1035,7 @@ public class Menu : MonoBehaviour
                     CameraController.bSnapMovement = !CameraController.bSnapMovement;
                     PlayerPrefs.SetInt("MyUseSnapMovement", CameraController.bSnapMovement?1:0);
                     PlayerPrefs.Save();
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
 
@@ -1056,7 +1056,7 @@ public class Menu : MonoBehaviour
                 if (iAllowSelection==0)
                 {
                     bLevelUnSelected = true;
-                    iAllowSelection = 50;
+                    iAllowSelection = 20;
                 }
             }
             else
