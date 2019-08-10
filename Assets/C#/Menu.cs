@@ -615,21 +615,21 @@ public class Menu : MonoBehaviour
 
             //menu options
 #if !DISABLESTEAMWORKS
-            //oMenuSteamOverlay = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 17, "Steam", "Steam", 30.0f, 12.0f);
+            //oMenuSteamOverlay = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 0, "Steam", "Steam", 30.0f, 12.0f);
 #endif
-            oMenuRecenter = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 24, "Re center", "Recenter", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 31, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 38, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 45, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuRecenter = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 7, "Re center", "Recenter", 30.0f, 12.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 14, "Quit", "Quit", 30.0f, 12.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 21, "Controls", "Controls", 30.0f, 9.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 28, "Credits", "Credits", 30.0f, 9.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 53.5f, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 36.5f, "Snap", "Snap", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             QualitySettings.SetQualityLevel(iQuality, true);
-            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 62, "Med", "Qual1", 30.0f, 9.0f);
-            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 69, "High", "Qual2", 30.0f, 9.0f);
-            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 76, "Ultra", "Qual3", 30.0f, 9.0f);
+            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 45, "Med", "Qual1", 30.0f, 9.0f);
+            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 52, "High", "Qual2", 30.0f, 9.0f);
+            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 59, "Ultra", "Qual3", 30.0f, 9.0f);
         }
         if (iIncrementalInit == 8)
         {
