@@ -18,7 +18,6 @@ public class Menu : MonoBehaviour
     public static bool bWorldBestReplay1 = false;
     public static bool bWorldBestReplay2 = false;
     public static bool bWorldBestReplay3 = false;
-    //public static bool bSteamOverlay = false;
     public static bool bRecenter = false;
     public static bool bQuit = false;
     public static bool bPauseInput = false;
@@ -280,7 +279,6 @@ public class Menu : MonoBehaviour
 
     public CameraController oCameraHolder;
 
-    //C_Item2InMenu oMenuSteamOverlay;
     C_Item2InMenu oMenuRecenter;
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
@@ -296,7 +294,7 @@ public class Menu : MonoBehaviour
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     internal Material oMaterialPentagonLocked, oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
     internal Material oMaterialOctagonPlay, oMaterialOctagonPlayHighlighted;
-    internal Material oMaterialCircle, oMaterialCircleHighlighted;
+    internal Material oMaterialBar, oMaterialBarHighlighted;
     internal Material oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
@@ -580,8 +578,8 @@ public class Menu : MonoBehaviour
             oMaterialPentagonHighlighted = Resources.Load("LevelPentagonHigh", typeof(Material)) as Material;
             oMaterialOctagonPlay = Resources.Load("LevelOctagonPlay", typeof(Material)) as Material;
             oMaterialOctagonPlayHighlighted = Resources.Load("LevelOctagonPlayHigh", typeof(Material)) as Material;
-            oMaterialCircle = Resources.Load("LevelCircle", typeof(Material)) as Material;
-            oMaterialCircleHighlighted = Resources.Load("LevelCircleHigh", typeof(Material)) as Material;
+            oMaterialBar = Resources.Load("LevelBar150", typeof(Material)) as Material;
+            oMaterialBarHighlighted = Resources.Load("LevelBar150High", typeof(Material)) as Material;
         }
         if (iIncrementalInit == 3)
         {
@@ -645,30 +643,27 @@ public class Menu : MonoBehaviour
             Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
             //menu options
-#if !DISABLESTEAMWORKS
-            //oMenuSteamOverlay = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 0, "Steam", "Steam", 30.0f, 12.0f);
-#endif
-            oMenuRecenter = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 7, "Re center", "Recenter", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 14, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 21, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 28, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -15, "Recenter", "Recenter", 30.0f, 12.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -4, "Quit", "Quit", 30.0f, 12.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 7, "Controls", "Controls", 30.0f, 9.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 18, "Credits", "Credits", 30.0f, 9.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 36.5f, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 30, "Snap", "Snap", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             QualitySettings.SetQualityLevel(iQuality, true);
-            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 45, "Med", "Qual1", 30.0f, 9.0f);
-            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 52, "High", "Qual2", 30.0f, 9.0f);
-            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, /**/-6.0f, 1.20f), vAroundPoint, 59, "Ultra", "Qual3", 30.0f, 9.0f);
+            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 42, "Med", "Qual1", 30.0f, 9.0f);
+            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 53, "High", "Qual2", 30.0f, 9.0f);
+            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 64, "Ultra", "Qual3", 30.0f, 9.0f);
         }
         if (iIncrementalInit == 8)
         {
             //next/prev buttons
-            Vector3 vPos = new Vector3(0.0f, /**/1.0f, -0.1f);
+            Vector3 vPos = new Vector3(0.0f, 1.0f, -0.1f);
             if (oMenuNext1 != null) oMenuNext1.DestroyObj();
-            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -9.0f), 50, "", "Next1", 18.0f, 9.0f);
-            vPos = new Vector3(1000.0f, /**/1.0f, -0.1f);
+            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -9.0f), 50, ">", "Next1", 18.0f, 9.0f);
+            vPos = new Vector3(1000.0f, 1.0f, -0.1f);
             if (oMenuPrev1 != null) oMenuPrev1.DestroyObj();
             oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), -50, "<", "Prev1", 18.0f, 9.0f);
 
@@ -762,14 +757,14 @@ public class Menu : MonoBehaviour
         if (oMenuNext1 != null && oMenuNext1.oLevelQuad != null) oMenuNext1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
         if (oMenuPrev1 != null && oMenuPrev1.oLevelQuad != null) oMenuPrev1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
 
-        if (oMenuRecenter != null && oMenuRecenter.oLevelQuad != null) oMenuRecenter.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
-        if (oMenuQuit != null && oMenuQuit.oLevelQuad != null) oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
-        if (oMenuControls != null && oMenuControls.oLevelQuad != null) oMenuControls.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
-        if (oMenuCredits != null && oMenuCredits.oLevelQuad != null) oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialCircle;
-        if (oMenuQuality1 != null && oMenuQuality1.oLevelQuad != null) oMenuQuality1.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 1) ? oMaterialCircleHighlighted : oMaterialCircle;
-        if (oMenuQuality2 != null && oMenuQuality2.oLevelQuad != null) oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 2) ? oMaterialCircleHighlighted : oMaterialCircle;
-        if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 4) ? oMaterialCircleHighlighted : oMaterialCircle;
-        if (oMenuSnapMovement != null && oMenuSnapMovement.oLevelQuad != null) oMenuSnapMovement.oLevelQuad.GetComponent<MeshRenderer>().material = CameraController.bSnapMovement ? oMaterialCircleHighlighted : oMaterialCircle;
+        if (oMenuRecenter != null && oMenuRecenter.oLevelQuad != null) oMenuRecenter.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialBar;
+        if (oMenuQuit != null && oMenuQuit.oLevelQuad != null) oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialBar;
+        if (oMenuControls != null && oMenuControls.oLevelQuad != null) oMenuControls.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialBar;
+        if (oMenuCredits != null && oMenuCredits.oLevelQuad != null) oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialBar;
+        if (oMenuQuality1 != null && oMenuQuality1.oLevelQuad != null) oMenuQuality1.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 1) ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuQuality2 != null && oMenuQuality2.oLevelQuad != null) oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 2) ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 4) ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuSnapMovement != null && oMenuSnapMovement.oLevelQuad != null) oMenuSnapMovement.oLevelQuad.GetComponent<MeshRenderer>().material = CameraController.bSnapMovement ? oMaterialBarHighlighted : oMaterialBar;
 
         bool bHitLevel = false;
         RaycastHit oHitInfo;
@@ -862,35 +857,35 @@ public class Menu : MonoBehaviour
             }
             else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
             {
-                oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
+                oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
             {
-                oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
+                oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
             {
-                oMenuControls.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
+                oMenuControls.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
             {
-                oMenuCredits.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
+                oMenuCredits.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
             {
-                oMenuQuality1.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
+                oMenuQuality1.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
             {
-                oMenuQuality2.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
+                oMenuQuality2.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
             {
-                oMenuQuality3.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
+                oMenuQuality3.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
             {
-                oMenuSnapMovement.oLevelQuadMeshRenderer.material = oMaterialCircleHighlighted;
+                oMenuSnapMovement.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
@@ -1294,13 +1289,16 @@ public class Menu : MonoBehaviour
             vPos = i_vPos;
 
             //create a quad with a text on, in the pos of each menu object
+            float fScaleX = ((i_szText.CompareTo(">") == 0) || (i_szText.CompareTo("<") == 0)) ? 1.0f : 1.5f;
             oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             oLevelQuad.transform.parent = Menu.theMenu.transform;
             oLevelQuad.AddComponent<BoxCollider>();
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
-            /**/oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);
-            oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
+            oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);
+            /**/oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f * fScaleX, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
+            if (i_szText.CompareTo(">") == 0)
+                i_szText = "";
             if (i_szText.CompareTo("<") == 0)
             {
                 //oLevelQuad.transform.eulerAngles = oLevelQuad.transform.eulerAngles + new Vector3(0, 0, 180);
@@ -1308,12 +1306,12 @@ public class Menu : MonoBehaviour
                 i_szText = "";
             }
             oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
-            oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialCircle;
+            oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialBar;
 
             //create text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-            /**/oLevelText.transform.position = new Vector3(vPos.x - .58f, vPos.y - .17f, vPos.z - .12f);
-            oLevelText.transform.localScale = new Vector3(1.6f, 1.6f, 1.0f);
+            oLevelText.transform.position = new Vector3(vPos.x - .68f, vPos.y - .17f, vPos.z - .12f);
+            oLevelText.transform.localScale = new Vector3(1.8f, 1.8f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;
             oLevelText.SetActive(true);

@@ -719,13 +719,6 @@ public class GameManager : MonoBehaviour
                 fRecenterTimer = 0.0f;
             }
         }
-#if !DISABLESTEAMWORKS
-        /*if (Menu.bSteamOverlay)
-        {
-            SteamFriends.ActivateGameOverlay("settings");
-            Menu.bSteamOverlay = false;
-        }*/
-#endif
 
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
