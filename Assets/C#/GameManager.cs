@@ -9,6 +9,7 @@ using System.Threading;
 using Oculus.Platform;
 #if !DISABLESTEAMWORKS //Add in Edit->Project Settings...->Player.Scripting Define Symbols [DISABLESTEAMWORKS]
 using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
+using Valve.VR;
 #endif
 
 public class GameManager : MonoBehaviour
@@ -695,13 +696,6 @@ public class GameManager : MonoBehaviour
                 fRecenterTimer = 0.0f;
             }
         }
-#if !DISABLESTEAMWORKS
-        /*if (Menu.bSteamOverlay)
-        {
-            SteamFriends.ActivateGameOverlay("settings");
-            Menu.bSteamOverlay = false;
-        }*/
-#endif
 
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present

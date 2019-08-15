@@ -1310,8 +1310,8 @@ public class Menu : MonoBehaviour
 
             //create text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
-            oLevelText.transform.position = new Vector3(vPos.x - .68f, vPos.y - .17f, vPos.z - .12f);
-            oLevelText.transform.localScale = new Vector3(1.8f, 1.8f, 1.0f);
+            oLevelText.transform.position = new Vector3(vPos.x - .58f, vPos.y - .17f, vPos.z - .12f);
+            oLevelText.transform.localScale = new Vector3(1.6f, 1.6f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;
             oLevelText.SetActive(true);
