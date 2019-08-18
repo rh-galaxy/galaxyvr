@@ -4,11 +4,13 @@
 	require_once("db_connect.php");
 	require_once("checkparams.php");
 
-	$paramArray = array($_POST["LEVEL"], $_POST["NAME"], $_POST["USERID"], $_POST["COUNTER"], $_POST["SCORE"], $_POST["REPLAY"]);
+	$paramArray = array($_POST["LEVEL"], $_POST["NAME"], $_POST["USERID"], $_POST["COUNTER"], $_POST["SCORE"], $_POST["STEAM"], $_POST["REPLAY"]);
 
 	if(checkstring($paramArray) && $_POST["LEVEL"]!="" && $_POST["NAME"]!="" && $_POST["USERID"]!="" && $_POST["COUNTER"]!="" && $_POST["SCORE"]!="" && $_POST["REPLAY"]!="") {
 		$user = $_POST["NAME"];
 		$userid = $_POST["USERID"];
+		$steam = 0;
+		if($_POST["STEAM"]==1) $steam = 1;
 		$isok = 0; //no qualify
 
 		$db = connect_to_db();
@@ -73,7 +75,7 @@
 					if($num_rows!=0) {
 						$query = "UPDATE achievements_t SET ip='".$ip."',timestamp=NOW(),score='".$_POST["SCORE"]."',replay='".$replay."' WHERE (level='".$_POST["LEVEL"]."' AND name='".$_POST["NAME"]."')";
 					} else {
-						$query = "INSERT INTO achievements_t (ip, name, level, score, replay) VALUES('".$ip."','".$_POST["NAME"]."','".$_POST["LEVEL"]."',".$_POST["SCORE"].",'".$replay."')";
+						$query = "INSERT INTO achievements_t (ip, name, level, score, replay, steam) VALUES('".$ip."','".$_POST["NAME"]."','".$_POST["LEVEL"]."',".$_POST["SCORE"].",'".$replay."',".$steam.")";
 					}
 					$result = mysqli_query($db, $query);
 				}

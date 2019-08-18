@@ -3,13 +3,16 @@
 	require_once("db_connect.php");
 	require_once("checkparams.php");
 
+	$steam = 0;
 	$user = $_GET["User"];
 	$userid = $_GET["UserId"];
-	$paramArray = array($user,$userid);
+	$steam_one = $_GET["IsSteam"];
+	$paramArray = array($user,$userid,$steam_one);
 	$isok = 0; //no qualify
 
-	
 	if(checkstring($paramArray) && $user!="" && $userid!="") {
+		if($steam_one==1) $steam=1;
+		
 		$db = connect_to_db();
 
 		$query = "SELECT * FROM members_t WHERE oculus_id=".$userid;
@@ -66,7 +69,8 @@
 //part 2 (per level) record scores 1st-3rd place
 						$sort = "DESC";
 						if($row['IsTime'] != 0) $sort = "ASC";
-						$select_string = "SELECT achievements_t.name AS Name, achievements_t.score AS Score FROM achievements_t WHERE achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
+						$select_string = "SELECT achievements_t.name AS Name, achievements_t.score AS Score FROM achievements_t WHERE achievements_t.steam=".$steam." AND achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
+						
 						$result2 = @mysqli_query($db, $select_string);
 
 						if($result2) {
