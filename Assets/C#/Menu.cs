@@ -709,7 +709,7 @@ public class Menu : MonoBehaviour
             // and is not behaving reliably
             if (!XRDevice.isPresent)
                 Camera.main.fieldOfView = 45.0f;
-            //prevent selection if trigger was hold when menu is started
+            //prevent selection if trigger was held when menu is started
             iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0 : 30;
 
             if (bFirstTime)
