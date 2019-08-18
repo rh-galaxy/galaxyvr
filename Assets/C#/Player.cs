@@ -445,7 +445,7 @@ public class Player : MonoBehaviour
                 {
                     oRb.position = rm.vPos;
                     oRb.velocity = rm.vVel;
-                    fDirection = rm.fDirection;
+                    oRb.rotation = rm.fDirection;
                     bThrottle = (rm.iKeyFlag & 8) != 0;
                     bLeft = (rm.iKeyFlag & 4) != 0;
                     bRight = (rm.iKeyFlag & 2) != 0;
@@ -467,7 +467,7 @@ public class Player : MonoBehaviour
                 {
                     oRb.position = rm.vPos;
                     oRb.velocity = rm.vVel;
-                    fDirection = rm.fDirection;
+                    oRb.rotation = rm.fDirection;
                     Kill(false);
                 }
             }
