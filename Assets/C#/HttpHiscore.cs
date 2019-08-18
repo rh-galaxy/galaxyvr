@@ -30,6 +30,12 @@ public class HttpHiscore
     UnityWebRequestAsyncOperation async;
     DateTime dtLastAccess; //when GetLimits() has run
 
+#if DISABLESTEAMWORKS
+    int iIsSteam = 0;
+#else
+    int iIsSteam = 1;
+#endif
+
     public HttpHiscore()
     {
 
@@ -41,7 +47,7 @@ public class HttpHiscore
         bIsDone = false;
         dtLastAccess = DateTime.Now; //set this before request
 
-        string url = WEB_HOST + "/achievements_get.php?User=" + GameManager.szUser + "&UserId=" + GameManager.iUserID;
+        string url = WEB_HOST + "/achievements_get.php?User=" + GameManager.szUser + "&UserId=" + GameManager.iUserID + "&IsSteam=" + iIsSteam;
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
@@ -126,7 +132,7 @@ public class HttpHiscore
 
         string url = WEB_HOST + "/achievements_post.php";
         string data= "LEVEL="+ i_szLevel + "&NAME="+ GameManager.szUser + "&USERID="+ GameManager.iUserID + "&COUNTER="+
-            iCount + "&SCORE="+ i_iScoreMs + "&REPLAY="+ base64;
+            iCount + "&SCORE="+ i_iScoreMs + "&STEAM=" + iIsSteam + "&REPLAY="+ base64;
 
         www = CreateUnityWebRequest(url, data); //UnityWebRequest.Post(url, data); <- didn't work
         yield return www.SendWebRequest();
