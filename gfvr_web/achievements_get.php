@@ -69,7 +69,8 @@
 //part 2 (per level) record scores 1st-3rd place
 						$sort = "DESC";
 						if($row['IsTime'] != 0) $sort = "ASC";
-						$select_string = "SELECT achievements_t.name AS Name, achievements_t.score AS Score FROM achievements_t WHERE achievements_t.steam=".$steam." AND achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
+						$select_string = "SELECT achievements_t.name AS Name, achievements_t.score AS Score FROM achievements_t WHERE achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
+						//achievements_t.steam=".$steam." AND
 						
 						$result2 = @mysqli_query($db, $select_string);
 
