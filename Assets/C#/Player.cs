@@ -624,9 +624,8 @@ public class Player : MonoBehaviour
             fTemp = (fFuel != 0 && bThrottle) ? SHIP_THRUST : 0.0f;
             if (fTemp != fAcceleration)
             {
-
                 //ParticleSystem.EmissionModule oEM = m_oThruster.emission;
-                //using that does not work: (oEM.enabled = false;), but m_oThruster.enableEmission = false; is depricated...
+                //using that does not work: (oEM.enabled = false;), but oThruster.enableEmission = false; is depricated...
                 if (fTemp != 0)
                 {
                     oThruster.enableEmission = true;
@@ -853,7 +852,7 @@ public class Player : MonoBehaviour
     {
         //bEngineFadeOut = true;
         //bScrapeFadeOut = true;
-        //^will not make the sounds stop since FixedUpdate is run to slowly
+        //^will not make the sounds stop since FixedUpdate is run too slowly
         oASEngine.Stop();
         oASScrape.Stop();
         //^may cause clicking but we have to live with that
