@@ -21,10 +21,10 @@
 		$num_rows = @mysqli_num_rows($result_member);
 		if($num_rows==1) {
 			$row = @mysqli_fetch_assoc($result_member);
-			$count = $_POST["COUNTER"];
+			$count = $_POST["COUNTER"] ^ 1467;
 			$tnow = time();
 			$tpast = $row['last_access'];
-			if(($tnow-$tpast)<$count+10 && ($tnow-$tpast)>$count-10) {
+			if(($tnow-$tpast)<$count+8 && ($tnow-$tpast)>$count-8 && $count>28) {
 				$isok = 1;
 			}
 		}
@@ -57,6 +57,8 @@
 				} else {
 					if($_POST["SCORE"] > $scoretobeat) $qualify = 1;
 				}
+				//limit to 4MB
+				if(strlen($_POST["REPLAY"])>=4*1024*1024) $qualify = 0;
 
 				if($qualify) {
 					if(getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")) {
