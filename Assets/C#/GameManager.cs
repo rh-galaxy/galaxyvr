@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour
 
     //////start of valve specific code
 #if !DISABLESTEAMWORKS
+    bool bSteamAPIInited = false;
     float fBackTimerForViveController = 0.0f;
 
     CGameID gameID;
@@ -141,6 +142,7 @@ public class GameManager : MonoBehaviour
 
     bool InitValve()
     {
+        bSteamAPIInited = false;
         try
         {
             if (SteamAPI.RestartAppIfNecessary((AppId_t)1035550))
@@ -155,8 +157,8 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        bool bInited = SteamAPI.Init();
-        if (!bInited)
+        bSteamAPIInited = SteamAPI.Init();
+        if (!bSteamAPIInited)
         {
             Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed.", this);
             return false;
@@ -186,7 +188,7 @@ public class GameManager : MonoBehaviour
     //we only want to do this when the app exits
     /*private void OnDestroy()
     {
-        if (!SteamManager.Initialized)
+        if (!bSteamAPIInited)
             return;
 
         SteamAPI.Shutdown();
@@ -201,7 +203,7 @@ public class GameManager : MonoBehaviour
 
     private void OnUserStatsReceived(UserStatsReceived_t pCallback)
     {
-        if (!SteamManager.Initialized)
+        if (!bSteamAPIInited)
             return;
 
         // we may get callbacks for other games' stats arriving, ignore them
@@ -668,13 +670,13 @@ public class GameManager : MonoBehaviour
 #endif
 
 #if !DISABLESTEAMWORKS
-        if (SteamManager.Initialized)
+        if (bSteamAPIInited)
             SteamAPI.RunCallbacks(); //must run every frame for some reason or garbage collector takes something and unity crashes
 #endif
         if (Menu.bQuit)
         {
 #if !DISABLESTEAMWORKS
-            if (SteamManager.Initialized)
+            if (bSteamAPIInited)
                 SteamAPI.Shutdown();
 #endif
 #if UNITY_EDITOR

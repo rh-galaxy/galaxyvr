@@ -128,7 +128,7 @@ public class HttpHiscore
         bIsDone = false;
         byte[] bytes = i_oReplay.SaveToMem();
         string base64 = System.Convert.ToBase64String(bytes);
-        int iCount = (int)(DateTime.Now - dtLastAccess).TotalSeconds;
+        int iCount = (int)(DateTime.Now - dtLastAccess).TotalSeconds ^ 1467;
 
         string url = WEB_HOST + "/achievements_post.php";
         string data= "LEVEL="+ i_szLevel + "&NAME="+ GameManager.szUser + "&USERID="+ GameManager.iUserID + "&COUNTER="+
