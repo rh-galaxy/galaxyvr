@@ -174,6 +174,8 @@ public class GameLevel : MonoBehaviour
     public Door oDoorObjBase;
     internal List<Door> aDoorList;
 
+    public FlyingScore oFlyingScoreObjBase;
+
     //static noncollidable objects
     List<GameObject> aDecorationList; //single bricks, brick wall left,center,right
     public ZObject oZObjBase;
@@ -218,28 +220,28 @@ public class GameLevel : MonoBehaviour
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
         oObj.transform.position = new Vector3(-vSize.x / 20 - 0.05f, 0, .20f);
-        oObj.transform.localScale = new Vector3(.10f, vSize.y/10, vSize.z + .6f);
+        oObj.transform.localScale = new Vector3(.10f, vSize.y / 10, vSize.z + .6f);
         oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
         //right
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
         oObj.transform.position = new Vector3(vSize.x / 20 + 0.05f, 0, .20f);
-        oObj.transform.localScale = new Vector3(.10f, vSize.y/10, vSize.z + .6f);
+        oObj.transform.localScale = new Vector3(.10f, vSize.y / 10, vSize.z + .6f);
         oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
         //top
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
         oObj.transform.position = new Vector3(0, vSize.y / 20 + 0.05f, .20f);
-        oObj.transform.localScale = new Vector3(vSize.x/10 + .20f, .10f, vSize.z + .6f);
+        oObj.transform.localScale = new Vector3(vSize.x / 10 + .20f, .10f, vSize.z + .6f);
         oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
         //bottom
         oObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         MonoBehaviour.DestroyImmediate(oObj.GetComponent<BoxCollider>());
         oObj.transform.parent = transform;
         oObj.transform.position = new Vector3(0, -vSize.y / 20 - 0.05f, .20f);
-        oObj.transform.localScale = new Vector3(vSize.x/10 + .20f, .10f, vSize.z + .6f);
+        oObj.transform.localScale = new Vector3(vSize.x / 10 + .20f, .10f, vSize.z + .6f);
         oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
 
         //change fov if non VR since the default setting shows to wide fov
@@ -249,7 +251,7 @@ public class GameLevel : MonoBehaviour
 
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);
-        switch(iSkyBox)
+        switch (iSkyBox)
         {
             case 1: RenderSettings.skybox = oSkyBoxMat1; break;
             case 2: RenderSettings.skybox = oSkyBoxMat2; break;
@@ -326,7 +328,7 @@ public class GameLevel : MonoBehaviour
 
             iLoadBeginState++;
         }
-        else if(iLoadBeginState == 2)
+        else if (iLoadBeginState == 2)
         {
             if (LoadTileSetFinalize()) iLoadBeginState++;
         }
@@ -337,8 +339,8 @@ public class GameLevel : MonoBehaviour
             int segs = oTileTexture.height / 6;
             int n2 = iLoadBeginState - 3;
 
-            if (n2==0) oTileSet = new bool[oTileTexture.height, oTileTexture.width];
-            for (int y = n2*segs; y < (n2<5?(n2+1)*segs:oTileTexture.height); y++)
+            if (n2 == 0) oTileSet = new bool[oTileTexture.height, oTileTexture.width];
+            for (int y = n2 * segs; y < (n2 < 5 ? (n2 + 1) * segs : oTileTexture.height); y++)
             {
                 for (int x = 0; x < oTileTexture.width; x++)
                 {
@@ -403,10 +405,10 @@ public class GameLevel : MonoBehaviour
 ///**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         return false;
     }
-    
+
     public bool LoadDone()
     {
-        if(bMeshBkReady)
+        if (bMeshBkReady)
         {
             oMeshGen.SetGenerateMeshBackgroundToUnity();
 
@@ -494,7 +496,7 @@ public class GameLevel : MonoBehaviour
 
         if (!bMapLoaded || iFinalizeCounter <= 32) return;
 
-        if(!bRunGameOverTimer)
+        if (!bRunGameOverTimer)
         {
             //race finished
             if(player.bAchieveFinishedRaceLevel)  {

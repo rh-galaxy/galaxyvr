@@ -961,11 +961,19 @@ public class Player : MonoBehaviour
             iCargoSpaceUsed -= aHold[iCargoNumUsed];
 
             //new weight
-            oRb.mass -= aHold[iCargoNumUsed] /**// 11.0f;
+            oRb.mass -= aHold[iCargoNumUsed] / 11.0f;
             oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //add score for the cargo moved
             iScore += aHold[iCargoNumUsed];
+
+            //add flying score text
+            S_FlyingScoreInfo stFlyingScoreInfo;
+            stFlyingScoreInfo.iScore = aHold[iCargoNumUsed];
+            stFlyingScoreInfo.vPos = new Vector3(oRb.position.x, oRb.position.y, -0.2f);
+            stFlyingScoreInfo.vVel = new Vector3(UnityEngine.Random.Range(-0.15f, 0.15f), UnityEngine.Random.Range(-0.15f, 0.15f), -0.35f);
+            FlyingScore o = Instantiate(oMap.oFlyingScoreObjBase, oMap.transform);
+            o.Init(stFlyingScoreInfo);
 
             //play unload cargo sound
             oASGeneral.PlayOneShot(oClipUnloadCargo);

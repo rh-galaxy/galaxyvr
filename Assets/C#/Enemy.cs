@@ -110,8 +110,20 @@ public class Enemy : MonoBehaviour
                 //play explosion sound
                 oAudioSource.PlayOneShot(oClipExplosion);
 
+                //add score
                 oMap.iAchieveEnemiesKilled++;
                 oMap.player.iScore += SENEMY_SCOREPOINTS[stInfo.iEnemyType];
+
+                //add flying score text
+                if (oMap.iLevelType == (int)LevelType.MAP_MISSION)
+                {
+                    S_FlyingScoreInfo stFlyingScoreInfo;
+                    stFlyingScoreInfo.iScore = SENEMY_SCOREPOINTS[stInfo.iEnemyType];
+                    stFlyingScoreInfo.vPos = new Vector3(transform.position.x, transform.position.y, -0.2f);
+                    stFlyingScoreInfo.vVel = new Vector3(UnityEngine.Random.Range(-0.15f, 0.15f), UnityEngine.Random.Range(-0.15f, 0.15f), -0.35f);
+                    FlyingScore o = Instantiate(oMap.oFlyingScoreObjBase, oMap.transform);
+                    o.Init(stFlyingScoreInfo);
+                }
             }
             else
             {
