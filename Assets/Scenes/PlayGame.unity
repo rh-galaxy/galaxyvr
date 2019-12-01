@@ -2737,7 +2737,7 @@ MonoBehaviour:
   oEnemyObjBase: {fileID: 1384903386879352621}
   oBulletObjBase: {fileID: 15}
   oDoorObjBase: {fileID: 2080158388583774448}
-  oFlyingScoreObjBase: {fileID: 0}
+  oFlyingScoreObjBase: {fileID: 692679971}
   oZObjBase: {fileID: 1729895974285792216}
   oDecorationObjBase: {fileID: 945264716}
   oSkyBoxMat1: {fileID: 2100000, guid: 1a096e073ffc2964b876fb03469ff7ec, type: 2}
