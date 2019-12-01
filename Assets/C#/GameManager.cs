@@ -72,6 +72,8 @@ public class GameManager : MonoBehaviour
             bNoVR = true;
             //XRSettings.enabled = false;
             Screen.SetResolution(1280, 720, true);
+
+            Debug.Log("Error initing VR, continue with no VR");
         }
         else
         {
@@ -819,7 +821,11 @@ public class GameManager : MonoBehaviour
                             }
                         }
                     }
-                    if(oHigh.oLevelList.Count==0) bNoInternet = true; //set this so no further attempts are made at accessing the internet
+                    if (oHigh.oLevelList.Count == 0)
+                    {
+                        Debug.LogError("error getting level list, disableing further internet access");
+                        bNoInternet = true; //set this so no further attempts are made at accessing the internet
+                    }
 
                     //handle gold achievements
                     if (iMissionFinishedGold >= 30)
