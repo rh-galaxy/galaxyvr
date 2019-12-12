@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public static GameManager theGM = null;
 
     public CameraController theCameraHolder;
+    public OvrAvatar myAvatar;
 
     internal static bool bOculusDevicePresent = false;
     internal static bool bValveDevicePresent = false;
@@ -448,6 +449,8 @@ public class GameManager : MonoBehaviour
             szUser = msg.GetUser().OculusID;
             Debug.Log("You are " + szUser);
             bUserValid = true;
+
+            /**/myAvatar.oculusUserID = msg.GetUser().ID.ToString();
         }
     }
     
@@ -642,11 +645,16 @@ public class GameManager : MonoBehaviour
         {
             iFade = 0;
             if(fFadeCurAlpha<0.1)
+            {
+                //fade in done
                 oFadeBox.SetActive(false);
+                /**/theCameraHolder.Fade(true);
+            }
         }
     }
     public void StartFade(float fTime, float fDelay, bool bOut)
     {
+        /**/if(bOut) theCameraHolder.Fade(false);
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
         fFadeDelay = fDelay;

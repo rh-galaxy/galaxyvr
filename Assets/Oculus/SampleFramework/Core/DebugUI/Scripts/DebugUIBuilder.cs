@@ -121,7 +121,7 @@ public class DebugUIBuilder : MonoBehaviour
     }
     GetComponent<OVRRaycaster>().pointer = lp.gameObject;
     lp.gameObject.SetActive(false);
-#if OVRPLUGIN_UNSUPPORTED_PLATFORM
+#if UNITY_EDITOR
     string scene = SceneManager.GetActiveScene().name;
     OVRPlugin.SendEvent("debug_ui_builder",
       ((scene == "DebugUI") ||

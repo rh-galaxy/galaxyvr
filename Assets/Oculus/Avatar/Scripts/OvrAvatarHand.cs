@@ -5,4 +5,8 @@ using System;
 
 public class OvrAvatarHand : MonoBehaviour
 {
+    private void Update()
+    {
+        /**/gameObject.SetActive(false);
+    }
 }

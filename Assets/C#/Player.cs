@@ -43,6 +43,10 @@ public class Player : MonoBehaviour
     float fDirection = 90.0f;
     const float fGravityScale = 0.045f;
 
+    //motion movement
+    internal bool bMotionMovementEnabled = false;
+    internal Vector2 vSteerToPoint;
+
     //ship properties
     const float MAXFUELINTANK = 60.0f;
     const float MAXSPACEINHOLDWEIGHT = 50.0f;
@@ -94,6 +98,9 @@ public class Player : MonoBehaviour
     float fFreeFromBulletsTimer = 0.0f;
     float fDamageTimer = 1.0f;
     float fExplosionTimer = 0.0f;
+
+    float fMovementTimer = 0.0f;
+    float fFullThrottleTimer = 0.0f;
 
     bool bInited;
     private void Awake()
@@ -386,6 +393,209 @@ public class Player : MonoBehaviour
         return oRb.position;
     }
 
+    /// /////////////////////////////////////////////////////////////////////
+    /// <summary>
+    struct S_CurState
+    {
+        public Vector2 vPos;
+        public Vector2 vVel;
+        public float fPointing;
+
+        public Vector2 l0; //original pos
+        public Vector2 l1; //goal
+
+        public int iLastMove;
+        public float fTimestep;
+    }
+    struct S_CurMove
+    {
+        public S_CurState stValue;
+        public float a;
+        public float b;
+        public float c;
+        public float d;
+        public float e;
+    }
+
+    struct S_Move
+    {
+        public S_Move(bool i_bLeft, bool i_bRight, bool i_bThrottle)
+        {
+            bLeft = i_bLeft;
+            bRight = i_bRight;
+            bThrottle = i_bThrottle;
+        }
+        public bool bLeft, bRight, bThrottle;
+    }
+    S_Move[] ALLMOVES =
+        {new S_Move(false, false, false), new S_Move(false, false, true), new S_Move(true, false, false),
+        new S_Move(true, false, true), new S_Move(false, true, false), new S_Move(false, true, true) };
+
+    int[,] MOVE_TO_MOVE_SCORE = {
+        { 0, 100, 100, 100, 100, 100}, //from 0 to 
+        { 100, 0, 100, 100, 100, 100}, //from 1 to 
+        { 100, 100, 0, 100, 400, 400},
+        { 100, 100, 100, 0, 400, 400},
+        { 100, 100, 400, 400, 0, 100},
+        { 100, 100, 400, 400, 100, 0}
+    };
+
+    void GenerateMoves(S_CurState i_stCurrent, float i_fTime, out S_CurMove[] o_stMoves)
+    {
+        int i;
+        o_stMoves = new S_CurMove[6];
+        for (i = 0; i < 6; i++)
+        {
+            S_CurState stNew = i_stCurrent;
+
+            stNew.fPointing -= ALLMOVES[i].bRight ? SHIP_STEERSPEED * i_fTime : 0;
+            stNew.fPointing += ALLMOVES[i].bLeft ? SHIP_STEERSPEED * i_fTime : 0;
+            if (stNew.fPointing < 0) stNew.fPointing += 360;
+            if (stNew.fPointing > 360) stNew.fPointing -= 360;
+
+            float fThrust = ALLMOVES[i].bThrottle ? SHIP_THRUST : 0;
+            
+            Vector2 a = new Vector2(Mathf.Cos(stNew.fPointing * (Mathf.PI / 180)) * fThrust, Mathf.Sin(stNew.fPointing * (Mathf.PI / 180)) * fThrust);
+            a += oCustomGravity.force;
+            a -= stNew.vVel * oRb.drag;
+
+            stNew.vPos += (stNew.vVel * i_fTime) + (0.5f * a * i_fTime * i_fTime);
+            stNew.vVel += a * i_fTime;
+
+            o_stMoves[i].stValue = stNew;
+            o_stMoves[i].a = Strategy5(stNew);
+            o_stMoves[i].b = Strategy1(stNew);
+            o_stMoves[i].c = Strategy2(stNew);
+            o_stMoves[i].d = Strategy4(stNew);
+            o_stMoves[i].e = MOVE_TO_MOVE_SCORE[stNew.iLastMove, i] * (1.0f/ Strategy5(stNew));
+        }
+    }
+
+    float[] TIME_FACTOR = { 1.0f, 1.0f, 1.0f, 2.0f, 2.0f, 3.0f, 5.0f, 5.0f, 5.0f, 5.0f };
+    int EvaluateMoves(S_CurState i_stCurrent, int i_iLevel, bool i_bShallow)
+    {
+        int i, iMove = 0;
+        float fBest = 1000000000, fWorst = -1000000000;
+        float[] dTest = new float[6];
+        float a, b, c, d, e;
+        S_CurMove[] aMoves;
+        int iWorst;
+
+        S_CurState stCurrent = i_stCurrent;
+        stCurrent.fTimestep = 0.07f * TIME_FACTOR[i_iLevel];
+        GenerateMoves(stCurrent, 0.07f * TIME_FACTOR[i_iLevel], out aMoves);
+
+        for (i = 0; i < 6; i++)
+        {
+            a = aMoves[i].a;
+            b = aMoves[i].b;
+            c = aMoves[i].c;
+            d = aMoves[i].d;
+            e = aMoves[i].e;
+            //dTest[i] = a * 0.0f + b * 1000.0f + c * 1.0f + d * 10.0f + e * 0.05f;
+            dTest[i] = a * 0.0f + b * 10000.0f + c * 2.0f + d * 10.0f + e * 0.1f;
+
+            if (dTest[i] > fWorst)
+            {
+                fWorst = dTest[i];
+                iWorst = i;
+            }
+        }
+
+        { //full search
+            for (i = 0; i < 6; i++)
+            {
+                //recurse...
+                stCurrent = aMoves[i].stValue;
+                stCurrent.iLastMove = i;
+                if (i_iLevel < /**/1)
+                {
+                    dTest[i] += EvaluateMoves(stCurrent, i_iLevel + 1, true);
+                }
+
+                if (dTest[i] < fBest)
+                {
+                    fBest = dTest[i];
+                    iMove = i;
+                }
+            }
+        }
+
+        if (i_iLevel > 0) return (int)fBest;
+        else return iMove;
+    }
+
+    //score for how far from the line
+    float Strategy0(S_CurState stValues)
+    {
+        return CheckPoint.PointDistanceToLineSeg(stValues.vPos, stValues.l0, stValues.l1);
+    }
+    //score for how much closer to goal
+    float Strategy1(S_CurState stValues)
+    {
+        float fDistNow = (stValues.vPos - stValues.l1).magnitude;
+        float fDistBefore = ((stValues.vPos - (stValues.vVel * stValues.fTimestep)) - stValues.l1).magnitude;
+
+        float fScore = (fDistNow - fDistBefore); //negative value is closer
+        return fScore;
+    }
+    float CalcLineAngle(Vector2 a, Vector2 b)
+    {
+        float difx = b.x - a.x;
+        float dify = b.y - a.y;
+
+        float fResult = 360.0f - (Mathf.Atan2(-dify, difx) * (180.0f / Mathf.PI));
+        if (fResult >= 360.0f) fResult -= 360.0f;
+        else if (fResult < 0.0f) fResult += 360.0f;
+
+        return fResult;
+    }
+    //score for pointing toward goal (more important further from goal)
+    float Strategy2(S_CurState stValues)
+    {
+        float fGoalAngle = CalcLineAngle(stValues.vPos, stValues.l1);
+        float fDiff = fGoalAngle - stValues.fPointing;
+        if (fDiff < 0) fDiff += 360;
+        if (fDiff > 360) fDiff -= 360;
+        if (fDiff > 180) fDiff = 360 - fDiff; //the difference of two angles can be max 180.
+
+        float fDistNow = (stValues.vPos - stValues.l1).magnitude;
+        if (fDistNow > 1.0f) fDistNow = 1.0f;
+
+        float fScore = fDiff /**// fDistNow;
+        return fScore;
+    }
+    //score for speed
+    float Strategy3(S_CurState stValues)
+    {
+        float fVel = stValues.vVel.magnitude;
+
+        float fScore = -fVel;
+        return fScore;
+    }
+    //score for speed vs dist to goal
+    float Strategy4(S_CurState stValues)
+    {
+        float fVel = stValues.vVel.magnitude;
+
+        float fDistNow = (stValues.vPos - stValues.l1).magnitude;
+        if (fDistNow > 1.0f) fDistNow = 1.0f;
+
+        float fScore = -fVel / (1.0f/fDistNow);
+        return fScore;
+    }
+    //score for dist to goal
+    float Strategy5(S_CurState stValues)
+    {
+        float fDistNow = (stValues.vPos - stValues.l1).magnitude;
+
+        float fScore = fDistNow;
+        return fScore;
+    }
+    /// </summary>
+    /// /////////////////////////////////////////////////////////////////////
+
+
     Vector2 vForceDir = new Vector2(0, 0);
     int iLastInput = 0; //bool bitfield
     float fReplayMessageTimer = 0;
@@ -395,6 +605,7 @@ public class Player : MonoBehaviour
     internal int iNumEnemiesNear = 0;
     internal int iNumBulletsNear = 0;
     float fCurrentSpeedSeg = 0;
+    int iBestMove = 0;
     void FixedUpdate()
     {
         if (!bInited)
@@ -474,55 +685,110 @@ public class Player : MonoBehaviour
         }
         else
         {
+            bool bNewFireState = false;
+            bThrottle = bLeft = bRight = bAdjust = false;
+            if (!bMotionMovementEnabled)
+            {
 #if DISABLESTEAMWORKS
-            //get input from joysticks
-            float fX = Input.GetAxisRaw("Horizontal");                                          //axis x (x left stick)
-            float fY = Input.GetAxisRaw("Vertical");                                            //axis y (y left stick)
-            float fX2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickHorizontal"); //axis 4 (x right stick)
-            float fY2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");   //axis 5 (y right stick)
-            float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");         //axis 9    must be fire to support   xbox, vive, touch
-            float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");       //axis 10   must be thrust to support xbox, vive, touch
+                //get input from joysticks
+                float fX = Input.GetAxisRaw("Horizontal");                                          //axis x (x left stick)
+                float fY = Input.GetAxisRaw("Vertical");                                            //axis y (y left stick)
+                float fX2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickHorizontal"); //axis 4 (x right stick)
+                float fY2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");   //axis 5 (y right stick)
+                float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");         //axis 9    must be fire to support   xbox, vive, touch
+                float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");       //axis 10   must be thrust to support xbox, vive, touch
 
-            bThrottle = bLeft = bRight = bAdjust = false;
+                //joysticks
+                if (fX > 0.3f) bRight = true;
+                if (fX < -0.3f) bLeft = true;
+                if (fX2 > 0.3f) bRight = true;
+                if (fX2 < -0.3f) bLeft = true;
+                if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
+                if (fY2 < -0.5f && bLeft == false && bRight == false) bAdjust = true;
 
-            //joysticks
-            if (fX > 0.3f) bRight = true;
-            if (fX < -0.3f) bLeft = true;
-            if (fX2 > 0.3f) bRight = true;
-            if (fX2 < -0.3f) bLeft = true;
-            if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-            if (fY2 < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-
-            //there is something wrong here, Oculus Touch A button is swapped with B, making it
-            //not work to have fire on A without having it on B. this does not happen in an empty project
-            if (fY2 > 0.5f || fTrg2 > 0.3f) bThrottle = true;
-            if (Input.GetButton("Button2")) bThrottle = true; //button 2 (X)
-            if (Input.GetButton("Button3")) bThrottle = true; //button 3 (Y)
-            //keyboard and joystick for fire (is a trigger once event)
-            bool bNewFireState = false;
-            if (fTrg1 > 0.3f) bNewFireState = true; //left trigger
-            if (Input.GetButton("Button0")) bNewFireState = true; //button 0 (A)
-            if (Input.GetButton("Button1")) bNewFireState = true; //button 1 (B)
+                //there is something wrong here, Oculus Touch A button is swapped with B, making it
+                //not work to have fire on A without having it on B. this does not happen in an empty project
+                if (fY2 > 0.5f || fTrg2 > 0.3f) bThrottle = true;
+                if (Input.GetButton("Button2")) bThrottle = true; //button 2 (X)
+                if (Input.GetButton("Button3")) bThrottle = true; //button 3 (Y)
+                                                                  //keyboard and joystick for fire (is a trigger once event)
+                if (fTrg1 > 0.3f) bNewFireState = true; //left trigger
+                if (Input.GetButton("Button0")) bNewFireState = true; //button 0 (A)
+                if (Input.GetButton("Button1")) bNewFireState = true; //button 1 (B)
 #else
-            //get input from joysticks
-            float fX = SteamVR_Actions.default_Steering.axis.x;
-            float fY = SteamVR_Actions.default_Steering.axis.y;
-            float fTrg2 = SteamVR_Actions.default_Throttle.axis;
+                //get input from joysticks
+                float fX = SteamVR_Actions.default_Steering.axis.x;
+                float fY = SteamVR_Actions.default_Steering.axis.y;
+                float fTrg2 = SteamVR_Actions.default_Throttle.axis;
 
-            bThrottle = bLeft = bRight = bAdjust = false;
+                //joysticks
+                if (fX > 0.3f) bRight = true;
+                if (fX < -0.3f) bLeft = true;
+                if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
+                /**/if (fY < -0.9f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
 
-            //joysticks
-            if (fX > 0.3f) bRight = true;
-            if (fX < -0.3f) bLeft = true;
-            if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-            /**/if (fY < -0.9f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
-
-            if (fTrg2 > 0.3f) bThrottle = true;
-            if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;
-            //keyboard and joystick for fire (is a trigger once event)
-            bool bNewFireState = false;
-            if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
+                if (fTrg2 > 0.3f) bThrottle = true;
+                if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;
+                //keyboard and joystick for fire (is a trigger once event)
+                bool bNewFireState = false;
+                if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
 #endif
+            }
+            else
+            {
+                //touch input
+                float fY = Input.GetAxisRaw("Vertical");                                            //axis y (y left stick)
+                float fY2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");   //axis 5 (y right stick)
+                float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");
+                float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");
+                if (fY < -0.5f || fY2 < -0.5f) bAdjust = true;
+                if (Input.GetButton("Button0") || Input.GetButton("Button2")) bNewFireState = true; //button 0 (A, X)
+                if (Input.GetButton("Button1") || Input.GetButton("Button3")) bAdjust = true; //button 1 (B, Y)
+
+
+                fMovementTimer += Time.fixedDeltaTime;
+                if(!bLanded) fFullThrottleTimer -= Time.fixedDeltaTime;
+                else fFullThrottleTimer = 0.3f;
+
+                if (fTrg1 > 0.3f || fTrg2 > 0.3f && !bAdjust)
+                {
+                    //new move descicion
+                    if(fMovementTimer > 0.07f)
+                    {
+                        fMovementTimer = 0;
+                        if (fFullThrottleTimer > 0)
+                        {
+                            iBestMove = 1;
+                            bThrottle = true;
+                        }
+                        else
+                        {
+                            S_CurState stCurrent;
+                            stCurrent.vPos = oRb.position;
+                            stCurrent.vVel = oRb.velocity;
+                            stCurrent.fPointing = fDirection;
+                            stCurrent.fTimestep = 0.1f;
+                            stCurrent.l0 = oRb.position;
+                            stCurrent.l1 = vSteerToPoint;
+                            stCurrent.iLastMove = iBestMove;
+                            iBestMove = EvaluateMoves(stCurrent, 0, true);
+
+                            bThrottle = ALLMOVES[iBestMove].bThrottle;
+                            bLeft = ALLMOVES[iBestMove].bLeft;
+                            bRight = ALLMOVES[iBestMove].bRight;
+                        }
+                    }
+                    //keep old move
+                    else
+                    {
+                        bThrottle = ALLMOVES[iBestMove].bThrottle;
+                        bLeft = ALLMOVES[iBestMove].bLeft;
+                        bRight = ALLMOVES[iBestMove].bRight;
+                    }
+
+                }
+            }
+
             //keyboard
             if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Space)) bNewFireState = true;
             if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) bThrottle = true;

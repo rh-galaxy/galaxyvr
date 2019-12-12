@@ -94,12 +94,25 @@ headline("Future");
 square_start("'100%'");
 ?>
 <p>There may be more official levels with hiscore coming.
-The plan is to also release it for the Oculus Quest.</p>
+The plan is to also release it for the Oculus Quest or Oculus GO.</p>
 <?php
 square_end();
 ?>
 <br><br><br>
 
+<?php
+headline("Contest 2020-01-19");
+?>
+<br>
+<?php
+square_start("'100%'");
+?>
+<p>A new contest! $55 via paypal to the one player at the top of the hiscores listing at the end of January 19, 2020 CET.
+I want to get the highscores flowing with people trying and in that case somebody will win, but if it's only a single person trying, I will also be trying to better my score (rh_galaxy).</p>
+<?php
+square_end();
+?>
+<br><br><br>
 
 <?php
 headline("Contact");
