@@ -66,12 +66,12 @@ public class CheckPoint : MonoBehaviour
         oCP2Text.SetActive(bActive);
     }
 
-    float PointDistance(Vector2 i_vPos1, Vector2 i_vPos2)
+    static float PointDistance(Vector2 i_vPos1, Vector2 i_vPos2)
     {
         Vector2 vDist = i_vPos1 - i_vPos2;
         return (float)Mathf.Sqrt(vDist.x * vDist.x + vDist.y * vDist.y);
     }
-    float PointDistanceToLineSeg(Vector2 p, Vector2 l0, Vector2 l1/*, out Vector2 o_vClosest*/)
+    static public float PointDistanceToLineSeg(Vector2 p, Vector2 l0, Vector2 l1/*, out Vector2 o_vClosest*/)
     {
         Vector2 l0_l1;
         float dist;
@@ -130,9 +130,9 @@ public class CheckPoint : MonoBehaviour
         l0.y = vPos1.y;
         l1.x = vPos2.x;
         l1.y = vPos2.y;
-        double dDist = PointDistanceToLineSeg(p, l0, l1);
+        float fDist = PointDistanceToLineSeg(p, l0, l1);
 
-        if (dDist < CP_RANGE)
+        if (fDist < CP_RANGE)
         {
             return true;
         }

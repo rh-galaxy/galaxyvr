@@ -35,7 +35,7 @@ All done in 55 narrow space caves filled with enemies. Featuring interactive mus
 
 <p>All players may have their best score for each level sent to this website and the top scores and top players are displayed below. The replay of the record scores are possible to view from the game to see how it was done. There are also 21 achievements to unlock.</p>
 
-<p>Available on Oculus Home (for Rift), and Steam (Rift and Vive) at 16th of August 2019 as a preliminary date.</p>
+<p>Available on Oculus Home (for Rift), and Steam (Rift, Vive and others) since 20th of September 2019.</p>
 <p><img align="left" src="images/screen8_860.jpg" title="Galaxy Forces VR screenshot"></p>
 <p><video width="860" height="484" controls poster="/images/screen4_race13_860.jpg"><source src="gfvr16.mp4" type="video/mp4">Your browser does not support the video tag.</video></p>
 
@@ -93,13 +93,26 @@ headline("Future");
 <?php
 square_start("'100%'");
 ?>
-<p>There may be more official levels with hiscore coming.
-The plan is to also release it for the Oculus Quest.</p>
+<p>Implement point-movement (done in Oculus v1.40) where you point with your hand and the ship goes there.
+The plan is to also release it for the Oculus Go.</p>
 <?php
 square_end();
 ?>
 <br><br><br>
 
+<?php
+headline("Contest 2020-01-19");
+?>
+<br>
+<?php
+square_start("'100%'");
+?>
+<p>A new contest! $55 via paypal to the one player at the top of the hiscores listing at the end of January 19, 2020 CET.
+I want to get the hiscores flowing with people trying and in that case somebody will win, but if it's only a single person trying, I will also be trying to better my score (rh_galaxy).</p>
+<?php
+square_end();
+?>
+<br><br><br>
 
 <?php
 headline("Contact");
