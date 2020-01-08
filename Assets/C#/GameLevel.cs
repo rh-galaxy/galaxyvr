@@ -82,7 +82,7 @@ public class GameLevel : MonoBehaviour
     internal int iAchieveEnemiesKilled = 0;
     internal bool bAchieveFinishedMissionLevel = false;
 
-    public GameObject backPlane;
+    public GameObject oBackPlane; //used in motion movement, not visible
     public Player player;
 
     public float fWallHeight = .30f;
@@ -243,6 +243,9 @@ public class GameLevel : MonoBehaviour
         oObj.transform.position = new Vector3(0, -vSize.y / 20 - 0.05f, .20f);
         oObj.transform.localScale = new Vector3(vSize.x / 10 + .20f, .10f, vSize.z + .6f);
         oObj.GetComponent<MeshRenderer>().material = oMaterialBox;
+
+        //play area for motion movement, not visible
+        oBackPlane.transform.localScale = new Vector3(vSize.x / 100, 1.0f, vSize.y / 100);
 
         //change fov if non VR since the default setting shows to wide fov
         // and is not behaving reliably
@@ -476,6 +479,8 @@ public class GameLevel : MonoBehaviour
             //so best do it the same time as the level has finished popping up
             GameManager.theGM.theCameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
+            player.bMotionMovementEnabled = CameraController.bPointMovement;
+
             iFinalizeCounter++;
 
             GameManager.theGM.StartFade(0.5f, 0.5f, false);
@@ -496,6 +501,30 @@ public class GameLevel : MonoBehaviour
 
         if (!bMapLoaded || iFinalizeCounter <= 32) return;
 
+        //motion controller movement
+        if (CameraController.bPointMovement)
+        {
+            //raycast
+            CameraController oCC = GameManager.theGM.theCameraHolder;
+            RaycastHit oHitInfo;
+            if (Physics.Raycast(oCC.vHeadPosition, oCC.vGazeDirection, out oHitInfo, 400.0f, LayerMask.GetMask("MapPlane")))
+            {
+                //a hit, place cursor on object, show ray
+                oCC.SetPointingInfo(oHitInfo.point, Quaternion.identity, oCC.vHeadPosition, oCC.qRotation);
+
+                //set stearing to oHitInfo.point
+                player.vSteerToPoint = new Vector2(oHitInfo.point.x, oHitInfo.point.y);
+            }
+            else
+            {
+                //set at max distance
+                Vector3 vPoint = (oCC.vHeadPosition + oCC.vGazeDirection * 17.0f);
+
+                oCC.SetPointingInfo(vPoint, oCC.qRotation, oCC.vHeadPosition, oCC.qRotation);
+            }
+        }
+
+        //game end conditions
         if (!bRunGameOverTimer)
         {
             //race finished
@@ -516,7 +545,6 @@ public class GameLevel : MonoBehaviour
                 bPlayClipGameOver = true;
             }
         }
-
         if (bRunGameOverTimer) {
             fGameOverTimer += Time.deltaTime;
 

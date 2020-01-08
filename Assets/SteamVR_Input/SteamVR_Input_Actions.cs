@@ -31,6 +31,14 @@ namespace Valve.VR
         
         private static SteamVR_Action_Boolean p_default_Back_instant;
         
+        private static SteamVR_Action_Pose p_default_Pose_right;
+        
+        private static SteamVR_Action_Pose p_default_Pose_left;
+        
+        private static SteamVR_Action_Pose p_default_Pose_right_tip;
+        
+        private static SteamVR_Action_Pose p_default_Pose_left_tip;
+        
         public static SteamVR_Action_Vector2 default_Steering
         {
             get
@@ -87,6 +95,38 @@ namespace Valve.VR
             }
         }
         
+        public static SteamVR_Action_Pose default_Pose_right
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_Pose_right.GetCopy<SteamVR_Action_Pose>();
+            }
+        }
+        
+        public static SteamVR_Action_Pose default_Pose_left
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_Pose_left.GetCopy<SteamVR_Action_Pose>();
+            }
+        }
+        
+        public static SteamVR_Action_Pose default_Pose_right_tip
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_Pose_right_tip.GetCopy<SteamVR_Action_Pose>();
+            }
+        }
+        
+        public static SteamVR_Action_Pose default_Pose_left_tip
+        {
+            get
+            {
+                return SteamVR_Actions.p_default_Pose_left_tip.GetCopy<SteamVR_Action_Pose>();
+            }
+        }
+        
         private static void InitializeActionArrays()
         {
             Valve.VR.SteamVR_Input.actions = new Valve.VR.SteamVR_Action[] {
@@ -96,7 +136,11 @@ namespace Valve.VR
                     SteamVR_Actions.default_Throttle2,
                     SteamVR_Actions.default_Back_long,
                     SteamVR_Actions.default_Recenter,
-                    SteamVR_Actions.default_Back_instant};
+                    SteamVR_Actions.default_Back_instant,
+                    SteamVR_Actions.default_Pose_right,
+                    SteamVR_Actions.default_Pose_left,
+                    SteamVR_Actions.default_Pose_right_tip,
+                    SteamVR_Actions.default_Pose_left_tip};
             Valve.VR.SteamVR_Input.actionsIn = new Valve.VR.ISteamVR_Action_In[] {
                     SteamVR_Actions.default_Steering,
                     SteamVR_Actions.default_Throttle,
@@ -104,10 +148,18 @@ namespace Valve.VR
                     SteamVR_Actions.default_Throttle2,
                     SteamVR_Actions.default_Back_long,
                     SteamVR_Actions.default_Recenter,
-                    SteamVR_Actions.default_Back_instant};
+                    SteamVR_Actions.default_Back_instant,
+                    SteamVR_Actions.default_Pose_right,
+                    SteamVR_Actions.default_Pose_left,
+                    SteamVR_Actions.default_Pose_right_tip,
+                    SteamVR_Actions.default_Pose_left_tip};
             Valve.VR.SteamVR_Input.actionsOut = new Valve.VR.ISteamVR_Action_Out[0];
             Valve.VR.SteamVR_Input.actionsVibration = new Valve.VR.SteamVR_Action_Vibration[0];
-            Valve.VR.SteamVR_Input.actionsPose = new Valve.VR.SteamVR_Action_Pose[0];
+            Valve.VR.SteamVR_Input.actionsPose = new Valve.VR.SteamVR_Action_Pose[] {
+                    SteamVR_Actions.default_Pose_right,
+                    SteamVR_Actions.default_Pose_left,
+                    SteamVR_Actions.default_Pose_right_tip,
+                    SteamVR_Actions.default_Pose_left_tip};
             Valve.VR.SteamVR_Input.actionsBoolean = new Valve.VR.SteamVR_Action_Boolean[] {
                     SteamVR_Actions.default_Fire,
                     SteamVR_Actions.default_Throttle2,
@@ -139,6 +191,10 @@ namespace Valve.VR
             SteamVR_Actions.p_default_Back_long = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Back_long")));
             SteamVR_Actions.p_default_Recenter = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Recenter")));
             SteamVR_Actions.p_default_Back_instant = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/default/in/Back_instant")));
+            SteamVR_Actions.p_default_Pose_right = ((SteamVR_Action_Pose)(SteamVR_Action.Create<SteamVR_Action_Pose>("/actions/default/in/Pose_right")));
+            SteamVR_Actions.p_default_Pose_left = ((SteamVR_Action_Pose)(SteamVR_Action.Create<SteamVR_Action_Pose>("/actions/default/in/Pose_left")));
+            SteamVR_Actions.p_default_Pose_right_tip = ((SteamVR_Action_Pose)(SteamVR_Action.Create<SteamVR_Action_Pose>("/actions/default/in/Pose_right_tip")));
+            SteamVR_Actions.p_default_Pose_left_tip = ((SteamVR_Action_Pose)(SteamVR_Action.Create<SteamVR_Action_Pose>("/actions/default/in/Pose_left_tip")));
         }
     }
 }

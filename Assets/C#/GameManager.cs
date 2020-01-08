@@ -6,10 +6,11 @@ using UnityEngine.XR;
 using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
-using Oculus.Platform;
 #if !DISABLESTEAMWORKS //Add in Edit->Project Settings...->Player.Scripting Define Symbols [DISABLESTEAMWORKS]
 using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
 using Valve.VR;
+#else
+using Oculus.Platform;
 #endif
 
 public class GameManager : MonoBehaviour
@@ -395,9 +396,10 @@ public class GameManager : MonoBehaviour
         bool bSuccess = SteamUserStats.StoreStats();
     }
 #endif
-    //////end of valve specific code
+//////end of valve specific code
 
-    //////start of oculus specific code
+//////start of oculus specific code
+#if DISABLESTEAMWORKS
     bool InitOculus()
     {
         if (XRDevice.model.StartsWith("Oculus Rift"))
@@ -538,6 +540,7 @@ public class GameManager : MonoBehaviour
         if (iTemp > 0)
             Achievements.AddCount("Hitchhiker42", (ulong)iTemp*5); //5m per unit is reasonable
     }
+#endif
     //////end of oculus specific code
 
     void UnlockMissionGoldAchievement()
@@ -647,11 +650,16 @@ public class GameManager : MonoBehaviour
         {
             iFade = 0;
             if(fFadeCurAlpha<0.1)
+            {
+                //fade in done
                 oFadeBox.SetActive(false);
+                /**/theCameraHolder.Fade(true);
+            }
         }
     }
     public void StartFade(float fTime, float fDelay, bool bOut)
     {
+        /**/if(bOut) theCameraHolder.Fade(false);
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
         fFadeDelay = fDelay;
@@ -718,7 +726,7 @@ public class GameManager : MonoBehaviour
                 // Calculate positional offset between CameraRig and Camera
                 Vector3 offsetPos = steamCamera.position - cameraRig.position;
                 // Reposition CameraRig to desired position minus offset
-                Vector3 v = new Vector3(0,0,-5.6f);
+                Vector3 v = new Vector3(0,0,-5.5f);
                 cameraRig.position = (v - offsetPos);
 
                 Menu.bRecenter = false;
@@ -729,16 +737,12 @@ public class GameManager : MonoBehaviour
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
         bool bPauseNow = bPause; //no change below
-        if (bOculusDevicePresent)
-        {
-            bPauseNow = (!OVRManager.hasInputFocus || !OVRManager.hasVrFocus) /*|| (XRDevice.userPresence!=UserPresenceState.Present)*/;
-        }
         if (bValveDevicePresent)
         {
             bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent); //|| bSteamOverlayActive;
         }
 
-        /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
+        /**/bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
         /**///AudioStateMachine.instance.masterVolume = 0.0f; //while recording video without music
 
         //pause state change
@@ -1085,10 +1089,12 @@ public class GameManager : MonoBehaviour
                             if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
                                 //////start of oculus specific code (achievements)
+#if DISABLESTEAMWORKS
                                 if (bOculusDevicePresent && XRDevice.userPresence != UserPresenceState.NotPresent) //VR user must be present for achievements
                                 {
                                     HandleOculusAchievements();
                                 }
+#endif
                                 //////end of oculus specific code
                                 //////start of valve specific code
 #if !DISABLESTEAMWORKS

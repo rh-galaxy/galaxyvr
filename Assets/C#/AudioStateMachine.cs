@@ -77,7 +77,7 @@ public class AudioStateMachine : MonoBehaviour
 
     //only to be run when compiled for oculus
     // setting rift headphones or windows default or both depending on config in Oculus Home
-    public void SetOutputByRiftSetting()
+    /*public void SetOutputByRiftSetting()
     {
         FMOD.System sys;
         FMODUnity.RuntimeManager.StudioSystem.getLowLevelSystem(out sys);
@@ -100,7 +100,7 @@ public class AudioStateMachine : MonoBehaviour
                 break;
             }
         }
-    }
+    }*/
 
 
     public void LevelTransition(float f)

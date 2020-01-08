@@ -6,7 +6,24 @@
       "/actions/default" : {
          "chords" : [],
          "haptics" : [],
-         "poses" : [],
+         "poses" : [
+            {
+               "output" : "/actions/default/in/pose_right",
+               "path" : "/user/hand/right/pose/handgrip"
+            },
+            {
+               "output" : "/actions/default/in/pose_left",
+               "path" : "/user/hand/left/pose/handgrip"
+            },
+            {
+               "output" : "/actions/default/in/pose_left_tip",
+               "path" : "/user/hand/left/pose/tip"
+            },
+            {
+               "output" : "/actions/default/in/pose_right_tip",
+               "path" : "/user/hand/right/pose/tip"
+            }
+         ],
          "skeleton" : [],
          "sources" : [
             {
@@ -87,7 +104,7 @@
    "category" : "steamvr_input",
    "controller_type" : "vive_controller",
    "description" : "",
-   "name" : "Galaxy Forces VR [Testing]-configuration for Vive Controller",
+   "name" : "Galaxy Forces VR configuration for Vive Controller",
    "options" : {},
    "simulated_actions" : []
 }

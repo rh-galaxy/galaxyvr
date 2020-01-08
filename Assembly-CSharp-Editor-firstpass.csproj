@@ -710,22 +710,6 @@
       <Project>{A481006E-72C6-A4BB-CAC6-6BD771EF6F4B}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
     </ProjectReference>
-    <ProjectReference Include="SteamVR_Actions.csproj">
-      <Project>{4FA199DF-C535-63C7-538F-99022A350E53}</Project>
-      <Name>SteamVR_Actions</Name>
-    </ProjectReference>
-    <ProjectReference Include="Oculus.VR.Editor.csproj">
-      <Project>{C8EE6049-2AB2-B101-53FC-1F75246DDF6D}</Project>
-      <Name>Oculus.VR.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Oculus.VR.Scripts.Editor.csproj">
-      <Project>{8DCB0301-2030-136B-2EF4-4CB083A32E84}</Project>
-      <Name>Oculus.VR.Scripts.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Oculus.VR.csproj">
-      <Project>{445D3B09-F269-E997-1BD7-DE810E686D7E}</Project>
-      <Name>Oculus.VR</Name>
-    </ProjectReference>
     <ProjectReference Include="SteamVR_Input_Editor.csproj">
       <Project>{CC8D91E8-6213-5876-F93D-0E8F45F01E3F}</Project>
       <Name>SteamVR_Input_Editor</Name>
@@ -737,6 +721,10 @@
     <ProjectReference Include="SteamVR.csproj">
       <Project>{4AE660DA-B0A9-91CC-F80E-9A6AE2A79B19}</Project>
       <Name>SteamVR</Name>
+    </ProjectReference>
+    <ProjectReference Include="SteamVR_Actions.csproj">
+      <Project>{4FA199DF-C535-63C7-538F-99022A350E53}</Project>
+      <Name>SteamVR_Actions</Name>
     </ProjectReference>
     <ProjectReference Include="SteamVR_Windows_EditorHelper.csproj">
       <Project>{11D3F371-4290-B42A-B6AB-D67E34D2F3F2}</Project>

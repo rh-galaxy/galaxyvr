@@ -29,12 +29,28 @@
     {
       "name": "/actions/default/in/Back_instant",
       "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Pose_right",
+      "type": "pose"
+    },
+    {
+      "name": "/actions/default/in/Pose_left",
+      "type": "pose"
+    },
+    {
+      "name": "/actions/default/in/Pose_right_tip",
+      "type": "pose"
+    },
+    {
+      "name": "/actions/default/in/Pose_left_tip",
+      "type": "pose"
     }
   ],
   "action_sets": [
     {
       "name": "/actions/default",
-      "usage": "single"
+      "usage": "leftright"
     }
   ],
   "default_bindings": [

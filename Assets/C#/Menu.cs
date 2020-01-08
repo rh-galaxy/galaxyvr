@@ -41,9 +41,6 @@ public class Menu : MonoBehaviour
     //C_LevelInMenu[] aMenuLevels2; //additional official levels
     C_LevelInMenu[] aMenuCustomLevels;
 
-    GameObject oGazeQuad;
-    Material oCursorMaterial, oCursorMaterialWait;
-
     private void Awake()
     {
         theMenu = this;
@@ -285,6 +282,7 @@ public class Menu : MonoBehaviour
     C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
     int iQuality = 2;
     C_Item2InMenu oMenuSnapMovement;
+    C_Item2InMenu oMenuPointMovement;
     C_Item2InMenu oMenuNext1, oMenuPrev1;//, oMenuNext2, oMenuPrev2;
 
     Material oMaterialGrey;
@@ -330,7 +328,7 @@ public class Menu : MonoBehaviour
     public GameObject oCorner;
 
     public GameObject oLimitsText1, oLimitsText2, oLimitsText3;
-    /**/private TextMesh oLimitsText1TextMesh, oLimitsText2TextMesh, oLimitsText3TextMesh;
+    private TextMesh oLimitsText1TextMesh, oLimitsText2TextMesh, oLimitsText3TextMesh;
 
     public GameObject oTextInfoContainer;
     bool bTextInfoActive = false;
@@ -358,6 +356,7 @@ public class Menu : MonoBehaviour
         if(i_iInfo==1) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
         else if (i_iInfo == 2) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_valve", typeof(Material)) as Material;
         else if (i_iInfo == 3) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
+        else if (i_iInfo == 4) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_valve_motion", typeof(Material)) as Material;
         else if (i_iInfo == 0) oCreditsQuad.GetComponent<MeshRenderer>().material = null;
     }
 
@@ -547,7 +546,6 @@ public class Menu : MonoBehaviour
             aMenuLevels[i].InitLevelRanking(i);
     }
 
-    float fRotateZAngle = 0.0f;
     int iIncrementalInit = 0;
     void Update()
     {
@@ -569,7 +567,6 @@ public class Menu : MonoBehaviour
         }
         if (iIncrementalInit == 2)
         {
-
             oMaterialOctagonLocked = Resources.Load("LevelOctagonGrey", typeof(Material)) as Material;
             oMaterialOctagonUnlocked = Resources.Load("LevelOctagon", typeof(Material)) as Material;
             oMaterialOctagonHighlighted = Resources.Load("LevelOctagonHigh", typeof(Material)) as Material;
@@ -609,14 +606,7 @@ public class Menu : MonoBehaviour
         }
         if (iIncrementalInit == 5)
         {
-            //create a quad a circle for gazeing in VR or mouse cursor in non VR
-            oGazeQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            oGazeQuad.transform.parent = transform;
-            MonoBehaviour.DestroyImmediate(oGazeQuad.GetComponent<Collider>());
-            oCursorMaterial = Resources.Load("Cursor", typeof(Material)) as Material;
-            oCursorMaterialWait = Resources.Load("Cursor2", typeof(Material)) as Material;
-            oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
-            oGazeQuad.transform.localScale = new Vector3(3.8f, 3.8f, 1);
+
         }
         if (iIncrementalInit == 6)
         {
@@ -643,13 +633,16 @@ public class Menu : MonoBehaviour
             Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
             //menu options
-            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -15, "Recenter", "Recenter", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -4, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 7, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 18, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -26, "Recenter", "Recenter", 30.0f, 12.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -15, "Quit", "Quit", 30.0f, 12.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -4, "Controls", "Controls", 30.0f, 9.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 7, "Credits", "Credits", 30.0f, 9.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 30, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 19, "Snap", "Snap", 30.0f, 9.0f);
+
+            CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
+            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 30, "Point motion", "Point", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             QualitySettings.SetQualityLevel(iQuality, true);
@@ -710,14 +703,16 @@ public class Menu : MonoBehaviour
             if (!XRDevice.isPresent)
                 Camera.main.fieldOfView = 45.0f;
             //prevent selection if trigger was held when menu is started
-            iAllowSelection = !(SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) ? 0 : 50;
+            iAllowSelection = !(SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f || 
+                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) ? 0 : 50;
 
             if (bFirstTime)
             {
-                SetTextInfo(2);
+                SetTextInfo(CameraController.bPointMovement ? 4 : 2);
                 bFirstTime = false;
             }
         }
+
         iIncrementalInit++;
         if(iIncrementalInit<11) return;
 
@@ -736,7 +731,8 @@ public class Menu : MonoBehaviour
         if (fAxisX > 0.4f) fAdjust = 1000;
         if (fAxisX < -0.4f) fAdjust = -1000;
 
-        if((bTextInfoActive && iAllowSelection==0) && (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)))
+        if ((bTextInfoActive && iAllowSelection==0) && (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f || 
+            SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)))
         {
             /**/SetTextInfo(0);
             /**/iAllowSelection = 20;
@@ -744,8 +740,6 @@ public class Menu : MonoBehaviour
 
         //do a raycast into the world based on the user's
         // head position and orientation
-        Vector3 vHeadPosition = Camera.main.transform.position;
-        Vector3 vGazeDirection = Camera.main.transform.forward;
 
         //reset highlighting
         if (oMenuReplayWR1 != null && oMenuReplayWR1.oLevelQuad != null) oMenuReplayWR1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
@@ -765,18 +759,15 @@ public class Menu : MonoBehaviour
         if (oMenuQuality2 != null && oMenuQuality2.oLevelQuad != null) oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 2) ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 4) ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuSnapMovement != null && oMenuSnapMovement.oLevelQuad != null) oMenuSnapMovement.oLevelQuad.GetComponent<MeshRenderer>().material = CameraController.bSnapMovement ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuPointMovement != null && oMenuPointMovement.oLevelQuad != null) oMenuPointMovement.oLevelQuad.GetComponent<MeshRenderer>().material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
 
         bool bHitLevel = false;
         RaycastHit oHitInfo;
-        if (Physics.Raycast(vHeadPosition, vGazeDirection, out oHitInfo, 400.0f))
-        {
-            //a hit, place cursor on object
 
-            //move the cursor to the point where the raycast hit
-            oGazeQuad.transform.position = oHitInfo.point;
-            //rotate the cursor to hug the surface
-            oGazeQuad.transform.rotation =
-                Quaternion.FromToRotation(Vector3.back, oHitInfo.normal);
+        if (Physics.Raycast(oCameraHolder.vHeadPosition, oCameraHolder.vGazeDirection, out oHitInfo, 400.0f))
+        {
+            //a hit, place cursor on object, show ray
+            oCameraHolder.SetPointingInfo(oHitInfo.point, Quaternion.FromToRotation(Vector3.back, oHitInfo.normal), oCameraHolder.vHeadPosition, oCameraHolder.qRotation);
 
             //find which object we hit
 
@@ -887,6 +878,10 @@ public class Menu : MonoBehaviour
             {
                 oMenuSnapMovement.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
+            else if (oHitInfo.collider.name.CompareTo("Point") == 0)
+            {
+                oMenuPointMovement.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
+            }
             else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
                 oMenuNext1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
@@ -897,7 +892,8 @@ public class Menu : MonoBehaviour
             }
 
             //manage selection
-            if ((SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) && iAllowSelection == 0)
+            if ((SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f ||
+                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) && iAllowSelection == 0)
             {
                 bool bPlaySelectSound = false;
                 if (oHitInfo.collider.name.CompareTo("Back") == 0)
@@ -986,7 +982,7 @@ public class Menu : MonoBehaviour
                 }
                 else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
                 {
-                    SetTextInfo(2);
+                    SetTextInfo(CameraController.bPointMovement ? 4 : 2);
 
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
@@ -1033,6 +1029,16 @@ public class Menu : MonoBehaviour
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
+                else if (oHitInfo.collider.name.CompareTo("Point") == 0)
+                {
+                    CameraController.bPointMovement = !CameraController.bPointMovement;
+                    PlayerPrefs.SetInt("MyUsePointMovement", CameraController.bPointMovement ? 1 : 0);
+                    PlayerPrefs.Save();
+                    iAllowSelection = 20;
+                    bPlaySelectSound = true;
+                    oCameraHolder.SetMovementMode(CameraController.bPointMovement);
+                }
+
 
                 if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
             }
@@ -1046,7 +1052,8 @@ public class Menu : MonoBehaviour
             //no hit, place cursor at max distance
 
             //first, unselect level if click outside levelinfo
-            if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0))
+            if (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f ||
+                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0))
             {
                 if (iAllowSelection==0)
                 {
@@ -1060,9 +1067,8 @@ public class Menu : MonoBehaviour
             }
 
             //set at max distance
-            oGazeQuad.transform.position = vHeadPosition+ vGazeDirection*17.0f;
-            //rotate the cursor to camera rotation
-            oGazeQuad.transform.rotation = Camera.main.transform.rotation;
+            Vector3 vPoint = (oCameraHolder.vHeadPosition + oCameraHolder.vGazeDirection * 17.0f);
+            /**/oCameraHolder.SetPointingInfo(vPoint, oCameraHolder.qRotation, oCameraHolder.vHeadPosition, oCameraHolder.qRotation);
         }
 
         //nothing highlighted?
@@ -1090,17 +1096,12 @@ public class Menu : MonoBehaviour
             if (x >= 0.0f && x <= 1000.0f)
                 oCameraHolder.transform.position = new Vector3(x, 0, -5.0f);
         }
-
-        //rotate again around Z, not visible on standard cursor, but visible on the waiting cursor
-        fRotateZAngle += 130 * Time.deltaTime;
-        if (fRotateZAngle > 360) fRotateZAngle -= 360; //keep it 0..360
-        oGazeQuad.transform.Rotate(Vector3.back, fRotateZAngle);
     }
 
     public void SetWaiting(bool i_bWaiting)
     {
-        if(i_bWaiting) oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterialWait;
-        else oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
+//        if(i_bWaiting) oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterialWait;
+//        else oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
     }
 
     public class C_LevelInMenu

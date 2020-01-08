@@ -72,5 +72,37 @@ namespace Valve.VR
                 return SteamVR_Actions.default_Back_instant;
             }
         }
+        
+        public virtual SteamVR_Action_Pose Pose_right
+        {
+            get
+            {
+                return SteamVR_Actions.default_Pose_right;
+            }
+        }
+        
+        public virtual SteamVR_Action_Pose Pose_left
+        {
+            get
+            {
+                return SteamVR_Actions.default_Pose_left;
+            }
+        }
+        
+        public virtual SteamVR_Action_Pose Pose_right_tip
+        {
+            get
+            {
+                return SteamVR_Actions.default_Pose_right_tip;
+            }
+        }
+        
+        public virtual SteamVR_Action_Pose Pose_left_tip
+        {
+            get
+            {
+                return SteamVR_Actions.default_Pose_left_tip;
+            }
+        }
     }
 }

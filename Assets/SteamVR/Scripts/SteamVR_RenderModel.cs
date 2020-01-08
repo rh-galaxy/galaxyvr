@@ -618,6 +618,11 @@ namespace Valve.VR
                 t.gameObject.AddComponent<MeshFilter>().mesh = model.mesh;
                 MeshRenderer newRenderer = t.gameObject.AddComponent<MeshRenderer>();
                 newRenderer.sharedMaterial = model.material;
+                
+                //hack by rh, disable shadows quick fix
+                /**/newRenderer.receiveShadows = false;
+                /**/newRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
                 meshRenderers.Add(newRenderer);
             }
 
