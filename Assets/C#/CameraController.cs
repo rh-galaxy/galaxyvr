@@ -245,16 +245,14 @@ public class CameraController : MonoBehaviour
         if (iRightHanded == 1)
         {
             vHeadPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
-            /**/
-            vHeadPosition = vHeadPosition + /**/(vCamPos - new Vector3(0, 0, 1.2f)); //to world coords
+            /**/vHeadPosition = vHeadPosition + (transform.position - new Vector3(0, 0, 1.2f)); //to world coords
             qRotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch);
             vGazeDirection = qRotation * Vector3.forward;
         }
         if (iRightHanded == 2)
         {
             vHeadPosition = OVRInput.GetLocalControllerPosition(OVRInput.Controller.LTouch);
-            /**/
-            vHeadPosition = vHeadPosition + /**/(vCamPos - new Vector3(0, 0, 1.2f)); //to world coords
+            /**/vHeadPosition = vHeadPosition + (transform.position - new Vector3(0, 0, 1.2f)); //to world coords
             qRotation = OVRInput.GetLocalControllerRotation(OVRInput.Controller.LTouch);
             vGazeDirection = qRotation * Vector3.forward;
         }

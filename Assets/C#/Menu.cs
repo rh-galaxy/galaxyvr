@@ -181,7 +181,6 @@ public class Menu : MonoBehaviour
         aLevels[33].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[33].szLevelName = "1mission08";
         aLevels[33].szLevelDisplayName = "08";
-        aLevels[33].szLevelDisplayName = "08";
         aLevels[33].szLevelDescription = "Mission08 - The whale";
         aLevels[34].iLevelType = (int)LevelType.MAP_MISSION;
         aLevels[34].szLevelName = "1mission09";
@@ -329,7 +328,7 @@ public class Menu : MonoBehaviour
     public GameObject oCorner;
 
     public GameObject oLimitsText1, oLimitsText2, oLimitsText3;
-    /**/private TextMesh oLimitsText1TextMesh, oLimitsText2TextMesh, oLimitsText3TextMesh;
+    private TextMesh oLimitsText1TextMesh, oLimitsText2TextMesh, oLimitsText3TextMesh;
 
     public GameObject oTextInfoContainer;
     bool bTextInfoActive = false;
@@ -1068,7 +1067,6 @@ public class Menu : MonoBehaviour
 
             //set at max distance
             Vector3 vPoint = (oCameraHolder.vHeadPosition + oCameraHolder.vGazeDirection * 17.0f);
-
             /**/oCameraHolder.SetPointingInfo(vPoint, oCameraHolder.qRotation, oCameraHolder.vHeadPosition, oCameraHolder.qRotation);
         }
 
@@ -1095,7 +1093,7 @@ public class Menu : MonoBehaviour
         {
             float x = oCameraHolder.transform.position.x + fAdjust;
             if (x >= 0.0f && x <= 1000.0f)
-                oCameraHolder.transform.position = new Vector3(x, 0, -5.0f);
+                oCameraHolder.transform.position = new Vector3(x, 0, -4.3f);
         }
     }
 

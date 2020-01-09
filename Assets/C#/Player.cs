@@ -687,6 +687,7 @@ public class Player : MonoBehaviour
         {
             bool bNewFireState = false;
             bThrottle = bLeft = bRight = bAdjust = false;
+            
             if (!bMotionMovementEnabled)
             {
 #if DISABLESTEAMWORKS
@@ -698,7 +699,6 @@ public class Player : MonoBehaviour
                 float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");         //axis 9    must be fire to support   xbox, vive, touch
                 float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");       //axis 10   must be thrust to support xbox, vive, touch
 
-                //joysticks
                 if (fX > 0.3f) bRight = true;
                 if (fX < -0.3f) bLeft = true;
                 if (fX2 > 0.3f) bRight = true;
@@ -711,7 +711,8 @@ public class Player : MonoBehaviour
                 if (fY2 > 0.5f || fTrg2 > 0.3f) bThrottle = true;
                 if (Input.GetButton("Button2")) bThrottle = true; //button 2 (X)
                 if (Input.GetButton("Button3")) bThrottle = true; //button 3 (Y)
-                                                                  //keyboard and joystick for fire (is a trigger once event)
+                //keyboard and joystick for fire (is a trigger once event)
+
                 if (fTrg1 > 0.3f) bNewFireState = true; //left trigger
                 if (Input.GetButton("Button0")) bNewFireState = true; //button 0 (A)
                 if (Input.GetButton("Button1")) bNewFireState = true; //button 1 (B)
@@ -721,7 +722,6 @@ public class Player : MonoBehaviour
                 float fY = SteamVR_Actions.default_Steering.axis.y;
                 float fTrg2 = SteamVR_Actions.default_Throttle.axis;
 
-                //joysticks
                 if (fX > 0.3f) bRight = true;
                 if (fX < -0.3f) bLeft = true;
                 if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
@@ -737,11 +737,19 @@ public class Player : MonoBehaviour
             else
             {
                 //touch input
+                float fX = Input.GetAxisRaw("Horizontal");                                          //axis x (x left stick)
                 float fY = Input.GetAxisRaw("Vertical");                                            //axis y (y left stick)
+                float fX2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickHorizontal"); //axis 4 (x right stick)
                 float fY2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");   //axis 5 (y right stick)
                 float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");
                 float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");
-                if (fY < -0.5f || fY2 < -0.5f) bAdjust = true;
+
+                if (fX > 0.3f) bRight = true;
+                if (fX < -0.3f) bLeft = true;
+                if (fX2 > 0.3f) bRight = true;
+                if (fX2 < -0.3f) bLeft = true;
+                if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
+                if (fY2 < -0.5f && bLeft == false && bRight == false) bAdjust = true;
                 if (Input.GetButton("Button0") || Input.GetButton("Button2")) bNewFireState = true; //button 0 (A, X)
                 if (Input.GetButton("Button1") || Input.GetButton("Button3")) bAdjust = true; //button 1 (B, Y)
 
@@ -750,7 +758,7 @@ public class Player : MonoBehaviour
                 if(!bLanded) fFullThrottleTimer -= Time.fixedDeltaTime;
                 else fFullThrottleTimer = 0.3f;
 
-                if (fTrg1 > 0.3f || fTrg2 > 0.3f && !bAdjust)
+                if ((fTrg1 > 0.3f || fTrg2 > 0.3f) && !bAdjust && !bRight && !bLeft)
                 {
                     //new move descicion
                     if(fMovementTimer > 0.07f)
