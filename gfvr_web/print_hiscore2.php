@@ -25,12 +25,12 @@ function print_hiscore()
 			// it better be more than 0
 			if($num_rows > 0) {
 			
-				echo "<table class=data width='100%'><tr><td></td><td>Top 51<br>players</td></tr></table>";
+				echo "<p>Top 51 players</p>";
 			
 				$num_per_table = 17;
 				for ($j=0; $j < floor(($num_rows+($num_per_table-1))/$num_per_table); $j++) {
 					// table header
-					echo "<table class=ranking width='30%' cellspacing=2 cellpadding=0>";
+					echo "<table class=ranking width='31%' cellspacing=0 cellpadding=0>";
 					echo "<tr><td></td><td><span class='colored2'>Name</span></td><td><span class='colored2'>Rank</span></td></tr>";
 					
 					$to = $num_per_table;
