@@ -642,6 +642,7 @@ public class Menu : MonoBehaviour
             oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 19, "Snap", "Snap", 30.0f, 9.0f);
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
+            if (!GameManager.bOculusDevicePresent) CameraController.bPointMovement = false;
             oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 30, "Point motion", "Point", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
@@ -703,7 +704,7 @@ public class Menu : MonoBehaviour
             if (!XRDevice.isPresent)
                 Camera.main.fieldOfView = 45.0f;
             //prevent selection if trigger was held when menu is started
-            iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0 : 30;
+            iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0 : 20;
 
             if (bFirstTime)
             {
@@ -731,10 +732,10 @@ public class Menu : MonoBehaviour
         if (fAxisX < -0.4f) fAdjust = -1000;
 
         bool bTrigger = (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch) > 0.5f) || (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch) > 0.5f);
-        if (((bTextInfoActive && iAllowSelection==0) && (bTrigger || (Input.GetButton("Button0") || Input.GetButton("Button1"))) || Input.GetMouseButton(0)))
+        if (((bTextInfoActive && iAllowSelection==0) && (bTrigger || (Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)))))
         {
-            /**/SetTextInfo(0);
-            /**/iAllowSelection = 20;
+            SetTextInfo(0);
+            iAllowSelection = 20;
         }
 
         //do a raycast into the world based on the user's
@@ -892,7 +893,7 @@ public class Menu : MonoBehaviour
 
             //manage selection
             //bool bTrigger = (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch) > 0.5f) || (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch) > 0.5f);
-            if ((bTrigger || Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) && iAllowSelection == 0)
+            if ( (bTrigger || Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0) ) && iAllowSelection == 0)
             {
                 bool bPlaySelectSound = false;
                 if (oHitInfo.collider.name.CompareTo("Back") == 0)
@@ -1041,10 +1042,6 @@ public class Menu : MonoBehaviour
 
                 if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
             }
-            else
-            {
-                if (iAllowSelection > 0) iAllowSelection--;
-            }
         }
         else
         {
@@ -1060,15 +1057,12 @@ public class Menu : MonoBehaviour
                     iAllowSelection = 20;
                 }
             }
-            else
-            {
-                if (iAllowSelection > 0) iAllowSelection--;
-            }
 
             //set at max distance
             Vector3 vPoint = (oCameraHolder.vHeadPosition + oCameraHolder.vGazeDirection * 17.0f);
             /**/oCameraHolder.SetPointingInfo(vPoint, oCameraHolder.qRotation, oCameraHolder.vHeadPosition, oCameraHolder.qRotation);
         }
+        if (iAllowSelection > 0) iAllowSelection--;
 
         //nothing highlighted?
         if (!bHitLevel)
