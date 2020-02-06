@@ -549,6 +549,11 @@ public class Menu : MonoBehaviour
     int iIncrementalInit = 0;
     void Update()
     {
+        bool bInputTriggered = false;
+        if (GameManager.bValveDevicePresent)
+            bInputTriggered = (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f) ||
+                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any);
+
         //from start
         if (iIncrementalInit == 0)
         {
@@ -703,8 +708,8 @@ public class Menu : MonoBehaviour
             if (!XRDevice.isPresent)
                 Camera.main.fieldOfView = 45.0f;
             //prevent selection if trigger was held when menu is started
-            iAllowSelection = !(SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f || 
-                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) ? 0 : 50;
+
+            iAllowSelection = !(bInputTriggered || Input.GetMouseButton(0)) ? 0 : 50;
 
             if (bFirstTime)
             {
@@ -731,8 +736,7 @@ public class Menu : MonoBehaviour
         if (fAxisX > 0.4f) fAdjust = 1000;
         if (fAxisX < -0.4f) fAdjust = -1000;
 
-        if ((bTextInfoActive && iAllowSelection==0) && (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f || 
-            SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)))
+        if ((bTextInfoActive && iAllowSelection==0) && (bInputTriggered || Input.GetMouseButton(0)))
         {
             /**/SetTextInfo(0);
             /**/iAllowSelection = 20;
@@ -892,8 +896,7 @@ public class Menu : MonoBehaviour
             }
 
             //manage selection
-            if ((SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f ||
-                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0)) && iAllowSelection == 0)
+            if ((bInputTriggered || Input.GetMouseButton(0)) && iAllowSelection == 0)
             {
                 bool bPlaySelectSound = false;
                 if (oHitInfo.collider.name.CompareTo("Back") == 0)
@@ -1042,18 +1045,13 @@ public class Menu : MonoBehaviour
 
                 if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
             }
-            else
-            {
-                if (iAllowSelection > 0) iAllowSelection--;
-            }
         }
         else
         {
             //no hit, place cursor at max distance
 
             //first, unselect level if click outside levelinfo
-            if (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f ||
-                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any) || Input.GetMouseButton(0))
+            if (bInputTriggered || Input.GetMouseButton(0))
             {
                 if (iAllowSelection==0)
                 {
@@ -1061,15 +1059,12 @@ public class Menu : MonoBehaviour
                     iAllowSelection = 20;
                 }
             }
-            else
-            {
-                if (iAllowSelection > 0) iAllowSelection--;
-            }
 
             //set at max distance
             Vector3 vPoint = (oCameraHolder.vHeadPosition + oCameraHolder.vGazeDirection * 17.0f);
             /**/oCameraHolder.SetPointingInfo(vPoint, oCameraHolder.qRotation, oCameraHolder.vHeadPosition, oCameraHolder.qRotation);
         }
+        if (iAllowSelection > 0) iAllowSelection--;
 
         //nothing highlighted?
         if (!bHitLevel)

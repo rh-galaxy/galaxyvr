@@ -184,9 +184,11 @@ public class GameManager : MonoBehaviour
         bUserValid = true;
 
         if (XRDevice.isPresent)
+        {
             bValveDevicePresent = true;
 
-        SteamVR.settings.lockPhysicsUpdateRateToRenderFrequency = false;
+            SteamVR.settings.lockPhysicsUpdateRateToRenderFrequency = false;
+        }
 
         return bValveDevicePresent;
     }
