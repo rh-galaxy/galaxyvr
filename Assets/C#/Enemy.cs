@@ -138,7 +138,7 @@ public class Enemy : MonoBehaviour
         //collision with player, done in player
 
         //ignore other and own enemy bullets
-        // is done in the collision matrix in Edit->Project Settins
+        // is done in the collision matrix in Edit->Project Settings
     }
 
     public Player thePlayer; //set in editor
