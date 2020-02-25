@@ -202,11 +202,6 @@ public class Player : MonoBehaviour
                 iCargoNumUsed==3 || iCargoSpaceUsed==MAXSPACEINHOLDWEIGHT, fFuel / MAXFUELINTANK, GetScore()/1000);
     }
 
-    void OnGUI()
-    {
-        //GUI.Label(new Rect(0, 0, 1000, 1000), "Health " + (fShipHealth * 100).ToString());
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         string szOtherObject = collision.collider.gameObject.name;
@@ -315,6 +310,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    //OBS this was using Time.fixedDeltaTime but that is wrong for this method since it runs at framerate (90, 80 or even 144), while fixed update is 100Hz.
+    //But no big harm done for replays since we have a KILL message for when that happens.
+    //Different models of headsets would have had slightly different time to do damage (and KILL).
+    //Now fixed, and it will work with current replays
+    // fLandTime is problematic, but for framerates recorded at <100 this will probably work
     private void OnCollisionStay2D(Collision2D collision)
     {
         string szOtherObject = collision.collider.gameObject.name;
@@ -332,9 +332,9 @@ public class Player : MonoBehaviour
 
             //too much tilted
             if (fDiff > 15)
-                fShipHealth -= 0.1f * Time.fixedDeltaTime;
+                fShipHealth -= 0.1f * Time.deltaTime;
             if (fDiff > 80)
-                fShipHealth -= 0.5f * Time.fixedDeltaTime;
+                fShipHealth -= 0.5f * Time.deltaTime;
 
             //damage taken?
             oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .0f);
@@ -343,7 +343,7 @@ public class Player : MonoBehaviour
             //landing stable
             if (fDiff < 3.0f)
             {
-                fLandTime += Time.fixedDeltaTime;
+                fLandTime += Time.deltaTime;
                 if (fLandTime > 0.3f && !bLanded)
                 {
                     bLanded = true;
@@ -358,11 +358,11 @@ public class Player : MonoBehaviour
             szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
             szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
         {
-            fShipHealth -= 0.5f * Time.fixedDeltaTime;
+            fShipHealth -= 0.5f * Time.deltaTime;
 
             //damage taken?
-            /**/oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .0f);
-            /**/oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
+            oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .0f);
+            oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
         }
     }
 
