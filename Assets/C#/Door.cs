@@ -69,7 +69,7 @@ public class Door : MonoBehaviour
             oButtons[i] = Instantiate(oButtonObjBase, this.transform);
             oButtons[i].SetActive(true);
             oButtons[i].name = "Knapp" + i_iDoorId.ToString();
-            oButtons[i].transform.position = new Vector3(stDoorInfo.stButtonPos[i].x, stDoorInfo.stButtonPos[i].y, /**/-0.02f);
+            oButtons[i].transform.position = new Vector3(stDoorInfo.stButtonPos[i].x, stDoorInfo.stButtonPos[i].y, -0.02f);
         }
 
         oMaterialRed = Resources.Load("ButtonRed", typeof(Material)) as Material;

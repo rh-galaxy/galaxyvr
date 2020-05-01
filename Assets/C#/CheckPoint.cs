@@ -29,13 +29,13 @@ public class CheckPoint : MonoBehaviour
         dBlinkTimer = 0;
         bBlinkState = false;
 
-        oCP1.transform.position = new Vector3(vPos1.x, vPos1.y, /**/-.12f);
-        oCP2.transform.position = new Vector3(vPos2.x, vPos2.y, /**/-.12f);
+        oCP1.transform.position = new Vector3(vPos1.x, vPos1.y, -.12f);
+        oCP2.transform.position = new Vector3(vPos2.x, vPos2.y, -.12f);
         oCP1.transform.localScale = new Vector3(20.0f / 32.0f * 1.0f, 16.0f / 32.0f * 1.0f, 1.0f);
         oCP2.transform.localScale = new Vector3(20.0f / 32.0f * 1.0f, 16.0f / 32.0f * 1.0f, 1.0f);
 
-        oCP1Text.transform.position = new Vector3(vPos1.x, vPos1.y, /**/-.17f);
-        oCP2Text.transform.position = new Vector3(vPos2.x, vPos2.y, /**/-.17f);
+        oCP1Text.transform.position = new Vector3(vPos1.x, vPos1.y, -.17f);
+        oCP2Text.transform.position = new Vector3(vPos2.x, vPos2.y, -.17f);
         if (iCPNum >= 10)
         {
             oCP1Text.transform.localScale = new Vector3(12.0f / 32.0f * 0.40f, 16.0f / 32.0f * 0.3f, 1.0f);

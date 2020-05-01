@@ -52,9 +52,9 @@ public class Player : MonoBehaviour
     const float MAXSPACEINHOLDWEIGHT = 50.0f;
     internal const int MAXSPACEINHOLDUNITS = 3;
     internal const float FULL_HEALTH = 1.5f;
-    const float SHIP_MASS = /**/4.8f; //6.0
+    const float SHIP_MASS = 4.8f;
     const float SHIP_STEERSPEED = 235.0f; //degree/second
-    const float SHIP_THRUST = /**/1.40f; //1.91
+    const float SHIP_THRUST = 1.40f;
     const int NUM_LIFES_MISSION = 5;
 
     //cargo
@@ -393,8 +393,8 @@ public class Player : MonoBehaviour
         return oRb.position;
     }
 
-    /// /////////////////////////////////////////////////////////////////////
-    /// <summary>
+    ////////////////////////////////////////////////////////////////////////
+    //code used in point movement
     struct S_CurState
     {
         public Vector2 vPos;
@@ -592,8 +592,7 @@ public class Player : MonoBehaviour
         float fScore = fDistNow;
         return fScore;
     }
-    /// </summary>
-    /// /////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
 
 
     Vector2 vForceDir = new Vector2(0, 0);
@@ -628,15 +627,11 @@ public class Player : MonoBehaviour
             if(i != iCurSec) fMeanSpeed += fMeanSpeeds[i];
         }
         fMeanSpeed = fMeanSpeed/(fMeanSpeeds.Length-1) * 10;
-        //...
 
         //enemies near (used in mission music)
         iNumEnemiesNear = oMap.GetNumEnemiesNearPlayer();
-        //...
-
         //or enemy bullets near (used in mission music)
         iNumBulletsNear = oMap.GetNumBulletsNearPlayer();
-        //...
 
         //distance achievement
         fAchieveDistance += fDist * 10;
@@ -688,7 +683,7 @@ public class Player : MonoBehaviour
             bool bNewFireState = false;
             bThrottle = bLeft = bRight = bAdjust = false;
             
-			if (!bMotionMovementEnabled)
+            if (!bMotionMovementEnabled)
             {
 #if DISABLESTEAMWORKS
                 //get input from joysticks
@@ -699,7 +694,6 @@ public class Player : MonoBehaviour
                 float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");         //axis 9    must be fire to support   xbox, vive, touch
                 float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");       //axis 10   must be thrust to support xbox, vive, touch
 
-                //joysticks
                 if (fX > 0.3f) bRight = true;
                 if (fX < -0.3f) bLeft = true;
                 if (fX2 > 0.3f) bRight = true;
@@ -1213,7 +1207,7 @@ public class Player : MonoBehaviour
             bCargoLoaded = true;
 
             //new weight
-            oRb.mass += iCargo /**// 11.0f;
+            oRb.mass += iCargo / 11.0f;
             oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //play load cargo sound

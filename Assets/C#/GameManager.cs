@@ -791,8 +791,7 @@ public class GameManager : MonoBehaviour
                 //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
 
-                /**///currently as a test to see if we never get stalls of 5 sec and longer
-                // the first time a level is started after app start
+                //to avoid stalls of 5+ sec the first time a level is started after app start
                 preLoadDataPath = UnityEngine.Application.dataPath;
                 ThreadStart ts = new ThreadStart(PreLoadAssetsToCache);
                 preLoadThread = new Thread(ts);
