@@ -52,9 +52,9 @@ public class Player : MonoBehaviour
     const float MAXSPACEINHOLDWEIGHT = 50.0f;
     internal const int MAXSPACEINHOLDUNITS = 3;
     internal const float FULL_HEALTH = 1.5f;
-    const float SHIP_MASS = /**/4.8f; //6.0
+    const float SHIP_MASS = 4.8f;
     const float SHIP_STEERSPEED = 235.0f; //degree/second
-    const float SHIP_THRUST = /**/1.40f; //1.91
+    const float SHIP_THRUST = 1.40f;
     const int NUM_LIFES_MISSION = 5;
 
     //cargo
@@ -393,8 +393,8 @@ public class Player : MonoBehaviour
         return oRb.position;
     }
 
-    /// /////////////////////////////////////////////////////////////////////
-    /// <summary>
+    ////////////////////////////////////////////////////////////////////////
+    //code used in point movement
     struct S_CurState
     {
         public Vector2 vPos;
@@ -592,8 +592,7 @@ public class Player : MonoBehaviour
         float fScore = fDistNow;
         return fScore;
     }
-    /// </summary>
-    /// /////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
 
 
     Vector2 vForceDir = new Vector2(0, 0);
@@ -628,15 +627,11 @@ public class Player : MonoBehaviour
             if(i != iCurSec) fMeanSpeed += fMeanSpeeds[i];
         }
         fMeanSpeed = fMeanSpeed/(fMeanSpeeds.Length-1) * 10;
-        //...
 
         //enemies near (used in mission music)
         iNumEnemiesNear = oMap.GetNumEnemiesNearPlayer();
-        //...
-
         //or enemy bullets near (used in mission music)
         iNumBulletsNear = oMap.GetNumBulletsNearPlayer();
-        //...
 
         //distance achievement
         fAchieveDistance += fDist * 10;
@@ -729,8 +724,8 @@ public class Player : MonoBehaviour
 
                 if (fTrg2 > 0.3f) bThrottle = true;
                 if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;
+
                 //keyboard and joystick for fire (is a trigger once event)
-                bool bNewFireState = false;
                 if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
 #endif
             }
@@ -1217,7 +1212,7 @@ public class Player : MonoBehaviour
             bCargoLoaded = true;
 
             //new weight
-            oRb.mass += iCargo /**// 11.0f;
+            oRb.mass += iCargo / 11.0f;
             oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //play load cargo sound

@@ -123,9 +123,9 @@ public class GameLevel : MonoBehaviour
     Vector2[] stPlayerStartPos = new Vector2[8];
 
     const float DEFAULT_SHIPGRAVITYBASEX = 0.0f;      //pixel/second 2
-    const float DEFAULT_SHIPGRAVITYBASEY = /**/7.6f;      //pixel/second 2             //70
+    const float DEFAULT_SHIPGRAVITYBASEY = 7.6f;      //pixel/second 2             //70
     const float DEFAULT_SHIPRESISTANCE = 0.68f;       //constant (velocity dependent)  //0.68f
-    internal const float BULLETBASEVEL = /**/22.0f;       //pixel/second
+    internal const float BULLETBASEVEL = 22.0f;       //pixel/second
     internal const float BULLETFREETIME = 3.1f;  //sec to be free from bullets when just come alive
 
     //map objects
@@ -137,7 +137,7 @@ public class GameLevel : MonoBehaviour
 
     public Enemy oEnemyObjBase;
     internal List<Enemy> aEnemyList;
-    public int GetNumEnemiesNearPlayer(/*Vector2 vPos, float fRadius*/)
+    public int GetNumEnemiesNearPlayer()
     {
         int iNumEnemies = 0;
 
@@ -146,12 +146,12 @@ public class GameLevel : MonoBehaviour
             if (aEnemyList[i] != null)
             {
                 Vector2 vDist = new Vector2(aEnemyList[i].vPos.x, aEnemyList[i].vPos.y) - this.player.GetPosition();
-                /**/if (vDist.magnitude < (450 / 32.0f /10.0f)) iNumEnemies++; //~14 tiles, same as fire range
+                if (vDist.magnitude < (450 / 32.0f /10.0f)) iNumEnemies++; //~14 tiles, same as fire range
             }
         }
         return iNumEnemies;
     }
-    public int GetNumBulletsNearPlayer(/*Vector2 vPos, float fRadius*/)
+    public int GetNumBulletsNearPlayer()
     {
         int iNumBullets = 0;
 
@@ -163,7 +163,7 @@ public class GameLevel : MonoBehaviour
                 Vector3 v = aBulletList[i].oCube.transform.position;
 
                 Vector2 vDist = new Vector2(v.x, v.y) - this.player.GetPosition();
-                /**/if (vDist.magnitude < (256 / 32.0f /10.0f)) iNumBullets++; //~8 tiles, same as fire range
+                if (vDist.magnitude < (256 / 32.0f /10.0f)) iNumBullets++; //~8 tiles
             }
         }
         return iNumBullets;
@@ -769,12 +769,12 @@ public class GameLevel : MonoBehaviour
             }
             else if (szTokens[0].CompareTo("*GRAVITY") == 0)
             {
-                /**/vGravity.x = float.Parse(szTokens[1], ci.NumberFormat) / 9.2f;
-                /**/vGravity.y = -float.Parse(szTokens[2], ci.NumberFormat) / 9.2f;
+                vGravity.x = float.Parse(szTokens[1], ci.NumberFormat) / 9.2f;
+                vGravity.y = -float.Parse(szTokens[2], ci.NumberFormat) / 9.2f;
             }
             else if (szTokens[0].CompareTo("*RESISTANCE") == 0)
             {
-                /**/fDrag = float.Parse(szTokens[1], ci.NumberFormat);
+                fDrag = float.Parse(szTokens[1], ci.NumberFormat);
                 //vDrag.y = float.Parse(szTokens[2]); //no support in physics engine
             }
             else if (szTokens[0].CompareTo("*PLAYERSTARTPOS") == 0)
@@ -1219,6 +1219,7 @@ public class GameLevel : MonoBehaviour
                     else oDObj.Init(7 + (iTile - 73), vPos);
                     break;
                 }
+            //radio tower
             case 77:
                 {
                     Vector2 vPos = AdjustPositionNoFlip(new Vector2(x * 32.0f - 0.0f, y * 32.0f + (32.0f + 12.0f)), new Vector2(32.0f, 64.0f));

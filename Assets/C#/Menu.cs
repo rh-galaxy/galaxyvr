@@ -516,7 +516,6 @@ public class Menu : MonoBehaviour
         {
             oLevelInfoLimitsContainer.SetActive(true);
 
-            /**/
             string szScore = (i_stLevelInfo.iLimit1 / 1000.0f).ToString("N3");
             if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iLimit1, true);
             if (i_stLevelInfo.iLimit1 == -1) szScore = "--";
@@ -1060,7 +1059,7 @@ public class Menu : MonoBehaviour
 
             //set at max distance
             Vector3 vPoint = (oCameraHolder.vHeadPosition + oCameraHolder.vGazeDirection * 17.0f);
-            /**/oCameraHolder.SetPointingInfo(vPoint, oCameraHolder.qRotation, oCameraHolder.vHeadPosition, oCameraHolder.qRotation);
+            oCameraHolder.SetPointingInfo(vPoint, oCameraHolder.qRotation, oCameraHolder.vHeadPosition, oCameraHolder.qRotation);
         }
         if (iAllowSelection > 0) iAllowSelection--;
 
@@ -1289,7 +1288,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.AddComponent<BoxCollider>();
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);
-            /**/oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f * fScaleX, i_fScale * 0.4f, 1.0f);
+            oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f * fScaleX, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             if (i_szText.CompareTo(">") == 0)
                 i_szText = "";

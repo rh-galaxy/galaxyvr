@@ -77,8 +77,8 @@ public class Enemy : MonoBehaviour
         iCurWP = 1;
         fWPTime = 0;
         fFireTime = 0;
-        /**/if (stInfo.iEnemyType != 4) oExplosionParticle.transform.localScale = new Vector3(1.60f, 1.60f, 1.60f); //smaller explosion
-        /**/else oExplosionParticle.transform.localScale = new Vector3(2.00f, 2.00f, 2.00f); //normal explosion
+        if (stInfo.iEnemyType != 4) oExplosionParticle.transform.localScale = new Vector3(1.60f, 1.60f, 1.60f); //smaller explosion
+        else oExplosionParticle.transform.localScale = new Vector3(2.00f, 2.00f, 2.00f); //normal explosion
         if (stInfo.iEnemyType == 0) enemy0.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 1) enemy1.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
         if (stInfo.iEnemyType == 2) enemy2.transform.Rotate(new Vector3(0, 0, stInfo.iAngle));
@@ -217,7 +217,7 @@ public class Enemy : MonoBehaviour
                     vDist = new Vector3(stInfo.vWayPoints[iCurWP].x - vPos.x, stInfo.vWayPoints[iCurWP].y - vPos.y, 0);
 
                     fDist = vDist.magnitude;
-                    fWPTime = fDist / (stInfo.iSpeed/**//10.0f / 32.0f);
+                    fWPTime = fDist / (stInfo.iSpeed/10.0f / 32.0f);
 
                     vVel = new Vector3(vDist.x / fWPTime, vDist.y / fWPTime, 0);
                     iCurWP = (iCurWP + 1) % stInfo.iNumWayPoints;
@@ -231,7 +231,7 @@ public class Enemy : MonoBehaviour
             {
                 fFireTime -= Time.fixedDeltaTime;
                 if (fFireTime <= 0)
-                { //fire bullet, send to network
+                { //fire bullet, set in replay
                     if (stInfo.iFireInterval == -1) stInfo.iFireInterval = 2000; //previous versions random time becomes 2 sec
                     fFireTime = stInfo.iFireInterval / 1000.0f;
 
@@ -248,8 +248,8 @@ public class Enemy : MonoBehaviour
                         for (int i = 0; i < SENEMY_NUMBULLETS[stInfo.iEnemyType]; i++)
                         {
                             Vector2 vFirePoint = vPos;
-                            if (stInfo.iEnemyType == 5 && i == 1) vFirePoint += SENEMY5_FIREPOINT2[stInfo.iAngle / 90] /**// 10.0f;
-                            else vFirePoint += SENEMY_FIREPOINT[stInfo.iEnemyType, stInfo.iAngle / 90] /**// 10.0f;
+                            if (stInfo.iEnemyType == 5 && i == 1) vFirePoint += SENEMY5_FIREPOINT2[stInfo.iAngle / 90] / 10.0f;
+                            else vFirePoint += SENEMY_FIREPOINT[stInfo.iEnemyType, stInfo.iAngle / 90] / 10.0f;
                             CreateBullet(vFirePoint, fDirection + SENEMY_BULLETANGLE[stInfo.iEnemyType, i], Bullet.BULLETBASEVEL / 2, i);
                         }
                     }
