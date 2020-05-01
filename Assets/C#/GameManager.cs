@@ -181,7 +181,11 @@ public class GameManager : MonoBehaviour
         bUserValid = true;
 
         if (XRDevice.isPresent)
+        {
             bValveDevicePresent = true;
+
+            SteamVR.settings.lockPhysicsUpdateRateToRenderFrequency = false;
+        }
 
         return bValveDevicePresent;
     }
@@ -450,7 +454,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("You are " + szUser);
             bUserValid = true;
 
-            /**/myAvatar.oculusUserID = msg.GetUser().ID.ToString();
+            myAvatar.oculusUserID = msg.GetUser().ID.ToString();
         }
     }
     

@@ -19,11 +19,11 @@ public class ZObject : MonoBehaviour
 
         if(i_iType < 2)
         {
-            transform.position = new Vector3(i_vPos.x, i_vPos.y, /**/-.35f);
+            transform.position = new Vector3(i_vPos.x, i_vPos.y, -.35f);
         }
         else
         {
-            transform.position = new Vector3(i_vPos.x, i_vPos.y, /**/-.32f);
+            transform.position = new Vector3(i_vPos.x, i_vPos.y, -.32f);
         }
         transform.Rotate(Vector3.forward, i_fRotation);
     }

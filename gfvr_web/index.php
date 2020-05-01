@@ -116,6 +116,20 @@ square_end();
 <br><br><br>
 
 <?php
+headline("Public Domain");
+?>
+<br>
+<?php
+square_start("'100%'");
+?>
+<p>Since April 09 2020 the Unity projects source for both the Oculus and Steam versions are available on <a href="https://sourceforge.net/projects/galaxy-forces-vr/">SourceForge</a>.</p>
+<p>If you find the source useful I'd like to hear from you.</p>
+<?php
+square_end();
+?>
+<br><br><br>
+
+<?php
 headline("Contact");
 ?>
 <br>

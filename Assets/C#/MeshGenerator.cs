@@ -163,8 +163,8 @@ public class MeshGenerator : MonoBehaviour
         uvs = new Vector2[vertices.Count];
         for (int i = 0; i < vertices.Count; i++)
         {
-            /**/float percentX = vertices[i].x*10;
-            /**/float percentY = vertices[i].y*10;
+            float percentX = vertices[i].x*10;
+            float percentY = vertices[i].y*10;
             uvs[i] = new Vector2(percentX, percentY);
         }
     }

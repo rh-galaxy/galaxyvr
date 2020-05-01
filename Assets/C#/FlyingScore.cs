@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Bullet
+// FlyingScore
 
-//class to handle bullets. (all existing bullets in a game are hold in GameLevel)
-// - collision detections against the map and objects always destroys the bullet.
-// - or it is removed after a timeout
+//class to handle the flying text when the player gets score.
 
 public struct S_FlyingScoreInfo
 {
@@ -23,8 +21,6 @@ public class FlyingScore : MonoBehaviour
     S_FlyingScoreInfo stFlyingScore;
 
     Rigidbody rb;
-
-    //public GameObject oTextScore;
 
     public void Init(S_FlyingScoreInfo i_stFlyingScoreInfo)
     {
