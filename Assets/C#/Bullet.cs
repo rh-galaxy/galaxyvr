@@ -19,7 +19,7 @@ public struct S_BulletInfo
 
 public class Bullet : MonoBehaviour
 {
-    public const float BULLETBASEVEL = /**/.90f;
+    public const float BULLETBASEVEL = 0.90f;
     const float BULLETLIFETIME = 8.0f;
 
     static int iUniqeValBase = 0;

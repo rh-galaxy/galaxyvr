@@ -27,7 +27,6 @@ public struct ReplayMessage
 public class Replay
 {
     int iCurTimeSlot;
-    //int iCurGetPos;
 
     List<ReplayMessage> oReplayMessages;
     int[] aiCurGetPosForID = new int[256];
@@ -46,7 +45,6 @@ public class Replay
     public void ResetBeforePlay()
     {
         iCurTimeSlot = 0;
-        //iCurGetPos = 0;
         for(int i=0; i< aiCurGetPosForID.Length; i++) aiCurGetPosForID[i] = 0;
     }
     public void IncTimeSlot() //used both in save and replay

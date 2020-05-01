@@ -24,13 +24,11 @@ public class AudioStateMachine : MonoBehaviour
     [Range(0.0f, 0.8f)]
     public float flowExitLimit;
 
-
     [Header("Parameter name in Studio")]
     public string transition = "Transition";
     public string death = "Death";
     public string flow = "Flow";
     public string cargo = "Cargo";
-
 
     [Header("Global Events")]
     [FMODUnity.EventRef]
@@ -50,7 +48,7 @@ public class AudioStateMachine : MonoBehaviour
 
     void Awake()
     {
-        //Singleton
+        //singleton
         if (instance == null)
         {
             instance = this;
@@ -63,11 +61,8 @@ public class AudioStateMachine : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Sets the output to # i in the device list
-    /// Device 0 is always default OS device
-    /// </summary>
-    /// <param name="i">The index.</param>
+    //sets the output to # i in the device list
+    // device 0 is always default OS device
     public void SetOutput(int i = 0) 
     {
         print("Using device " + i);
@@ -111,7 +106,6 @@ public class AudioStateMachine : MonoBehaviour
 
     public void SetLife(float f)
     {
-        /**///print(f);
         SetParam(death, 1 - f);
         lifeVal = 1 - f;
     }
@@ -249,11 +243,6 @@ public class AudioStateMachine : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// Sets the parameter s to val the current instance
-    /// </summary>
-    /// <param name="s">S.</param>
-    /// <param name="val">Value.</param>
     void SetParam(string s, float val)
     {
         // do not send out of range values, breaks playback

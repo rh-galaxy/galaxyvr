@@ -398,9 +398,9 @@ public class GameManager : MonoBehaviour
         bool bSuccess = SteamUserStats.StoreStats();
     }
 #endif
-//////end of valve specific code
+    //////end of valve specific code
 
-//////start of oculus specific code
+    //////start of oculus specific code
 #if DISABLESTEAMWORKS
     bool InitOculus()
     {
@@ -457,6 +457,8 @@ public class GameManager : MonoBehaviour
             szUser = msg.GetUser().OculusID;
             Debug.Log("You are " + szUser);
             bUserValid = true;
+
+            myAvatar.oculusUserID = msg.GetUser().ID.ToString();
         }
     }
     
