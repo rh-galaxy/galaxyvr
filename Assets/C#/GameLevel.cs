@@ -7,6 +7,15 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.XR;
 
+//Level loading and generation
+//It uses levels from a pixel/tile based map editor where a tile is 32 pixels
+
+//I should explain why almost every number in the game has been scaled down by a factor 10...
+//When the game was finished it came up in the review that there was almost no difference in the view when you moved your head in VR
+// (3DoF instead of 6DoF). I had missed the fact that 1.0 units in Unity equals 1.0 meter in reality. And I saw no other way to fix
+// it than to make everything 10 times smaller and bring the camera closer so that a map is a couple of meters instead of 100 meter.
+// This also ment that I had to readjust ship engine power, ship mass, gravity and drag. It took 3 days.
+
 public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP }; //MAP_DOGFIGHT, MAP_MISSION_COOP not supported
 
 struct S_TilesetInfo
