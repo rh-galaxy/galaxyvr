@@ -1214,10 +1214,10 @@ public class Menu : MonoBehaviour
 
             //create a quad with a text on, in the pos of each menu object
             oLevelQuad.transform.parent = Menu.theMenu.oLevelInfoContainer.transform;
-            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
+            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
             oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialPentagonUnlocked;
 
@@ -1240,11 +1240,11 @@ public class Menu : MonoBehaviour
             //create a quad with a text on, in the pos of each menu object
             oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             oLevelQuad.transform.parent = Menu.theMenu.oLevelInfoContainer.transform;
-            oLevelQuad.AddComponent<BoxCollider>();
-            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
+            oLevelQuad.AddComponent<BoxCollider>();
+            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
             oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialPentagonUnlocked;
 

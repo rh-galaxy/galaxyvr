@@ -640,7 +640,7 @@ public class GameManager : MonoBehaviour
         if (iFade == 0)
             return;
 
-        fFadeTimer += Time.deltaTime;
+        fFadeTimer += Time.unscaledDeltaTime;
         if (fFadeTimer < fFadeDelay)
             return;
 
@@ -657,13 +657,13 @@ public class GameManager : MonoBehaviour
             {
                 //fade in done
                 oFadeBox.SetActive(false);
-                /**/theCameraHolder.Fade(true);
+                theCameraHolder.Fade(true);
             }
         }
     }
     public void StartFade(float fTime, float fDelay, bool bOut)
     {
-        /**/if(bOut) theCameraHolder.Fade(false);
+        if(bOut) theCameraHolder.Fade(false);
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
         fFadeDelay = fDelay;
@@ -713,7 +713,7 @@ public class GameManager : MonoBehaviour
         }
         if (Menu.bRecenter)
         {
-            fRecenterTimer += Time.deltaTime;
+            fRecenterTimer += Time.unscaledDeltaTime;
             if (fRecenterTimer > 3.0f)
             {
                 //no effect!
@@ -1032,7 +1032,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    oReplay.Reset(); //reset before recording a new one during play
+                    oReplay.Reset(1); //reset before recording a new one during play
                     GameLevel.bRunReplay = false;
                 }
                 bStartReplay = false; //we have seen it

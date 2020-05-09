@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    internal static int iOwnerIdBase = 10; //must be set to 10 also before load of every level
+    int iOwnerId;
     S_EnemyInfo stInfo;
 
     GameLevel oMap;
@@ -60,6 +62,9 @@ public class Enemy : MonoBehaviour
         oMap = i_oMap;
         stInfo = i_stInfo;
 
+        //set owner id to a uniqe value
+        iOwnerId = iOwnerIdBase++;
+
         //set the correct one active
         gameObject.SetActive(true);
         enemy0.SetActive(stInfo.iEnemyType == 0);
@@ -106,24 +111,6 @@ public class Enemy : MonoBehaviour
             {
                 //kill this enemy
                 bStartExplosion = true;
-
-                //play explosion sound
-                oAudioSource.PlayOneShot(oClipExplosion);
-
-                //add score
-                oMap.iAchieveEnemiesKilled++;
-                oMap.player.iScore += SENEMY_SCOREPOINTS[stInfo.iEnemyType];
-
-                //add flying score text
-                if (oMap.iLevelType == (int)LevelType.MAP_MISSION)
-                {
-                    S_FlyingScoreInfo stFlyingScoreInfo;
-                    stFlyingScoreInfo.iScore = SENEMY_SCOREPOINTS[stInfo.iEnemyType];
-                    stFlyingScoreInfo.vPos = new Vector3(transform.position.x, transform.position.y, -0.2f);
-                    stFlyingScoreInfo.vVel = new Vector3(UnityEngine.Random.Range(-0.15f, 0.15f), UnityEngine.Random.Range(-0.15f, 0.15f), -0.35f);
-                    FlyingScore o = Instantiate(oMap.oFlyingScoreObjBase, oMap.transform);
-                    o.Init(stFlyingScoreInfo);
-                }
             }
             else
             {
@@ -167,10 +154,24 @@ public class Enemy : MonoBehaviour
                     stBulletInfo.vVel = rm.vVel;
                     stBulletInfo.fDirection = rm.fDirection;
                     GameObject o = Instantiate(oMap.oBulletObjBase, oMap.transform);
-                    o.GetComponent<Bullet>().Init(stBulletInfo, 1/*iOwnerID*/);
+                    o.GetComponent<Bullet>().Init(stBulletInfo, 1/*iOwnerId*/);
 
                     if(rm.iGeneralByte1==0)
                         GetComponent<AudioSource>().PlayOneShot(oClipFire);
+                }
+            }
+
+            if (GameLevel.theReplay.iVersion >= 1)
+            {
+                if(iNumHits!=0) iNumHits = 3; //fake always 3 hits left in replay, until kill below
+
+                while (GameLevel.theReplay.Get(out rm, iOwnerId))
+                {
+                    if (rm.iType == (byte)MsgType.ENEMY_KILL)
+                    {
+                        bStartExplosion = true;
+                        iNumHits = 0; //kill below
+                    }
                 }
             }
         }
@@ -182,6 +183,33 @@ public class Enemy : MonoBehaviour
             //start explosion
             if (bStartExplosion)
             {
+                //create kill message
+                if (!GameLevel.bRunReplay && GameLevel.theReplay.iVersion >= 1)
+                {
+                    ReplayMessage rm = new ReplayMessage();
+                    rm.iID = iOwnerId;
+                    rm.iType = (byte)MsgType.ENEMY_KILL;
+                    GameLevel.theReplay.Add(rm);
+                }
+
+                //play explosion sound
+                oAudioSource.PlayOneShot(oClipExplosion);
+
+                //add score
+                oMap.iAchieveEnemiesKilled++;
+                oMap.player.iScore += SENEMY_SCOREPOINTS[stInfo.iEnemyType];
+
+                //add flying score text
+                if (oMap.iLevelType == (int)LevelType.MAP_MISSION)
+                {
+                    S_FlyingScoreInfo stFlyingScoreInfo;
+                    stFlyingScoreInfo.iScore = SENEMY_SCOREPOINTS[stInfo.iEnemyType];
+                    stFlyingScoreInfo.vPos = new Vector3(transform.position.x, transform.position.y, -0.2f);
+                    stFlyingScoreInfo.vVel = new Vector3(UnityEngine.Random.Range(-0.15f, 0.15f), UnityEngine.Random.Range(-0.15f, 0.15f), -0.35f);
+                    FlyingScore o = Instantiate(oMap.oFlyingScoreObjBase, oMap.transform);
+                    o.Init(stFlyingScoreInfo);
+                }
+
                 //set the specific enemytype inactive
                 enemy0.SetActive(false);
                 enemy1.SetActive(false);
