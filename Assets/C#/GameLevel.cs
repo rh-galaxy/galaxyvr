@@ -323,6 +323,7 @@ public class GameLevel : MonoBehaviour
         if (iLoadBeginState == 0)
         {
             bMapLoaded = false;
+            Enemy.iOwnerIdBase = 10;
 
             //load des pass 1 (unity: must be done from main thread)
             Debug.Log("Loading Level: " + szLevel);

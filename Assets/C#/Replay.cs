@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MsgType { MOVEMENT, KEY_CHANGE, BULLETE_NEW, BULLETP_NEW, BULLET_REMOVE, PLAYER_KILL }; //(DOOR_ACTION, ...)
+public enum MsgType { MOVEMENT, KEY_CHANGE, BULLETE_NEW, BULLETP_NEW, BULLET_REMOVE, PLAYER_KILL, REPLAY_VERSION, ENEMY_KILL }; //(DOOR_ACTION, ...)
 
 public struct ReplayMessage
 {
@@ -26,6 +26,7 @@ public struct ReplayMessage
 
 public class Replay
 {
+    internal int iVersion;
     int iCurTimeSlot;
 
     List<ReplayMessage> oReplayMessages;
@@ -34,13 +35,21 @@ public class Replay
     public Replay()
     {
         oReplayMessages = new List<ReplayMessage>();
-        Reset();
+        Reset(1);
     }
 
-    public void Reset()
+    public void Reset(int iReplayVersion)
     {
         oReplayMessages.Clear();
         ResetBeforePlay();
+
+        //add replay version as first element
+        iVersion = iReplayVersion;
+        ReplayMessage rm = new ReplayMessage();
+        rm.iType = (byte)MsgType.REPLAY_VERSION;
+        rm.iID = 0;
+        rm.iGeneralByte1 = (byte)iReplayVersion;
+        Add(rm);
     }
     public void ResetBeforePlay()
     {
@@ -83,7 +92,8 @@ public class Replay
 
     public bool LoadFromMem(byte[] i_pMem)
     {
-        Reset();
+        oReplayMessages.Clear();
+        ResetBeforePlay();
 
         if (i_pMem.Length % 32 != 0) return false; //not an array containing elements with size 32 bytes
         int iOffset = 0;
@@ -115,6 +125,12 @@ public class Replay
             iOffset += 32;
             oReplayMessages.Add(stAction);
         }
+
+        //get replay version
+        if (oReplayMessages.Count>0 && oReplayMessages[0].iType == (byte)MsgType.REPLAY_VERSION)
+            iVersion = oReplayMessages[0].iGeneralByte1;
+        else iVersion = 0;
+
         return true;
     }
     public byte[] SaveToMem()
