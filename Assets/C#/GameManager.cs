@@ -558,8 +558,7 @@ public class GameManager : MonoBehaviour
         if (bUserValid)
         {
             if (!bSteamStatsValid) return;
-            if (GameLevel.theMap.player.bAchieveNoDamage)
-                SteamUserStats.SetAchievement("CargoGold30");
+            SteamUserStats.SetAchievement("CargoGold30");
             bool bSuccess = SteamUserStats.StoreStats();
         }
 #endif
@@ -575,8 +574,7 @@ public class GameManager : MonoBehaviour
         if (bUserValid)
         {
             if (!bSteamStatsValid) return;
-            if (GameLevel.theMap.player.bAchieveNoDamage)
-                SteamUserStats.SetAchievement("RaceGold25");
+            SteamUserStats.SetAchievement("RaceGold25");
             bool bSuccess = SteamUserStats.StoreStats();
         }
 #endif
