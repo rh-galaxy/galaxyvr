@@ -30,7 +30,7 @@ function print_hiscore()
 				$num_per_table = 17;
 				for ($j=0; $j < floor(($num_rows+($num_per_table-1))/$num_per_table); $j++) {
 					// table header
-					echo "<table class=ranking width='31%' cellspacing=0 cellpadding=0>";
+					echo "<table class=ranking width='30%' cellspacing=0 cellpadding=0>";
 					echo "<tr><td></td><td><span class='colored2'>Name</span></td><td><span class='colored2'>Rank</span></td></tr>";
 					
 					$to = $num_per_table;
