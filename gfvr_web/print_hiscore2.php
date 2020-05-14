@@ -13,7 +13,7 @@ function print_hiscore()
 			" UNION ALL".
 			" SELECT achievements_t.name AS name, achievements_t.level, achievements_t.score, levels_t.is_time, levels_t.limit3, achievements_t.score AS pos_score FROM achievements_t, levels_t WHERE achievements_t.level = levels_t.level AND levels_t.is_time=0) scr_t".
 			" GROUP BY scr_t.name".
-			" ORDER BY score_sum DESC LIMIT 0,51";
+			" ORDER BY score_sum DESC LIMIT 0,50";
 
 		$result = @mysqli_query($db, $select_string);
 		
@@ -25,9 +25,9 @@ function print_hiscore()
 			// it better be more than 0
 			if($num_rows > 0) {
 			
-				echo "<p>Top 51 players</p>";
+				echo "<p>Top 50 players</p>";
 			
-				$num_per_table = 17;
+				$num_per_table = 25;
 				for ($j=0; $j < floor(($num_rows+($num_per_table-1))/$num_per_table); $j++) {
 					// table header
 					echo "<table class=ranking width='30%' cellspacing=0 cellpadding=0>";
@@ -44,7 +44,8 @@ function print_hiscore()
 						echo "</i></td>";
 						
 						echo "<td><a href=\"print_hiscore_for_user.php?Name=".$row["name"]."\">";
-						echo $row["name"];
+						if(strlen($row["name"])>26) echo substr($row["name"], 0, 24)."..";
+						else echo $row["name"];
 						echo "</a></td>";
 						
 						echo "<td>";
@@ -100,7 +101,8 @@ function print_hiscore()
 
 							//name
 							echo "<td>";
-							echo $row2["Name"];
+							if(strlen($row2["Name"])>26) echo substr($row2["Name"], 0, 24)."..";
+							else echo $row2["Name"];
 							echo "<br>";
 
 							// score
