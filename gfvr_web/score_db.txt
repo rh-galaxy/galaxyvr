@@ -1,0 +1,204 @@
+-- phpMyAdmin SQL Dump
+-- version 4.9.5
+-- https://www.phpmyadmin.net/
+--
+-- Värd: s679.loopia.se
+-- Tid vid skapande: 15 maj 2020 kl 05:10
+-- Serverversion: 10.2.31-MariaDB-log
+-- PHP-version: 7.4.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Databas: `galaxy_forces_vr_com`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `achievements_t`
+--
+
+CREATE TABLE `achievements_t` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `name` varchar(34) NOT NULL,
+  `level` varchar(40) NOT NULL,
+  `score` int(11) NOT NULL,
+  `replay` mediumblob DEFAULT NULL,
+  `ip` varchar(32) NOT NULL,
+  `steam` int(11) NOT NULL DEFAULT 0
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `levels_t`
+--
+
+CREATE TABLE `levels_t` (
+  `id` int(11) NOT NULL,
+  `level` varchar(40) NOT NULL,
+  `is_time` tinyint(1) NOT NULL DEFAULT 1,
+  `ordering` int(11) NOT NULL,
+  `limit1` int(11) NOT NULL,
+  `limit2` int(11) NOT NULL,
+  `limit3` int(11) NOT NULL,
+  `is_singleplayer` tinyint(4) NOT NULL DEFAULT 1
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='valid levels for hiscore';
+
+--
+-- Dumpning av Data i tabell `levels_t`
+--
+
+INSERT INTO `levels_t` (`id`, `level`, `is_time`, `ordering`, `limit1`, `limit2`, `limit3`, `is_singleplayer`) VALUES
+(2, 'race00', 1, 0, 34000, 40000, 120000, 1),
+(3, 'race01', 1, 1, 60500, 72000, 120000, 1),
+(4, 'race02', 1, 2, 46500, 57000, 120000, 1),
+(5, 'race03', 1, 3, 52000, 61000, 120000, 1),
+(6, 'race04', 1, 4, 45000, 56000, 120000, 1),
+(7, 'race05', 1, 5, 51500, 64000, 120000, 1),
+(8, 'race06', 1, 6, 52000, 65000, 120000, 1),
+(9, 'race07', 1, 7, 91000, 103000, 180000, 1),
+(10, 'race08', 1, 8, 64000, 71000, 180000, 1),
+(11, 'race09', 1, 9, 90000, 102000, 180000, 1),
+(12, 'race10', 1, 10, 97000, 113000, 180000, 1),
+(13, 'race11', 1, 11, 51000, 58000, 120000, 1),
+(14, 'race12', 1, 12, 85000, 107000, 180000, 1),
+(15, 'race13', 1, 13, 53000, 67000, 120000, 1),
+(16, 'race14', 1, 14, 59000, 82000, 180000, 1),
+(17, 'race15', 1, 15, 145000, 165000, 280000, 1),
+(18, 'race16', 1, 16, 83000, 97000, 120000, 1),
+(19, 'race17', 1, 17, 89000, 100000, 210000, 1),
+(20, 'race18', 1, 18, 29000, 34000, 90000, 1),
+(21, 'mission00', 0, 30, 280500, 240000, 100000, 1),
+(22, 'mission01', 0, 31, 305000, 250000, 100000, 1),
+(23, 'mission02', 0, 32, 345000, 300000, 100000, 1),
+(24, 'mission03', 0, 33, 358000, 300000, 100000, 1),
+(25, 'mission04', 0, 34, 395000, 300000, 100000, 1),
+(26, 'mission05', 0, 35, 413000, 320000, 100000, 1),
+(27, 'mission06', 0, 36, 369000, 300000, 100000, 1),
+(28, 'mission07', 0, 37, 364000, 300000, 100000, 1),
+(29, 'mission08', 0, 38, 385000, 300000, 100000, 1),
+(30, 'mission09', 0, 39, 400000, 320000, 100000, 1),
+(31, 'mission10', 0, 40, 282000, 230000, 60000, 1),
+(32, 'mission11', 0, 41, 432000, 340000, 10000, 1),
+(33, 'mission12', 0, 42, 460000, 300000, 10000, 1),
+(34, 'mission13', 0, 43, 460000, 300000, 10000, 1),
+(35, 'mission14', 0, 44, 380000, 280000, 10000, 1),
+(36, 'mission15', 0, 45, 475000, 300000, 10000, 1),
+(37, 'mission16', 0, 46, 260000, 140000, 1000, 1),
+(38, 'mission17', 0, 47, 320000, 220000, 1000, 1),
+(61, 'race19', 1, 19, 41500, 56000, 100000, 1),
+(62, 'race20', 1, 20, 57500, 70000, 120000, 1),
+(63, 'race21', 1, 21, 125000, 155000, 240000, 1),
+(64, 'mission18', 0, 48, 305000, 160000, 1000, 1),
+(65, 'mission19', 0, 49, 380000, 320000, 1000, 1),
+(66, 'mission20', 0, 50, 400000, 270000, 1000, 1),
+(67, 'mission21', 0, 51, 210000, 100000, 1000, 1),
+(68, 'mission22', 0, 52, 290000, 90000, 1000, 1),
+(69, 'race22', 1, 22, 70000, 98000, 150000, 1),
+(70, 'race23', 1, 23, 68000, 81000, 120000, 1),
+(71, 'race24', 1, 24, 72000, 84000, 180000, 1),
+(72, 'mission23', 0, 53, 440000, 300000, 1000, 1),
+(73, 'mission24', 0, 54, 360000, 190000, 1000, 1),
+(74, 'mission25', 0, 55, 340000, 200000, 1000, 1),
+(75, 'mission26', 0, 56, 360000, 200000, 1000, 1),
+(76, 'mission27', 0, 57, 390000, 210000, 1000, 1),
+(77, 'mission28', 0, 58, 340000, 200000, 1000, 1),
+(78, 'mission29', 0, 59, 340000, 180000, 1000, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `members_t`
+--
+
+CREATE TABLE `members_t` (
+  `id` int(11) NOT NULL,
+  `oculus_id` bigint(20) NOT NULL,
+  `username` varchar(34) NOT NULL,
+  `last_access` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `statistics_t`
+--
+
+CREATE TABLE `statistics_t` (
+  `id` int(11) NOT NULL,
+  `page` varchar(32) NOT NULL,
+  `count` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumpning av Data i tabell `statistics_t`
+--
+
+INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
+(1, 'index.php', 9903),
+(2, 'achievements_post.php', 1011),
+(5, 'privacy.php', 25),
+(6, 'achievements_get.php', 6766);
+
+--
+-- Index för dumpade tabeller
+--
+
+--
+-- Index för tabell `achievements_t`
+--
+ALTER TABLE `achievements_t`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index för tabell `levels_t`
+--
+ALTER TABLE `levels_t`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index för tabell `members_t`
+--
+ALTER TABLE `members_t`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index för tabell `statistics_t`
+--
+ALTER TABLE `statistics_t`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT för dumpade tabeller
+--
+
+--
+-- AUTO_INCREMENT för tabell `achievements_t`
+--
+ALTER TABLE `achievements_t`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT för tabell `levels_t`
+--
+ALTER TABLE `levels_t`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+
+--
+-- AUTO_INCREMENT för tabell `members_t`
+--
+ALTER TABLE `members_t`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT för tabell `statistics_t`
+--
+ALTER TABLE `statistics_t`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+COMMIT;
