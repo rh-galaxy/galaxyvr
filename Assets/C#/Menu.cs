@@ -404,6 +404,8 @@ public class Menu : MonoBehaviour
 
         if (n == 0)
         {
+            oLevelInfoContainer.SetActive(false);
+
             vHeadPosition = Camera.main.transform.position;
             vGazeDirection = Camera.main.transform.forward;
             oLevelInfoContainer.transform.position = (vHeadPosition + vGazeDirection * 5.30f) + new Vector3(0.0f, -.40f, 0.0f);
