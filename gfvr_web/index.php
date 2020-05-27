@@ -94,7 +94,7 @@ headline("Future");
 square_start("'100%'");
 ?>
 <p>Point-movement (now done for both Steam and Oculus v1.40) where you point with your hand and the ship goes there.
-The plan is to also release it for the Oculus Go.</p>
+The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
 <?php
 square_end();
 ?>

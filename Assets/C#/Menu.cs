@@ -1090,7 +1090,7 @@ public class Menu : MonoBehaviour
         {
             float x = oCameraHolder.transform.position.x + fAdjust;
             if (x >= 0.0f && x <= 1000.0f)
-                oCameraHolder.transform.position = new Vector3(x, 0, -5.0f);
+                oCameraHolder.transform.position = new Vector3(x, 0, -5.5f);
         }
     }
 
