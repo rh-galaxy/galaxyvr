@@ -39,6 +39,7 @@ public class CameraController : MonoBehaviour
         bMapMode = true;
         oPlayer = i_oPlayer;
         oMap = i_oMap;
+        transform.eulerAngles = new Vector3(0, 0, 0);
         vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update.
 
         vCamOffset = new Vector3(0, 0.3f, -1.90f);

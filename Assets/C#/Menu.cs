@@ -547,6 +547,8 @@ public class Menu : MonoBehaviour
             aMenuLevels[i].InitLevelRanking(i);
     }
 
+    bool bCamRotateRightOneShot = false;
+    int iCamRotateRight = 0;
     int iIncrementalInit = 0;
     void Update()
     {
@@ -732,10 +734,19 @@ public class Menu : MonoBehaviour
         if (Menu.bPauseInput) return;
 
         //get input from joysticks
-        /**/float fAxisX = 0; //Input.GetAxisRaw("Horizontal");
         float fAdjust = 0;
-        if (fAxisX > 0.4f) fAdjust = 1000;
-        if (fAxisX < -0.4f) fAdjust = -1000;
+
+        float fX = Input.GetAxisRaw("Horizontal");
+        if(fX==0) fX = SteamVR_Actions.default_Steering.axis.x;
+        if (fX > 0.3f)
+        {
+            if (!bCamRotateRightOneShot) { iCamRotateRight++; bCamRotateRightOneShot = true; }
+        }
+        else if (fX < -0.3f)
+        {
+            if (!bCamRotateRightOneShot) { iCamRotateRight--; bCamRotateRightOneShot = true; }
+        }
+        else bCamRotateRightOneShot = false;
 
         if ((bTextInfoActive && iAllowSelection==0) && (bInputTriggered || Input.GetMouseButton(0)))
         {
@@ -1092,6 +1103,9 @@ public class Menu : MonoBehaviour
             if (x >= 0.0f && x <= 1000.0f)
                 oCameraHolder.transform.position = new Vector3(x, 0, -5.5f);
         }
+
+        if(bCamRotateRightOneShot)
+            oCameraHolder.transform.eulerAngles = new Vector3(0, iCamRotateRight * 90.0f, 0);
     }
 
     public void SetWaiting(bool i_bWaiting)
