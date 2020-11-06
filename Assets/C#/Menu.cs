@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.InputSystem;
 using TMPro;
-#if !DISABLESTEAMWORKS
-using Valve.VR;
-#endif
 
 public class Menu : MonoBehaviour
 {
@@ -354,7 +352,6 @@ public class Menu : MonoBehaviour
         oCreditsQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
 
         if(i_iInfo==1) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
-        else if (i_iInfo == 2) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_valve", typeof(Material)) as Material;
         else if (i_iInfo == 3) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
         else if (i_iInfo == 4) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_motion", typeof(Material)) as Material;
         else if (i_iInfo == 0) oCreditsQuad.GetComponent<MeshRenderer>().material = null;
@@ -617,14 +614,14 @@ public class Menu : MonoBehaviour
             Vector3 vPos, vAroundPoint = new Vector3(0, 0, -9.0f);
             for (int i = 0; i < iNumRace; i++)
             {
-                vPos = new Vector3(0, (i % 3) * 1.00f - 2.40f, 1.20f);
+                vPos = new Vector3(0, (i % 3) * 1.00f - 2.40f, 2.81f);
                 float fRotateAngle = fStartAngle + i * (fAngleRange / (iNumRace - 1));
                 aMenuLevels[i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, aLevels[i], i);
             }
             int iStartOffs = iNumRace;
             for (int i = 0; i < iNumMission; i++)
             {
-                vPos = new Vector3(0, (i % 3) * 1.00f + 2.40f, 1.20f);
+                vPos = new Vector3(0, (i % 3) * 1.00f + 2.40f, 2.81f);
                 float fRotateAngle = fStartAngle + i * (fAngleRange / (iNumMission - 1));
                 aMenuLevels[iStartOffs + i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, aLevels[iStartOffs + i], iStartOffs + i);
             }
@@ -634,23 +631,23 @@ public class Menu : MonoBehaviour
             Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
             //menu options
-            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -26, "Recenter", "Recenter", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -15, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -4, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 7, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -36, "Recenter", "Recenter", 30.0f, 12.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 19, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 9.0f);
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
-            if (!GameManager.bOculusDevicePresent) CameraController.bPointMovement = false;
-            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 30, "Point motion", "Point", 30.0f, 9.0f);
+            oCameraHolder.SetMovementMode(CameraController.bPointMovement);
+            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             QualitySettings.SetQualityLevel(iQuality, true);
-            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 42, "Med", "Qual1", 30.0f, 9.0f);
-            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 53, "High", "Qual2", 30.0f, 9.0f);
-            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 64, "Ultra", "Qual3", 30.0f, 9.0f);
+            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 9.0f);
+            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 45, "High", "Qual2", 30.0f, 9.0f);
+            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 9.0f);
         }
         if (iIncrementalInit == 8)
         {
@@ -677,7 +674,7 @@ public class Menu : MonoBehaviour
             int iNum = (fileInfo.Length > 9 * 5 ? 9 * 5 : fileInfo.Length); //limit to 45, if its a problem fix later
             for (int i = 0; i < iNum; i++)
             {
-                Vector3 vPos = new Vector3(1000, (i % 9) * 1.05f - 4.70f, 1.20f);
+                Vector3 vPos = new Vector3(1000, (i % 9) * 1.05f - 4.70f, 2.81f);
                 float fRotateAngle = fStartAngle + (i / 9) * 23.0f;
                 S_Levels level = new S_Levels();
                 level.iLevelType = (int)LevelType.MAP_MISSION;
@@ -692,7 +689,7 @@ public class Menu : MonoBehaviour
             //level text
             GameObject oCustomPathText;
             oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-            oCustomPathText.transform.position = new Vector3(1000.0f, fileInfo.Length < 22 ? 0.0f : 50.0f, 1.20f);
+            oCustomPathText.transform.position = new Vector3(1000.0f, fileInfo.Length < 22 ? 0.0f : 50.0f, 2.81f);
             oCustomPathText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             //oCustomPathText.transform.RotateAround(vAroundPoint, Vector3.up, 0.0f);
             oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels (" + s + "), download editor from www.galaxy-forces-vr.com";
@@ -702,10 +699,11 @@ public class Menu : MonoBehaviour
         {
             //change fov if non VR since that default setting shows to wide fov
             // and is not behaving reliably
-            if (!XRDevice.isPresent)
+            if (GameManager.bNoVR)
                 Camera.main.fieldOfView = 45.0f;
+
             //prevent selection if trigger was held when menu is started
-            iAllowSelection = !(Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)) ? 0 : 20;
+            iAllowSelection = 20;
 
             if (bFirstTime)
             {
@@ -726,14 +724,31 @@ public class Menu : MonoBehaviour
         //exit if input shall be ignored
         if (Menu.bPauseInput) return;
 
-        //get input from joysticks
-        float fAxisX = Input.GetAxisRaw("Horizontal");
-        float fAdjust = 0;
-        if (fAxisX > 0.4f) fAdjust = 1000;
-        if (fAxisX < -0.4f) fAdjust = -1000;
+        Mouse mouse = Mouse.current;
+        Gamepad gamepad = Gamepad.current;
+        UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        UnityEngine.XR.InputDevice handLDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+        bool triggerRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float triggerR);
+        bool button1RSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool button1R);
+        bool button2RSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2R);
+        bool stickRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickR);
+        bool triggerLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float triggerL);
+        bool button1LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool button1L);
+        bool button2LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2L);
+        bool stickLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickL);
 
-        bool bTrigger = (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch) > 0.5f) || (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch) > 0.5f);
-        if (((bTextInfoActive && iAllowSelection==0) && (bTrigger || (Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0)))))
+        //get input from joysticks
+        float fAdjust = 0;
+        if (stickR.x > 0.5f || stickL.x > 0.5f) fAdjust = 1000;
+        if (stickR.x < -0.5f || stickL.x < -0.5f) fAdjust = -1000;
+
+        bool bTrigger = (triggerR > 0.5f) || (triggerL > 0.5f) || button1R || button2R || button1L || button2L;
+        if (gamepad != null)
+        {
+            bTrigger = bTrigger || gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed;
+        }
+        if (mouse != null) bTrigger = bTrigger || mouse.rightButton.isPressed;
+        if ((bTextInfoActive && iAllowSelection==0) && bTrigger)
         {
             SetTextInfo(0);
             iAllowSelection = 20;
@@ -893,8 +908,7 @@ public class Menu : MonoBehaviour
             }
 
             //manage selection
-            //bool bTrigger = (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch) > 0.5f) || (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch) > 0.5f);
-            if ( (bTrigger || Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0) ) && iAllowSelection == 0)
+            if ( bTrigger && iAllowSelection == 0)
             {
                 bool bPlaySelectSound = false;
                 if (oHitInfo.collider.name.CompareTo("Back") == 0)
@@ -969,7 +983,7 @@ public class Menu : MonoBehaviour
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
-                else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
+                else if (oHitInfo.collider.name.CompareTo("Recenter") == 0 && !bRecenter)
                 {
                     bRecenter = true;
                     iAllowSelection = 20;
@@ -983,14 +997,16 @@ public class Menu : MonoBehaviour
                 }
                 else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
                 {
-                    SetTextInfo(CameraController.bPointMovement ? 4 : 1);
+                    if (oLevelInfoContainer.activeSelf) bLevelUnSelected = true;
+                    else SetTextInfo(CameraController.bPointMovement ? 4 : 1);
 
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
                 {
-                    SetTextInfo(3);
+                    if (oLevelInfoContainer.activeSelf) bLevelUnSelected = true;
+                    else SetTextInfo(3);
 
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
@@ -1049,8 +1065,7 @@ public class Menu : MonoBehaviour
             //no hit, place cursor at max distance
 
             //first, unselect level if click outside levelinfo
-            //bool bTrigger = (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch) > 0.5f) || (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch) > 0.5f);
-            if (bTrigger || Input.GetButton("Button0") || Input.GetButton("Button1") || Input.GetMouseButton(0))
+            if ( bTrigger )
             {
                 if (iAllowSelection==0)
                 {
@@ -1090,12 +1105,6 @@ public class Menu : MonoBehaviour
             if (x >= 0.0f && x <= 1000.0f)
                 oCameraHolder.transform.position = new Vector3(x, 0, -4.3f);
         }
-    }
-
-    public void SetWaiting(bool i_bWaiting)
-    {
-//        if(i_bWaiting) oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterialWait;
-//        else oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
     }
 
     public class C_LevelInMenu

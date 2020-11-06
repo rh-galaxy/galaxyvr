@@ -143,7 +143,7 @@ namespace Oculus.Platform
     }
   }
 
-  public static class ApplicationLifecycle
+  public static partial class ApplicationLifecycle
   {
     public static Models.LaunchDetails GetLaunchDetails() {
       return new Models.LaunchDetails(CAPI.ovr_ApplicationLifecycle_GetLaunchDetails());
@@ -399,6 +399,49 @@ namespace Oculus.Platform
     }
   }
 
+  public static partial class Challenges
+  {
+    public static Request<Models.ChallengeEntryList> GetNextEntries(Models.ChallengeEntryList list)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.ChallengeEntryList>(CAPI.ovr_HTTP_GetWithMessageType(list.NextUrl, (int)Message.MessageType.Challenges_GetNextEntries));
+      }
+
+      return null;
+    }
+
+    public static Request<Models.ChallengeEntryList> GetPreviousEntries(Models.ChallengeEntryList list)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.ChallengeEntryList>(CAPI.ovr_HTTP_GetWithMessageType(list.PreviousUrl, (int)Message.MessageType.Challenges_GetPreviousEntries));
+      }
+
+      return null;
+    }
+
+    public static Request<Models.ChallengeList> GetNextChallenges(Models.ChallengeList list)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.ChallengeList>(CAPI.ovr_HTTP_GetWithMessageType(list.NextUrl, (int)Message.MessageType.Challenges_GetNextChallenges));
+      }
+
+      return null;
+    }
+
+    public static Request<Models.ChallengeList> GetPreviousChallenges(Models.ChallengeList list)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.ChallengeList>(CAPI.ovr_HTTP_GetWithMessageType(list.PreviousUrl, (int)Message.MessageType.Challenges_GetPreviousChallenges));
+      }
+
+      return null;
+    }
+  }
+
   public static partial class Voip
   {
     public static void Start(UInt64 userID)
@@ -622,6 +665,22 @@ namespace Oculus.Platform
 
   }
 
+  public static partial class ApplicationLifecycle
+  {
+    /// Sent when a launch intent is received (for both cold and warm starts). The
+    /// payload is the type of the intent. ApplicationLifecycle.GetLaunchDetails()
+    /// should be called to get the other details.
+    ///
+    public static void SetLaunchIntentChangedNotificationCallback(Message<string>.Callback callback)
+    {
+      Callback.SetNotificationCallback(
+        Message.MessageType.Notification_ApplicationLifecycle_LaunchIntentChanged,
+        callback
+      );
+    }
+
+  }
+
   public static partial class AssetFile
   {
     /// DEPRECATED. Use AssetFile.DeleteById()
@@ -812,7 +871,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
   }
 
   public static partial class Avatar
@@ -821,6 +880,155 @@ namespace Oculus.Platform
 
   public static partial class Cal
   {
+  }
+
+  public static partial class Challenges
+  {
+    /// Creates a new user challenge
+    ///
+    public static Request<Models.Challenge> Create(string leaderboardName, ChallengeOptions challengeOptions)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.Challenge>(CAPI.ovr_Challenges_Create(leaderboardName, (IntPtr)challengeOptions));
+      }
+
+      return null;
+    }
+
+    /// If the current user has an invite to the challenge, decline the invite
+    ///
+    public static Request<Models.Challenge> DeclineInvite(UInt64 challengeID)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.Challenge>(CAPI.ovr_Challenges_DeclineInvite(challengeID));
+      }
+
+      return null;
+    }
+
+    /// If the current user has permission, deletes a challenge
+    ///
+    public static Request Delete(UInt64 challengeID)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request(CAPI.ovr_Challenges_Delete(challengeID));
+      }
+
+      return null;
+    }
+
+    /// Gets the information for a single challenge
+    /// \param challengeID The id of the challenge whose entries to return.
+    ///
+    public static Request<Models.Challenge> Get(UInt64 challengeID)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.Challenge>(CAPI.ovr_Challenges_Get(challengeID));
+      }
+
+      return null;
+    }
+
+    /// Requests a block of challenge entries.
+    /// \param challengeID The id of the challenge whose entries to return.
+    /// \param limit Defines the maximum number of entries to return.
+    /// \param filter Allows you to restrict the returned values by friends.
+    /// \param startAt Defines whether to center the query on the user or start at the top of the challenge.
+    ///
+    public static Request<Models.ChallengeEntryList> GetEntries(UInt64 challengeID, int limit, LeaderboardFilterType filter, LeaderboardStartAt startAt)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.ChallengeEntryList>(CAPI.ovr_Challenges_GetEntries(challengeID, limit, filter, startAt));
+      }
+
+      return null;
+    }
+
+    /// Requests a block of challenge entries.
+    /// \param challengeID The id of the challenge whose entries to return.
+    /// \param limit The maximum number of entries to return.
+    /// \param afterRank The position after which to start.  For example, 10 returns challenge results starting with the 11th user.
+    ///
+    public static Request<Models.ChallengeEntryList> GetEntriesAfterRank(UInt64 challengeID, int limit, ulong afterRank)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.ChallengeEntryList>(CAPI.ovr_Challenges_GetEntriesAfterRank(challengeID, limit, afterRank));
+      }
+
+      return null;
+    }
+
+    /// Requests a block of challenge entries. Will return only entries matching
+    /// the user IDs passed in.
+    /// \param challengeID The id of the challenge whose entries to return.
+    /// \param limit Defines the maximum number of entries to return.
+    /// \param startAt Defines whether to center the query on the user or start at the top of the challenge. If this is LeaderboardStartAt.CenteredOnViewer or LeaderboardStartAt.CenteredOnViewerOrTop, then the current user's ID will be automatically added to the query.
+    /// \param userIDs Defines a list of user ids to get entries for.
+    ///
+    public static Request<Models.ChallengeEntryList> GetEntriesByIds(UInt64 challengeID, int limit, LeaderboardStartAt startAt, UInt64[] userIDs)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.ChallengeEntryList>(CAPI.ovr_Challenges_GetEntriesByIds(challengeID, limit, startAt, userIDs, (uint)(userIDs != null ? userIDs.Length : 0)));
+      }
+
+      return null;
+    }
+
+    /// Requests for a list of challenge
+    ///
+    public static Request<Models.ChallengeList> GetList(ChallengeOptions challengeOptions, int limit)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.ChallengeList>(CAPI.ovr_Challenges_GetList((IntPtr)challengeOptions, limit));
+      }
+
+      return null;
+    }
+
+    /// If the current user has permission, join the challenge
+    ///
+    public static Request<Models.Challenge> Join(UInt64 challengeID)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.Challenge>(CAPI.ovr_Challenges_Join(challengeID));
+      }
+
+      return null;
+    }
+
+    /// If the current user has permission, leave the challenge
+    ///
+    public static Request<Models.Challenge> Leave(UInt64 challengeID)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.Challenge>(CAPI.ovr_Challenges_Leave(challengeID));
+      }
+
+      return null;
+    }
+
+    /// If the current user has permission, updates a challenge information
+    ///
+    public static Request<Models.Challenge> UpdateInfo(UInt64 challengeID, ChallengeOptions challengeOptions)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.Challenge>(CAPI.ovr_Challenges_UpdateInfo(challengeID, (IntPtr)challengeOptions));
+      }
+
+      return null;
+    }
+
   }
 
   public static partial class CloudStorage
@@ -971,6 +1179,23 @@ namespace Oculus.Platform
 
   public static partial class CloudStorage2
   {
+    /// Get the directory path for the current user/app pair that will be used
+    /// during cloud storage synchronization
+    ///
+    public static Request<string> GetUserDirectoryPath()
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<string>(CAPI.ovr_CloudStorage2_GetUserDirectoryPath());
+      }
+
+      return null;
+    }
+
+  }
+
+  public static partial class Colocation
+  {
   }
 
   public static partial class Entitlements
@@ -1038,6 +1263,21 @@ namespace Oculus.Platform
       return null;
     }
 
+    /// Retrieve a list of Purchase that the Logged-In-User has made. This list
+    /// will only contain durable purchase (non-consumable) and is populated from a
+    /// device cache. It is recommended in all cases to use
+    /// ovr_User_GetViewerPurchases first and only check the cache if that fails.
+    ///
+    public static Request<Models.PurchaseList> GetViewerPurchasesDurableCache()
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.PurchaseList>(CAPI.ovr_IAP_GetViewerPurchasesDurableCache());
+      }
+
+      return null;
+    }
+
     /// Launch the checkout flow to purchase the existing product. Oculus Home
     /// tries handle and fix as many errors as possible. Home returns the
     /// appropriate error message and how to resolveit, if possible. Returns a
@@ -1099,7 +1339,7 @@ namespace Oculus.Platform
 
   public static partial class Leaderboards
   {
-    /// Requests a block of Leaderboard Entries.
+    /// Requests a block of leaderboard entries.
     /// \param leaderboardName The name of the leaderboard whose entries to return.
     /// \param limit Defines the maximum number of entries to return.
     /// \param filter Allows you to restrict the returned values by friends.
@@ -1118,7 +1358,7 @@ namespace Oculus.Platform
       return null;
     }
 
-    /// Requests a block of leaderboard Entries.
+    /// Requests a block of leaderboard entries.
     /// \param leaderboardName The name of the leaderboard.
     /// \param limit The maximum number of entries to return.
     /// \param afterRank The position after which to start.  For example, 10 returns leaderboard results starting with the 11th user.
@@ -1128,6 +1368,23 @@ namespace Oculus.Platform
       if (Core.IsInitialized())
       {
         return new Request<Models.LeaderboardEntryList>(CAPI.ovr_Leaderboard_GetEntriesAfterRank(leaderboardName, limit, afterRank));
+      }
+
+      return null;
+    }
+
+    /// Requests a block of leaderboard entries. Will return only entries matching
+    /// the user IDs passed in.
+    /// \param leaderboardName The name of the leaderboard whose entries to return.
+    /// \param limit Defines the maximum number of entries to return.
+    /// \param startAt Defines whether to center the query on the user or start at the top of the leaderboard. If this is LeaderboardStartAt.CenteredOnViewer or LeaderboardStartAt.CenteredOnViewerOrTop, then the current user's ID will be automatically added to the query.
+    /// \param userIDs Defines a list of user ids to get entries for.
+    ///
+    public static Request<Models.LeaderboardEntryList> GetEntriesByIds(string leaderboardName, int limit, LeaderboardStartAt startAt, UInt64[] userIDs)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.LeaderboardEntryList>(CAPI.ovr_Leaderboard_GetEntriesByIds(leaderboardName, limit, startAt, userIDs, (uint)(userIDs != null ? userIDs.Length : 0)));
       }
 
       return null;
@@ -1206,7 +1463,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
   }
 
   public static partial class Matchmaking
@@ -1235,7 +1492,7 @@ namespace Oculus.Platform
     ///
     /// Return a list of matchmaking rooms in the current pool filtered by skill
     /// and ping (if enabled). This also enqueues the user in the matchmaking
-    /// queue. When the user has made a selection, call Room.Join2() on one of the
+    /// queue. When the user has made a selection, call Rooms.Join2() on one of the
     /// rooms that was returned. If the user stops browsing, call
     /// Matchmaking.Cancel().
     ///
@@ -1419,7 +1676,7 @@ namespace Oculus.Platform
     ///
     /// Enqueue yourself to await an available matchmaking room. The platform
     /// returns a MessageType.Notification_Matchmaking_MatchFound message when a
-    /// match is found. Call Room.Join2() on the returned room. The response
+    /// match is found. Call Rooms.Join2() on the returned room. The response
     /// contains useful information to display to the user to set expectations for
     /// how long it will take to get a match.
     ///
@@ -1525,7 +1782,7 @@ namespace Oculus.Platform
     ///
     /// For pools with skill-based matching. See overview documentation above.
     ///
-    /// Call after calling Room.Join2() when the players are present to begin a
+    /// Call after calling Rooms.Join2() when the players are present to begin a
     /// rated match for which you plan to report the results (using
     /// Matchmaking.ReportResultInsecure()).
     ///
@@ -1554,7 +1811,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
   }
 
   public static partial class Media
@@ -1582,6 +1839,31 @@ namespace Oculus.Platform
 
   }
 
+  public static partial class NetSync
+  {
+    /// Sent when the status of a connection has changed.
+    ///
+    public static void SetConnectionStatusChangedNotificationCallback(Message<Models.NetSyncConnection>.Callback callback)
+    {
+      Callback.SetNotificationCallback(
+        Message.MessageType.Notification_NetSync_ConnectionStatusChanged,
+        callback
+      );
+    }
+
+    /// Sent when the list of known connected sessions has changed. Contains the
+    /// new list of sessions.
+    ///
+    public static void SetSessionsChangedNotificationCallback(Message<Models.NetSyncSessionsChangedNotification>.Callback callback)
+    {
+      Callback.SetNotificationCallback(
+        Message.MessageType.Notification_NetSync_SessionsChanged,
+        callback
+      );
+    }
+
+  }
+
   public static partial class Net
   {
     /// Indicates that a connection has been established or there's been an error.
@@ -1595,7 +1877,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
     /// Indicates that another user is attempting to establish a P2P connection
     /// with us. Use NetworkingPeer.GetID() to extract the ID of the peer.
     ///
@@ -1606,7 +1888,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
     /// Generated in response to Net.Ping(). Either contains ping time in
     /// microseconds or indicates that there was a timeout.
     ///
@@ -1617,7 +1899,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
   }
 
   public static partial class Notifications
@@ -1675,7 +1957,47 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
+  }
+
+  public static partial class RichPresence
+  {
+    /// Clear rich presence for running app
+    ///
+    public static Request Clear()
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request(CAPI.ovr_RichPresence_Clear());
+      }
+
+      return null;
+    }
+
+    /// Gets all the destinations that the presence can be set to
+    ///
+    public static Request<Models.DestinationList> GetDestinations()
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.DestinationList>(CAPI.ovr_RichPresence_GetDestinations());
+      }
+
+      return null;
+    }
+
+    /// Set rich presence for running app
+    ///
+    public static Request Set(RichPresenceOptions richPresenceOptions)
+    {
+      if (Core.IsInitialized())
+      {
+        return new Request(CAPI.ovr_RichPresence_Set((IntPtr)richPresenceOptions));
+      }
+
+      return null;
+    }
+
   }
 
   public static partial class Rooms
@@ -1831,9 +2153,9 @@ namespace Oculus.Platform
     /// Invites a user to the specified room. They will receive a notification via
     /// MessageType.Notification_Room_InviteReceived if they are in your game,
     /// and/or they can poll for room invites using
-    /// Notification.GetRoomInviteNotifications().
+    /// Notifications.GetRoomInviteNotifications().
     /// \param roomID The ID of your current room.
-    /// \param inviteToken A user's invite token, returned by Room.GetInvitableUsers().
+    /// \param inviteToken A user's invite token, returned by Rooms.GetInvitableUsers().
     ///
     /// <b>Error codes</b>
     /// - \b 100: The invite token has expired, the user will need to be reinvited to the room.
@@ -1961,7 +2283,7 @@ namespace Oculus.Platform
     }
 
     /// Disallow new members from being able to join the room. This will prevent
-    /// joins from Room.Join(), invites, 'Join From Home', etc. Users that are in
+    /// joins from Rooms.Join(), invites, 'Join From Home', etc. Users that are in
     /// the room at the time of lockdown WILL be able to rejoin.
     /// \param roomID The room whose membership you want to lock or unlock.
     /// \param membershipLockStatus The new LockStatus for the room
@@ -2014,7 +2336,7 @@ namespace Oculus.Platform
     /// has been inivted to as a string. Then call ovrID_FromString() to parse it
     /// into an ovrID.
     ///
-    /// Note that you must call Room.Join() if you want to actually join the room.
+    /// Note that you must call Rooms.Join() if you want to actually join the room.
     ///
     public static void SetRoomInviteAcceptedNotificationCallback(Message<string>.Callback callback)
     {
@@ -2023,10 +2345,11 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
     /// Handle this to notify the user when they've received an invitation to join
     /// a room in your game. You can use this in lieu of, or in addition to,
-    /// polling for room invitations via Notification.GetRoomInviteNotifications().
+    /// polling for room invitations via
+    /// Notifications.GetRoomInviteNotifications().
     ///
     public static void SetRoomInviteReceivedNotificationCallback(Message<Models.RoomInviteNotification>.Callback callback)
     {
@@ -2035,7 +2358,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
     /// Indicates that the current room has been updated. Use Message.GetRoom() to
     /// extract the updated room.
     ///
@@ -2046,7 +2369,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
   }
 
   public static partial class Users
@@ -2177,10 +2500,10 @@ namespace Oculus.Platform
     }
 
     /// Part of the scheme to confirm the identity of a particular user in your
-    /// backend. You can pass the result of User.GetUserProof() and a user ID from
-    /// User.Get() to your your backend. Your server can then use our api to verify
-    /// identity. 'https://graph.oculus.com/user_nonce_validate?nonce=USER_PROOF&us
-    /// er_id=USER_ID&access_token=ACCESS_TOKEN'
+    /// backend. You can pass the result of Users.GetUserProof() and a user ID from
+    /// Users.Get() to your your backend. Your server can then use our api to
+    /// verify identity. 'https://graph.oculus.com/user_nonce_validate?nonce=USER_P
+    /// ROOF&user_id=USER_ID&access_token=ACCESS_TOKEN'
     ///
     /// NOTE: The nonce is only good for one check and then it is invalidated.
     ///
@@ -2250,7 +2573,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
     /// Sent to indicate that the state of the VoIP connection changed. Use
     /// Message.GetNetworkingPeer() and NetworkingPeer.GetState() to extract the
     /// current state.
@@ -2262,7 +2585,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
     /// Sent to indicate that some part of the overall state of SystemVoip has
     /// changed. Use Message.GetSystemVoipState() and the properties of
     /// SystemVoipState to extract the state that triggered the notification.
@@ -2278,7 +2601,7 @@ namespace Oculus.Platform
         callback
       );
     }
-    
+
   }
 
 
@@ -2405,6 +2728,29 @@ namespace Oculus.Platform
           CAPI.ovr_HTTP_GetWithMessageType(
             list.NextUrl,
             (int)Message.MessageType.Notification_GetNextRoomInviteNotificationArrayPage
+          )
+        );
+      }
+
+      return null;
+    }
+
+  }
+
+  public static partial class RichPresence {
+    public static Request<Models.DestinationList> GetNextDestinationListPage(Models.DestinationList list) {
+      if (!list.HasNextPage)
+      {
+        Debug.LogWarning("Oculus.Platform.GetNextDestinationListPage: List has no next page");
+        return null;
+      }
+
+      if (Core.IsInitialized())
+      {
+        return new Request<Models.DestinationList>(
+          CAPI.ovr_HTTP_GetWithMessageType(
+            list.NextUrl,
+            (int)Message.MessageType.RichPresence_GetNextDestinationArrayPage
           )
         );
       }

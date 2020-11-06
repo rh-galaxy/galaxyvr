@@ -258,7 +258,7 @@ public class GameLevel : MonoBehaviour
 
         //change fov if non VR since the default setting shows to wide fov
         // and is not behaving reliably
-        if (!XRDevice.isPresent)
+        if (GameManager.bNoVR)
             Camera.main.fieldOfView = 40.0f;
 
         //set random skybox

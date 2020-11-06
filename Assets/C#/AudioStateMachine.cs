@@ -80,7 +80,7 @@ public class AudioStateMachine : MonoBehaviour
         int i, driverCount = 0;
         sys.getNumDrivers(out driverCount);
 
-        string riftId = OVRManager.audioOutId;
+        string riftId = OVRPlugin.audioOutId; // OVRManager.audioOutId;
 
         for (i=0; i<driverCount; i++)
         {
