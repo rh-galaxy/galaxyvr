@@ -7455,7 +7455,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1110497465}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1000, y: 0, z: 0}
+  m_LocalPosition: {x: 100, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 440394743}
@@ -7959,7 +7959,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -29, y: 64}
-  m_SizeDelta: {x: 20, y: 5}
+  m_SizeDelta: {x: 24, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1314915068
 MonoBehaviour:
@@ -8681,7 +8681,7 @@ GameObject:
   - component: {fileID: 1724532997}
   - component: {fileID: 1724532998}
   - component: {fileID: 1724532999}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: MenuHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

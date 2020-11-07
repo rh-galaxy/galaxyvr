@@ -388,7 +388,7 @@ public class GameManager : MonoBehaviour
                 bTrackingOriginSet = true;
             }
         }
-        if (Menu.bRecenter)
+        if (Menu.bRecenter && !bNoVR)
         {
             fRecenterTimer += Time.unscaledDeltaTime;
             if (fRecenterTimer > 3.0f)

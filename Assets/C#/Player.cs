@@ -730,7 +730,7 @@ public class Player : MonoBehaviour
                 if ((triggerR > 0.3f || triggerL > 0.3f) && !bAdjust && !bRight && !bLeft)
                 {
                     //new move descicion
-                    if(fMovementTimer > 0.07f)
+                    if (fMovementTimer > 0.07f)
                     {
                         fMovementTimer = 0;
                         if (fFullThrottleTimer > 0)
