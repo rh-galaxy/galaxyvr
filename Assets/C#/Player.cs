@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if !DISABLESTEAMWORKS
 using Valve.VR;
-#endif
 
 public class Player : MonoBehaviour
 {
@@ -682,76 +680,33 @@ public class Player : MonoBehaviour
         {
             bool bNewFireState = false;
             bThrottle = bLeft = bRight = bAdjust = false;
-            
-            if (!bMotionMovementEnabled)
+
+            //get input from joysticks
+            float fX = SteamVR_Actions.default_Steering.axis.x;
+            float fY = SteamVR_Actions.default_Steering.axis.y;
+            float fTrg2 = SteamVR_Actions.default_Throttle.axis;
+
+            if (fTrg2 > 0.3f) bThrottle = true;
+            if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;
+
+            if (fX > 0.3f) bRight = true;
+            if (fX < -0.3f) bLeft = true;
+            if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
+            if (fY < -0.9f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
+
+            //keyboard and joystick for fire (is a trigger once event)
+            if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
+
+            if (bMotionMovementEnabled)
             {
-#if DISABLESTEAMWORKS
-                //get input from joysticks
-                float fX = Input.GetAxisRaw("Horizontal");                                          //axis x (x left stick)
-                float fY = Input.GetAxisRaw("Vertical");                                            //axis y (y left stick)
-                float fX2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickHorizontal"); //axis 4 (x right stick)
-                float fY2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");   //axis 5 (y right stick)
-                float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");         //axis 9    must be fire to support   xbox, vive, touch
-                float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");       //axis 10   must be thrust to support xbox, vive, touch
-
-                if (fX > 0.3f) bRight = true;
-                if (fX < -0.3f) bLeft = true;
-                if (fX2 > 0.3f) bRight = true;
-                if (fX2 < -0.3f) bLeft = true;
-                if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-                if (fY2 < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-
-                //there is something wrong here, Oculus Touch A button is swapped with B, making it
-                //not work to have fire on A without having it on B. this does not happen in an empty project
-                if (fY2 > 0.5f || fTrg2 > 0.3f) bThrottle = true;
-                if (Input.GetButton("Button2")) bThrottle = true; //button 2 (X)
-                if (Input.GetButton("Button3")) bThrottle = true; //button 3 (Y)
-                //keyboard and joystick for fire (is a trigger once event)
-
-                if (fTrg1 > 0.3f) bNewFireState = true; //left trigger
-                if (Input.GetButton("Button0")) bNewFireState = true; //button 0 (A)
-                if (Input.GetButton("Button1")) bNewFireState = true; //button 1 (B)
-#else
-                //get input from joysticks
-                float fX = SteamVR_Actions.default_Steering.axis.x;
-                float fY = SteamVR_Actions.default_Steering.axis.y;
-                float fTrg2 = SteamVR_Actions.default_Throttle.axis;
-
-                if (fX > 0.3f) bRight = true;
-                if (fX < -0.3f) bLeft = true;
-                if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-                /**/if (fY < -0.9f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
-
-                if (fTrg2 > 0.3f) bThrottle = true;
-                if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;
-
-                //keyboard and joystick for fire (is a trigger once event)
-                if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
-#endif
-            }
-            else
-            {
-                //get input from joysticks
-                float fX = SteamVR_Actions.default_Steering.axis.x;
-                float fY = SteamVR_Actions.default_Steering.axis.y;
-                float fTrg2 = SteamVR_Actions.default_Throttle.axis;
-
-                if (fX > 0.3f) bRight = true;
-                if (fX < -0.3f) bLeft = true;
-                if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-                /**/if (fY < -0.9f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
-
-                //keyboard and joystick for fire (is a trigger once event)
-                if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
-
                 fMovementTimer += Time.fixedDeltaTime;
                 if(!bLanded) fFullThrottleTimer -= Time.fixedDeltaTime;
                 else fFullThrottleTimer = 0.3f;
 
-                if (fTrg2 > 0.3f && !bAdjust && !bLeft && !bRight)
+                if (bThrottle && !bAdjust && !bRight && !bLeft)
                 {
                     //new move descicion
-                    if(fMovementTimer > 0.07f)
+                    if (fMovementTimer > 0.07f)
                     {
                         fMovementTimer = 0;
                         if (fFullThrottleTimer > 0)
@@ -783,7 +738,6 @@ public class Player : MonoBehaviour
                         bLeft = ALLMOVES[iBestMove].bLeft;
                         bRight = ALLMOVES[iBestMove].bRight;
                     }
-
                 }
             }
 
@@ -894,7 +848,7 @@ public class Player : MonoBehaviour
                 {
                     oThruster.enableEmission = true;
                     bEngineFadeOut = false;
-                    oASEngine.volume = 0.75f;
+                    oASEngine.volume = 0.40f;
                     oASEngine.Play();
                 }
                 else

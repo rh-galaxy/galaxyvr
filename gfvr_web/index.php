@@ -101,15 +101,14 @@ square_end();
 <br><br><br>
 
 <?php
-headline("Contest 2020-01-19");
+headline("Multiplayer coders");
 ?>
 <br>
 <?php
 square_start("'100%'");
 ?>
-<p>A new contest! $55 via paypal to the one player at the top of the hiscores listing at the end of January 19, 2020 CET.
-I want to get the hiscores flowing with people trying and in that case somebody will win, but if it's only a single person trying, I will also be trying to better my score (rh_galaxy).</p>
-<p>The winner is 'Mahed', please make contact on mail address below.</p>
+<p>Contact me if you are interested in collaborating to get this vr game feature done.
+I have set a time frame to 6 months, and have more info of what is needed.</p>
 <?php
 square_end();
 ?>

@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if !DISABLESTEAMWORKS
 using Valve.VR;
-#endif
 
 public class CameraController : MonoBehaviour
 {
@@ -15,10 +13,11 @@ public class CameraController : MonoBehaviour
     private Vector3 vMapSize;
 
     internal static bool bSnapMovement = false;
-    internal static bool bPointMovement = true;
+    internal static bool bPointMovement = false;
+    bool bPointMovementInMenu = false;
     internal static Vector3 vCamPos = new Vector3(0, 0, -4.5f);
 
-    int iRightHanded;
+    int iRightHanded = 0;
     public GameObject oRayQuad;
     GameObject oGazeQuad = null;
     Material oCursorMaterial;
@@ -27,10 +26,6 @@ public class CameraController : MonoBehaviour
     internal Vector3 vGazeDirection;
     internal Quaternion qRotation;
 
-    public Transform oRight;
-    public Transform oLeft;
-    public GameObject oRightModel;
-    public GameObject oLeftModel;
     SteamVR_Action_Pose poseActionR;
     SteamVR_Action_Pose poseActionL;
 
@@ -39,20 +34,16 @@ public class CameraController : MonoBehaviour
         bMapMode = true;
         oPlayer = i_oPlayer;
         oMap = i_oMap;
-        vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update.
+        vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update
 
         vCamOffset = new Vector3(0, 0.3f, -1.90f);
         vMapSize = oMap.GetMapSize();
-
-        if (oGazeQuad != null) oGazeQuad.SetActive(false);
     }
     public void InitForMenu()
     {
         bMapMode = false;
         vCamPos = new Vector3(0, 0, -5.5f);
         transform.position = vCamPos;
-
-        if (oGazeQuad != null) oGazeQuad.SetActive(!bPointMovement);
     }
 
     //mouse movement smoothing to distribute movement every frame when framerate
@@ -112,12 +103,12 @@ public class CameraController : MonoBehaviour
         oCursorMaterial = Resources.Load("Cursor", typeof(Material)) as Material;
         oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
         oGazeQuad.transform.localScale = new Vector3(.38f, .38f, 1);
-        oGazeQuad.SetActive(!bPointMovement);
+        oGazeQuad.SetActive(false);
 
         poseActionR = SteamVR_Input.GetAction<SteamVR_Action_Pose>("Pose_right_tip");
         poseActionL = SteamVR_Input.GetAction<SteamVR_Action_Pose>("Pose_left_tip");
 
-        iRightHanded = -1;
+        iRightHanded = 0;
     }
 
     // Update is called once per frame
@@ -184,21 +175,11 @@ public class CameraController : MonoBehaviour
             //begin
             oRayQuad.SetActive(false);
         }
-        else
-        {
-            //end
-            oRayQuad.SetActive(bPointMovement);
-        }
     }
 
     public void SetMovementMode(bool bMotionController)
     {
         bPointMovement = bMotionController;
-        oRightModel.SetActive(bPointMovement);
-        oLeftModel.SetActive(false);
-        oRayQuad.SetActive(bPointMovement);
-        oGazeQuad.SetActive(!bPointMovement && !bMapMode);
-        iRightHanded = bPointMovement ? 1 : 0;
     }
     public void SetPointingInfo(Vector3 vHitPoint, Quaternion qHitDir, Vector3 vOrigin, Quaternion qOriginDir)
     {
@@ -211,40 +192,42 @@ public class CameraController : MonoBehaviour
         //direction of ray
         oRayQuad.transform.SetPositionAndRotation((vHitPoint + vOrigin) / 2.0f, qOriginDir);
         oRayQuad.transform.Rotate(new Vector3(90, 0, 0));
-        oRayQuad.transform.localScale = new Vector3(0.05f, ((vHitPoint - vOrigin).magnitude - 0.14f)/2.0f, 0.05f);
+        oRayQuad.transform.localScale = new Vector3(0.05f, ((vHitPoint - vOrigin).magnitude - 0.07f)/2.0f, 0.05f);
     }
 
     private void Update()
     {
-        //handle touch controller
-        //first init
-        if (iRightHanded == -1 && bFadeDone)
+        //switch hand/use gamepad?
         {
-            iRightHanded = bPointMovement ? 1 : 0;
-
-            //always begin as right handed
-            if (bPointMovement)
+            if ((SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.RightHand) > 0.5f)
+                || SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.RightHand) )
             {
-                oRightModel.SetActive(true);
-                oLeftModel.SetActive(false);
-            }
-            oRayQuad.SetActive(bPointMovement);
-            oGazeQuad.SetActive(!bPointMovement && !bMapMode);
-        }
-        //switch hand?
-        if (bPointMovement && bFadeDone)
-        {
-            if (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.RightHand) > 0.5f && iRightHanded != 1)
-            {
-                oRightModel.SetActive(true);
-                oLeftModel.SetActive(false);
+                bPointMovementInMenu = true;
                 iRightHanded = 1;
             }
-            else if (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.LeftHand) > 0.5f && iRightHanded != 2)
+            else if ((SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.LeftHand) > 0.5f)
+                || SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.LeftHand) )
             {
-                oRightModel.SetActive(false);
-                oLeftModel.SetActive(true);
+                bPointMovementInMenu = true;
                 iRightHanded = 2;
+            }
+
+            if ((SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Gamepad) > 0.5f)
+                || SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Gamepad))
+            {
+                bPointMovementInMenu = false;
+                iRightHanded = 0;
+            }
+            if (Input.GetMouseButton(0) && iRightHanded != 0)
+            {
+                bPointMovementInMenu = false;
+                iRightHanded = 0;
+            }
+
+            if (bFadeDone)
+            {
+                oRayQuad.SetActive(bPointMovement || (!bMapMode && bPointMovementInMenu));
+                if (oGazeQuad != null) oGazeQuad.SetActive(!bPointMovementInMenu && !bMapMode);
             }
         }
 
@@ -254,16 +237,12 @@ public class CameraController : MonoBehaviour
         qRotation = Camera.main.transform.rotation;
         if (iRightHanded == 1)
         {
-            //vHeadPosition = oRight.position;
-            //qRotation = oRight.rotation;
             vHeadPosition = GameManager.theGM.cameraRig.position + poseActionR[SteamVR_Input_Sources.RightHand].localPosition;
             qRotation = GameManager.theGM.cameraRig.rotation * poseActionR[SteamVR_Input_Sources.RightHand].localRotation;
             vGazeDirection = qRotation * Vector3.forward;
         }
         if (iRightHanded == 2)
         {
-            //vHeadPosition = oLeft.position;
-            //qRotation = oLeft.rotation;
             vHeadPosition = GameManager.theGM.cameraRig.position + poseActionL[SteamVR_Input_Sources.LeftHand].localPosition;
             qRotation = GameManager.theGM.cameraRig.rotation * poseActionL[SteamVR_Input_Sources.LeftHand].localRotation;
             vGazeDirection = qRotation * Vector3.forward;

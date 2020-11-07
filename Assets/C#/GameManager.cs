@@ -6,12 +6,9 @@ using UnityEngine.XR;
 using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
-#if !DISABLESTEAMWORKS //Add in Edit->Project Settings...->Player.Scripting Define Symbols [DISABLESTEAMWORKS]
+
 using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
 using Valve.VR;
-#else
-using Oculus.Platform;
-#endif
 
 public class GameManager : MonoBehaviour
 {
@@ -22,7 +19,6 @@ public class GameManager : MonoBehaviour
     /**/public Transform steamCamera;
     /**/public Transform cameraRig;
 
-    internal static bool bOculusDevicePresent = false;
     internal static bool bValveDevicePresent = false;
     internal static ulong iUserID = 1;
     internal static string szUser = "DebugUser"; //use debug user if no VR user
@@ -61,12 +57,8 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         bool bInited = false;
-#if !DISABLESTEAMWORKS
         this.enabled = true;
         bInited = InitValve();
-#else
-        bInited = InitOculus();
-#endif
 
         if (!bInited)
         {
@@ -74,7 +66,6 @@ public class GameManager : MonoBehaviour
             //bUserValid = true;
             bNoHiscore = true;
             bNoVR = true;
-            //XRSettings.enabled = false;
             Screen.SetResolution(1280, 720, true);
 
             Debug.Log("Error initing VR, continue with no VR");
@@ -87,7 +78,7 @@ public class GameManager : MonoBehaviour
         GameLevel.theReplay = oReplay;
 
         //this list keeps the last scores for each level for the entire game session, beginning with no score
-        for (int i=0; i < aLastScore.Length; i++) aLastScore[i] = -1;
+        for (int i = 0; i < aLastScore.Length; i++) aLastScore[i] = -1;
 
         //set thread prio
         UnityEngine.Application.backgroundLoadingPriority = UnityEngine.ThreadPriority.BelowNormal;
@@ -99,12 +90,7 @@ public class GameManager : MonoBehaviour
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFade(0.01f, 0.0f, true);
 
-#if DISABLESTEAMWORKS
-        if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
-#endif
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
-
-        /**///XRDevice.SetTrackingSpaceType(TrackingSpaceType.Stationary);
 
 #if LOGPROFILERDATA
         Profiler.logFile = "log" + logProfilerFileCnt.ToString();
@@ -115,16 +101,10 @@ public class GameManager : MonoBehaviour
 
     private void AudioSettings_OnAudioConfigurationChanged(bool deviceWasChanged)
     {
-#if !DISABLESTEAMWORKS
         AudioStateMachine.instance.SetOutput(0);
-#else
-        if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
-        else AudioStateMachine.instance.SetOutput(0);
-#endif
     }
 
     //////start of valve specific code
-#if !DISABLESTEAMWORKS
     bool bSteamAPIInited = false;
     float fBackTimerForViveController = 0.0f;
 
@@ -397,187 +377,25 @@ public class GameManager : MonoBehaviour
         //send to server
         bool bSuccess = SteamUserStats.StoreStats();
     }
-#endif
     //////end of valve specific code
-
-    //////start of oculus specific code
-#if DISABLESTEAMWORKS
-    bool InitOculus()
-    {
-        if (XRDevice.model.StartsWith("Oculus Rift"))
-        {
-            //init Oculus SDK
-            try
-            {
-                Core.AsyncInitialize("2005558116207772");
-                Entitlements.IsUserEntitledToApplication().OnComplete(EntitlementCallback);
-                Users.GetLoggedInUser().OnComplete(LoggedInUserCallback);
-            }
-            catch (UnityException e)
-            {
-                Debug.LogException(e);
-                UnityEngine.Application.Quit();
-            }
-
-            //observe counteractive effect, enhances dark pixels levels for more banding as i see it
-            //OVRManager.eyeTextureFormat = OVRManager.EyeTextureFormat.R11G11B10_FP;
-            //OVRManager.eyeTextureFormat = OVRManager.EyeTextureFormat.R16G16B16A16_FP;
-
-            bOculusDevicePresent = true;
-            return true;
-        }
-        return false;
-    }
-
-    void EntitlementCallback(Message msg)
-    {
-        if (msg.IsError)
-        {
-            Debug.LogError("Not entitled to play this game");
-            
-            UnityEngine.Application.Quit(); //it is possible to remove quit while developing
-        }
-        else
-        {
-            //ok
-            Debug.Log("You are entitled to play this game");
-        }
-    }
-
-    void LoggedInUserCallback(Message msg)
-    {
-        if (msg.IsError)
-        {
-            Debug.LogError("No Oculus user");
-        }
-        else
-        {
-            //save ID, and user name
-            iUserID = msg.GetUser().ID;
-            szUser = msg.GetUser().OculusID;
-            Debug.Log("You are " + szUser);
-            bUserValid = true;
-
-            myAvatar.oculusUserID = msg.GetUser().ID.ToString();
-        }
-    }
-    
-    void HandleOculusAchievements()
-    {
-        //handle achievements
-        if (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel)
-        {
-            //finished any level with ok result
-
-            //survivor achievement check
-            if (GameLevel.theMap.player.bAchieveNoDamage)
-                Achievements.Unlock("Survivor");
-            //hellbent achievement check
-            if (szLastLevel.CompareTo(GameLevel.szLevel) != 0) iAchievementHellbentCounter = 1;
-            else iAchievementHellbentCounter++;
-            if (iAchievementHellbentCounter == 8)
-                Achievements.Unlock("Hellbent");
-            //speedster achievement check
-            if (GameLevel.theMap.player.bAchieveFullThrottle)
-                Achievements.Unlock("Speedster");
-            //racer achievement check
-            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
-                Achievements.AddCount("Racer", 1);
-            //transporter achievement check (named loader)
-            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
-                Achievements.AddCount("Loader", 1);
-
-            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
-            {
-                //cargo beginner
-                if (GameLevel.szLevel.CompareTo("1mission00") == 0)
-                    Achievements.Unlock("Cargo1");
-                //cargo apprentice
-                if (GameLevel.szLevel.CompareTo("1mission03") == 0)
-                    Achievements.Unlock("Cargo2");
-                //cargo expert
-                if (GameLevel.szLevel.CompareTo("1mission06") == 0 && GameLevel.theMap.player.iAchieveShipsDestroyed == 0)
-                    Achievements.Unlock("Cargo3");
-                //cargo master
-                if (GameLevel.szLevel.CompareTo("1mission09") == 0 && GameLevel.theMap.player.bAchieveNoDamage)
-                    Achievements.Unlock("Cargo4");
-            }
-            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
-            {
-                //race beginner
-                if (GameLevel.szLevel.CompareTo("2race00") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
-                    Achievements.Unlock("Race1");
-                //race apprentice
-                if (GameLevel.szLevel.CompareTo("2race03") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
-                    Achievements.Unlock("Race2");
-                //race expert
-                if (GameLevel.szLevel.CompareTo("2race06") == 0 && GameLevel.theMap.player.fTotalTime < 60.0f)
-                    Achievements.Unlock("Race3");
-                //race master
-                if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime < 104.0f)
-                    Achievements.Unlock("Race4");
-            }
-            string szBits = "0000000000000000000000000000000000000000000000000000000";
-            char[] aBitsChars = szBits.ToCharArray();
-            aBitsChars[GameLevel.iLevelIndex] = '1';
-            string szBits2 = new string(aBitsChars, 0, aBitsChars.Length - 0);
-            Achievements.AddFields("Galaxy55", szBits2);
-        }
-        //fuelburner achievement check
-        int iTemp = (int)GameLevel.theMap.player.fAchieveFuelBurnt;
-        if (iTemp > 0)
-            Achievements.AddCount("Fuelburner", (ulong)iTemp);
-        //ravager achievement check
-        iTemp = GameLevel.theMap.iAchieveEnemiesKilled;
-        if (iTemp > 0)
-            Achievements.AddCount("Ravager", (ulong)iTemp);
-        //kamikaze achievement check (named doom)
-        iTemp = GameLevel.theMap.player.iAchieveShipsDestroyed;
-        if (iTemp > 0)
-            Achievements.AddCount("Doom", (ulong)iTemp);
-        //trigger achievement check
-        iTemp = GameLevel.theMap.player.iAchieveBulletsFired;
-        if (iTemp > 0)
-            Achievements.AddCount("Trigger", (ulong)iTemp);
-        //hitchhiker42 achievement check
-        iTemp = (int)GameLevel.theMap.player.fAchieveDistance;
-        if (iTemp > 0)
-            Achievements.AddCount("Hitchhiker42", (ulong)iTemp*5); //5m per unit is reasonable
-    }
-#endif
-    //////end of oculus specific code
 
     void UnlockMissionGoldAchievement()
     {
-#if DISABLESTEAMWORKS
-        if (bOculusDevicePresent)
-        {
-            Achievements.Unlock("CargoGold30");
-        }
-#else
         if (bUserValid)
         {
             if (!bSteamStatsValid) return;
             SteamUserStats.SetAchievement("CargoGold30");
             bool bSuccess = SteamUserStats.StoreStats();
         }
-#endif
     }
     void UnlockRaceGoldAchievement()
     {
-#if DISABLESTEAMWORKS
-        if (bOculusDevicePresent)
-        {
-            Achievements.Unlock("RaceGold25");
-        }
-#else
         if (bUserValid)
         {
             if (!bSteamStatsValid) return;
             SteamUserStats.SetAchievement("RaceGold25");
             bool bSuccess = SteamUserStats.StoreStats();
         }
-#endif
     }
 
     LevelInfo stLevel;
@@ -617,10 +435,10 @@ public class GameManager : MonoBehaviour
         {
             fs = File.OpenRead(preLoadDataPath + "/sharedassets1.assets.resS");
         } catch { }
-        while (fs!=null && !allRead)
+        while (fs != null && !allRead)
         {
             int fr = fs.Read(preLoadBytes, 0 + iChunkNr * iChunkSize, iChunkSize);
-            if (fr!= iChunkSize) allRead = true;
+            if (fr != iChunkSize) allRead = true;
             Thread.Sleep(5);
         }
     }
@@ -647,11 +465,11 @@ public class GameManager : MonoBehaviour
         if (iFade == 1) fFadeCurAlpha = 1.0f - fProgress;
         if (fFadeCurAlpha < 0.0f) fFadeCurAlpha = 0.0f;
         if (fFadeCurAlpha > 1.0f) fFadeCurAlpha = 1.0f;
-        oFadeMatCopy.color = new Color(0, 0, 0, fFadeCurAlpha); 
-        if (fProgress>0.999f)
+        oFadeMatCopy.color = new Color(0, 0, 0, fFadeCurAlpha);
+        if (fProgress > 0.999f)
         {
             iFade = 0;
-            if(fFadeCurAlpha<0.1)
+            if (fFadeCurAlpha < 0.1)
             {
                 //fade in done
                 oFadeBox.SetActive(false);
@@ -661,11 +479,11 @@ public class GameManager : MonoBehaviour
     }
     public void StartFade(float fTime, float fDelay, bool bOut)
     {
-        if(bOut) theCameraHolder.Fade(false);
+        if (bOut) theCameraHolder.Fade(false);
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
         fFadeDelay = fDelay;
-        if(bOut) iFade = 2; //out
+        if (bOut) iFade = 2; //out
         else iFade = 1; //in
         oFadeBox.SetActive(true);
         UpdateFade();
@@ -673,6 +491,7 @@ public class GameManager : MonoBehaviour
 
     //float t1;
     float fRecenterTimer = 0.0f;
+    float fLongpressTimer = 0.0f;
     void Update()
     {
 #if LOGPROFILERDATA
@@ -686,16 +505,14 @@ public class GameManager : MonoBehaviour
         }
 #endif
 
-#if !DISABLESTEAMWORKS
         if (bSteamAPIInited)
             SteamAPI.RunCallbacks(); //must run every frame for some reason or garbage collector takes something and unity crashes
-#endif
+
+        //quit
         if (Menu.bQuit)
         {
-#if !DISABLESTEAMWORKS
             if (bSteamAPIInited)
                 SteamAPI.Shutdown();
-#endif
 #if UNITY_EDITOR
             //Application.Quit() does not work in the editor so
             // this need to be set to false to end the game
@@ -704,12 +521,13 @@ public class GameManager : MonoBehaviour
             UnityEngine.Application.Quit();
 #endif
         }
+        //recenter
         if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any) && iState<=4) //for now only recenter if in menu
         {
             Menu.bRecenter = true;
             fRecenterTimer = 3.1f; //make it instant
         }
-        if (Menu.bRecenter)
+        if (Menu.bRecenter && !bNoVR)
         {
             fRecenterTimer += Time.unscaledDeltaTime;
             if (fRecenterTimer > 3.0f)
@@ -735,6 +553,20 @@ public class GameManager : MonoBehaviour
                 fRecenterTimer = 0.0f;
             }
         }
+
+        //long press on grip button is back
+        bool bBackButton = false;
+        if (SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any))
+        {
+            fLongpressTimer += Time.deltaTime;
+
+            if (fLongpressTimer > 2.0f)
+            {
+                fLongpressTimer = 0;
+                bBackButton = true;
+            }
+        }
+        else fLongpressTimer = 0.0f;
 
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
@@ -777,7 +609,7 @@ public class GameManager : MonoBehaviour
         //to ignore input below, only way back is to unpause
         if (bPause) return;
 
-        bool bBack_long = false;
+
         //the main state machine
         switch (iState)
         {
@@ -867,6 +699,7 @@ public class GameManager : MonoBehaviour
                     {
                         UnlockRaceGoldAchievement();
                     }
+                    //handle unlocking
                     int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
                     if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
                     int iRaceToUnlock = (int)(iRaceFinished * 1.35f) + 1;
@@ -954,19 +787,7 @@ public class GameManager : MonoBehaviour
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
 
-                //valve, back is considered when default_Back_long (grip button) is held for 2 sec
-                if (SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any))
-                {
-                    fBackTimerForViveController += Time.deltaTime;
-                    if (fBackTimerForViveController > 2.0)
-                    {
-                        fBackTimerForViveController = 0;
-                        bBack_long = true;
-                    }
-                }
-                else fBackTimerForViveController = 0.0f;
-
-                if (SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any) || bBack_long
+                if (SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any) || bBackButton
                     || Input.GetKey(KeyCode.Escape) || Menu.bLevelUnSelected)
                 {
                     Menu.bLevelUnSelected = false;
@@ -1022,7 +843,6 @@ public class GameManager : MonoBehaviour
                 bBeginMapLoading = false;
                 bLoadBeginDone = false;
                 GameLevel.bMapLoaded = false;
-                Menu.theMenu.SetWaiting(true);
                 if (bStartReplay)
                 {
                     oReplay.ResetBeforePlay();
@@ -1063,18 +883,9 @@ public class GameManager : MonoBehaviour
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
 
-                    //valve, back is considered when default_Back_long (grip button) is held for 2 sec
-                    if (SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any))
-                    {
-                        fBackTimerForViveController += Time.deltaTime;
-                        if (fBackTimerForViveController>2.0)
-                        {
-                            fBackTimerForViveController = 0;
-                            bBack_long = true;
-                        }
-                    } else fBackTimerForViveController = 0.0f;
 
-                    if (SteamVR_Actions.default_Back_instant.GetState(SteamVR_Input_Sources.Any) || bBack_long
+
+                    if (SteamVR_Actions.default_Back_instant.GetState(SteamVR_Input_Sources.Any) || bBackButton
                         || Input.GetKey(KeyCode.Escape)) //back to menu
                     {
                         bBackToMenu = true;
@@ -1089,21 +900,11 @@ public class GameManager : MonoBehaviour
                         {
                             if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
-                                //////start of oculus specific code (achievements)
-#if DISABLESTEAMWORKS
-                                if (bOculusDevicePresent && XRDevice.userPresence != UserPresenceState.NotPresent) //VR user must be present for achievements
-                                {
-                                    HandleOculusAchievements();
-                                }
-#endif
-                                //////end of oculus specific code
                                 //////start of valve specific code
-#if !DISABLESTEAMWORKS
                                 if (bUserValid /*&& bValveDevicePresent*/) //allow non VR mode to set steam achievements
                                 {
                                     HandleValveAchievements();
                                 }
-#endif
                                 //////end of valve specific code
                             }
                         }

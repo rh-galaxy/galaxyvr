@@ -30,11 +30,7 @@ public class HttpHiscore
     UnityWebRequestAsyncOperation async;
     DateTime dtLastAccess; //when GetLimits() has run
 
-#if DISABLESTEAMWORKS
-    int iIsSteam = 0;
-#else
     int iIsSteam = 1;
-#endif
 
     public HttpHiscore()
     {

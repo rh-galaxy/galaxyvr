@@ -4,9 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.XR;
 using TMPro;
-#if !DISABLESTEAMWORKS
 using Valve.VR;
-#endif
 
 public class Menu : MonoBehaviour
 {
@@ -550,11 +548,6 @@ public class Menu : MonoBehaviour
     int iIncrementalInit = 0;
     void Update()
     {
-        bool bInputTriggered = false;
-        if (GameManager.bValveDevicePresent)
-            bInputTriggered = (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f) ||
-                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any);
-
         //from start
         if (iIncrementalInit == 0)
         {
@@ -639,22 +632,23 @@ public class Menu : MonoBehaviour
             Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
             //menu options
-            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -26, "Recenter", "Recenter", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -15, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -4, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 7, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -36, "Recenter", "Recenter", 30.0f, 12.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 19, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 9.0f);
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
-            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 30, "Point motion", "Point", 30.0f, 9.0f);
+            oCameraHolder.SetMovementMode(CameraController.bPointMovement);
+            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             QualitySettings.SetQualityLevel(iQuality, true);
-            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 42, "Med", "Qual1", 30.0f, 9.0f);
-            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 53, "High", "Qual2", 30.0f, 9.0f);
-            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 64, "Ultra", "Qual3", 30.0f, 9.0f);
+            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 9.0f);
+            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 45, "High", "Qual2", 30.0f, 9.0f);
+            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 9.0f);
         }
         if (iIncrementalInit == 8)
         {
@@ -706,11 +700,11 @@ public class Menu : MonoBehaviour
         {
             //change fov if non VR since that default setting shows to wide fov
             // and is not behaving reliably
-            if (!XRDevice.isPresent)
+            if (GameManager.bNoVR)
                 Camera.main.fieldOfView = 45.0f;
-            //prevent selection if trigger was held when menu is started
 
-            iAllowSelection = !(bInputTriggered || Input.GetMouseButton(0)) ? 0 : 50;
+            //prevent selection if trigger was held when menu is started
+            iAllowSelection = 20;
 
             if (bFirstTime)
             {
@@ -732,12 +726,17 @@ public class Menu : MonoBehaviour
         if (Menu.bPauseInput) return;
 
         //get input from joysticks
-        /**/float fAxisX = 0; //Input.GetAxisRaw("Horizontal");
-        float fAdjust = 0;
-        if (fAxisX > 0.4f) fAdjust = 1000;
-        if (fAxisX < -0.4f) fAdjust = -1000;
+        bool bTrigger = false;
+        if (GameManager.bValveDevicePresent)
+            bTrigger = (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f) ||
+                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any);
 
-        if ((bTextInfoActive && iAllowSelection==0) && (bInputTriggered || Input.GetMouseButton(0)))
+        float fAdjust = 0;
+        //if (fAxisX > 0.5f) fAdjust = 1000;
+        //if (fAxisX < -0.5f) fAdjust = -1000;
+
+        bTrigger = bTrigger || Input.GetMouseButton(0);
+        if ((bTextInfoActive && iAllowSelection==0) && bTrigger)
         {
             SetTextInfo(0);
             iAllowSelection = 20;
@@ -897,7 +896,7 @@ public class Menu : MonoBehaviour
             }
 
             //manage selection
-            if ((bInputTriggered || Input.GetMouseButton(0)) && iAllowSelection == 0)
+            if ( bTrigger && iAllowSelection == 0)
             {
                 bool bPlaySelectSound = false;
                 if (oHitInfo.collider.name.CompareTo("Back") == 0)
@@ -972,7 +971,7 @@ public class Menu : MonoBehaviour
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
-                else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
+                else if (oHitInfo.collider.name.CompareTo("Recenter") == 0 && !bRecenter)
                 {
                     bRecenter = true;
                     iAllowSelection = 20;
@@ -986,14 +985,16 @@ public class Menu : MonoBehaviour
                 }
                 else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
                 {
-                    SetTextInfo(CameraController.bPointMovement ? 4 : 2);
+                    if (oLevelInfoContainer.activeSelf) bLevelUnSelected = true;
+                    else SetTextInfo(CameraController.bPointMovement ? 4 : 2);
 
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Credits") == 0)
                 {
-                    SetTextInfo(3);
+                    if (oLevelInfoContainer.activeSelf) bLevelUnSelected = true;
+                    else SetTextInfo(3);
 
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
@@ -1052,7 +1053,7 @@ public class Menu : MonoBehaviour
             //no hit, place cursor at max distance
 
             //first, unselect level if click outside levelinfo
-            if (bInputTriggered || Input.GetMouseButton(0))
+            if ( bTrigger )
             {
                 if (iAllowSelection==0)
                 {
@@ -1089,15 +1090,10 @@ public class Menu : MonoBehaviour
         if (fAdjust != 0)
         {
             float x = oCameraHolder.transform.position.x + fAdjust;
+            float z = oCameraHolder.transform.position.z;
             if (x >= 0.0f && x <= 1000.0f)
-                oCameraHolder.transform.position = new Vector3(x, 0, -5.5f);
+                oCameraHolder.transform.position = new Vector3(x, 0, z);
         }
-    }
-
-    public void SetWaiting(bool i_bWaiting)
-    {
-//        if(i_bWaiting) oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterialWait;
-//        else oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
     }
 
     public class C_LevelInMenu
