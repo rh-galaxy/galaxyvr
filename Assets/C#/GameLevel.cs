@@ -283,7 +283,7 @@ public class GameLevel : MonoBehaviour
         //create background plane first of all
         //if (bSimpleBg) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f, 32.0f);
         //else
-        oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, /**/.105f, 1.0f);
+        oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 0.105f, 1.0f);
 
         bMeshBkReady = true;
         oEvent.WaitOne();
@@ -294,7 +294,7 @@ public class GameLevel : MonoBehaviour
         LoadGrid(substeps, pixelsamplepos);
 
         //generate final mesh, set tile material
-        oMeshGen.GenerateMeshInit(aMapHighres, /**/0.10f / substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
+        oMeshGen.GenerateMeshInit(aMapHighres, 0.10f / substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
 
         oMeshGen.GenerateMesh();
 

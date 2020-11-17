@@ -266,6 +266,7 @@ public class MeshGenerator : MonoBehaviour
         wallMesh.uv = wallUVs.ToArray();
 
         walls.mesh = wallMesh;
+        walls.GetComponent<MeshCollider>().sharedMesh = wallMesh;
 
         //and material
         walls.GetComponent<MeshRenderer>().material = oMatWalls;

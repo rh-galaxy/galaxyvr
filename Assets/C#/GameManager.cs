@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public CameraController theCameraHolder;
 
     internal static bool bOculusDevicePresent = false;
-    internal static ulong iUserID = 1;
+    internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
     internal static bool bUserValid = false;
     internal static bool bNoHiscore = false;
@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
         else
         {
             //save ID, and user name
-            iUserID = msg.GetUser().ID;
+            szUserID = msg.GetUser().ID.ToString();
             szUser = msg.GetUser().OculusID;
             Debug.Log("You are " + szUser);
             bUserValid = true;

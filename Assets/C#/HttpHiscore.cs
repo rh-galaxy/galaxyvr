@@ -43,7 +43,7 @@ public class HttpHiscore
         bIsDone = false;
         dtLastAccess = DateTime.Now; //set this before request
 
-        string url = WEB_HOST + "/achievements_get.php?User=" + UnityWebRequest.EscapeURL(GameManager.szUser) + "&UserId=" + GameManager.iUserID + "&IsSteam=" + iIsSteam;
+        string url = WEB_HOST + "/achievements_get.php?User=" + UnityWebRequest.EscapeURL(GameManager.szUser) + "&UserId=" + UnityWebRequest.EscapeURL(GameManager.szUserID) + "&IsSteam=" + iIsSteam;
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
@@ -114,7 +114,7 @@ public class HttpHiscore
         int iCount = (int)(DateTime.Now - dtLastAccess).TotalSeconds ^ 1467;
 
         string url = WEB_HOST + "/achievements_post.php";
-        string data= "LEVEL="+ i_szLevel + "&NAME="+ UnityWebRequest.EscapeURL(GameManager.szUser) + "&USERID="+ GameManager.iUserID + "&COUNTER="+
+        string data= "LEVEL="+ i_szLevel + "&NAME="+ UnityWebRequest.EscapeURL(GameManager.szUser) + "&USERID="+ UnityWebRequest.EscapeURL(GameManager.szUserID) + "&COUNTER="+
             iCount + "&SCORE="+ i_iScoreMs + "&STEAM=" + iIsSteam + "&REPLAY="+ base64;
 
         www = CreateUnityWebRequest(url, data); //UnityWebRequest.Post(url, data); <- didn't work
