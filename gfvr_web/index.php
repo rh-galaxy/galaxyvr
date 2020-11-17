@@ -29,15 +29,16 @@ square_start("'100%'");
 ?>
 <p>A single player space shooter game in VR. The player is in control of a ship.
 The goal is to race against the clock to get the fastest time (<i>race</i>), or transport cargo to get the best score (<i>mission</i>).
-All done in 55 narrow space caves filled with enemies. Featuring interactive music, realistic physics and challenging game-play.</p>
+All done in 55 narrow space caves filled with evil enemies. Featuring interactive music, realistic physics and challenging game-play.</p>
 
 <p>The game is inspired by <a href="https://www.mobygames.com/game/amiga/gravity-force">Gravity Force</a> on the Amiga, and by <a href="http://www.galaxy-forces.com">Galaxy Forces V2</a>.</p>
 
 <p>All players may have their best score for each level sent to this website and the top scores and top players are displayed below. The replay of the record scores are possible to view from the game to see how it was done. There are also 21 achievements to unlock.</p>
 
-<p>Available on <a href="https://www.oculus.com/experiences/rift/2005558116207772/">Oculus Home</a> (for Rift), and <a href="https://store.steampowered.com/app/1035550/Galaxy_Forces_VR/">Steam</a> (Rift, Vive and others) since 20th of September 2019.</p>
-<p><img align="left" src="images/screen8_860.jpg" title="Galaxy Forces VR screenshot"></p>
+<p>Available for free on <a href="https://www.oculus.com/experiences/rift/2005558116207772/">Oculus Home</a> (for Rift), and <a href="https://store.steampowered.com/app/1035550/Galaxy_Forces_VR/">Steam</a> (Rift, Vive and others) since 20th of September 2019.</p>
+<p>Also available on <a href="https://sidequestvr.com/app/2058/galaxy-forces-vr">SideQuest</a> for free.</p>
 <p><video width="860" height="484" controls poster="/images/screen4_race13_860.jpg"><source src="gfvr16.mp4" type="video/mp4">Your browser does not support the video tag.</video></p>
+<p><img align="left" src="images/screen8_860.jpg" title="Galaxy Forces VR screenshot"></p>
 
 <table cellspacing="10" cellpadding="0">
 <tr>

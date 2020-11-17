@@ -691,8 +691,8 @@ public class Player : MonoBehaviour
 
             if (fX > 0.3f) bRight = true;
             if (fX < -0.3f) bLeft = true;
-            if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-            if (fY < -0.9f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
+            if (fY < -0.75f && bLeft == false && bRight == false) bAdjust = true;
+            if (fY < -0.85f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
 
             //keyboard and joystick for fire (is a trigger once event)
             if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;

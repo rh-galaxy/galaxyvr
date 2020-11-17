@@ -15,7 +15,7 @@
 		
 		$db = connect_to_db();
 
-		$query = "SELECT * FROM members_t WHERE oculus_id=".$userid;
+		$query = "SELECT * FROM members_t WHERE oculus_id='".$userid."'";
 		$result_member = mysqli_query($db, $query);
 
 		$num_rows = @mysqli_num_rows($result_member);
@@ -23,14 +23,14 @@
 			$row = @mysqli_fetch_assoc($result_member);
 			if($row['username'] == $user) {
 				//user and id match
-				$query = "UPDATE members_t SET last_access=".time()." WHERE (oculus_id=".$userid.")";
+				$query = "UPDATE members_t SET last_access=".time()." WHERE (oculus_id='".$userid."')";
 			} else {
 				//update user name in members_t since it has changed
-				$query = "UPDATE members_t SET username='".$user."',last_access=".time()." WHERE (oculus_id=".$userid.")";
+				$query = "UPDATE members_t SET username='".$user."',last_access=".time()." WHERE (oculus_id='".$userid."')";
 			}
 		} else if($num_rows==0) {
 			//insert new row in members_t
-			$query = "INSERT INTO members_t (username, oculus_id, last_access) VALUES('".$user."',".$userid.",".time().")";
+			$query = "INSERT INTO members_t (username, oculus_id, last_access) VALUES('".$user."','".$userid."',".time().")";
 		}
 		$result = mysqli_query($db, $query);
 		

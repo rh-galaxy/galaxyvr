@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     /**/public Transform cameraRig;
 
     internal static bool bValveDevicePresent = false;
-    internal static ulong iUserID = 1;
+    internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
     internal static bool bUserValid = false;
     internal static bool bNoHiscore = false;
@@ -159,14 +159,13 @@ public class GameManager : MonoBehaviour
         bool bSuccess = SteamUserStats.RequestCurrentStats();
 
         // get user name
-        iUserID = SteamUser.GetSteamID().m_SteamID;
+        szUserID = SteamUser.GetSteamID().m_SteamID.ToString();
         szUser = "s_" + SteamFriends.GetPersonaName();
         bUserValid = true;
 
-        if (XRDevice.isPresent)
+        if (XRDevice.isPresent && SteamVR.initializedState!=SteamVR.InitializedStates.InitializeFailure)
         {
             bValveDevicePresent = true;
-
             SteamVR.settings.lockPhysicsUpdateRateToRenderFrequency = false;
         }
 
@@ -187,7 +186,7 @@ public class GameManager : MonoBehaviour
     bool bSteamOverlayActive = false;
     private void OnGameOverlayActivated(GameOverlayActivated_t pCallback)
     {
-        bSteamOverlayActive = pCallback.m_bActive == 1;
+        bSteamOverlayActive = (pCallback.m_bActive == 1);
         Debug.Log("Steam overlay active " + pCallback.m_bActive);
     }
 
