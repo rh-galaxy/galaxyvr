@@ -37,7 +37,8 @@ square_start("'100%'");
 	require_once("checkparams.php");
 	
 	$name = $_GET["Name"];
-	$paramArray = array($name);
+	$id = $_GET["Id"];
+	$paramArray = array($name,$id);
 	if(checkstring($paramArray)) {
 		echo "<h3>Score for ".$name."</h3>";
 	
@@ -60,8 +61,8 @@ square_start("'100%'");
 						$row = @mysqli_fetch_assoc($result);
 					
 						//should only result in one row (or 0)
-						$select_string = "SELECT achievements_t.name AS Name, achievements_t.level AS Level, achievements_t.score AS Score, levels_t.is_time AS is_time, levels_t.limit1 AS limit1, levels_t.limit2 AS limit2, levels_t.limit3 AS limit3".
-							" FROM achievements_t, levels_t WHERE achievements_t.level=levels_t.level AND achievements_t.level='".$row['level']."' AND achievements_t.name='".$name."'";
+						$select_string = "SELECT achievements_t.level AS Level, achievements_t.score AS Score, levels_t.is_time AS is_time, levels_t.limit1 AS limit1, levels_t.limit2 AS limit2, levels_t.limit3 AS limit3".
+							" FROM achievements_t, levels_t WHERE achievements_t.level=levels_t.level AND achievements_t.level='".$row['level']."' AND achievements_t.user_id='".$id."'";
 					
 						$result2 = @mysqli_query($db, $select_string);
 

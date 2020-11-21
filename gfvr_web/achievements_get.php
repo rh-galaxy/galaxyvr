@@ -51,7 +51,7 @@
 //part 1 (per level) limits and player score
 						$score = -1;
 						$row = @mysqli_fetch_assoc($result);
-						$select_string = "SELECT achievements_t.score AS Score FROM achievements_t WHERE achievements_t.name='".$user."' AND achievements_t.level='".$row['Level']."'";
+						$select_string = "SELECT achievements_t.score AS Score FROM achievements_t WHERE achievements_t.user_id='".$userid."' AND achievements_t.level='".$row['Level']."'";
 
 						$result2 = @mysqli_query($db, $select_string);
 						// succeeded
@@ -69,13 +69,15 @@
 //part 2 (per level) record scores 1st-3rd place
 						$sort = "DESC";
 						if($row['IsTime'] != 0) $sort = "ASC";
-						$select_string = "SELECT achievements_t.name AS Name, achievements_t.score AS Score FROM achievements_t WHERE achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
-						//achievements_t.steam=".$steam." AND
+						$select_string = "SELECT members_t.oculus_id AS Id, achievements_t.score AS Score, members_t.username AS Name FROM achievements_t, members_t WHERE members_t.oculus_id=achievements_t.user_id AND achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
 						
 						$result2 = @mysqli_query($db, $select_string);
 
 						if($result2) {
 							$num_rows2 = @mysqli_num_rows($result2);
+							$id1 = "0";
+							$id2 = "0";
+							$id3 = "0";
 							for($j=0; $j < 3; $j++) {
 								if($j>=$num_rows2) {
 									echo "\"_None\" ";
@@ -84,11 +86,15 @@
 									// a bit slower but easier to read
 									$row2 = @mysqli_fetch_assoc($result2);
 
-									//name, score
+									//name, score, id
 									echo "\"".$row2['Name']."\" ";
 									echo $row2['Score']." ";
+									if($j==0) $id1 = $row2['Id'];
+									if($j==1) $id2 = $row2['Id'];
+									if($j==2) $id3 = $row2['Id'];
 								}
 							}
+							echo $id1." ".$id2." ".$id3." "; //patch in id last for version compatibility
 						}
 						echo "\n";
 ////////////////////////////////////////////////////////////////////////////////////////////

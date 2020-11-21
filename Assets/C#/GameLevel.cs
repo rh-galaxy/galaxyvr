@@ -316,8 +316,6 @@ public class GameLevel : MonoBehaviour
     byte[] bytes;
     public bool LoadBegin()
     {
-/**///float t1 = Time.realtimeSinceStartup;
-
         bool bIsCustom = iLevelIndex >= 200;
         int substeps = 6;
         if (iLoadBeginState == 0)
@@ -410,12 +408,10 @@ public class GameLevel : MonoBehaviour
             thread.Priority = System.Threading.ThreadPriority.Lowest;
             thread.Start();
 
-///**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             iLoadBeginState = 0;
             return true;
         }
 
-///**/Debug.Log("LoadBegin: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         return false;
     }
 
@@ -453,7 +449,7 @@ public class GameLevel : MonoBehaviour
 
             //(user name not currently used in Player)
             string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
-            /**/player.Init(szUser, 0, stPlayerStartPos[0], this);
+            player.Init(szUser, 0, stPlayerStartPos[0], this);
 ///**/Debug.Log("LoadDesPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             if (bFinished) iFinalizeCounter++;
         }
@@ -1143,7 +1139,7 @@ public class GameLevel : MonoBehaviour
                         oMaterial = Resources.Load("RedBricks", typeof(Material)) as Material;
                     else oMaterial = Resources.Load("GreyBricks", typeof(Material)) as Material;
 
-                    oObj.transform.position = new Vector3(vPos.x, vPos.y, /**/-.15f - fBumpHeight);
+                    oObj.transform.position = new Vector3(vPos.x, vPos.y, -.15f - fBumpHeight);
                     oObj.transform.localScale = new Vector3(16.0f / 320.0f, 8.0f / 320.0f, 1.0f);
                     oObj.GetComponent<MeshRenderer>().material = oMaterial;
 
@@ -1177,7 +1173,7 @@ public class GameLevel : MonoBehaviour
 
                     //there are no or only negative bumps in the mesh on these tiles, so we need not offset z by -fBumpHeight,
                     // still we offset it by a little to not collide with the mesh that is under it
-                    oObj.transform.position = new Vector3(vPos.x, vPos.y, /**/-.15f - 0.008f);
+                    oObj.transform.position = new Vector3(vPos.x, vPos.y, -.15f - 0.008f);
                     oObj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
                     oObj.GetComponent<MeshRenderer>().material = oMaterial;
 

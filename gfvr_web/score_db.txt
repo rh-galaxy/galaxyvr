@@ -3,14 +3,20 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: s679.loopia.se
--- Tid vid skapande: 15 maj 2020 kl 05:10
--- Serverversion: 10.2.31-MariaDB-log
--- PHP-version: 7.4.4
+-- Tid vid skapande: 21 nov 2020 kl 09:09
+-- Serverversion: 10.3.27-MariaDB-log
+-- PHP-version: 7.4.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Databas: `galaxy_forces_vr_com`
@@ -25,6 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `achievements_t` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `user_id` varchar(34) NOT NULL,
   `name` varchar(34) NOT NULL,
   `level` varchar(40) NOT NULL,
   `score` int(11) NOT NULL,
@@ -119,7 +126,7 @@ INSERT INTO `levels_t` (`id`, `level`, `is_time`, `ordering`, `limit1`, `limit2`
 
 CREATE TABLE `members_t` (
   `id` int(11) NOT NULL,
-  `oculus_id` bigint(20) NOT NULL,
+  `oculus_id` varchar(34) NOT NULL,
   `username` varchar(34) NOT NULL,
   `last_access` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -141,10 +148,12 @@ CREATE TABLE `statistics_t` (
 --
 
 INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
-(1, 'index.php', 9903),
-(2, 'achievements_post.php', 1011),
-(5, 'privacy.php', 25),
-(6, 'achievements_get.php', 6766);
+(1, 'index.php', 13445),
+(2, 'achievements_post.php', 1952),
+(5, 'privacy.php', 62),
+(6, 'achievements_get.php', 9945),
+(8, 'mpgames_create.php', 4),
+(9, 'mpgames_join.php', 2);
 
 --
 -- Index för dumpade tabeller
@@ -200,5 +209,9 @@ ALTER TABLE `members_t`
 -- AUTO_INCREMENT för tabell `statistics_t`
 --
 ALTER TABLE `statistics_t`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

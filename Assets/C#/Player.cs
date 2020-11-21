@@ -9,8 +9,10 @@ public class Player : MonoBehaviour
 
     public GameObject oShip;
     public ParticleSystem oThruster;
+    ParticleSystem.EmissionModule oThrusterEmission;
     public ParticleSystem oExplosionParticle;
     public ParticleSystem oWallsColl;
+    ParticleSystem.EmissionModule oWallsCollEmission;
     public GameObject oShipBody;
     public Material oShipMaterial;
     public GameStatus status;
@@ -104,8 +106,10 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         bInited = false;
-        oThruster.enableEmission = false;
-        oWallsColl.enableEmission = false;
+        oThrusterEmission = oThruster.emission;
+        oThrusterEmission.enabled = false;
+        oWallsCollEmission = oWallsColl.emission;
+        oWallsCollEmission.enabled = false;
         asm = GameObject.Find("AudioStateMachineDND").GetComponent<AudioStateMachine>();
     }
 
@@ -258,7 +262,7 @@ public class Player : MonoBehaviour
             {
                 c = collision.GetContact(0);
                 oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
-                oWallsColl.enableEmission = true;
+                oWallsCollEmission.enabled = true;
             }
 
             oASGeneral.PlayOneShot(oClipLand);
@@ -282,7 +286,7 @@ public class Player : MonoBehaviour
 
             c = collision.GetContact(0);
             oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
-            oWallsColl.enableEmission = true;
+            oWallsCollEmission.enabled = true;
         }
 
         //collide with enemy body
@@ -336,7 +340,7 @@ public class Player : MonoBehaviour
 
             //damage taken?
             oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .0f);
-            oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
+            oWallsCollEmission.enabled = !(fShipHealth >= fLastShipHealth);
 
             //landing stable
             if (fDiff < 3.0f)
@@ -360,7 +364,7 @@ public class Player : MonoBehaviour
 
             //damage taken?
             oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .0f);
-            oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
+            oWallsCollEmission.enabled = !(fShipHealth >= fLastShipHealth);
         }
     }
 
@@ -372,7 +376,7 @@ public class Player : MonoBehaviour
         {
             fLandTime = 0.0f;
             bLanded = false;
-            oWallsColl.enableEmission = false;
+            oWallsCollEmission.enabled = false;
         }
 
         //map or door, or map decorations
@@ -382,7 +386,7 @@ public class Player : MonoBehaviour
             szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
         {
             bScrapeFadeOut = true;
-            oWallsColl.enableEmission = false;
+            oWallsCollEmission.enabled = false;
         }
     }
 
@@ -560,7 +564,7 @@ public class Player : MonoBehaviour
         float fDistNow = (stValues.vPos - stValues.l1).magnitude;
         if (fDistNow > 1.0f) fDistNow = 1.0f;
 
-        float fScore = fDiff /**// fDistNow;
+        float fScore = fDiff / fDistNow;
         return fScore;
     }
     //score for speed
@@ -846,14 +850,14 @@ public class Player : MonoBehaviour
                 //using that does not work: (oEM.enabled = false;), but oThruster.enableEmission = false; is depricated...
                 if (fTemp != 0)
                 {
-                    oThruster.enableEmission = true;
+                    oThrusterEmission.enabled = true;
                     bEngineFadeOut = false;
                     oASEngine.volume = 0.40f;
                     oASEngine.Play();
                 }
                 else
                 {
-                    oThruster.enableEmission = false;
+                    oThrusterEmission.enabled = false;
                     bEngineFadeOut = true;
                 }
             }
@@ -1084,7 +1088,7 @@ public class Player : MonoBehaviour
 
         if (fAcceleration != 0.0f)
         {
-            oThruster.enableEmission = false;
+            oThrusterEmission.enabled = false;
             bEngineFadeOut = true;
         }
         fAcceleration = 0.0f;
