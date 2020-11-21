@@ -8,11 +8,11 @@ function print_hiscore()
 
 	if($db) {
 
-		$select_string = "SELECT scr_t.name, SUM(scr_t.pos_score) AS score_sum FROM".
-			" (SELECT achievements_t.name AS name, achievements_t.level, achievements_t.score, levels_t.is_time, levels_t.limit3, levels_t.limit3 -achievements_t.score AS pos_score FROM achievements_t, levels_t WHERE achievements_t.level = levels_t.level AND levels_t.is_time=1".
+		$select_string = "SELECT scr_t.id, scr_t.name, SUM(scr_t.pos_score) AS score_sum FROM".
+			" (SELECT members_t.oculus_id AS id, members_t.username AS name, achievements_t.level, achievements_t.score, levels_t.is_time, levels_t.limit3, levels_t.limit3 -achievements_t.score AS pos_score FROM members_t, achievements_t, levels_t WHERE members_t.oculus_id=achievements_t.user_id AND achievements_t.level = levels_t.level AND levels_t.is_time=1".
 			" UNION ALL".
-			" SELECT achievements_t.name AS name, achievements_t.level, achievements_t.score, levels_t.is_time, levels_t.limit3, achievements_t.score AS pos_score FROM achievements_t, levels_t WHERE achievements_t.level = levels_t.level AND levels_t.is_time=0) scr_t".
-			" GROUP BY scr_t.name".
+			" SELECT members_t.oculus_id AS id, members_t.username AS name, achievements_t.level, achievements_t.score, levels_t.is_time, levels_t.limit3, achievements_t.score AS pos_score FROM members_t, achievements_t, levels_t WHERE members_t.oculus_id=achievements_t.user_id AND achievements_t.level = levels_t.level AND levels_t.is_time=0) scr_t".
+			" GROUP BY scr_t.id".
 			" ORDER BY score_sum DESC LIMIT 0,50";
 
 		$result = @mysqli_query($db, $select_string);
@@ -43,7 +43,7 @@ function print_hiscore()
 						echo ($i+1)."&nbsp;";
 						echo "</i></td>";
 						
-						echo "<td><a href=\"print_hiscore_for_user.php?Name=".$row["name"]."\">";
+						echo "<td><a href=\"print_hiscore_for_user.php?Name=".$row["name"]."&Id=".$row["id"]."\">";
 						if(strlen($row["name"])>26) echo substr($row["name"], 0, 24)."..";
 						else echo $row["name"];
 						echo "</a></td>";
@@ -81,7 +81,7 @@ function print_hiscore()
 					$row = @mysqli_fetch_assoc($result);
 					$sort = "DESC";
 					if($row["IsTime"] != 0) $sort = "ASC";
-					$select_string  = "SELECT achievements_t.name AS Name, achievements_t.score AS Score FROM achievements_t WHERE achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
+					$select_string  = "SELECT members_t.username AS Name, achievements_t.score AS Score FROM achievements_t, members_t WHERE achievements_t.user_id=members_t.oculus_id AND achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
 					$result2 = @mysqli_query($db, $select_string);
 
 

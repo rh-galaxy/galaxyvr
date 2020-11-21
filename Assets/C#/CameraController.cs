@@ -191,7 +191,7 @@ public class CameraController : MonoBehaviour
         //direction of ray
         oRayQuad.transform.SetPositionAndRotation((vHitPoint + vOrigin) / 2.0f, qOriginDir);
         oRayQuad.transform.Rotate(new Vector3(90, 0, 0));
-        oRayQuad.transform.localScale = new Vector3(0.05f, ((vHitPoint - vOrigin).magnitude - 0.14f)/2.0f, 0.05f);
+        oRayQuad.transform.localScale = new Vector3(0.05f, ((vHitPoint - vOrigin).magnitude - 0.07f)/2.0f, 0.05f);
     }
 
     private void Update()

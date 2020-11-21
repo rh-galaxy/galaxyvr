@@ -12,10 +12,13 @@ public struct LevelInfo
     public int iLastScoreMs; //your last
     public int iBestScoreMs; //your best
 
+    public string szWRId1;
     public string szWRName1;
     public int iWRScore1;
+    public string szWRId2;
     public string szWRName2;
     public int iWRScore2;
+    public string szWRId3;
     public string szWRName3;
     public int iWRScore3;
 }
@@ -83,7 +86,14 @@ public class HttpHiscore
                 stLevel.szWRName2 = szWithin[4].Trim(' ');
                 stLevel.iWRScore2 = int.Parse(szWithin[5]);
                 stLevel.szWRName3 = szWithin[6].Trim(' ');
-                stLevel.iWRScore3 = int.Parse(szWithin[7]);
+
+                szTokens = szWithin[7].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                stLevel.iWRScore3 = int.Parse(szTokens[0]);
+
+                if (szTokens.Length < 4) continue;
+                stLevel.szWRId1 = szTokens[1].Trim(' ');
+                stLevel.szWRId2 = szTokens[2].Trim(' ');
+                stLevel.szWRId3 = szTokens[3].Trim(' ');
 
                 oLevelList.Add(stLevel);
             }
@@ -130,11 +140,11 @@ public class HttpHiscore
         bIsDone = true;
     }
 
-    public IEnumerator GetReplay(string i_szLevel, string i_szName, Replay i_oResult)
+    public IEnumerator GetReplay(string i_szLevel, string i_szId, Replay i_oResult)
     {
         bIsDone = false;
 
-        string url = WEB_HOST + "/hiscore_getreplay2.php?Level=" + i_szLevel + "&Name=" + UnityWebRequest.EscapeURL(i_szName);
+        string url = WEB_HOST + "/hiscore_getreplay2.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 

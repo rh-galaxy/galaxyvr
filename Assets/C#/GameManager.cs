@@ -652,13 +652,13 @@ public class GameManager : MonoBehaviour
                     || (Menu.bWorldBestReplay3 && stLevel.iWRScore3 != -1)
                     || (Menu.bYourBestReplay && stLevel.iBestScoreMs != -1))
                 {
-                    string szReplayName = null;
-                    if (Menu.bYourBestReplay) szReplayName = GameManager.szUser;
-                    if (Menu.bWorldBestReplay1) szReplayName = stLevel.szWRName1;
-                    if (Menu.bWorldBestReplay2) szReplayName = stLevel.szWRName2;
-                    if (Menu.bWorldBestReplay3) szReplayName = stLevel.szWRName3;
+                    string szReplayId = null;
+                    if (Menu.bYourBestReplay) szReplayId = GameManager.szUserID;
+                    if (Menu.bWorldBestReplay1) szReplayId = stLevel.szWRId1;
+                    if (Menu.bWorldBestReplay2) szReplayId = stLevel.szWRId2;
+                    if (Menu.bWorldBestReplay3) szReplayId = stLevel.szWRId3;
 
-                    StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayName, oReplay));
+                    StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayId, oReplay));
                     iState++; //load replay
                     StartFade(0.3f, 0.0f, true);
 
@@ -773,7 +773,7 @@ public class GameManager : MonoBehaviour
                             if (!GameLevel.bRunReplay && (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel))
                             {
                                 //protect against huge replays (medium blob in server db is 16MB but no need to support that large)
-                                if (oReplay.GetSize() < 4 * 1024 * 1024) //at 200 bytes per sec this is ~6 hours, and normal rate is ~100 Bps.
+                                if (oReplay.GetSize() < 3 * 1024 * 1024) //at 200 bytes per sec this is ~4.5 hours, and normal rate is ~100 Bps.
                                 {
                                     //finished ok, and with a new score or better than before, then send
                                     if (stLevel.iBestScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.iBestScoreMs) ||

@@ -565,6 +565,13 @@ public class Menu : MonoBehaviour
         }
         if (iIncrementalInit == 2)
         {
+            //to fix 70 warnings about not needed CanvasRenderer in 2020.1
+            {
+                if (oTMProBaseObj.TryGetComponent<CanvasRenderer>(out CanvasRenderer cr0)) Destroy(cr0);
+                if (oTMProBaseObj1.TryGetComponent<CanvasRenderer>(out CanvasRenderer cr1)) Destroy(cr1);
+                if (oTMProBaseObj2.TryGetComponent<CanvasRenderer>(out CanvasRenderer cr2)) Destroy(cr2);
+            }
+
             oMaterialOctagonLocked = Resources.Load("LevelOctagonGrey", typeof(Material)) as Material;
             oMaterialOctagonUnlocked = Resources.Load("LevelOctagon", typeof(Material)) as Material;
             oMaterialOctagonHighlighted = Resources.Load("LevelOctagonHigh", typeof(Material)) as Material;
