@@ -173,21 +173,16 @@ public class MeshGenerator : MonoBehaviour
     {
         if (n == 0)
         {
-//float t1 = Time.realtimeSinceStartup;
             //CreateWallMesh() must be done before
             SetCreateWallMeshToUnity();
-//Debug.Log("CreateWallMesh: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
         else if (n == 1)
         {
-//float t1 = Time.realtimeSinceStartup;
             //generate 2d collission
             Generate2DColliders();
-//Debug.Log("Generate2DColliders: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
         else if (n == 2)
         {
-//float t1 = Time.realtimeSinceStartup;
             //set the map mesh
             Mesh mapMesh = new Mesh();
             mapMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
@@ -199,7 +194,6 @@ public class MeshGenerator : MonoBehaviour
             //and material
             map0.GetComponent<MeshRenderer>().material = oMat;
 
-//Debug.Log("SetMeshToUnity: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             return true;
         }
         return false;
@@ -266,6 +260,7 @@ public class MeshGenerator : MonoBehaviour
         wallMesh.uv = wallUVs.ToArray();
 
         walls.mesh = wallMesh;
+        walls.GetComponent<MeshCollider>().sharedMesh = wallMesh;
 
         //and material
         walls.GetComponent<MeshRenderer>().material = oMatWalls;

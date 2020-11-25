@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamVR", "SteamVR.csproj", "{9D4AFFE5-C252-4739-CA47-72C467A8EF86}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{3C510C45-17BA-9778-D9EF-66F423E69FDE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8} = {49BA1C69-6104-41AC-A5D8-B54FA9F696E8}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{1FB3D9ED-F4C3-2E98-7733-7C45506FC9EA}"
 EndProject
@@ -18,6 +23,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{6EAF646F-C029-C9B6-D276-6E5B804F076B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamVR_Windows_EditorHelper", "SteamVR_Windows_EditorHelper.csproj", "{82DDD9DC-ADDF-0E83-8D6F-465D1D4896C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network", "lidgren-network-gen3-master\Lidgren.Network\Lidgren.Network.csproj", "{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,8 +68,15 @@ Global
 		{82DDD9DC-ADDF-0E83-8D6F-465D1D4896C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82DDD9DC-ADDF-0E83-8D6F-465D1D4896C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82DDD9DC-ADDF-0E83-8D6F-465D1D4896C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7FF34B5-AC93-47AE-AC15-2336E12351DD}
 	EndGlobalSection
 EndGlobal

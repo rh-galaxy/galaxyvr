@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if !DISABLESTEAMWORKS
 using Valve.VR;
-#endif
 
 public class Player : MonoBehaviour
 {
@@ -11,8 +9,10 @@ public class Player : MonoBehaviour
 
     public GameObject oShip;
     public ParticleSystem oThruster;
+    ParticleSystem.EmissionModule oThrusterEmission;
     public ParticleSystem oExplosionParticle;
     public ParticleSystem oWallsColl;
+    ParticleSystem.EmissionModule oWallsCollEmission;
     public GameObject oShipBody;
     public Material oShipMaterial;
     public GameStatus status;
@@ -106,8 +106,10 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         bInited = false;
-        oThruster.enableEmission = false;
-        oWallsColl.enableEmission = false;
+        oThrusterEmission = oThruster.emission;
+        oThrusterEmission.enabled = false;
+        oWallsCollEmission = oWallsColl.emission;
+        oWallsCollEmission.enabled = false;
         asm = GameObject.Find("AudioStateMachineDND").GetComponent<AudioStateMachine>();
     }
 
@@ -260,7 +262,7 @@ public class Player : MonoBehaviour
             {
                 c = collision.GetContact(0);
                 oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
-                oWallsColl.enableEmission = true;
+                oWallsCollEmission.enabled = true;
             }
 
             oASGeneral.PlayOneShot(oClipLand);
@@ -284,7 +286,7 @@ public class Player : MonoBehaviour
 
             c = collision.GetContact(0);
             oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
-            oWallsColl.enableEmission = true;
+            oWallsCollEmission.enabled = true;
         }
 
         //collide with enemy body
@@ -338,7 +340,7 @@ public class Player : MonoBehaviour
 
             //damage taken?
             oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .0f);
-            oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
+            oWallsCollEmission.enabled = !(fShipHealth >= fLastShipHealth);
 
             //landing stable
             if (fDiff < 3.0f)
@@ -362,7 +364,7 @@ public class Player : MonoBehaviour
 
             //damage taken?
             oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .0f);
-            oWallsColl.enableEmission = !(fShipHealth >= fLastShipHealth);
+            oWallsCollEmission.enabled = !(fShipHealth >= fLastShipHealth);
         }
     }
 
@@ -374,7 +376,7 @@ public class Player : MonoBehaviour
         {
             fLandTime = 0.0f;
             bLanded = false;
-            oWallsColl.enableEmission = false;
+            oWallsCollEmission.enabled = false;
         }
 
         //map or door, or map decorations
@@ -384,7 +386,7 @@ public class Player : MonoBehaviour
             szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
         {
             bScrapeFadeOut = true;
-            oWallsColl.enableEmission = false;
+            oWallsCollEmission.enabled = false;
         }
     }
 
@@ -562,7 +564,7 @@ public class Player : MonoBehaviour
         float fDistNow = (stValues.vPos - stValues.l1).magnitude;
         if (fDistNow > 1.0f) fDistNow = 1.0f;
 
-        float fScore = fDiff /**// fDistNow;
+        float fScore = fDiff / fDistNow;
         return fScore;
     }
     //score for speed
@@ -682,76 +684,33 @@ public class Player : MonoBehaviour
         {
             bool bNewFireState = false;
             bThrottle = bLeft = bRight = bAdjust = false;
-            
-            if (!bMotionMovementEnabled)
+
+            //get input from joysticks
+            float fX = SteamVR_Actions.default_Steering.axis.x;
+            float fY = SteamVR_Actions.default_Steering.axis.y;
+            float fTrg2 = SteamVR_Actions.default_Throttle.axis;
+
+            if (fTrg2 > 0.3f) bThrottle = true;
+            if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;
+
+            if (fX > 0.3f) bRight = true;
+            if (fX < -0.3f) bLeft = true;
+            if (fY < -0.75f && bLeft == false && bRight == false) bAdjust = true;
+            if (fY < -0.85f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
+
+            //keyboard and joystick for fire (is a trigger once event)
+            if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
+
+            if (bMotionMovementEnabled)
             {
-#if DISABLESTEAMWORKS
-                //get input from joysticks
-                float fX = Input.GetAxisRaw("Horizontal");                                          //axis x (x left stick)
-                float fY = Input.GetAxisRaw("Vertical");                                            //axis y (y left stick)
-                float fX2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickHorizontal"); //axis 4 (x right stick)
-                float fY2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");   //axis 5 (y right stick)
-                float fTrg1 = Input.GetAxisRaw("Oculus_CrossPlatform_PrimaryIndexTrigger");         //axis 9    must be fire to support   xbox, vive, touch
-                float fTrg2 = Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryIndexTrigger");       //axis 10   must be thrust to support xbox, vive, touch
-
-                if (fX > 0.3f) bRight = true;
-                if (fX < -0.3f) bLeft = true;
-                if (fX2 > 0.3f) bRight = true;
-                if (fX2 < -0.3f) bLeft = true;
-                if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-                if (fY2 < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-
-                //there is something wrong here, Oculus Touch A button is swapped with B, making it
-                //not work to have fire on A without having it on B. this does not happen in an empty project
-                if (fY2 > 0.5f || fTrg2 > 0.3f) bThrottle = true;
-                if (Input.GetButton("Button2")) bThrottle = true; //button 2 (X)
-                if (Input.GetButton("Button3")) bThrottle = true; //button 3 (Y)
-                //keyboard and joystick for fire (is a trigger once event)
-
-                if (fTrg1 > 0.3f) bNewFireState = true; //left trigger
-                if (Input.GetButton("Button0")) bNewFireState = true; //button 0 (A)
-                if (Input.GetButton("Button1")) bNewFireState = true; //button 1 (B)
-#else
-                //get input from joysticks
-                float fX = SteamVR_Actions.default_Steering.axis.x;
-                float fY = SteamVR_Actions.default_Steering.axis.y;
-                float fTrg2 = SteamVR_Actions.default_Throttle.axis;
-
-                if (fX > 0.3f) bRight = true;
-                if (fX < -0.3f) bLeft = true;
-                if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-                /**/if (fY < -0.9f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
-
-                if (fTrg2 > 0.3f) bThrottle = true;
-                if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;
-
-                //keyboard and joystick for fire (is a trigger once event)
-                if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
-#endif
-            }
-            else
-            {
-                //get input from joysticks
-                float fX = SteamVR_Actions.default_Steering.axis.x;
-                float fY = SteamVR_Actions.default_Steering.axis.y;
-                float fTrg2 = SteamVR_Actions.default_Throttle.axis;
-
-                if (fX > 0.3f) bRight = true;
-                if (fX < -0.3f) bLeft = true;
-                if (fY < -0.5f && bLeft == false && bRight == false) bAdjust = true;
-                /**/if (fY < -0.9f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
-
-                //keyboard and joystick for fire (is a trigger once event)
-                if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
-
                 fMovementTimer += Time.fixedDeltaTime;
                 if(!bLanded) fFullThrottleTimer -= Time.fixedDeltaTime;
                 else fFullThrottleTimer = 0.3f;
 
-                if (fTrg2 > 0.3f && !bAdjust && !bLeft && !bRight)
+                if (bThrottle && !bAdjust && !bRight && !bLeft)
                 {
                     //new move descicion
-                    if(fMovementTimer > 0.07f)
+                    if (fMovementTimer > 0.07f)
                     {
                         fMovementTimer = 0;
                         if (fFullThrottleTimer > 0)
@@ -783,7 +742,6 @@ public class Player : MonoBehaviour
                         bLeft = ALLMOVES[iBestMove].bLeft;
                         bRight = ALLMOVES[iBestMove].bRight;
                     }
-
                 }
             }
 
@@ -892,14 +850,14 @@ public class Player : MonoBehaviour
                 //using that does not work: (oEM.enabled = false;), but oThruster.enableEmission = false; is depricated...
                 if (fTemp != 0)
                 {
-                    oThruster.enableEmission = true;
+                    oThrusterEmission.enabled = true;
                     bEngineFadeOut = false;
-                    oASEngine.volume = 0.75f;
+                    oASEngine.volume = 0.40f;
                     oASEngine.Play();
                 }
                 else
                 {
-                    oThruster.enableEmission = false;
+                    oThrusterEmission.enabled = false;
                     bEngineFadeOut = true;
                 }
             }
@@ -1130,7 +1088,7 @@ public class Player : MonoBehaviour
 
         if (fAcceleration != 0.0f)
         {
-            oThruster.enableEmission = false;
+            oThrusterEmission.enabled = false;
             bEngineFadeOut = true;
         }
         fAcceleration = 0.0f;
