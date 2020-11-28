@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     Replay oReplay = new Replay(); //create one replay... this is recycled during the session
 
+    SendRecv oSendRecv = new SendRecv();
+
 #if LOGPROFILERDATA
     int logProfilerFrameCnt = 0;
     int logProfilerFileCnt = 0;
@@ -491,6 +493,9 @@ public class GameManager : MonoBehaviour
     //float t1;
     float fRecenterTimer = 0.0f;
     float fLongpressTimer = 0.0f;
+    float fMultiplayerTimer = 20.0f;
+    bool bMultiplayerUpdateJoinInProgress = false;
+    bool bMultiplayerUpdateCreateInProgress = false;
     void Update()
     {
 #if LOGPROFILERDATA
@@ -605,9 +610,65 @@ public class GameManager : MonoBehaviour
 
         UpdateFade();
 
+        //in menu?
+        if (iState >= 1 || iState <= 4)
+        {
+            if(Menu.bMCreate)
+            {
+                oSendRecv.bRunJoin = false;
+                oSendRecv.bRunCreate = true;
+                fMultiplayerTimer = 30; //make it happen below
+                Menu.bMCreate = false;
+            }
+            if (Menu.iMJoin > 0)
+            {
+                //todo action
+                Menu.iMJoin = 0;
+            }
+            if (Menu.bMCancelAll)
+            {
+                //todo action
+                Menu.bMCancelAll = false;
+            }
+
+            fMultiplayerTimer += Time.unscaledDeltaTime;
+            if (fMultiplayerTimer > 30)
+            {
+                if (oSendRecv.bRunJoin && bMultiplayerUpdateJoinInProgress)
+                {
+                    oSendRecv.bIsJoinDone = false;
+                    StartCoroutine(oSendRecv.UpdateJoin());
+                    bMultiplayerUpdateJoinInProgress = true;
+                }
+                if (oSendRecv.bRunCreate && !bMultiplayerUpdateCreateInProgress)
+                {
+                    oSendRecv.bIsCreateDone = false;
+                    StartCoroutine(oSendRecv.UpdateCreate());
+                    bMultiplayerUpdateCreateInProgress = true;
+                }
+                fMultiplayerTimer = 0;
+            }
+
+            if (bMultiplayerUpdateJoinInProgress)
+            {
+                if (oSendRecv.bIsJoinDone)
+                {
+                    bMultiplayerUpdateJoinInProgress = false;
+                    //todo action
+                }
+            }
+            if (bMultiplayerUpdateCreateInProgress)
+            {
+                if (oSendRecv.bIsCreateDone)
+                {
+                    bMultiplayerUpdateCreateInProgress = false;
+                    //todo action
+                }
+            }
+        }
+
         //to ignore input below, only way back is to unpause
         if (bPause) return;
-
 
         //the main state machine
         switch (iState)

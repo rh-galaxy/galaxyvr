@@ -403,6 +403,9 @@
     <Reference Include="Unity.Analytics.Tracker">
       <HintPath>D:/Prog/unity/Galaxy Forces VR_multip/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
+    <Reference Include="Open.Nat">
+      <HintPath>D:/Prog/unity/Galaxy Forces VR_multip/Assets/Open.Nat/Open.Nat.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.10f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
     </Reference>

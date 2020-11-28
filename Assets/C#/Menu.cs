@@ -12,6 +12,9 @@ public class Menu : MonoBehaviour
     public static bool bLevelSelected = false;
     public static bool bLevelUnSelected = false;
     public static bool bLevelPlay = false;
+    public static bool bMCreate = false;
+    public static int iMJoin = 0;
+    public static bool bMCancelAll = false;
     public static bool bYourBestReplay = false;
     public static bool bWorldBestReplay1 = false;
     public static bool bWorldBestReplay2 = false;
@@ -314,6 +317,15 @@ public class Menu : MonoBehaviour
     Texture2D oMiniMapTex;
 
     public GameObject oTMProBaseObj, oTMProBaseObj1, oTMProBaseObj2;
+
+    /**/
+    public GameObject oMultiplayerInfoContainer;
+    public GameObject oMJoinText1, oMJoinText2, oMJoinText3;
+    public GameObject oMPlayerText1, oMPlayerText2, oMPlayerText3, oMPlayerText4;
+    C_ItemInMenu oMCreate;
+    C_ItemInMenu oMJoin1, oMJoin2, oMJoin3;
+    C_ItemInMenu oMCancelAll;
+
     public GameObject oLevelInfoContainer;
     public GameObject oLevelInfoLimitsContainer;
     public GameObject oWRNameText1, oWRNameText2, oWRNameText3;
@@ -370,6 +382,40 @@ public class Menu : MonoBehaviour
         else szTime += iMs.ToString("000");
 
         return szTime;
+    }
+
+    public void SetNetworkInfo()
+    {
+        Vector3 vPos = new Vector3(-8.9f, 3.0f, -0.1f);
+        if (oMCreate != null) oMCreate.Reinit(vPos, "", "MCreate", 4.0f, 4.0f);
+        else oMCreate = new C_ItemInMenu(vPos, "", "MCreate", 4.0f, 4.0f);
+        oMCreate.oLevelQuad.SetActive(true);
+        oMCreate.oLevelText.SetActive(false);
+
+        vPos = new Vector3(-8.9f, -0.5f, -0.1f);
+        if (oMJoin1 != null) oMJoin1.Reinit(vPos, "", "MJoin1", 4.0f, 4.0f);
+        else oMJoin1 = new C_ItemInMenu(vPos, "", "MJoin1", 4.0f, 4.0f);
+        oMJoin1.oLevelQuad.SetActive(true);
+        oMJoin1.oLevelText.SetActive(false);
+        //todo set text, set active if text
+
+        vPos = new Vector3(-8.9f, -1.5f, -0.1f);
+        if (oMJoin2 != null) oMJoin2.Reinit(vPos, "", "MJoin2", 4.0f, 4.0f);
+        else oMJoin2 = new C_ItemInMenu(vPos, "", "MJoin2", 4.0f, 4.0f);
+        oMJoin2.oLevelQuad.SetActive(true);
+        oMJoin2.oLevelText.SetActive(false);
+        //todo set text, set active if text
+
+        vPos = new Vector3(-8.9f, -2.5f, -0.1f);
+        if (oMJoin3 != null) oMJoin3.Reinit(vPos, "", "MJoin3", 4.0f, 4.0f);
+        else oMJoin3 = new C_ItemInMenu(vPos, "", "MJoin3", 4.0f, 4.0f);
+        oMJoin3.oLevelQuad.SetActive(true);
+        oMJoin3.oLevelText.SetActive(false);
+        //todo set text, set active if text
+
+        vPos = new Vector3(1.0f, -1.5f, -0.1f);
+        if (oMCancelAll != null) oMCancelAll.Reinit(vPos, "", "MCancelAll", 4.0f, 4.0f);
+        else oMCancelAll = new C_ItemInMenu(vPos, "", "MCancelAll", 4.0f, 4.0f);
     }
 
     public void SetLevelInfoOff()
@@ -971,6 +1017,38 @@ public class Menu : MonoBehaviour
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
                 }
+
+                else if (oHitInfo.collider.name.CompareTo("MCreate") == 0)
+                {
+                    bMCreate = true;
+                    iAllowSelection = 20;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("MJoin1") == 0)
+                {
+                    iMJoin = 1;
+                    iAllowSelection = 20;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("MJoin2") == 0)
+                {
+                    iMJoin = 2;
+                    iAllowSelection = 20;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("MJoin3") == 0)
+                {
+                    iMJoin = 3;
+                    iAllowSelection = 20;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("MCancelAll") == 0)
+                {
+                    bMCancelAll = true;
+                    iAllowSelection = 20;
+                    bPlaySelectSound = true;
+                }
+
                 else if (oHitInfo.collider.name.CompareTo("Recenter") == 0 && !bRecenter)
                 {
                     bRecenter = true;

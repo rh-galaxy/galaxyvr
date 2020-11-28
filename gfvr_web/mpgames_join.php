@@ -16,7 +16,7 @@
 		if($num_rows > 0) {
 			for($i=0; $i < $num_rows; $i++) {
 				$row = @mysqli_fetch_assoc($result);
-				echo "\"".$row['username']."\" \"".$row['ip']."\"\n";
+				echo "\"".$row['username']."\" \"".$row['ip']."\"".$row['port']."\n";
 			}
 		} else {
 			echo "0\n";

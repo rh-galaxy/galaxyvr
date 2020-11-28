@@ -288,6 +288,9 @@
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>D:/Prog/unity/Galaxy Forces VR_multip/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
+    <Reference Include="Open.Nat">
+      <HintPath>D:/Prog/unity/Galaxy Forces VR_multip/Assets/Open.Nat/Open.Nat.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>D:/Prog/unity/Galaxy Forces VR_multip/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
