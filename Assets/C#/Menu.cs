@@ -297,6 +297,8 @@ public class Menu : MonoBehaviour
     internal Material oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
+        CreateNetworkInfo();
+
         //done incrementally in Update
     }
 
@@ -319,6 +321,7 @@ public class Menu : MonoBehaviour
     public GameObject oTMProBaseObj, oTMProBaseObj1, oTMProBaseObj2;
 
     /**/
+    bool bMCreateLocked, bMJoinLocked;
     public GameObject oMultiplayerInfoContainer;
     public GameObject oMJoinText1, oMJoinText2, oMJoinText3;
     public GameObject oMPlayerText1, oMPlayerText2, oMPlayerText3, oMPlayerText4;
@@ -384,47 +387,53 @@ public class Menu : MonoBehaviour
         return szTime;
     }
 
+    public void CreateNetworkInfo()
+    {
+        Vector3 vPos = new Vector3(-8.9f, 3.0f - 0.4f, -0.1f);
+        if (oMCreate == null) oMCreate = new C_ItemInMenu(vPos, "", "MCreate", 4.0f, 4.0f, Menu.theMenu.oMultiplayerInfoContainer);
+        oMCreate.oLevelText.SetActive(false);
+
+        vPos = new Vector3(-8.9f, -0.5f - 0.4f, -0.1f);
+        if (oMJoin1 == null) oMJoin1 = new C_ItemInMenu(vPos, "", "MJoin1", 4.0f, 4.0f, Menu.theMenu.oMultiplayerInfoContainer);
+        oMJoin1.oLevelText.SetActive(false);
+
+        vPos = new Vector3(-8.9f, -1.5f - 0.4f, -0.1f);
+        if (oMJoin2 == null) oMJoin2 = new C_ItemInMenu(vPos, "", "MJoin2", 4.0f, 4.0f, Menu.theMenu.oMultiplayerInfoContainer);
+        oMJoin2.oLevelText.SetActive(false);
+
+        vPos = new Vector3(-8.9f, -2.5f - 0.4f, -0.1f);
+        if (oMJoin3 == null) oMJoin3 = new C_ItemInMenu(vPos, "", "MJoin3", 4.0f, 4.0f, Menu.theMenu.oMultiplayerInfoContainer);
+        oMJoin3.oLevelText.SetActive(false);
+
+        vPos = new Vector3(1.0f, -2.5f - 0.4f, -0.1f);
+        if (oMCancelAll == null) oMCancelAll = new C_ItemInMenu(vPos, "", "MCancelAll", 4.0f, 4.0f, Menu.theMenu.oMultiplayerInfoContainer);
+    }
+
     public void SetNetworkButtons(bool bCreate, bool bJoin)
     {
+        bMCreateLocked = !bCreate;
+        bMJoinLocked = !bJoin;
+
         oMCreate.oLevelQuad.SetActive(true);
         oMCreate.oLevelQuadMeshRenderer.material = bCreate ? oMaterialOctagonUnlocked : oMaterialOctagonLocked;
         oMJoin1.oLevelQuad.SetActive(oMJoinText1.GetComponent<TextMesh>().text.CompareTo("") != 0);
         oMJoin2.oLevelQuad.SetActive(oMJoinText2.GetComponent<TextMesh>().text.CompareTo("") != 0);
         oMJoin3.oLevelQuad.SetActive(oMJoinText3.GetComponent<TextMesh>().text.CompareTo("") != 0);
         oMJoin1.oLevelQuadMeshRenderer.material = bJoin ? oMaterialOctagonUnlocked : oMaterialOctagonLocked;
+        oMJoin2.oLevelQuadMeshRenderer.material = bJoin ? oMaterialOctagonUnlocked : oMaterialOctagonLocked;
+        oMJoin3.oLevelQuadMeshRenderer.material = bJoin ? oMaterialOctagonUnlocked : oMaterialOctagonLocked;
     }
 
     public void SetNetworkInfo(SendRecv sendRecv)
     {
-        Vector3 vPos = new Vector3(-8.9f, 3.0f, -0.1f);
-        if (oMCreate != null) oMCreate.Reinit(vPos, "", "MCreate", 4.0f, 4.0f);
-        else oMCreate = new C_ItemInMenu(vPos, "", "MCreate", 4.0f, 4.0f);
-        oMCreate.oLevelText.SetActive(false);
-
-        vPos = new Vector3(-8.9f, -0.5f, -0.1f);
-        if (oMJoin1 != null) oMJoin1.Reinit(vPos, "", "MJoin1", 4.0f, 4.0f);
-        else oMJoin1 = new C_ItemInMenu(vPos, "", "MJoin1", 4.0f, 4.0f);
-        oMJoin1.oLevelText.SetActive(false);
-        if(sendRecv.oJoinList.Count>=1) oMJoinText1.GetComponent<TextMesh>().text = sendRecv.oJoinList[0].szName;
+        if (sendRecv.oJoinList.Count >= 1) oMJoinText1.GetComponent<TextMesh>().text = sendRecv.oJoinList[0].szName;
         else oMJoinText1.GetComponent<TextMesh>().text = "";
 
-        vPos = new Vector3(-8.9f, -1.5f, -0.1f);
-        if (oMJoin2 != null) oMJoin2.Reinit(vPos, "", "MJoin2", 4.0f, 4.0f);
-        else oMJoin2 = new C_ItemInMenu(vPos, "", "MJoin2", 4.0f, 4.0f);
-        oMJoin2.oLevelText.SetActive(false);
         if (sendRecv.oJoinList.Count >= 2) oMJoinText2.GetComponent<TextMesh>().text = sendRecv.oJoinList[1].szName;
         else oMJoinText2.GetComponent<TextMesh>().text = "";
 
-        vPos = new Vector3(-8.9f, -2.5f, -0.1f);
-        if (oMJoin3 != null) oMJoin3.Reinit(vPos, "", "MJoin3", 4.0f, 4.0f);
-        else oMJoin3 = new C_ItemInMenu(vPos, "", "MJoin3", 4.0f, 4.0f);
-        oMJoin3.oLevelText.SetActive(false);
         if (sendRecv.oJoinList.Count >= 3) oMJoinText3.GetComponent<TextMesh>().text = sendRecv.oJoinList[2].szName;
         else oMJoinText3.GetComponent<TextMesh>().text = "";
-
-        vPos = new Vector3(1.0f, -1.5f, -0.1f);
-        if (oMCancelAll != null) oMCancelAll.Reinit(vPos, "", "MCancelAll", 4.0f, 4.0f);
-        else oMCancelAll = new C_ItemInMenu(vPos, "", "MCancelAll", 4.0f, 4.0f);
     }
 
     public void SetLevelInfoOff()
@@ -534,32 +543,32 @@ public class Menu : MonoBehaviour
             oLevelInfoContainer.SetActive(true);
 
             Vector3 vPos = new Vector3(-8.9f, 1.5f, -0.1f);
-            if (oMenuReplayWR1 != null) oMenuReplayWR1.Reinit(vPos, "1", "ReplayWR1", 4.0f, 4.0f);
-            else oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f);
+            if (oMenuReplayWR1 != null) oMenuReplayWR1.Reinit(vPos, "1", "ReplayWR1", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            else oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayWR1.oLevelQuad.SetActive(i_stLevelInfo.iWRScore1 != -1);
             oMenuReplayWR1.oLevelText.SetActive(i_stLevelInfo.iWRScore1 != -1);
 
             vPos = new Vector3(-8.9f, -1.0f, -0.1f);
-            if (oMenuReplayWR2 != null) oMenuReplayWR2.Reinit(vPos, "2", "ReplayWR2", 4.0f, 4.0f);
-            else oMenuReplayWR2 = new C_ItemInMenu(vPos, "2", "ReplayWR2", 4.0f, 4.0f);
+            if (oMenuReplayWR2 != null) oMenuReplayWR2.Reinit(vPos, "2", "ReplayWR2", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            else oMenuReplayWR2 = new C_ItemInMenu(vPos, "2", "ReplayWR2", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayWR2.oLevelQuad.SetActive(i_stLevelInfo.iWRScore2 != -1);
             oMenuReplayWR2.oLevelText.SetActive(i_stLevelInfo.iWRScore2 != -1);
 
             vPos = new Vector3(-8.9f, -3.5f, -0.1f);
-            if (oMenuReplayWR3 != null) oMenuReplayWR3.Reinit(vPos, "3", "ReplayWR3", 4.0f, 4.0f);
-            else oMenuReplayWR3 = new C_ItemInMenu(vPos, "3", "ReplayWR3", 4.0f, 4.0f);
+            if (oMenuReplayWR3 != null) oMenuReplayWR3.Reinit(vPos, "3", "ReplayWR3", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            else oMenuReplayWR3 = new C_ItemInMenu(vPos, "3", "ReplayWR3", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayWR3.oLevelQuad.SetActive(i_stLevelInfo.iWRScore3 != -1);
             oMenuReplayWR3.oLevelText.SetActive(i_stLevelInfo.iWRScore3 != -1);
 
             vPos = new Vector3(0.5f, 1.5f, -0.1f);
-            if (oMenuReplayYR != null) oMenuReplayYR.Reinit(vPos, "", "ReplayYR", 4.0f, 4.0f);
-            else oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f);
+            if (oMenuReplayYR != null) oMenuReplayYR.Reinit(vPos, "", "ReplayYR", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            else oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayYR.oLevelQuad.SetActive(i_stLevelInfo.iBestScoreMs != -1);
             oMenuReplayYR.oLevelText.SetActive(i_stLevelInfo.iBestScoreMs != -1);
 
             vPos = new Vector3(0.5f, -2.5f, -0.1f);
-            if (oMenuPlay != null) oMenuPlay.Reinit(vPos, "", "Play", 4.0f, 4.0f);
-            else oMenuPlay = new C_ItemInMenu(vPos, "", "Play", 4.0f, 4.0f);
+            if (oMenuPlay != null) oMenuPlay.Reinit(vPos, "", "Play", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            else oMenuPlay = new C_ItemInMenu(vPos, "", "Play", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
 
             oWRNameText1.SetActive(true); oWRNameText2.SetActive(true); oWRNameText3.SetActive(true);
             oWRScoreText1.SetActive(true); oWRScoreText2.SetActive(true); oWRScoreText3.SetActive(true);
@@ -801,30 +810,30 @@ public class Menu : MonoBehaviour
         // head position and orientation
 
         //reset highlighting
-        if (oMCreate != null && oMCreate.oLevelQuad != null && oMCreate.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMCreate.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-        if (oMJoin1 != null && oMJoin1.oLevelQuad != null && oMJoin1.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-        if (oMJoin2 != null && oMJoin2.oLevelQuad != null && oMJoin2.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-        if (oMJoin3 != null && oMJoin3.oLevelQuad != null && oMJoin3.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-        if (oMCancelAll != null && oMCancelAll.oLevelQuad != null) oMCancelAll.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMCreate != null && !bMCreateLocked) oMCreate.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
+        if (oMJoin1 != null && !bMJoinLocked) oMJoin1.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
+        if (oMJoin2 != null && !bMJoinLocked) oMJoin2.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
+        if (oMJoin3 != null && !bMJoinLocked) oMJoin3.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
+        if (oMCancelAll != null) oMCancelAll.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
 
-        if (oMenuReplayWR1 != null && oMenuReplayWR1.oLevelQuad != null) oMenuReplayWR1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-        if (oMenuReplayWR2 != null && oMenuReplayWR2.oLevelQuad != null) oMenuReplayWR2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-        if (oMenuReplayWR3 != null && oMenuReplayWR3.oLevelQuad != null) oMenuReplayWR3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-        if (oMenuReplayYR != null && oMenuReplayYR.oLevelQuad != null) oMenuReplayYR.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
-        if (oMenuPlay != null && oMenuPlay.oLevelQuad != null) oMenuPlay.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
+        if (oMenuReplayWR1 != null) oMenuReplayWR1.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
+        if (oMenuReplayWR2 != null) oMenuReplayWR2.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
+        if (oMenuReplayWR3 != null) oMenuReplayWR3.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
+        if (oMenuReplayYR != null) oMenuReplayYR.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
+        if (oMenuPlay != null) oMenuPlay.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
 
-        if (oMenuNext1 != null && oMenuNext1.oLevelQuad != null) oMenuNext1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
-        if (oMenuPrev1 != null && oMenuPrev1.oLevelQuad != null) oMenuPrev1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonPlay;
+        if (oMenuNext1 != null) oMenuNext1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
+        if (oMenuPrev1 != null) oMenuPrev1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
 
-        if (oMenuRecenter != null && oMenuRecenter.oLevelQuad != null) oMenuRecenter.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialBar;
-        if (oMenuQuit != null && oMenuQuit.oLevelQuad != null) oMenuQuit.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialBar;
-        if (oMenuControls != null && oMenuControls.oLevelQuad != null) oMenuControls.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialBar;
-        if (oMenuCredits != null && oMenuCredits.oLevelQuad != null) oMenuCredits.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialBar;
-        if (oMenuQuality1 != null && oMenuQuality1.oLevelQuad != null) oMenuQuality1.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 1) ? oMaterialBarHighlighted : oMaterialBar;
-        if (oMenuQuality2 != null && oMenuQuality2.oLevelQuad != null) oMenuQuality2.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 2) ? oMaterialBarHighlighted : oMaterialBar;
-        if (oMenuQuality3 != null && oMenuQuality3.oLevelQuad != null) oMenuQuality3.oLevelQuad.GetComponent<MeshRenderer>().material = (iQuality == 4) ? oMaterialBarHighlighted : oMaterialBar;
-        if (oMenuSnapMovement != null && oMenuSnapMovement.oLevelQuad != null) oMenuSnapMovement.oLevelQuad.GetComponent<MeshRenderer>().material = CameraController.bSnapMovement ? oMaterialBarHighlighted : oMaterialBar;
-        if (oMenuPointMovement != null && oMenuPointMovement.oLevelQuad != null) oMenuPointMovement.oLevelQuad.GetComponent<MeshRenderer>().material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuRecenter != null) oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialBar;
+        if (oMenuQuit != null) oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBar;
+        if (oMenuControls != null) oMenuControls.oLevelQuadMeshRenderer.material = oMaterialBar;
+        if (oMenuCredits != null) oMenuCredits.oLevelQuadMeshRenderer.material = oMaterialBar;
+        if (oMenuQuality1 != null) oMenuQuality1.oLevelQuadMeshRenderer.material = (iQuality == 1) ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuQuality2 != null) oMenuQuality2.oLevelQuadMeshRenderer.material = (iQuality == 2) ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuQuality3 != null) oMenuQuality3.oLevelQuadMeshRenderer.material = (iQuality == 4) ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuSnapMovement != null) oMenuSnapMovement.oLevelQuadMeshRenderer.material = CameraController.bSnapMovement ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuPointMovement != null) oMenuPointMovement.oLevelQuadMeshRenderer.material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
 
         bool bHitLevel = false;
         RaycastHit oHitInfo;
@@ -961,19 +970,19 @@ public class Menu : MonoBehaviour
             }
             else if (oHitInfo.collider.name.CompareTo("MCreate") == 0)
             {
-                if(oMCreate.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMCreate.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+                if(!bMCreateLocked) oMCreate.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("MJoin1") == 0)
             {
-                if (oMJoin1.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin1.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+                if (!bMJoinLocked) oMJoin1.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("MJoin2") == 0)
             {
-                if (oMJoin2.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin2.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+                if (!bMJoinLocked) oMJoin2.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("MJoin3") == 0)
             {
-                if (oMJoin3.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin3.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+                if (!bMJoinLocked) oMJoin3.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
 
             //manage selection
@@ -1055,7 +1064,7 @@ public class Menu : MonoBehaviour
 
                 else if (oHitInfo.collider.name.CompareTo("MCreate") == 0)
                 {
-                    if (oMCreate.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked)
+                    if (!bMCreateLocked)
                     {
                         bMCreate = true;
                         iAllowSelection = 20;
@@ -1064,7 +1073,7 @@ public class Menu : MonoBehaviour
                 }
                 else if (oHitInfo.collider.name.CompareTo("MJoin1") == 0)
                 {
-                    if (oMJoin1.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked)
+                    if (!bMJoinLocked)
                     {
                         iMJoin = 1;
                         iAllowSelection = 20;
@@ -1073,7 +1082,7 @@ public class Menu : MonoBehaviour
                 }
                 else if (oHitInfo.collider.name.CompareTo("MJoin2") == 0)
                 {
-                    if (oMJoin2.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked)
+                    if (!bMJoinLocked)
                     {
                         iMJoin = 2;
                         iAllowSelection = 20;
@@ -1082,7 +1091,7 @@ public class Menu : MonoBehaviour
                 }
                 else if (oHitInfo.collider.name.CompareTo("MJoin3") == 0)
                 {
-                    if (oMJoin3.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked)
+                    if (!bMJoinLocked)
                     {
                         iMJoin = 3;
                         iAllowSelection = 20;
@@ -1331,15 +1340,15 @@ public class Menu : MonoBehaviour
             Destroy(oLevelText);
         }*/
 
-        public void Reinit(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText)
+        public void Reinit(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText, GameObject i_oParent)
         {
             vPos = i_vPos;
 
             //create a quad with a text on, in the pos of each menu object
-            oLevelQuad.transform.parent = Menu.theMenu.oLevelInfoContainer.transform;
+            oLevelQuad.transform.parent = i_oParent.transform;
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
-            oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
+            oLevelQuad.transform.rotation = i_oParent.transform.rotation; //why doesn't this come from the parent already
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
             oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialPentagonUnlocked;
@@ -1347,7 +1356,7 @@ public class Menu : MonoBehaviour
             //create text
             oLevelText.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
             oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.08f, i_fScaleText * 0.08f, 1.0f);
-            oLevelText.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
+            oLevelText.transform.rotation = i_oParent.transform.rotation; //why doesn't this come from the parent already
 
             TextMesh oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();
             /*oLevelTextTextMesh.fontStyle = FontStyle.Bold;
@@ -1356,16 +1365,16 @@ public class Menu : MonoBehaviour
             oLevelTextTextMesh.text = i_szText;
         }
 
-        public C_ItemInMenu(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText)
+        public C_ItemInMenu(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText, GameObject i_oParent)
         {
             vPos = i_vPos;
 
             //create a quad with a text on, in the pos of each menu object
             oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            oLevelQuad.transform.parent = Menu.theMenu.oLevelInfoContainer.transform;
+            oLevelQuad.transform.parent = i_oParent.transform;
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
-            oLevelQuad.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
+            oLevelQuad.transform.rotation = i_oParent.transform.rotation; //why doesn't this come from the parent already
             oLevelQuad.AddComponent<BoxCollider>();
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
@@ -1373,12 +1382,12 @@ public class Menu : MonoBehaviour
 
             //create text
             oLevelText = new GameObject();
-            oLevelText.transform.parent = Menu.theMenu.oLevelInfoContainer.transform;
+            oLevelText.transform.parent = i_oParent.transform;
             oLevelText.name = "TextMesh";
             oLevelText.AddComponent<TextMesh>();
             oLevelText.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
             oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.08f, i_fScaleText * 0.08f, 1.0f);
-            oLevelText.transform.rotation = Menu.theMenu.oLevelInfoContainer.transform.rotation; //why doesn't this come from the parent already
+            oLevelText.transform.rotation = i_oParent.transform.rotation; //why doesn't this come from the parent already
 
             TextMesh oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();
             oLevelTextTextMesh.fontStyle = FontStyle.Bold;

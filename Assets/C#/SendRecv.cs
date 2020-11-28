@@ -48,7 +48,7 @@ public class SendRecv
         bIsJoinDone = false;
         bIsMaster = false;
 
-        string url = WEB_HOST + "/mpgame_join.php";
+        string url = WEB_HOST + "/mpgames_join.php";
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
@@ -72,10 +72,12 @@ public class SendRecv
                 char[] szSeparator = { (char)' ' };
                 char[] szSeparator2 = { (char)'\"' };
                 string[] szWithin = szLines[i].Trim('\r', '\n').Split(szSeparator2, StringSplitOptions.RemoveEmptyEntries);
-                stJoin.szName = szWithin[1].Trim(' ');
-                stJoin.szIP = szWithin[3].Trim(' ');
+                if (szWithin.Length < 4) break;
 
-                string[] szPort = szWithin[4].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                stJoin.szName = szWithin[0].Trim(' ');
+                stJoin.szIP = szWithin[2].Trim(' ');
+
+                string[] szPort = szWithin[3].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
                 stJoin.iPort = int.Parse(szPort[0].Trim(' '));
 
                 oJoinList.Add(stJoin);
@@ -153,7 +155,7 @@ public class SendRecv
             }
         }
 
-        string url = WEB_HOST + "/mpgame_create.php?User=" + UnityWebRequest.EscapeURL(GameManager.szUser) +"&IP="+ externalIP.ToString() +"&Port="+ iBasePort.ToString();
+        string url = WEB_HOST + "/mpgames_create.php?User=" + UnityWebRequest.EscapeURL(GameManager.szUser) +"&IP="+ externalIP.ToString() +"&Port="+ iBasePort.ToString();
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
@@ -166,7 +168,7 @@ public class SendRecv
             //retrieve results as text
             string szResult = www.downloadHandler.text;
 
-            Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + szResult + "]");
+            Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + externalIP.ToString() + "]");
         }
 
         bIsCreateDone = true;
