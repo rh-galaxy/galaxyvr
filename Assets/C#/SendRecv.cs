@@ -233,7 +233,8 @@ public class SendRecv
     bool bIsMaster;
     bool bListening = false; //true while master is listening for joining players
     static int iNumCI = 0;
-    static ConnectionInfo[] ci = new ConnectionInfo[3]; //the other players (1..3)
+    static ConnectionInfo[] ci = new ConnectionInfo[3]; //the other players (1..3) when master
+    ConnectionInfo ci_toserver; //the server, when !master
 
     public SendRecv()
     {
@@ -246,6 +247,14 @@ public class SendRecv
         server.Stop();
         server = null;
         /**/SendRecv.tcpClientConnected.Reset();
+    }
+
+    public void DoJoin(int iNum)
+    {
+        ci_toserver.szIP = oJoinList[iNum].szIP;
+        ci_toserver.szName = oJoinList[iNum].szName;
+        ci_toserver.tcp = new TcpClient(oJoinList[iNum].szIP, oJoinList[iNum].iPort);
+        ci_toserver.ns = ci_toserver.tcp.GetStream();
     }
 
     public void ClientCheck()

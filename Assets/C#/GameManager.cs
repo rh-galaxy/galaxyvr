@@ -496,6 +496,9 @@ public class GameManager : MonoBehaviour
     float fMultiplayerTimer = 25.0f;
     bool bMultiplayerUpdateJoinInProgress = false;
     bool bMultiplayerUpdateCreateInProgress = false;
+
+    bool bWeHaveJoined = false;
+    bool bWeHaveCreated = false;
     void Update()
     {
 #if LOGPROFILERDATA
@@ -610,6 +613,9 @@ public class GameManager : MonoBehaviour
 
         UpdateFade();
 
+        if(bWeHaveJoined) oSendRecv.ClientCheck();
+        if(bWeHaveCreated) oSendRecv.ServerCheck();
+
         //in menu?
         if (iState >= 1 || iState <= 4)
         {
@@ -617,20 +623,28 @@ public class GameManager : MonoBehaviour
             {
                 oSendRecv.bRunJoin = false;
                 oSendRecv.bRunCreate = true;
+                bWeHaveCreated = true;
                 fMultiplayerTimer = 30; //make it happen below
                 Menu.theMenu.SetNetworkButtons(false, false);
                 Menu.bMCreate = false;
             }
             if (Menu.iMJoin > 0)
             {
-                //todo action
-                //...
+                //todo more?
+                if (Menu.iMJoin == 1) oSendRecv.DoJoin(0);
+                if (Menu.iMJoin == 2) oSendRecv.DoJoin(1);
+                if (Menu.iMJoin == 3) oSendRecv.DoJoin(2);
+                oSendRecv.bRunJoin = false;
+                oSendRecv.bRunCreate = false;
+                bWeHaveJoined = true;
                 Menu.theMenu.SetNetworkButtons(false, false);
                 Menu.iMJoin = 0;
             }
             if (Menu.bMCancelAll)
             {
                 //todo more?
+                bWeHaveJoined = false;
+                bWeHaveCreated = false;
                 oSendRecv.Cancel();
                 oSendRecv.bRunJoin = true;
                 oSendRecv.bRunCreate = false;
