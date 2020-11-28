@@ -229,7 +229,7 @@ public class SendRecv
 
 
     bool bIsMaster;
-    bool bListening; //true while master is listening for joining players
+    bool bListening = false; //true while master is listening for joining players
     static int iNumCI = 0;
     static ConnectionInfo[] ci = new ConnectionInfo[3]; //the other players (1..3)
 
@@ -237,12 +237,21 @@ public class SendRecv
     {
     }
 
-    void ClientCheck()
+    public void Cancel()
+    {
+        bIsMaster = false;
+        oJoinList.Clear();
+        server.Stop();
+        server = null;
+        /**/SendRecv.tcpClientConnected.Reset();
+    }
+
+    public void ClientCheck()
     {
         //recv data
     }
 
-    void ServerCheck()
+    public void ServerCheck()
     {
         //accept new joining players
         if (!bListening)

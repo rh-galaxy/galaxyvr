@@ -384,7 +384,15 @@ public class Menu : MonoBehaviour
         return szTime;
     }
 
-    public void SetNetworkInfo()
+    public void SetNetworkButtons(bool bCreate, bool bJoin)
+    {
+        oMCreate.oLevelQuad.SetActive(bCreate);
+        oMJoin1.oLevelQuad.SetActive(oMJoinText1.GetComponent<TextMesh>().text.CompareTo("") == 0 ? false : bJoin);
+        oMJoin2.oLevelQuad.SetActive(oMJoinText2.GetComponent<TextMesh>().text.CompareTo("") == 0 ? false : bJoin);
+        oMJoin3.oLevelQuad.SetActive(oMJoinText3.GetComponent<TextMesh>().text.CompareTo("") == 0 ? false : bJoin);
+    }
+
+    public void SetNetworkInfo(SendRecv sendRecv)
     {
         Vector3 vPos = new Vector3(-8.9f, 3.0f, -0.1f);
         if (oMCreate != null) oMCreate.Reinit(vPos, "", "MCreate", 4.0f, 4.0f);
@@ -397,21 +405,24 @@ public class Menu : MonoBehaviour
         else oMJoin1 = new C_ItemInMenu(vPos, "", "MJoin1", 4.0f, 4.0f);
         oMJoin1.oLevelQuad.SetActive(true);
         oMJoin1.oLevelText.SetActive(false);
-        //todo set text, set active if text
+        if(sendRecv.oJoinList.Count>=1) oMJoinText1.GetComponent<TextMesh>().text = sendRecv.oJoinList[0].szName;
+        else oMJoinText1.GetComponent<TextMesh>().text = "";
 
         vPos = new Vector3(-8.9f, -1.5f, -0.1f);
         if (oMJoin2 != null) oMJoin2.Reinit(vPos, "", "MJoin2", 4.0f, 4.0f);
         else oMJoin2 = new C_ItemInMenu(vPos, "", "MJoin2", 4.0f, 4.0f);
         oMJoin2.oLevelQuad.SetActive(true);
         oMJoin2.oLevelText.SetActive(false);
-        //todo set text, set active if text
+        if (sendRecv.oJoinList.Count >= 2) oMJoinText2.GetComponent<TextMesh>().text = sendRecv.oJoinList[1].szName;
+        else oMJoinText2.GetComponent<TextMesh>().text = "";
 
         vPos = new Vector3(-8.9f, -2.5f, -0.1f);
         if (oMJoin3 != null) oMJoin3.Reinit(vPos, "", "MJoin3", 4.0f, 4.0f);
         else oMJoin3 = new C_ItemInMenu(vPos, "", "MJoin3", 4.0f, 4.0f);
         oMJoin3.oLevelQuad.SetActive(true);
         oMJoin3.oLevelText.SetActive(false);
-        //todo set text, set active if text
+        if (sendRecv.oJoinList.Count >= 3) oMJoinText3.GetComponent<TextMesh>().text = sendRecv.oJoinList[2].szName;
+        else oMJoinText3.GetComponent<TextMesh>().text = "";
 
         vPos = new Vector3(1.0f, -1.5f, -0.1f);
         if (oMCancelAll != null) oMCancelAll.Reinit(vPos, "", "MCancelAll", 4.0f, 4.0f);
@@ -1023,24 +1034,28 @@ public class Menu : MonoBehaviour
                     bMCreate = true;
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
+                    SetNetworkButtons(false, false);
                 }
                 else if (oHitInfo.collider.name.CompareTo("MJoin1") == 0)
                 {
                     iMJoin = 1;
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
+                    SetNetworkButtons(false, false);
                 }
                 else if (oHitInfo.collider.name.CompareTo("MJoin2") == 0)
                 {
                     iMJoin = 2;
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
+                    SetNetworkButtons(false, false);
                 }
                 else if (oHitInfo.collider.name.CompareTo("MJoin3") == 0)
                 {
                     iMJoin = 3;
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
+                    SetNetworkButtons(false, false);
                 }
                 else if (oHitInfo.collider.name.CompareTo("MCancelAll") == 0)
                 {

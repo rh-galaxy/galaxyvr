@@ -623,11 +623,14 @@ public class GameManager : MonoBehaviour
             if (Menu.iMJoin > 0)
             {
                 //todo action
+                //...
                 Menu.iMJoin = 0;
             }
             if (Menu.bMCancelAll)
             {
-                //todo action
+                //todo more?
+                oSendRecv.Cancel();
+                Menu.theMenu.SetNetworkButtons(true, true);
                 Menu.bMCancelAll = false;
             }
 
@@ -655,6 +658,7 @@ public class GameManager : MonoBehaviour
                 {
                     bMultiplayerUpdateJoinInProgress = false;
                     //todo action
+                    Menu.theMenu.SetNetworkInfo(oSendRecv);
                 }
             }
             if (bMultiplayerUpdateCreateInProgress)
@@ -663,6 +667,7 @@ public class GameManager : MonoBehaviour
                 {
                     bMultiplayerUpdateCreateInProgress = false;
                     //todo action
+                    Menu.theMenu.SetNetworkInfo(oSendRecv);
                 }
             }
         }
