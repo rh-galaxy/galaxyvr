@@ -618,12 +618,14 @@ public class GameManager : MonoBehaviour
                 oSendRecv.bRunJoin = false;
                 oSendRecv.bRunCreate = true;
                 fMultiplayerTimer = 30; //make it happen below
+                Menu.theMenu.SetNetworkButtons(false, false);
                 Menu.bMCreate = false;
             }
             if (Menu.iMJoin > 0)
             {
                 //todo action
                 //...
+                Menu.theMenu.SetNetworkButtons(false, false);
                 Menu.iMJoin = 0;
             }
             if (Menu.bMCancelAll)
@@ -637,7 +639,7 @@ public class GameManager : MonoBehaviour
             fMultiplayerTimer += Time.unscaledDeltaTime;
             if (fMultiplayerTimer > 30)
             {
-                if (oSendRecv.bRunJoin && bMultiplayerUpdateJoinInProgress)
+                if (oSendRecv.bRunJoin && !bMultiplayerUpdateJoinInProgress)
                 {
                     oSendRecv.bIsJoinDone = false;
                     StartCoroutine(oSendRecv.UpdateJoin());
@@ -659,6 +661,7 @@ public class GameManager : MonoBehaviour
                     bMultiplayerUpdateJoinInProgress = false;
                     //todo action
                     Menu.theMenu.SetNetworkInfo(oSendRecv);
+                    Menu.theMenu.SetNetworkButtons(true, true);
                 }
             }
             if (bMultiplayerUpdateCreateInProgress)
@@ -668,6 +671,7 @@ public class GameManager : MonoBehaviour
                     bMultiplayerUpdateCreateInProgress = false;
                     //todo action
                     Menu.theMenu.SetNetworkInfo(oSendRecv);
+                    Menu.theMenu.SetNetworkButtons(false, false);
                 }
             }
         }

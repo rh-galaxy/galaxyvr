@@ -386,10 +386,12 @@ public class Menu : MonoBehaviour
 
     public void SetNetworkButtons(bool bCreate, bool bJoin)
     {
-        oMCreate.oLevelQuad.SetActive(bCreate);
-        oMJoin1.oLevelQuad.SetActive(oMJoinText1.GetComponent<TextMesh>().text.CompareTo("") == 0 ? false : bJoin);
-        oMJoin2.oLevelQuad.SetActive(oMJoinText2.GetComponent<TextMesh>().text.CompareTo("") == 0 ? false : bJoin);
-        oMJoin3.oLevelQuad.SetActive(oMJoinText3.GetComponent<TextMesh>().text.CompareTo("") == 0 ? false : bJoin);
+        oMCreate.oLevelQuad.SetActive(true);
+        oMCreate.oLevelQuadMeshRenderer.material = bCreate ? oMaterialOctagonUnlocked : oMaterialOctagonLocked;
+        oMJoin1.oLevelQuad.SetActive(oMJoinText1.GetComponent<TextMesh>().text.CompareTo("") != 0);
+        oMJoin2.oLevelQuad.SetActive(oMJoinText2.GetComponent<TextMesh>().text.CompareTo("") != 0);
+        oMJoin3.oLevelQuad.SetActive(oMJoinText3.GetComponent<TextMesh>().text.CompareTo("") != 0);
+        oMJoin1.oLevelQuadMeshRenderer.material = bJoin ? oMaterialOctagonUnlocked : oMaterialOctagonLocked;
     }
 
     public void SetNetworkInfo(SendRecv sendRecv)
@@ -397,13 +399,11 @@ public class Menu : MonoBehaviour
         Vector3 vPos = new Vector3(-8.9f, 3.0f, -0.1f);
         if (oMCreate != null) oMCreate.Reinit(vPos, "", "MCreate", 4.0f, 4.0f);
         else oMCreate = new C_ItemInMenu(vPos, "", "MCreate", 4.0f, 4.0f);
-        oMCreate.oLevelQuad.SetActive(true);
         oMCreate.oLevelText.SetActive(false);
 
         vPos = new Vector3(-8.9f, -0.5f, -0.1f);
         if (oMJoin1 != null) oMJoin1.Reinit(vPos, "", "MJoin1", 4.0f, 4.0f);
         else oMJoin1 = new C_ItemInMenu(vPos, "", "MJoin1", 4.0f, 4.0f);
-        oMJoin1.oLevelQuad.SetActive(true);
         oMJoin1.oLevelText.SetActive(false);
         if(sendRecv.oJoinList.Count>=1) oMJoinText1.GetComponent<TextMesh>().text = sendRecv.oJoinList[0].szName;
         else oMJoinText1.GetComponent<TextMesh>().text = "";
@@ -411,7 +411,6 @@ public class Menu : MonoBehaviour
         vPos = new Vector3(-8.9f, -1.5f, -0.1f);
         if (oMJoin2 != null) oMJoin2.Reinit(vPos, "", "MJoin2", 4.0f, 4.0f);
         else oMJoin2 = new C_ItemInMenu(vPos, "", "MJoin2", 4.0f, 4.0f);
-        oMJoin2.oLevelQuad.SetActive(true);
         oMJoin2.oLevelText.SetActive(false);
         if (sendRecv.oJoinList.Count >= 2) oMJoinText2.GetComponent<TextMesh>().text = sendRecv.oJoinList[1].szName;
         else oMJoinText2.GetComponent<TextMesh>().text = "";
@@ -419,7 +418,6 @@ public class Menu : MonoBehaviour
         vPos = new Vector3(-8.9f, -2.5f, -0.1f);
         if (oMJoin3 != null) oMJoin3.Reinit(vPos, "", "MJoin3", 4.0f, 4.0f);
         else oMJoin3 = new C_ItemInMenu(vPos, "", "MJoin3", 4.0f, 4.0f);
-        oMJoin3.oLevelQuad.SetActive(true);
         oMJoin3.oLevelText.SetActive(false);
         if (sendRecv.oJoinList.Count >= 3) oMJoinText3.GetComponent<TextMesh>().text = sendRecv.oJoinList[2].szName;
         else oMJoinText3.GetComponent<TextMesh>().text = "";
@@ -803,6 +801,12 @@ public class Menu : MonoBehaviour
         // head position and orientation
 
         //reset highlighting
+        if (oMCreate != null && oMCreate.oLevelQuad != null && oMCreate.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMCreate.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMJoin1 != null && oMJoin1.oLevelQuad != null && oMJoin1.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMJoin2 != null && oMJoin2.oLevelQuad != null && oMJoin2.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMJoin3 != null && oMJoin3.oLevelQuad != null && oMJoin3.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+        if (oMCancelAll != null && oMCancelAll.oLevelQuad != null) oMCancelAll.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
+
         if (oMenuReplayWR1 != null && oMenuReplayWR1.oLevelQuad != null) oMenuReplayWR1.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
         if (oMenuReplayWR2 != null && oMenuReplayWR2.oLevelQuad != null) oMenuReplayWR2.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
         if (oMenuReplayWR3 != null && oMenuReplayWR3.oLevelQuad != null) oMenuReplayWR3.oLevelQuad.GetComponent<MeshRenderer>().material = oMaterialOctagonUnlocked;
@@ -874,7 +878,6 @@ public class Menu : MonoBehaviour
                     oMatTemp = oMaterialOctagonUnlocked;
                     if (i == iIndex-200)
                     {
-                        
                         if (aMenuCustomLevels[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonHighlighted;
                         else oMatTemp = oMaterialOctagonHighlighted;
                     }
@@ -950,6 +953,27 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
             {
                 oMenuPrev1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
+            }
+
+            else if (oHitInfo.collider.name.CompareTo("MCancelAll") == 0)
+            {
+                oMCancelAll.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("MCreate") == 0)
+            {
+                if(oMCreate.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMCreate.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("MJoin1") == 0)
+            {
+                if (oMJoin1.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin1.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("MJoin2") == 0)
+            {
+                if (oMJoin2.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin2.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("MJoin3") == 0)
+            {
+                if (oMJoin3.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked) oMJoin3.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
 
             //manage selection
@@ -1031,31 +1055,39 @@ public class Menu : MonoBehaviour
 
                 else if (oHitInfo.collider.name.CompareTo("MCreate") == 0)
                 {
-                    bMCreate = true;
-                    iAllowSelection = 20;
-                    bPlaySelectSound = true;
-                    SetNetworkButtons(false, false);
+                    if (oMCreate.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked)
+                    {
+                        bMCreate = true;
+                        iAllowSelection = 20;
+                        bPlaySelectSound = true;
+                    }
                 }
                 else if (oHitInfo.collider.name.CompareTo("MJoin1") == 0)
                 {
-                    iMJoin = 1;
-                    iAllowSelection = 20;
-                    bPlaySelectSound = true;
-                    SetNetworkButtons(false, false);
+                    if (oMJoin1.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked)
+                    {
+                        iMJoin = 1;
+                        iAllowSelection = 20;
+                        bPlaySelectSound = true;
+                    }
                 }
                 else if (oHitInfo.collider.name.CompareTo("MJoin2") == 0)
                 {
-                    iMJoin = 2;
-                    iAllowSelection = 20;
-                    bPlaySelectSound = true;
-                    SetNetworkButtons(false, false);
+                    if (oMJoin2.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked)
+                    {
+                        iMJoin = 2;
+                        iAllowSelection = 20;
+                        bPlaySelectSound = true;
+                    }
                 }
                 else if (oHitInfo.collider.name.CompareTo("MJoin3") == 0)
                 {
-                    iMJoin = 3;
-                    iAllowSelection = 20;
-                    bPlaySelectSound = true;
-                    SetNetworkButtons(false, false);
+                    if (oMJoin3.oLevelQuad.GetComponent<MeshRenderer>().material != oMaterialOctagonLocked)
+                    {
+                        iMJoin = 3;
+                        iAllowSelection = 20;
+                        bPlaySelectSound = true;
+                    }
                 }
                 else if (oHitInfo.collider.name.CompareTo("MCancelAll") == 0)
                 {
