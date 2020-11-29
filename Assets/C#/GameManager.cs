@@ -623,7 +623,6 @@ public class GameManager : MonoBehaviour
             {
                 oSendRecv.bRunJoin = false;
                 oSendRecv.bRunCreate = true;
-                bWeHaveCreated = true;
                 fMultiplayerTimer = 30; //make it happen below
                 Menu.theMenu.SetNetworkButtons(false, false);
                 Menu.bMCreate = false;
@@ -634,9 +633,9 @@ public class GameManager : MonoBehaviour
                 if (Menu.iMJoin == 1) oSendRecv.DoJoin(0);
                 if (Menu.iMJoin == 2) oSendRecv.DoJoin(1);
                 if (Menu.iMJoin == 3) oSendRecv.DoJoin(2);
+                bWeHaveJoined = true;
                 oSendRecv.bRunJoin = false;
                 oSendRecv.bRunCreate = false;
-                bWeHaveJoined = true;
                 Menu.theMenu.SetNetworkButtons(false, false);
                 Menu.iMJoin = 0;
             }
@@ -676,7 +675,7 @@ public class GameManager : MonoBehaviour
                 {
                     bMultiplayerUpdateJoinInProgress = false;
                     //todo action
-                    if(oSendRecv.bRunJoin)
+                    if (oSendRecv.bRunJoin)
                     {
                         Menu.theMenu.SetNetworkInfo(oSendRecv);
                         Menu.theMenu.SetNetworkButtons(true, true);
@@ -691,6 +690,7 @@ public class GameManager : MonoBehaviour
                     //todo action
                     if (oSendRecv.bRunCreate)
                     {
+                        bWeHaveCreated = true;
                         Menu.theMenu.SetNetworkInfo(oSendRecv);
                         Menu.theMenu.SetNetworkButtons(false, false);
                     }
