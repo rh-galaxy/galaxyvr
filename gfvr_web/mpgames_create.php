@@ -5,10 +5,11 @@
 
 	$user = $_GET["User"];
 	$ip = $_GET["IP"];
+	$local_ip = $_GET["LocalIP"];
 	$port = $_GET["Port"];
 	$paramArray = array($user,$ip,$port);
 
-	if(checkstring($paramArray) && $user!="" && $ip!="" && $port!="") {
+	if(checkstring($paramArray) && $user!="" && $ip!="" && $port!="" && $local_ip!="") {
 		
 		$db = connect_to_db();
 
@@ -18,10 +19,10 @@
 		$num_rows = @mysqli_num_rows($result);
 		if($num_rows==1) {
 			$row = @mysqli_fetch_assoc($result);
-			$query = "UPDATE mpgames_t SET ip='".$ip."', port=".$port.", last_access=".time()." WHERE (username='".$user."')";
+			$query = "UPDATE mpgames_t SET ip='".$ip."', port=".$port.", local_ip='".$local_ip."', last_access=".time()." WHERE (username='".$user."')";
 		} else if($num_rows==0) {
 			//insert new row in mpgames_t
-			$query = "INSERT INTO mpgames_t (username, ip, port, last_access) VALUES('".$user."','".$ip."',".$port.",".time().")";
+			$query = "INSERT INTO mpgames_t (username, ip, port, local_ip, last_access) VALUES('".$user."','".$ip."',".$port.",'".$local_ip."',".time().")";
 		}
 		$result = mysqli_query($db, $query);
 		

@@ -13,7 +13,7 @@ public struct HttpJoinInfo
 {
     public string szName;
     public string szIP; //internet ip
-    //public string szLocalIP; //not needed?, remove
+    public string szLocalIP; //not needed?
     public int iPort; //port forwarded and local, that we listen on
 }
 
@@ -76,6 +76,7 @@ public class SendRecv
 
                 stJoin.szName = szWithin[0].Trim(' ');
                 stJoin.szIP = szWithin[2].Trim(' ');
+                stJoin.szLocalIP = szWithin[4].Trim(' ');
 
                 string[] szPort = szWithin[3].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
                 stJoin.iPort = int.Parse(szPort[0].Trim(' '));
@@ -89,6 +90,7 @@ public class SendRecv
     //run periodically from game created until begin play level
     NatDevice device;
     IPAddress externalIP;
+    IPAddress localIP;
     int iBasePort = 1999;
     internal bool bRunCreate = false;
     public IEnumerator UpdateCreate()
@@ -130,7 +132,6 @@ public class SendRecv
                 }
             }
 
-            IPAddress localIP;
             using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
             {
                 socket.Connect("8.8.8.8", 65530); //this does nothing on the cable
@@ -155,7 +156,7 @@ public class SendRecv
             }
         }
 
-        string url = WEB_HOST + "/mpgames_create.php?User=" + UnityWebRequest.EscapeURL(GameManager.szUser) +"&IP="+ externalIP.ToString() +"&Port="+ iBasePort.ToString();
+        string url = WEB_HOST + "/mpgames_create.php?User=" + UnityWebRequest.EscapeURL(GameManager.szUser) + "&IP=" + externalIP.ToString() + "&Port=" + iBasePort.ToString() + "&LocalIP=" + localIP.ToString();
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
@@ -168,7 +169,7 @@ public class SendRecv
             //retrieve results as text
             string szResult = www.downloadHandler.text;
 
-            Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + externalIP.ToString() + "]");
+            Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + externalIP.ToString() + "], [" + localIP +"]");
         }
 
         bIsCreateDone = true;
@@ -187,7 +188,7 @@ public class SendRecv
         tcpClientConnected.Reset();
 
         // Start to listen for connections from a client.
-        Console.WriteLine("Waiting for a connection...");
+        Debug.Log("Waiting for a connection...");
 
         // Accept the connection.
         // BeginAcceptSocket() creates the accepted socket.
@@ -222,7 +223,7 @@ public class SendRecv
 
         // Process the connection here. (Add the client to a
         // server table, read data, etc.)
-        Console.WriteLine("Client connected completed");
+        Debug.Log("Client connected completed");
 
         // Signal the calling thread to continue.
         tcpClientConnected.Set();
@@ -244,17 +245,42 @@ public class SendRecv
     {
         bIsMaster = false;
         oJoinList.Clear();
-        server.Stop();
-        server = null;
-        /**/SendRecv.tcpClientConnected.Reset();
+        if (server != null)
+        {
+            server.Stop();
+            server = null;
+        }
+        if(ci_toserver.tcp != null)
+        {
+            ci_toserver.tcp.Close();
+            ci_toserver.ns = null;
+            ci_toserver.tcp = null;
+        }
+        SendRecv.tcpClientConnected.Reset();
     }
 
     public void DoJoin(int iNum)
     {
         ci_toserver.szIP = oJoinList[iNum].szIP;
         ci_toserver.szName = oJoinList[iNum].szName;
-        ci_toserver.tcp = new TcpClient(oJoinList[iNum].szIP, oJoinList[iNum].iPort);
-        ci_toserver.ns = ci_toserver.tcp.GetStream();
+        try
+        {
+            ci_toserver.tcp = new TcpClient(oJoinList[iNum].szIP, oJoinList[iNum].iPort);
+            ci_toserver.ns = ci_toserver.tcp.GetStream();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            try
+            {
+                ci_toserver.tcp = new TcpClient(oJoinList[iNum].szLocalIP, oJoinList[iNum].iPort);
+                ci_toserver.ns = ci_toserver.tcp.GetStream();
+            }
+            catch (Exception e2)
+            {
+                Debug.Log(e2.Message);
+            }
+        }
     }
 
     public void ClientCheck()
