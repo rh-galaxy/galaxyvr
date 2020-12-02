@@ -264,6 +264,9 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="Open.Nat">
+      <HintPath>D:/Prog/unity/Galaxy Forces VR_multip/Assets/Open.Nat/Open.Nat.dll</HintPath>
+    </Reference>
     <Reference Include="Valve.Newtonsoft.Json">
       <HintPath>D:/Prog/unity/Galaxy Forces VR_multip/Assets/SteamVR/Input/Plugins/JSON.NET/Valve.Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -287,9 +290,6 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>D:/Prog/unity/Galaxy Forces VR_multip/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
-    </Reference>
-    <Reference Include="Open.Nat">
-      <HintPath>D:/Prog/unity/Galaxy Forces VR_multip/Assets/Open.Nat/Open.Nat.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.10f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

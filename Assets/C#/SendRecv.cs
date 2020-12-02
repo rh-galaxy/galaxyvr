@@ -207,23 +207,39 @@ public class SendRecv
         // Get the listener that handles the client request.
         TcpListener listener = (TcpListener)ar.AsyncState;
 
-        // End the operation and display the received data on
-        // the console.
-        TcpClient client = listener.EndAcceptTcpClient(ar);
-        client.NoDelay = true;
+        // End the operation.
+        TcpClient client = null;
+        try
+        {
+            client = listener.EndAcceptTcpClient(ar);
+            client.NoDelay = true;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+        if (client == null) return;
         if (iNumCI == 3) client.Close();
         else
         {
-            ci[iNumCI].tcp = client;
-            ci[iNumCI].ns = client.GetStream();
-            ci[iNumCI].stream_msg_recv_pos = 0;
-            ci[iNumCI].stream_msg_recv = new byte[32];
-            iNumCI++;
+            for (int i = 0; i < 3; i++)
+            {
+                if (ci[i].tcp == null) //a free pos
+                {
+                    ci[i].szIP = client.Client.RemoteEndPoint.ToString();
+                    ci[i].tcp = client;
+                    ci[i].ns = client.GetStream();
+                    ci[i].stream_msg_recv_pos = 0;
+                    ci[i].stream_msg_recv = new byte[64];
+                    iNumCI++;
+                    break;
+                }
+            }
         }
 
         // Process the connection here. (Add the client to a
         // server table, read data, etc.)
-        Debug.Log("Client connected completed");
+        Debug.Log("Client connect completed");
 
         // Signal the calling thread to continue.
         tcpClientConnected.Set();
@@ -243,20 +259,83 @@ public class SendRecv
 
     public void Cancel()
     {
+        iNumCI = 0;
         bIsMaster = false;
         oJoinList.Clear();
-        if (server != null)
+        try
         {
-            server.Stop();
-            server = null;
+            if (server != null)
+            {
+                server.Stop();
+            }
         }
-        if(ci_toserver.tcp != null)
+        catch (Exception e)
         {
-            ci_toserver.tcp.Close();
-            ci_toserver.ns = null;
-            ci_toserver.tcp = null;
+            Debug.Log(e.Message);
         }
-        SendRecv.tcpClientConnected.Reset();
+        try
+        {
+            if (ci[0].tcp != null)
+            {
+                //ci[0].tcp.Client.Disconnect(true);
+                ci[0].tcp.Close();
+                ci[0].ns.Close();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+        try
+        {
+            if (ci[1].tcp != null)
+            {
+                //ci[1].tcp.Client.Disconnect(true);
+                ci[1].tcp.Close();
+                ci[1].ns.Close();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+        try
+        {
+            if (ci[2].tcp != null)
+            {
+                //ci[2].tcp.Client.Disconnect(true);
+                ci[2].tcp.Close();
+                ci[2].ns.Close();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+        try
+        {
+            if (ci_toserver.tcp != null)
+            {
+                //ci_toserver.tcp.Client.Disconnect(true);
+                ci_toserver.tcp.Close();
+                ci_toserver.ns.Close();
+            }
+            SendRecv.tcpClientConnected.Reset();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+
+        //proper reset all vars with or witout error
+        server = null;
+        for (int i = 0; i < 3; i++)
+        {
+            ci[i].ns = null;
+            ci[i].tcp = null;
+        }
+        ci_toserver.ns = null;
+        ci_toserver.tcp = null;
     }
 
     public void DoJoin(int iNum)
@@ -366,77 +445,6 @@ public class SendRecv
     int iMyPlayerId = -1;
 
     UnityWebRequest www;
-    public IEnumerator UpdateJoin()
-    {
-        bIsDone = false;
-        bIsMaster = false;
-
-        string url = WEB_HOST + "/mpgame_join.php";
-        www = UnityWebRequest.Get(url);
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            //retrieve results as text
-            string szResult = www.downloadHandler.text;
-            HttpJoinInfo stJoin = new HttpJoinInfo();
-
-            string[] szLines = szResult.Split((char)10);
-            oJoinList.Clear(); //rebuild list
-
-            //parse result
-            for (int i = 0; i < szLines.Length; i++)
-            {
-                //handle spaces in names
-                char[] szSeparator2 = { (char)'\"' };
-                string[] szWithin = szLines[i].Trim('\r', '\n').Split(szSeparator2, StringSplitOptions.RemoveEmptyEntries);
-                stJoin.szName = szWithin[1].Trim(' ');
-                stJoin.szIP = szWithin[3].Trim(' ');
-
-                oJoinList.Add(stJoin);
-            }
-        }
-        bIsDone = true;
-    }
-
-    public IEnumerator UpdateCreate()
-    {
-        bIsDone = false;
-        bIsMaster = true;
-
-        string url = WEB_HOST + "/mpgame_create.php?User=" + UnityWebRequest.EscapeURL(GameManager.szUser);
-        www = UnityWebRequest.Get(url);
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            //retrieve results as text
-            string szResult = www.downloadHandler.text;
-
-            Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + szResult + "]");
-        }
-
-        if (server == null)
-        {
-            config.Port = 14242;
-            server = new NetServer(config);
-            server.Start();
-
-            gi.iNumPlayers = 1;
-            gi.szName[0] = GameManager.szUser;
-            iMyPlayerId = 0;
-        }
-
-        bIsDone = true;
-    }
 
     void DoJoin(string szIP)
     {

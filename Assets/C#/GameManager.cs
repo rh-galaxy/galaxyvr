@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -623,16 +624,23 @@ public class GameManager : MonoBehaviour
             {
                 oSendRecv.bRunJoin = false;
                 oSendRecv.bRunCreate = true;
-                fMultiplayerTimer = 30; //make it happen below
+                fMultiplayerTimer = 25; //make it happen below
                 Menu.theMenu.SetNetworkButtons(false, false);
                 Menu.bMCreate = false;
             }
             if (Menu.iMJoin > 0)
             {
                 //todo more?
-                if (Menu.iMJoin == 1) oSendRecv.DoJoin(0);
-                if (Menu.iMJoin == 2) oSendRecv.DoJoin(1);
-                if (Menu.iMJoin == 3) oSendRecv.DoJoin(2);
+                try
+                {
+                    if (Menu.iMJoin == 1) oSendRecv.DoJoin(0);
+                    if (Menu.iMJoin == 2) oSendRecv.DoJoin(1);
+                    if (Menu.iMJoin == 3) oSendRecv.DoJoin(2);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e.Message);
+                }
                 bWeHaveJoined = true;
                 oSendRecv.bRunJoin = false;
                 oSendRecv.bRunCreate = false;
@@ -647,12 +655,13 @@ public class GameManager : MonoBehaviour
                 oSendRecv.Cancel();
                 oSendRecv.bRunJoin = true;
                 oSendRecv.bRunCreate = false;
+                Menu.theMenu.SetNetworkInfo(oSendRecv); //update to no games to join
                 Menu.theMenu.SetNetworkButtons(true, true);
                 Menu.bMCancelAll = false;
             }
 
             fMultiplayerTimer += Time.unscaledDeltaTime;
-            if (fMultiplayerTimer > 30)
+            if (fMultiplayerTimer > 25)
             {
                 if (oSendRecv.bRunJoin && !bMultiplayerUpdateJoinInProgress)
                 {

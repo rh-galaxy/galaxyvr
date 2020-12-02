@@ -781,7 +781,7 @@ public class Menu : MonoBehaviour
         if(iIncrementalInit<11) return;
 
         Material oMatTemp;
-        if(aMenuLevels[0]==null)
+        if (aMenuLevels == null || aMenuLevels[0] == null)
         {
             Debug.LogError("Update - NULL");
         }
