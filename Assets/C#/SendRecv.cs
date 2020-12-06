@@ -27,15 +27,38 @@ public struct ConnectionInfo
     public System.Net.Sockets.NetworkStream ns;
 
     //impl of "peek buffer", or gather a full message before processing it
-    public int stream_msg_recv_pos;
-    public byte[] stream_msg_recv;
+    public bool stream_recv_len_valid;
+    public int stream_recv_len;
+    public int stream_recv_pos;
+    public byte[] stream_recv;
 }
 
-public struct JoinClient //to server
+public struct GameJoin //type 1, to server
 {
     public char type;
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)]
     public string szName;
+}
+
+public struct GameInfo //type 2, to client
+{
+    public char type;
+    public char iNumPlayers;
+    //player id 0..3
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)]
+    public string szName1;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)]
+    public string szName2;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)]
+    public string szName3;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)]
+    public string szName4;
+}
+
+public struct GameStart //type 3, from master to server from server to all
+{
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)] //max len?
+    public string szLevel;
 }
 
 public class SendRecv
@@ -179,6 +202,8 @@ public class SendRecv
 
             Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + externalIP.ToString() + "], [" + localIP +"]");
         }
+        gi.iNumPlayers = 1;
+        gi.szName1 = GameManager.szUser;
 
         bIsCreateDone = true;
     }
@@ -238,8 +263,9 @@ public class SendRecv
                     ci[i].tcp = client;
                     /**///ci[i].tcp.LingerState = new LingerOption(true, 0);
                     ci[i].ns = client.GetStream();
-                    ci[i].stream_msg_recv_pos = 0;
-                    ci[i].stream_msg_recv = new byte[64];
+                    ci[i].stream_recv_pos = 0;
+                    ci[i].stream_recv = new byte[256];
+                    ci[i].stream_recv_len_valid = false;
                     iNumCI++;
                     break;
                 }
@@ -261,6 +287,8 @@ public class SendRecv
     static int iNumCI = 0;
     static ConnectionInfo[] ci = new ConnectionInfo[3]; //the other players (1..3) when master
     ConnectionInfo ci_toserver; //the server, when !master
+
+    GameInfo gi = new GameInfo();
 
     public SendRecv()
     {
@@ -372,12 +400,14 @@ public class SendRecv
                 Debug.Log(e2.Message);
             }
         }
+        ci_toserver.stream_recv = new byte[256];
+        ci_toserver.stream_recv_pos = 0;
+        ci_toserver.stream_recv_len_valid = false;
 
-        JoinClient toServer;
+        GameJoin toServer;
         toServer.type = (char)1;
         toServer.szName = GameManager.szUser;
-        byte[] b = getBytes<JoinClient>(toServer);
-        //JoinClient jc = fromBytes<JoinClient>(b);
+        byte[] b = getBytes<GameJoin>(toServer);
         byte[] bl = { (byte)b.Length };
         ci_toserver.ns.Write(bl, 0, bl.Length);
         ci_toserver.ns.Write(b, 0, b.Length);
@@ -388,6 +418,7 @@ public class SendRecv
         //recv data
     }
 
+    byte[] tmp_len = new byte[1];
     public void ServerCheck()
     {
         //accept new joining players
@@ -406,23 +437,43 @@ public class SendRecv
         {
             if (ci[i].ns.CanRead && ci[i].ns.DataAvailable)
             {
-                byte[] buf = ci[i].stream_msg_recv;
-                int pos = ci[i].stream_msg_recv_pos;
-                int iNumRead = ci[i].ns.Read(buf, pos, buf.Length - pos);
+                //get length of next message
+                if(!ci[i].stream_recv_len_valid)
+                {
+                    ci[i].ns.Read(tmp_len, 0, 1);
+                    ci[i].stream_recv_len = tmp_len[0];
+                    ci[i].stream_recv_len_valid = true;
+                }
+
+                byte[] buf = ci[i].stream_recv;
+                int pos = ci[i].stream_recv_pos;
+                int iNumRead = ci[i].ns.Read(buf, pos, ci[i].stream_recv_len - pos);
                 pos += iNumRead;
-                if (pos == buf.Length)
+                if (pos == ci[i].stream_recv_len)
                 {
                     pos = 0;
+                    ci[i].stream_recv_len_valid = false;
                     //buf contains a full message
 
                     //construct message
-
                     //handle message
+                    switch (ci[i].stream_recv[0])
+                    {
+                        case 1:
+                            GameJoin gj = fromBytes<GameJoin>(ci[i].stream_recv);
+                            gi.iNumPlayers++;
+                            if (gi.iNumPlayers == 2) gi.szName2 = gj.szName;
+                            if (gi.iNumPlayers == 3) gi.szName3 = gj.szName;
+                            if (gi.iNumPlayers == 4) gi.szName4 = gj.szName;
+                            break;
+                        case 3:
+                            break;
+                    }
 
                     //resend message
 
                 }
-                ci[i].stream_msg_recv_pos = pos;
+                ci[i].stream_recv_pos = pos;
             }
         }
     }
@@ -431,23 +482,6 @@ public class SendRecv
 }
 
 /*
-public class GameInfo //type 1
-{
-    public int iNumPlayers = 0;
-    //player id 0..3
-    public string[] szName = new string[4];
-    //public string[] szIP = new string[4];
-}
-
-public class GameJoin //type 2
-{
-    public string szName;
-}
-
-public class GameStart //type 3
-{
-    public string szLevel;
-}
 
 public class SendRecv
 {
