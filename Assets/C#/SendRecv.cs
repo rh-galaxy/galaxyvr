@@ -7,6 +7,8 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 
+using System.Runtime.InteropServices;
+
 using Open.Nat;
 
 public struct HttpJoinInfo
@@ -29,6 +31,12 @@ public struct ConnectionInfo
     public byte[] stream_msg_recv;
 }
 
+public struct JoinClient //to server
+{
+    public char type;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)]
+    public string szName;
+}
 
 public class SendRecv
 {
@@ -228,6 +236,7 @@ public class SendRecv
                 {
                     ci[i].szIP = client.Client.RemoteEndPoint.ToString();
                     ci[i].tcp = client;
+                    /**///ci[i].tcp.LingerState = new LingerOption(true, 0);
                     ci[i].ns = client.GetStream();
                     ci[i].stream_msg_recv_pos = 0;
                     ci[i].stream_msg_recv = new byte[64];
@@ -257,6 +266,30 @@ public class SendRecv
     {
     }
 
+    byte[] getBytes<T>(T str)
+    {
+        int size = Marshal.SizeOf(str);
+        byte[] arr = new byte[size];
+
+        IntPtr ptr = Marshal.AllocHGlobal(size);
+        Marshal.StructureToPtr(str, ptr, true);
+        Marshal.Copy(ptr, arr, 0, size);
+        Marshal.FreeHGlobal(ptr);
+        return arr;
+    }
+    T fromBytes<T>(byte[] arr)
+    {
+        int size = Marshal.SizeOf<T>();
+        IntPtr ptr = Marshal.AllocHGlobal(size);
+
+        Marshal.Copy(arr, 0, ptr, size);
+
+        T str = Marshal.PtrToStructure<T>(ptr);
+        Marshal.FreeHGlobal(ptr);
+
+        return str;
+    }
+
     public void Cancel()
     {
         iNumCI = 0;
@@ -273,54 +306,30 @@ public class SendRecv
         {
             Debug.Log(e.Message);
         }
-        try
+        for(int i=0; i<3; i++)
         {
-            if (ci[0].tcp != null)
+            try
             {
-                //ci[0].tcp.Client.Disconnect(true);
-                ci[0].tcp.Close();
-                ci[0].ns.Close();
+                if (ci[i].tcp != null)
+                {
+                    ci[i].tcp.Client.Close();
+                    ci[i].tcp.Close();
+                    ci[i].ns.Close();
+                }
             }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
-        try
-        {
-            if (ci[1].tcp != null)
+            catch (Exception e)
             {
-                //ci[1].tcp.Client.Disconnect(true);
-                ci[1].tcp.Close();
-                ci[1].ns.Close();
+                Debug.Log(e.Message);
             }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
-        try
-        {
-            if (ci[2].tcp != null)
-            {
-                //ci[2].tcp.Client.Disconnect(true);
-                ci[2].tcp.Close();
-                ci[2].ns.Close();
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
         }
         try
         {
             if (ci_toserver.tcp != null)
             {
-                //ci_toserver.tcp.Client.Disconnect(true);
+                ci_toserver.tcp.Client.Close();
                 ci_toserver.tcp.Close();
                 ci_toserver.ns.Close();
             }
-            SendRecv.tcpClientConnected.Reset();
         }
         catch (Exception e)
         {
@@ -328,6 +337,7 @@ public class SendRecv
         }
 
         //proper reset all vars with or witout error
+        SendRecv.tcpClientConnected.Reset();
         server = null;
         for (int i = 0; i < 3; i++)
         {
@@ -345,6 +355,7 @@ public class SendRecv
         try
         {
             ci_toserver.tcp = new TcpClient(oJoinList[iNum].szIP, oJoinList[iNum].iPort);
+            /**///ci_toserver.tcp.LingerState = new LingerOption(true, 0);
             ci_toserver.ns = ci_toserver.tcp.GetStream();
         }
         catch (Exception e)
@@ -353,6 +364,7 @@ public class SendRecv
             try
             {
                 ci_toserver.tcp = new TcpClient(oJoinList[iNum].szLocalIP, oJoinList[iNum].iPort);
+                /**///ci_toserver.tcp.LingerState = new LingerOption(true, 0);
                 ci_toserver.ns = ci_toserver.tcp.GetStream();
             }
             catch (Exception e2)
@@ -360,6 +372,15 @@ public class SendRecv
                 Debug.Log(e2.Message);
             }
         }
+
+        JoinClient toServer;
+        toServer.type = (char)1;
+        toServer.szName = GameManager.szUser;
+        byte[] b = getBytes<JoinClient>(toServer);
+        //JoinClient jc = fromBytes<JoinClient>(b);
+        byte[] bl = { (byte)b.Length };
+        ci_toserver.ns.Write(bl, 0, bl.Length);
+        ci_toserver.ns.Write(b, 0, b.Length);
     }
 
     public void ClientCheck()

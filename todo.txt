@@ -1,3 +1,32 @@
+A bit of network programming in c#.
+
+Goal: Implement 4 player multiplayer for Galaxy Forces VR
+*Current status of project
+- Unity and C# is used.
+- Game is single player and in mature state.
+- Open.Nat library is used to setup port forwarding with UPnP.
+- SendRecv.cs will contain the new code, and contains a first (broken) version.
+- PHP database is used in the Create/Join procedure:
+(mpgames_create.php accessed when a game is created, and then continuously access it every 30 sec while the game is waiting for joining players)
+(mpgames_join.php accessed to get a list of all games created that are waiting for players)
+- GUI for the connection procedure is partly done, I will continue on this.
+- It is a VR game but it runs without VR with mouse and keyboard, SteamVR is needed.
+- Everything up until the actual connection and send/recv data is done and tested.
+*TODO
+1. Connect/Join code to go through firewall/router (internet side)
+During testing it will be important to also make it possible to connect from the local network side.
+It should be possible to implement this with C# sockets, but don't know how exactly yet.
+- SendRecv.cs and GameManager.cs (and Menu.cs) source files are the only files needed to modify to achieve this.
+2. Make the GUI for this procedure (partly done).
+3. Game-logic (ingame messsages for bullets, enemies, moving doors, and the 4 players)
+
+Currently I need help with 1.
+
+Game can be checked out at https://github.com/rh-galaxy/galaxyvr/tree/multiplayer
+Here is the game website, with other links https://www.galaxy-forces-vr.com/
+
+
+-------
 Release
 - Trailer: Seems only 30fps is shown not 60 (need fix by Oculus)
 Release for Oculus Quest
