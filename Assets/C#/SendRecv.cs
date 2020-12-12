@@ -55,7 +55,7 @@ public struct GameInfo //type 2, to client
     public string szName4;
 }
 
-public struct GameStart //type 3, from master to server from server to all
+public struct GameStart //type 3, from master to all
 {
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)] //max len?
     public string szLevel;
@@ -144,17 +144,18 @@ public class SendRecv
 
                 System.Threading.Tasks.Task<IPAddress> task2 = device.GetExternalIPAsync();
                 while (!task2.IsCompleted && !task2.IsFaulted) yield return null;
-                if (task.IsCompleted)
+                if (task2.IsCompleted)
                 {
                     externalIP = task2.Result;
 
+                    //test mapping 1999, 2009, 2019 and so on for 20 retries
                     for(int i=0; i<20; i++)
                     {
-                        System.Threading.Tasks.Task task3 = device.CreatePortMapAsync(new Mapping(Protocol.Tcp, iBasePort, iBasePort + 10, "GFVR"));
+                        System.Threading.Tasks.Task task3 = device.CreatePortMapAsync(new Mapping(Protocol.Tcp, iBasePort, iBasePort, "GFVR"));
                         while (!task3.IsCompleted && !task3.IsFaulted) yield return null;
                         if (task3.IsCompleted)
                         {
-                            Debug.Log("Ports "+ iBasePort.ToString() + "+10 mapped on " + externalIP.ToString());
+                            Debug.Log("Port "+ iBasePort.ToString() + " mapped on " + externalIP.ToString());
                             mapped = true;
                             break;
                         }
@@ -172,7 +173,7 @@ public class SendRecv
             if (!mapped)
             {
                 externalIP = localIP;
-                Debug.Log("Ports not mapped, making the best of it and use IP " + externalIP.ToString());
+                Debug.Log("Port not mapped, making the best of it and use IP " + externalIP.ToString());
             }
 
             //create listening socket
@@ -202,7 +203,7 @@ public class SendRecv
 
             Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + externalIP.ToString() + "], [" + localIP +"]");
         }
-        gi.iNumPlayers = 1;
+        gi.iNumPlayers = (char)1;
         gi.szName1 = GameManager.szUser;
 
         bIsCreateDone = true;

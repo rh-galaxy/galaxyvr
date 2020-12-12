@@ -11,11 +11,13 @@ Goal: Implement 4 player multiplayer for Galaxy Forces VR
 (mpgames_join.php accessed to get a list of all games created that are waiting for players)
 - GUI for the connection procedure is partly done, I will continue on this.
 - It is a VR game but it runs without VR with mouse and keyboard, SteamVR is needed.
-- Everything up until the actual connection and send/recv data is done and tested.
 *TODO
 1. Connect/Join code to go through firewall/router (internet side)
 During testing it will be important to also make it possible to connect from the local network side.
-It should be possible to implement this with C# sockets, but don't know how exactly yet.
+Master  <-> Router <-> Internet <-> Client2
+Client1 <|                       |> Router <-> Client3
+It should be possible to implement this with C# sockets.
+Now TcpClient and TcpListener is used but may have to change to Socket (lower level) to be able to set port used to one in the range fwd from Open.Nat.
 - SendRecv.cs and GameManager.cs (and Menu.cs) source files are the only files needed to modify to achieve this.
 2. Make the GUI for this procedure (partly done).
 3. Game-logic (ingame messsages for bullets, enemies, moving doors, and the 4 players)
