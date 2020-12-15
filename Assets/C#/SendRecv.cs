@@ -57,6 +57,7 @@ public struct GameInfo //type 2, to client
 
 public struct GameStart //type 3, from master to all
 {
+    public char type;
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)] //max len?
     public string szLevel;
 }
@@ -384,6 +385,8 @@ public class SendRecv
         server = null;
         for (int i = 0; i < 3; i++)
         {
+            ci[i].szIP = "";
+            ci[i].szName = "";
             ci[i].ns = null;
             ci[i].tcp = null;
         }
@@ -391,6 +394,7 @@ public class SendRecv
         ci_toserver.tcp = null;
     }
 
+    //done by each client
     public void DoJoin(int iNum)
     {
         ci_toserver.szIP = oJoinList[iNum].szIP;
@@ -427,6 +431,22 @@ public class SendRecv
         byte[] bl = { (byte)b.Length };
         ci_toserver.ns.Write(bl, 0, bl.Length);
         ci_toserver.ns.Write(b, 0, b.Length);
+    }
+
+    //done by master
+    public void DoStartGame(string szLevel)
+    {
+        gs.type = (char)3;
+        byte[] b = getBytes<GameStart>(gs);
+        byte[] bl = { (byte)b.Length };
+        for (int j = 0; j < 3; j++)
+        {
+            if (ci[j].szName.Length > 0)
+            {
+                ci[j].ns.Write(bl, 0, bl.Length);
+                ci[j].ns.Write(b, 0, b.Length);
+            }
+        }
     }
 
     public int ClientCheck()
@@ -533,8 +553,14 @@ public class SendRecv
                             gi.type = (char)2;
                             byte[] b = getBytes<GameInfo>(gi);
                             byte[] bl = { (byte)b.Length };
-                            ci_toserver.ns.Write(bl, 0, bl.Length);
-                            ci_toserver.ns.Write(b, 0, b.Length);
+                            for (int j = 0; j < 3; j++)
+                            {
+                                if(ci[j].szName.Length>0)
+                                {
+                                    ci[j].ns.Write(bl, 0, bl.Length);
+                                    ci[j].ns.Write(b, 0, b.Length);
+                                }
+                            }
 
                             action = 2;
 
