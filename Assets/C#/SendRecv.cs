@@ -204,9 +204,9 @@ public class SendRecv
 
             Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + externalIP.ToString() + "], [" + localIP +"]");
         }
-        if (gi.iNumPlayers == 0)
+        //if (gi.iNumPlayers == 0)
         {
-            gi.iNumPlayers = (char)1;
+            //gi.iNumPlayers = (char)1;
             gi.szName1 = GameManager.szUser;
         }
 
@@ -441,7 +441,8 @@ public class SendRecv
         byte[] bl = { (byte)b.Length };
         for (int j = 0; j < 3; j++)
         {
-            if (ci[j].szName.Length > 0)
+            //TODO error handling, detect closed sockets (should be in all send code)
+            if (ci[j].szIP.Length > 0)
             {
                 ci[j].ns.Write(bl, 0, bl.Length);
                 ci[j].ns.Write(b, 0, b.Length);
@@ -449,6 +450,7 @@ public class SendRecv
         }
     }
 
+    byte[] tmp_len = new byte[1];
     public int ClientCheck()
     {
         //recv data
@@ -499,7 +501,6 @@ public class SendRecv
         return 0;
     }
 
-    byte[] tmp_len = new byte[1];
     public int ServerCheck()
     {
         //accept new joining players
@@ -544,18 +545,20 @@ public class SendRecv
                         //msgs in loby
                         case 1:
                             GameJoin gj = fromBytes<GameJoin>(ci[i].stream_recv);
-                            gi.iNumPlayers++;
-                            if (gi.iNumPlayers == 2) gi.szName2 = gj.szName;
-                            if (gi.iNumPlayers == 3) gi.szName3 = gj.szName;
-                            if (gi.iNumPlayers == 4) gi.szName4 = gj.szName;
+                            //gi.iNumPlayers++;
+                            if (gi.szName2 == "") gi.szName2 = gj.szName;
+                            else if (gi.szName3 == "") gi.szName3 = gj.szName;
+                            else if (gi.szName4 == "") gi.szName4 = gj.szName;
+                            //else full, should not happen
 
-                            //TODO error handling, detect closed sockets (should be in all send code)
+                            //send to all
                             gi.type = (char)2;
                             byte[] b = getBytes<GameInfo>(gi);
                             byte[] bl = { (byte)b.Length };
                             for (int j = 0; j < 3; j++)
                             {
-                                if(ci[j].szName.Length>0)
+                                //TODO error handling, detect closed sockets (should be in all send code)
+                                if (ci[j].szIP.Length>0)
                                 {
                                     ci[j].ns.Write(bl, 0, bl.Length);
                                     ci[j].ns.Write(b, 0, b.Length);
