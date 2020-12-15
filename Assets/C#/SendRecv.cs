@@ -262,7 +262,6 @@ public class SendRecv
                 {
                     ci[i].szIP = client.Client.RemoteEndPoint.ToString();
                     ci[i].tcp = client;
-                    /**///ci[i].tcp.LingerState = new LingerOption(true, 0);
                     ci[i].ns = client.GetStream();
                     ci[i].stream_recv_pos = 0;
                     ci[i].stream_recv = new byte[256];
@@ -289,7 +288,8 @@ public class SendRecv
     static ConnectionInfo[] ci = new ConnectionInfo[3]; //the other players (1..3) when master
     ConnectionInfo ci_toserver; //the server, when !master
 
-    GameInfo gi = new GameInfo();
+    internal GameInfo gi = new GameInfo();
+    internal GameStart gs = new GameStart();
 
     public SendRecv()
     {
@@ -383,8 +383,8 @@ public class SendRecv
         ci_toserver.szName = oJoinList[iNum].szName;
         try
         {
+            //TODO async connect (non blocking), this freezes the game for 2 sec
             ci_toserver.tcp = new TcpClient(oJoinList[iNum].szIP, oJoinList[iNum].iPort);
-            /**///ci_toserver.tcp.LingerState = new LingerOption(true, 0);
             ci_toserver.ns = ci_toserver.tcp.GetStream();
         }
         catch (Exception e)
@@ -392,8 +392,8 @@ public class SendRecv
             Debug.Log(e.Message);
             try
             {
+                //TODO async connect (non blocking), this freezes the game for 2 sec
                 ci_toserver.tcp = new TcpClient(oJoinList[iNum].szLocalIP, oJoinList[iNum].iPort);
-                /**///ci_toserver.tcp.LingerState = new LingerOption(true, 0);
                 ci_toserver.ns = ci_toserver.tcp.GetStream();
             }
             catch (Exception e2)
@@ -405,6 +405,7 @@ public class SendRecv
         ci_toserver.stream_recv_pos = 0;
         ci_toserver.stream_recv_len_valid = false;
 
+        //TODO error handling, detect closed sockets (should be in all send code)
         GameJoin toServer;
         toServer.type = (char)1;
         toServer.szName = GameManager.szUser;
@@ -414,13 +415,58 @@ public class SendRecv
         ci_toserver.ns.Write(b, 0, b.Length);
     }
 
-    public void ClientCheck()
+    public int ClientCheck()
     {
         //recv data
+        if (ci_toserver.ns.CanRead && ci_toserver.ns.DataAvailable)
+        {
+            int action = 0;
+            //get length of next message
+            if (!ci_toserver.stream_recv_len_valid)
+            {
+                ci_toserver.ns.Read(tmp_len, 0, 1);
+                ci_toserver.stream_recv_len = tmp_len[0];
+                ci_toserver.stream_recv_len_valid = true;
+            }
+
+            byte[] buf = ci_toserver.stream_recv;
+            int pos = ci_toserver.stream_recv_pos;
+            int iNumRead = ci_toserver.ns.Read(buf, pos, ci_toserver.stream_recv_len - pos);
+            pos += iNumRead;
+            if (pos == ci_toserver.stream_recv_len)
+            {
+                pos = 0;
+                ci_toserver.stream_recv_len_valid = false;
+                //buf contains a full message
+
+                //construct message
+                //handle message
+                switch (ci_toserver.stream_recv[0])
+                {
+                    //msgs in loby
+                    case 2:
+                        gi = fromBytes<GameInfo>(ci_toserver.stream_recv);
+                        action = 2;
+                        break;
+                    case 3:
+                        gs = fromBytes<GameStart>(ci_toserver.stream_recv);
+                        action = 3;
+                        break;
+                    //msgs in game
+                    //case ?:
+                        //TODO
+                        //break;
+                }
+
+            }
+            ci_toserver.stream_recv_pos = pos;
+            return action;
+        }
+        return 0;
     }
 
     byte[] tmp_len = new byte[1];
-    public void ServerCheck()
+    public int ServerCheck()
     {
         //accept new joining players
         if (!bListening)
@@ -434,6 +480,7 @@ public class SendRecv
         }
 
         //recv data
+        int action = 0;
         for (int i = 0; i < iNumCI; i++)
         {
             if (ci[i].ns.CanRead && ci[i].ns.DataAvailable)
@@ -460,178 +507,34 @@ public class SendRecv
                     //handle message
                     switch (ci[i].stream_recv[0])
                     {
+                        //msgs in loby
                         case 1:
                             GameJoin gj = fromBytes<GameJoin>(ci[i].stream_recv);
                             gi.iNumPlayers++;
                             if (gi.iNumPlayers == 2) gi.szName2 = gj.szName;
                             if (gi.iNumPlayers == 3) gi.szName3 = gj.szName;
                             if (gi.iNumPlayers == 4) gi.szName4 = gj.szName;
-                            break;
-                        case 3:
-                            break;
-                    }
 
-                    //resend message
+                            //TODO send GameInfo (gi) to all clients
+                            //...
+
+                            action = 2;
+
+                            break;
+                        //msgs in game
+                        //case ?:
+                            //TODO
+                            //break;
+                    }
 
                 }
                 ci[i].stream_recv_pos = pos;
+                return action;
             }
         }
+        return 0;
     }
 
 
 }
 
-/*
-
-public class SendRecv
-{
-    // unity web vars used in the create/join process
-    const string WEB_HOST = "https://galaxy-forces-vr.com";
-
-    internal List<HttpJoinInfo> oJoinList = new List<HttpJoinInfo>();
-    internal bool bIsDone = false;
-    internal bool bIsMaster;
-
-    NetPeerConfiguration config = new NetPeerConfiguration("GFVR");
-    NetServer server = null;
-    NetClient client = null;
-
-    GameInfo gi = new GameInfo();
-    int iMyPlayerId = -1;
-
-    UnityWebRequest www;
-
-    void DoJoin(string szIP)
-    {
-        NetPeerConfiguration c = new NetPeerConfiguration("GFVR");
-        client = new NetClient(c);
-        client.Start();
-        client.Connect(szIP, 14242);
-
-        //send name
-        GameJoin gj = new GameJoin();
-        gj.szName = GameManager.szUser;
-        NetOutgoingMessage message = client.CreateMessage();
-        message.Write( (byte)2 );
-        message.WriteAllFields(gj);
-        client.SendMessage(message, NetDeliveryMethod.ReliableOrdered);
-    }
-
-    void DoStart(string szLevel)
-    {
-        GameStart gs = new GameStart();
-        gs.szLevel = szLevel;
-        NetOutgoingMessage message = server.CreateMessage();
-        message.Write((byte)3);
-        message.WriteAllFields(gs);
-        server.SendToAll(message, NetDeliveryMethod.ReliableOrdered);
-    }
-
-    int ClientCheck()
-    {
-        int iResult = 0;
-        //recv data
-        // construct message
-        // handle message
-        NetIncomingMessage msg;
-        while ((msg = client.ReadMessage()) != null)
-        {
-            switch (msg.MessageType)
-            {
-                case NetIncomingMessageType.VerboseDebugMessage:
-                case NetIncomingMessageType.DebugMessage:
-                case NetIncomingMessageType.WarningMessage:
-                case NetIncomingMessageType.ErrorMessage:
-                    Console.WriteLine(msg.ReadString());
-                    break;
-                case NetIncomingMessageType.Data:
-                    byte type = msg.ReadByte();
-                    switch(type)
-                    {
-                        case 1:
-                            bool found = false;
-                            msg.ReadAllFields(gi);
-                            for(int i=0; i<gi.iNumPlayers; i++)
-                            {
-                                if (gi.szName[i].CompareTo(GameManager.szUser) == 0)
-                                {
-                                    iMyPlayerId = i;
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if(!found && gi.iNumPlayers==4) //gi.iNumPlayers==4 is a hack to not disconnect if two or more players have joined at the same time
-                            {
-                                //disconnect
-                                client.Disconnect("game full");
-                            }
-                            break;
-                        case 3:
-                            GameStart gs = new GameStart();
-                            msg.ReadAllFields(gs);
-                            iResult = 1;
-                            break;
-                    }
-                    break;
-                default:
-                    Console.WriteLine("Unhandled type: " + msg.MessageType);
-                    break;
-            }
-            client.Recycle(msg);
-        }
-        return iResult;
-    }
-
-    void ServerCheck()
-    {
-        //accept new joining players
-        //server.
-
-        //recv data
-        // construct message
-        // handle message
-        // resend message
-        NetIncomingMessage msg;
-        while ((msg = server.ReadMessage()) != null)
-        {
-            switch (msg.MessageType)
-            {
-                case NetIncomingMessageType.VerboseDebugMessage:
-                case NetIncomingMessageType.DebugMessage:
-                case NetIncomingMessageType.WarningMessage:
-                case NetIncomingMessageType.ErrorMessage:
-                    Console.WriteLine(msg.ReadString());
-                    break;
-                case NetIncomingMessageType.Data:
-                    byte type = msg.ReadByte();
-                    switch (type)
-                    {
-                        case 2:
-                            GameJoin gj = new GameJoin();
-                            msg.ReadAllFields(gj);
-
-                            if(gi.iNumPlayers<=3)
-                            {
-                                gi.szName[gi.iNumPlayers] = gj.szName;
-                                gi.iNumPlayers++;
-                            }
-                            //build reply
-                            NetOutgoingMessage message = server.CreateMessage();
-                            message.Write( (byte)1 );
-                            message.WriteAllFields(gi);
-                            //send to all
-                            server.SendToAll(message, NetDeliveryMethod.ReliableOrdered);
-                            break;
-                    }
-                    break;
-                default:
-                    Console.WriteLine("Unhandled type: " + msg.MessageType);
-                    break;
-            }
-            server.Recycle(msg);
-        }
-    }
-
-}
-*/

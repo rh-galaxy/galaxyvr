@@ -614,8 +614,27 @@ public class GameManager : MonoBehaviour
 
         UpdateFade();
 
-        if(bWeHaveJoined) oSendRecv.ClientCheck();
-        if(bWeHaveCreated) oSendRecv.ServerCheck();
+        int iAction = 0;
+        do
+        {
+            if (bWeHaveJoined) iAction = oSendRecv.ClientCheck();
+            if (bWeHaveCreated) iAction = oSendRecv.ServerCheck();
+
+            switch (iAction)
+            {
+                case 2:
+                    //TODO update network info in menu with joined players
+                    //set oSendRecv.gi in menu
+                    break;
+                case 3:
+                    //start the game level selected
+                    //TODO setup more on players that are in the game
+                    GameLevel.szLevel = oSendRecv.gs.szLevel;
+                    iState = 6;
+                    StartFade(0.3f, 0.0f, true);
+                    break;
+            }
+        } while (iAction != 0);
 
         //in menu?
         if (iState >= 1 || iState <= 4)
