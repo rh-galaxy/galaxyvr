@@ -203,8 +203,11 @@ public class SendRecv
 
             Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + externalIP.ToString() + "], [" + localIP +"]");
         }
-        gi.iNumPlayers = (char)1;
-        gi.szName1 = GameManager.szUser;
+        if (gi.iNumPlayers == 0)
+        {
+            gi.iNumPlayers = (char)1;
+            gi.szName1 = GameManager.szUser;
+        }
 
         bIsCreateDone = true;
     }
@@ -291,8 +294,18 @@ public class SendRecv
     internal GameInfo gi = new GameInfo();
     internal GameStart gs = new GameStart();
 
+    void ClearStructs()
+    {
+        gi.iNumPlayers = (char)0;
+        gi.szName1 = "";
+        gi.szName2 = "";
+        gi.szName3 = "";
+        gi.szName4 = "";
+    }
+
     public SendRecv()
     {
+        ClearStructs();
     }
 
     byte[] getBytes<T>(T str)
@@ -324,6 +337,7 @@ public class SendRecv
         iNumCI = 0;
         bIsMaster = false;
         oJoinList.Clear();
+        ClearStructs();
         try
         {
             if (server != null)
@@ -515,8 +529,12 @@ public class SendRecv
                             if (gi.iNumPlayers == 3) gi.szName3 = gj.szName;
                             if (gi.iNumPlayers == 4) gi.szName4 = gj.szName;
 
-                            //TODO send GameInfo (gi) to all clients
-                            //...
+                            //TODO error handling, detect closed sockets (should be in all send code)
+                            gi.type = (char)2;
+                            byte[] b = getBytes<GameInfo>(gi);
+                            byte[] bl = { (byte)b.Length };
+                            ci_toserver.ns.Write(bl, 0, bl.Length);
+                            ci_toserver.ns.Write(b, 0, b.Length);
 
                             action = 2;
 

@@ -614,6 +614,7 @@ public class GameManager : MonoBehaviour
 
         UpdateFade();
 
+        //start network code
         int iAction = 0;
         do
         {
@@ -623,8 +624,8 @@ public class GameManager : MonoBehaviour
             switch (iAction)
             {
                 case 2:
-                    //TODO update network info in menu with joined players
-                    //set oSendRecv.gi in menu
+                    //update network info in menu with joined players
+                    Menu.theMenu.SetNetworkInfo(oSendRecv);
                     break;
                 case 3:
                     //start the game level selected
@@ -725,6 +726,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        //end network code
 
         //to ignore input below, only way back is to unpause
         if (bPause) return;

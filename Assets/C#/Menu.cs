@@ -434,6 +434,11 @@ public class Menu : MonoBehaviour
 
         if (sendRecv.oJoinList.Count >= 3) oMJoinText3.GetComponent<TextMesh>().text = sendRecv.oJoinList[2].szName;
         else oMJoinText3.GetComponent<TextMesh>().text = "";
+
+        oMPlayerText1.GetComponent<TextMesh>().text = sendRecv.gi.szName1;
+        oMPlayerText2.GetComponent<TextMesh>().text = sendRecv.gi.szName2;
+        oMPlayerText3.GetComponent<TextMesh>().text = sendRecv.gi.szName3;
+        oMPlayerText4.GetComponent<TextMesh>().text = sendRecv.gi.szName4;
     }
 
     public void SetLevelInfoOff()
