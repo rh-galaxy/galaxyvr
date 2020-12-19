@@ -1,32 +1,81 @@
 A bit of network programming in c#.
 
 Goal: Implement 4 player multiplayer for Galaxy Forces VR
+*Requirements from you
+- You will need min two windows PCs in a network for testing
+- You will need to be familiar with TcpListener and TcpCliend in C#
+- You will need some knowledge of Unity
+- You will need to download the "Galaxy Forces VR" Unity project and make sure you can run it and debug it.
+ (that is a first test order of $20, then we can continue with the real order if you believe you can help me)
 *Current status of project
-- Unity and C# is used.
-- Game is single player and in mature state.
+- Unity and C# is used, PC windows.
+- Game is single player and in a mature state.
 - Open.Nat library is used to setup port forwarding with UPnP.
-- SendRecv.cs will contain the new code, and contains a first (broken) version.
 - PHP database is used in the Create/Join procedure:
 (mpgames_create.php accessed when a game is created, and then continuously access it every 30 sec while the game is waiting for joining players)
 (mpgames_join.php accessed to get a list of all games created that are waiting for players)
+- SendRecv.cs will contain the new code, and contains a first version.
 - GUI for the connection procedure is partly done, I will continue on this.
 - It is a VR game but it runs without VR with mouse and keyboard, SteamVR is needed.
 *TODO
-1. Connect/Join code to go through firewall/router (internet side)
+1. Connect/Join/Cancel code to go through firewall/router (internet side)
 During testing it will be important to also make it possible to connect from the local network side.
-Master  <-> Router <-> Internet <-> Client2
-Client1 <|                       |> Router <-> Client3
-It should be possible to implement this with C# sockets.
-Now TcpClient and TcpListener is used but may have to change to Socket (lower level) to be able to set port used to one in the range fwd from Open.Nat.
+It is possible to implement this with C# tcp sockets.
 - SendRecv.cs and GameManager.cs (and Menu.cs) source files are the only files needed to modify to achieve this.
-2. Make the GUI for this procedure (partly done).
-3. Game-logic (ingame messsages for bullets, enemies, moving doors, and the 4 players)
+2. Make the rest of the GUI for this procedure (partly done).
+3. Game-logic (in-game messages for bullets, enemies, moving doors, and the 4 players)
 
-Currently I need help with 1.
-
-Game can be checked out at https://github.com/rh-galaxy/galaxyvr/tree/multiplayer
+Begin to download the project either from github (https://github.com/rh-galaxy/galaxyvr/tree/multiplayer) or this link: https://www.galaxy-forces-vr.com/GFVR_multip_dev.zip
+Then install Unity 2019.2.10f1 from https://unity3d.com/get-unity/download/archive (via UnityHub).
 Here is the game website, with other links https://www.galaxy-forces-vr.com/
 
+---
+More explained on the connection procedure.
+
+The connect procedure in the GUI (see image 1: https://www.galaxy-forces-vr.com/temp/unity_multiplayer1.jpg)
+The possible ways for connections (see below)
+
+                      PHP Server
+                        |
+Master  <-> Router <-> Internet <-> Client2
+Client1 <|                       |> Router <-> Client3
+
+1. The master create a game (and send its internal and external IP to the PHP server), it also setup port forwarding with Open.Nat (default ports 1999+10 in range)
+2. Other clients can see the game and join
+3. Joining clients use the IP (first try external, then try internal) and port from the PHP server to connect
+4. The joined players see other players in the game (sent from master as a reply whenever the list of players change)
+5. The master starts the game - all players in the game begin loading the level selected.
+
+We are now at the start of 4 in the current code
+
+But there are things not working yet like
+1. Cancel connection at any time from any computer.
+ (joined players shall disappear, if the master cancels joined players shall detect it and cancel)
+2. Connect is blocking right now, should be asynchronous.
+3. Master - Client1 -- tested working
+   Master - Client2 -- not tested
+   Master - Client3 -- tested working
+   
+---   
+Currently multiplayer code are added to 3 files   
+
+GameManager.cs - Mostly row 617 - 729
+Menu.cs - Mostly around row 390 - 442 but some code is spread all over
+SendRecv.cs - All of this file.
+ UpdateJoin() is called periodically to get available games from the PHP server
+ UpdateCreate() is called periodically after the Master has created a game to announce to the PHP server that the game is still open and waiting for players
+   The first time this is called port forwarding is set up with Open.Nat.
+ Messages sent on the network are defined as a struct, currently GameJoin, GameInfo, and GameStart. And every message shall begin with the size (one byte outside of the struct).
+  getBytes() and fromBytes() can be used to convert a struct to/from a byte array before sending.
+
+
+
+
+
+
+
+
+Non-multiplayer todo.txt
 
 -------
 Release
