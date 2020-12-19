@@ -397,15 +397,15 @@ public class Menu : MonoBehaviour
         if (oMJoin1 == null) oMJoin1 = new C_ItemInMenu(vPos, "", "MJoin1", 4.0f, 4.0f, Menu.theMenu.oMultiplayerInfoContainer);
         oMJoin1.oLevelText.SetActive(false);
 
-        vPos = new Vector3(-8.9f, -1.5f - 0.4f, -0.1f);
+        vPos = new Vector3(-8.9f, -2.0f - 0.4f, -0.1f);
         if (oMJoin2 == null) oMJoin2 = new C_ItemInMenu(vPos, "", "MJoin2", 4.0f, 4.0f, Menu.theMenu.oMultiplayerInfoContainer);
         oMJoin2.oLevelText.SetActive(false);
 
-        vPos = new Vector3(-8.9f, -2.5f - 0.4f, -0.1f);
+        vPos = new Vector3(-8.9f, -3.5f - 0.4f, -0.1f);
         if (oMJoin3 == null) oMJoin3 = new C_ItemInMenu(vPos, "", "MJoin3", 4.0f, 4.0f, Menu.theMenu.oMultiplayerInfoContainer);
         oMJoin3.oLevelText.SetActive(false);
 
-        vPos = new Vector3(1.0f, -2.5f - 0.4f, -0.1f);
+        vPos = new Vector3(1.0f, -3.5f - 0.4f, -0.1f);
         if (oMCancelAll == null) oMCancelAll = new C_ItemInMenu(vPos, "", "MCancelAll", 4.0f, 4.0f, Menu.theMenu.oMultiplayerInfoContainer);
     }
 

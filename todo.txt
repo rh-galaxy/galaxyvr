@@ -40,7 +40,7 @@ The possible ways for connections (see below)
 Master  <-> Router <-> Internet <-> Client2
 Client1 <|                       |> Router <-> Client3
 
-1. The master create a game (and send its internal and external IP to the PHP server), it also setup port forwarding with Open.Nat (default ports 1999+10 in range)
+1. The master create a game (and send its internal and external IP to the PHP server), it also setup port forwarding with Open.Nat (default port 1999)
 2. Other clients can see the game and join
 3. Joining clients use the IP (first try external, then try internal) and port from the PHP server to connect
 4. The joined players see other players in the game (sent from master as a reply whenever the list of players change)

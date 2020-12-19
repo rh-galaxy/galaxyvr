@@ -21,7 +21,8 @@ public struct HttpJoinInfo
 
 public struct ConnectionInfo
 {
-    public string szName;
+    public string szGameName;
+    public int iClientNum; //index in list of clients (GameInfo) (master always index 0)
     public string szIP;
     public System.Net.Sockets.TcpClient tcp;
     public System.Net.Sockets.NetworkStream ns;
@@ -31,6 +32,10 @@ public struct ConnectionInfo
     public int stream_recv_len;
     public int stream_recv_pos;
     public byte[] stream_recv;
+
+    public bool bPingSent;
+    public int iLastPingSeq;
+    public DateTime dtLastPingResponse;
 }
 
 public struct GameJoin //type 1, to server
@@ -43,8 +48,7 @@ public struct GameJoin //type 1, to server
 public struct GameInfo //type 2, to client
 {
     public char type;
-    public char iNumPlayers;
-    //player id 0..3
+    //player id 0..3, ""=no player with this id/pos
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)]
     public string szName1;
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 38)]
@@ -62,8 +66,18 @@ public struct GameStart //type 3, from master to all
     public string szLevel;
 }
 
+public struct GamePing //type 4, to server, to client
+{
+    public char type;
+    public char origin_server; //1 is first send from server to a client
+    public int seq;
+}
+
 public class SendRecv
 {
+    const double PingTime = 3.0;
+    const double PingAnswerTime = 9.0; //high during debug later 9.0 or something
+
     // unity web vars used in the create/join process
     const string WEB_HOST = "https://galaxy-forces-vr.com";
 
@@ -204,11 +218,7 @@ public class SendRecv
 
             Debug.Log("Created game as \"" + GameManager.szUser + "\" [" + externalIP.ToString() + "], [" + localIP +"]");
         }
-        //if (gi.iNumPlayers == 0)
-        {
-            //gi.iNumPlayers = (char)1;
-            gi.szName1 = GameManager.szUser;
-        }
+        gi.szName1 = GameManager.szUser;
 
         bIsCreateDone = true;
     }
@@ -257,7 +267,7 @@ public class SendRecv
             Debug.Log(e.Message);
         }
         if (client == null) return;
-        if (iNumCI == 3) client.Close();
+        if (iNumCI >= 3) client.Close();
         else
         {
             for (int i = 0; i < 3; i++)
@@ -270,6 +280,8 @@ public class SendRecv
                     ci[i].stream_recv_pos = 0;
                     ci[i].stream_recv = new byte[256];
                     ci[i].stream_recv_len_valid = false;
+                    ci[i].iLastPingSeq = 0;
+                    ci[i].dtLastPingResponse = DateTime.Now;
                     iNumCI++;
                     break;
                 }
@@ -297,7 +309,6 @@ public class SendRecv
 
     void ClearStructs()
     {
-        gi.iNumPlayers = (char)0;
         gi.szName1 = "";
         gi.szName2 = "";
         gi.szName3 = "";
@@ -333,6 +344,32 @@ public class SendRecv
         return str;
     }
 
+    public void CancelCI(ConnectionInfo ci_to_cancel)
+    {
+        if (ci_to_cancel.iClientNum == 1) gi.szName2 = "";
+        if (ci_to_cancel.iClientNum == 2) gi.szName3 = "";
+        if (ci_to_cancel.iClientNum == 3) gi.szName4 = "";
+
+        if (ci_to_cancel.tcp != null)
+        {
+            try
+            {
+                ci_to_cancel.tcp.Client.Close();
+                ci_to_cancel.tcp.Close();
+                ci_to_cancel.ns.Close();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
+        }
+        //proper reset all vars with or witout error
+        ci_to_cancel.bPingSent = false;
+        ci_to_cancel.iClientNum = 0;
+        ci_to_cancel.szIP = "";
+        ci_to_cancel.ns = null;
+        ci_to_cancel.tcp = null;
+    }
     public void Cancel()
     {
         iNumCI = 0;
@@ -352,53 +389,19 @@ public class SendRecv
         }
         for(int i=0; i<3; i++)
         {
-            try
-            {
-                if (ci[i].tcp != null)
-                {
-                    ci[i].tcp.Client.Close();
-                    ci[i].tcp.Close();
-                    ci[i].ns.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-            }
+            CancelCI(ci[i]);
         }
-        try
-        {
-            if (ci_toserver.tcp != null)
-            {
-                ci_toserver.tcp.Client.Close();
-                ci_toserver.tcp.Close();
-                ci_toserver.ns.Close();
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
+        CancelCI(ci_toserver);
 
-        //proper reset all vars with or witout error
         SendRecv.tcpClientConnected.Reset();
         server = null;
-        for (int i = 0; i < 3; i++)
-        {
-            ci[i].szIP = "";
-            ci[i].szName = "";
-            ci[i].ns = null;
-            ci[i].tcp = null;
-        }
-        ci_toserver.ns = null;
-        ci_toserver.tcp = null;
     }
 
     //done by each client
     public void DoJoin(int iNum)
     {
         ci_toserver.szIP = oJoinList[iNum].szIP;
-        ci_toserver.szName = oJoinList[iNum].szName;
+        ci_toserver.szGameName = oJoinList[iNum].szName;
         try
         {
             //TODO async connect (non blocking), this freezes the game for 2 sec
@@ -422,15 +425,22 @@ public class SendRecv
         ci_toserver.stream_recv = new byte[256];
         ci_toserver.stream_recv_pos = 0;
         ci_toserver.stream_recv_len_valid = false;
+        ci_toserver.iLastPingSeq = 0;
+        ci_toserver.dtLastPingResponse = DateTime.Now;
 
-        //TODO error handling, detect closed sockets (should be in all send code)
         GameJoin toServer;
         toServer.type = (char)1;
         toServer.szName = GameManager.szUser;
         byte[] b = getBytes<GameJoin>(toServer);
         byte[] bl = { (byte)b.Length };
-        ci_toserver.ns.Write(bl, 0, bl.Length);
-        ci_toserver.ns.Write(b, 0, b.Length);
+        try
+        {
+            ci_toserver.ns.Write(bl, 0, bl.Length);
+            ci_toserver.ns.Write(b, 0, b.Length);
+        }
+        catch (Exception e)
+        {
+        }
     }
 
     //done by master
@@ -441,11 +451,16 @@ public class SendRecv
         byte[] bl = { (byte)b.Length };
         for (int j = 0; j < 3; j++)
         {
-            //TODO error handling, detect closed sockets (should be in all send code)
-            if (ci[j].szIP.Length > 0)
+            try
             {
-                ci[j].ns.Write(bl, 0, bl.Length);
-                ci[j].ns.Write(b, 0, b.Length);
+                if (ci[j].tcp != null)
+                {
+                    ci[j].ns.Write(bl, 0, bl.Length);
+                    ci[j].ns.Write(b, 0, b.Length);
+                }
+            }
+            catch (Exception e)
+            {
             }
         }
     }
@@ -453,6 +468,35 @@ public class SendRecv
     byte[] tmp_len = new byte[1];
     public int ClientCheck()
     {
+        //send ping
+        if ((DateTime.Now - ci_toserver.dtLastPingResponse) > TimeSpan.FromSeconds(PingTime) && !ci_toserver.bPingSent && ci_toserver.ns.CanWrite)
+        {
+            ci_toserver.bPingSent = true;
+            GamePing gp = new GamePing();
+            gp.type = (char)4;
+            gp.seq = ci_toserver.iLastPingSeq++;
+            gp.origin_server = (char)0;
+            byte[] b = getBytes<GamePing>(gp);
+            byte[] bl = { (byte)b.Length };
+            try
+            {
+                ci_toserver.ns.Write(bl, 0, bl.Length);
+                ci_toserver.ns.Write(b, 0, b.Length);
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        //check connection valid (ping)
+        if ((DateTime.Now - ci_toserver.dtLastPingResponse) > TimeSpan.FromSeconds(PingAnswerTime))
+        {
+            //too long period, connection dead?
+            //cancel
+            Cancel();
+            return 2;
+        }
+
         //recv data
         if (ci_toserver.ns.CanRead && ci_toserver.ns.DataAvailable)
         {
@@ -488,6 +532,30 @@ public class SendRecv
                         gs = fromBytes<GameStart>(ci_toserver.stream_recv);
                         action = 3;
                         break;
+                    case 4:
+                        {
+                            GamePing gp = fromBytes<GamePing>(ci_toserver.stream_recv);
+                            if(gp.origin_server!=(char)0)
+                            {
+                                //respond with the same
+                                byte[] b = getBytes<GamePing>(gp);
+                                byte[] bl = { (byte)b.Length };
+                                try {
+                                    ci_toserver.ns.Write(bl, 0, bl.Length);
+                                    ci_toserver.ns.Write(b, 0, b.Length);
+                                }
+                                catch (Exception e)
+                                {
+                                }
+                            }
+                            else
+                            {
+                                //update ping to valid
+                                ci_toserver.dtLastPingResponse = DateTime.Now;
+                                ci_toserver.bPingSent = false;
+                            }
+                        }
+                        break;
                     //msgs in game
                     //case ?:
                         //TODO
@@ -514,11 +582,47 @@ public class SendRecv
             DoBeginAcceptTcpClient(server);
         }
 
+        //send ping
+        for (int i = 0; i < 3; i++)
+        {
+            if (ci[i].tcp != null && (DateTime.Now - ci[i].dtLastPingResponse) > TimeSpan.FromSeconds(PingTime) && !ci[i].bPingSent && ci[i].ns.CanWrite)
+            {
+                ci[i].bPingSent = true;
+                GamePing gp = new GamePing();
+                gp.type = (char)4;
+                gp.seq = ci[i].iLastPingSeq++;
+                gp.origin_server = (char)1;
+                byte[] b = getBytes<GamePing>(gp);
+                byte[] bl = { (byte)b.Length };
+                try
+                {
+                    ci[i].ns.Write(bl, 0, bl.Length);
+                    ci[i].ns.Write(b, 0, b.Length);
+                }
+                catch(Exception e)
+                {
+                }
+            }
+        }
+
+        //check connection valid (ping)
+        for (int i = 0; i < 3; i++)
+        {
+            if (ci[i].tcp != null && (DateTime.Now - ci[i].dtLastPingResponse) > TimeSpan.FromSeconds(PingAnswerTime))
+            {
+                //too long period, connection dead?
+                //cancel this client
+                CancelCI(ci[i]);
+                iNumCI--;
+                return 2;
+            }
+        }
+
         //recv data
         int action = 0;
-        for (int i = 0; i < iNumCI; i++)
+        for (int i = 0; i < 3; i++)
         {
-            if (ci[i].ns.CanRead && ci[i].ns.DataAvailable)
+            if (ci[i].tcp != null && ci[i].ns.CanRead && ci[i].ns.DataAvailable)
             {
                 //get length of next message
                 if(!ci[i].stream_recv_len_valid)
@@ -544,32 +648,63 @@ public class SendRecv
                     {
                         //msgs in loby
                         case 1:
-                            GameJoin gj = fromBytes<GameJoin>(ci[i].stream_recv);
-                            //gi.iNumPlayers++;
-                            if (gi.szName2 == "") gi.szName2 = gj.szName;
-                            else if (gi.szName3 == "") gi.szName3 = gj.szName;
-                            else if (gi.szName4 == "") gi.szName4 = gj.szName;
-                            //else full, should not happen
-
-                            //send to all
-                            gi.type = (char)2;
-                            byte[] b = getBytes<GameInfo>(gi);
-                            byte[] bl = { (byte)b.Length };
-                            for (int j = 0; j < 3; j++)
                             {
-                                //TODO error handling, detect closed sockets (should be in all send code)
-                                if (ci[j].szIP.Length>0)
+                                GameJoin gj = fromBytes<GameJoin>(ci[i].stream_recv);
+                                if (gi.szName2 == "") { gi.szName2 = gj.szName; ci[i].iClientNum = 1; }
+                                else if (gi.szName3 == "") { gi.szName3 = gj.szName; ci[i].iClientNum = 2; }
+                                else if (gi.szName4 == "") { gi.szName4 = gj.szName; ci[i].iClientNum = 3; }
+                                //else full, should not happen
+
+                                //send to all
+                                gi.type = (char)2;
+                                byte[] b = getBytes<GameInfo>(gi);
+                                byte[] bl = { (byte)b.Length };
+                                for (int j = 0; j < 3; j++)
                                 {
-                                    ci[j].ns.Write(bl, 0, bl.Length);
-                                    ci[j].ns.Write(b, 0, b.Length);
+                                    if (ci[j].tcp != null)
+                                    {
+                                        try
+                                        {
+                                            ci[j].ns.Write(bl, 0, bl.Length);
+                                            ci[j].ns.Write(b, 0, b.Length);
+                                        }
+                                        catch(Exception e)
+                                        {
+                                        }
+                                    }
+                                }
+
+                                action = 2;
+                            }
+                            break;
+                        case 4:
+                            {
+                                GamePing gp = fromBytes<GamePing>(ci[i].stream_recv);
+
+                                if (gp.origin_server == (char)0)
+                                {
+                                    //respond with the same
+                                    byte[] b = getBytes<GamePing>(gp);
+                                    byte[] bl = { (byte)b.Length };
+                                    try
+                                    {
+                                        ci[i].ns.Write(bl, 0, bl.Length);
+                                        ci[i].ns.Write(b, 0, b.Length);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                    }
+                                }
+                                else
+                                {
+                                    //update ping to valid
+                                    ci[i].dtLastPingResponse = DateTime.Now;
+                                    ci[i].bPingSent = false;
                                 }
                             }
-
-                            action = 2;
-
                             break;
-                        //msgs in game
-                        //case ?:
+                            //msgs in game
+                            //case ?:
                             //TODO
                             //break;
                     }
