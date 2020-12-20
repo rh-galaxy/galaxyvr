@@ -1,6 +1,6 @@
 A bit of network programming in c#.
 
-Goal: Implement 4 player multiplayer for Galaxy Forces VR
+Goal: Implement 4 player multi-player for Galaxy Forces VR
 *Requirements from you
 - You will need min two windows PCs in a network for testing
 - You will need to be familiar with TcpListener and TcpCliend in C#
@@ -18,15 +18,23 @@ Goal: Implement 4 player multiplayer for Galaxy Forces VR
 - GUI for the connection procedure is partly done, I will continue on this.
 - It is a VR game but it runs without VR with mouse and keyboard, SteamVR is needed.
 *TODO
-1. Connect/Join/Cancel code to go through firewall/router (internet side)
-During testing it will be important to also make it possible to connect from the local network side.
-It is possible to implement this with C# tcp sockets.
+1. Connect/Join/Cancel code to go through firewall/router (internet/local side)
+It is possible to implement this with C# tcp sockets and is well on the way.
 - SendRecv.cs and GameManager.cs (and Menu.cs) source files are the only files needed to modify to achieve this.
 2. Make the rest of the GUI for this procedure (partly done).
 3. Game-logic (in-game messages for bullets, enemies, moving doors, and the 4 players)
+3.1 Getting the players color right and send position msg to each other
+3.2 Get computer enemies working
+3.3 Get bullets working
+3.4 Get doors working
+4. Get game modes working [dogfight] p vs p (I will do 4 maps)
+5. Get game modes working [mission] players cooperate to transport cargo
+6. Get game modes working [race]  players do not collide
+7. Get the rest of the GUI in menu working to present the result of a match.
+
 
 Begin to download the project either from github (https://github.com/rh-galaxy/galaxyvr/tree/multiplayer) or this link: https://www.galaxy-forces-vr.com/GFVR_multip_dev.zip
-Then install Unity 2019.2.10f1 from https://unity3d.com/get-unity/download/archive (via UnityHub).
+Then install UnityHub and go to https://unity3d.com/get-unity/download/archive and select version Unity 2019.2.10f1.
 Here is the game website, with other links https://www.galaxy-forces-vr.com/
 
 ---
@@ -57,7 +65,7 @@ But there are things not working yet like
    Master - Client3 -- tested working
    
 ---   
-Currently multiplayer code are added to 3 files   
+Currently multi-player code are added to 3 files   
 
 GameManager.cs - Mostly row 617 - 729
 Menu.cs - Mostly around row 390 - 442 but some code is spread all over
@@ -75,7 +83,7 @@ SendRecv.cs - All of this file.
 
 
 
-Non-multiplayer todo.txt
+Non-multi-player todo.txt
 
 -------
 Release
