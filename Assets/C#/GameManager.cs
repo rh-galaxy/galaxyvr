@@ -402,7 +402,7 @@ public class GameManager : MonoBehaviour
 
     LevelInfo stLevel;
     internal HttpHiscore oHigh = new HttpHiscore();
-    int[] aLastScore = new int[400]; //a bit of a hack
+    int[] aLastScore = new int[800]; //a bit of a hack
     int iLastLevelIndex;
     bool bAutoSetLevelInfo = false;
 
@@ -417,7 +417,7 @@ public class GameManager : MonoBehaviour
     //it is ensured through Edit->Project settings->Script Execution Order that this runs _after_ the updates of others.
     private void FixedUpdate()
     {
-        if (iState == 9) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
+        if (iState == 10) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
     }
 
     /**/
@@ -491,6 +491,43 @@ public class GameManager : MonoBehaviour
         UpdateFade();
     }
 
+    //the reason we have to deal with this here is that the GameLevel code is not started so can't run subroutines.
+    int loadState = 0;
+    bool LoadUserLevel()
+    {
+        switch (loadState)
+        {
+            case 0:
+                StartCoroutine(oHigh.GetLevelFile(GameLevel.szLevel+".des", false));
+                loadState++;
+                break;
+            case 1:
+                if (oHigh.bIsDone)
+                {
+                    loadState++;
+                }
+                break;
+            case 2:
+                string szMapFile = GameLevel.FindMapFile(oHigh.szLevelTextData);
+                StartCoroutine(oHigh.GetLevelFile(szMapFile, true));
+                loadState++;
+                break;
+            case 3:
+                if (oHigh.bIsDone)
+                {
+                    loadState++;
+                }
+                break;
+        }
+        if(loadState==4)
+        {
+            loadState = 0;
+            return true;
+        }
+        return false;
+    }
+
+
     //float t1;
     float fRecenterTimer = 0.0f;
     float fLongpressTimer = 0.0f;
@@ -530,7 +567,7 @@ public class GameManager : MonoBehaviour
 #endif
         }
         //recenter
-        if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any) && iState<=4) //for now only recenter if in menu
+        if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any) && iState<=5) //for now only recenter if in menu
         {
             Menu.bRecenter = true;
             fRecenterTimer = 3.1f; //make it instant
@@ -731,6 +768,7 @@ public class GameManager : MonoBehaviour
         //to ignore input below, only way back is to unpause
         if (bPause) return;
 
+
         //the main state machine
         switch (iState)
         {
@@ -816,7 +854,7 @@ public class GameManager : MonoBehaviour
                     {
                         UnlockMissionGoldAchievement();
                     }
-                    if (iRaceFinishedGold>=25)
+                    if (iRaceFinishedGold >= 25)
                     {
                         UnlockRaceGoldAchievement();
                     }
@@ -860,7 +898,7 @@ public class GameManager : MonoBehaviour
                 {
                     //set default level info (in case we have network error)
                     stLevel = new LevelInfo();
-                    if(GameLevel.iLevelIndex>=200) stLevel.szName = GameLevel.szLevel;
+                    if (GameLevel.iLevelIndex >= 200) stLevel.szName = GameLevel.szLevel;
                     else stLevel.szName = GameLevel.szLevel.Substring(1);
                     //stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
                     //^this is now set in SetLevelInfo, read from file
@@ -870,7 +908,7 @@ public class GameManager : MonoBehaviour
                     stLevel.szWRName1 = "_None"; stLevel.szWRName2 = "_None"; stLevel.szWRName3 = "_None";
 
                     string szLevelToLoad = stLevel.szName;
-                    if (GameLevel.iLevelIndex >= 200)
+                    if (GameLevel.iLevelIndex >= 200 && GameLevel.iLevelIndex<400)
                     {
                         stLevel.iLastScoreMs = aLastScore[GameLevel.iLevelIndex];
                         iLastLevelIndex = GameLevel.iLevelIndex;
@@ -888,22 +926,28 @@ public class GameManager : MonoBehaviour
                             }
                         }
                     }
-
-                    Menu.theMenu.SetLevelInfoPass1(stLevel); //set our level info to menu, it will be displayed there
-                    iSetLevelInfo = 0;
-
                     iState++;
                 }
                 break;
             case 3:
+                if (GameLevel.iLevelIndex >= 400)
+                {
+                    if (!LoadUserLevel()) break; //do until completion first in this state so the level can show info and minimap during this state (until play)
+                }
+
+                Menu.theMenu.SetLevelInfoPass1(stLevel); //set our level info to menu, it will be displayed there
+                iSetLevelInfo = 0;
+                iState++;
+                break;
+            case 4:
                 //must always run after SetLevelInfoPass1
-                if(Menu.theMenu.SetLevelInfoPass2(stLevel, iSetLevelInfo)) //set our level info to menu, it will be displayed there
+                if (Menu.theMenu.SetLevelInfoPass2(stLevel, iSetLevelInfo)) //set our level info to menu, it will be displayed there
                     iState++;
                 iSetLevelInfo++;
                 break;
-            case 4:
+            case 5:
                 //menu part 2
-                if(Menu.bLevelSelected)
+                if (Menu.bLevelSelected)
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
@@ -942,7 +986,7 @@ public class GameManager : MonoBehaviour
                     StartFade(0.3f, 0.0f, true);
                 }
                 break;
-            case 5:
+            case 6:
                 //menu part 2, while loading replay
                 if (oHigh.bIsDone)
                 {
@@ -950,12 +994,13 @@ public class GameManager : MonoBehaviour
                     iState++;
                 }
                 break;
-            case 6:
+            case 7:
                 //wait for fade done
                 if (iFade == 0)
                     iState++;
                 break;
-            case 7:
+
+            case 8:
                 //begin loading the level (or replay)
                 //Debug.Log("Load map Begin");
                 szToLoad = "Scenes/PlayGame";
@@ -978,7 +1023,7 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(LoadAsyncScene());
                 iState++;
                 break;
-            case 8:
+            case 9:
                 //while loading level
                 if (bBeginMapLoading && bTilesetLoaded)
                 {
@@ -999,7 +1044,7 @@ public class GameManager : MonoBehaviour
                     }
                 }
                 break;
-            case 9:
+            case 10:
                 //running game
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
@@ -1050,7 +1095,8 @@ public class GameManager : MonoBehaviour
                                     if (stLevel.iBestScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.iBestScoreMs) ||
                                         (stLevel.bIsTime && iScoreMs < stLevel.iBestScoreMs))
                                     {
-                                        StartCoroutine(oHigh.SendHiscore(szLastLevel.Substring(1), iScoreMs, oReplay));
+                                        string szFile = iLastLevelIndex < 55 ? szLastLevel.Substring(1) : szLastLevel;
+                                        StartCoroutine(oHigh.SendHiscore(szFile, iScoreMs, oReplay));
 
                                         //set in the above, but since StartCoroutine returns before it has a chance
                                         // to run we need to set it
@@ -1068,7 +1114,7 @@ public class GameManager : MonoBehaviour
                     }
                     break;
                 }
-            case 10:
+            case 11:
                 if (iFade==0) //fading done?
                 {
                     theCameraHolder.InitForMenu();
@@ -1079,12 +1125,12 @@ public class GameManager : MonoBehaviour
                     iState++;
                 }
                 break;
-            case 11:
+            case 12:
                 //while hiscore is being sent
                 if (oHigh.bIsDone)
                     iState++;
                 break;
-            case 12:
+            case 13:
                 //while menu is loading
                 if (bLoadDone)
                 {

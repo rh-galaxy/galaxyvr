@@ -15,7 +15,7 @@
 
 		$db = connect_to_db();
 
-		$query = "SELECT * FROM members_t WHERE oculus_id=".$userid;
+		$query = "SELECT * FROM members_t WHERE oculus_id='".$userid."'";
 		$result_member = mysqli_query($db, $query);
 
 		$num_rows = @mysqli_num_rows($result_member);
@@ -43,7 +43,7 @@
 					$sort = "ASC";
 				}
 
-				$query = "SELECT achievements_t.score FROM achievements_t WHERE level='".$_POST["LEVEL"]."' AND name='".$_POST["NAME"]."'";
+				$query = "SELECT achievements_t.score FROM achievements_t WHERE level='".$_POST["LEVEL"]."' AND user_id='".$userid."'";
 				$hiscore = mysqli_query($db, $query);
 				$num_rows = @mysqli_num_rows($hiscore);
 				if($num_rows!=0) { //always qualify not 1
@@ -75,9 +75,9 @@
 
 					$replay = str_replace(' ','+',$_POST["REPLAY"]);
 					if($num_rows!=0) {
-						$query = "UPDATE achievements_t SET ip='".$ip."',timestamp=NOW(),score='".$_POST["SCORE"]."',replay='".$replay."' WHERE (level='".$_POST["LEVEL"]."' AND name='".$_POST["NAME"]."')";
+						$query = "UPDATE achievements_t SET ip='".$ip."',timestamp=NOW(),score='".$_POST["SCORE"]."',replay='".$replay."' WHERE (level='".$_POST["LEVEL"]."' AND user_id='".$userid."')";
 					} else {
-						$query = "INSERT INTO achievements_t (ip, name, level, score, replay, steam) VALUES('".$ip."','".$_POST["NAME"]."','".$_POST["LEVEL"]."',".$_POST["SCORE"].",'".$replay."',".$steam.")";
+						$query = "INSERT INTO achievements_t (ip, user_id, level, score, replay, steam) VALUES('".$ip."','".$userid."','".$_POST["LEVEL"]."',".$_POST["SCORE"].",'".$replay."',".$steam.")";
 					}
 					$result = mysqli_query($db, $query);
 				}

@@ -316,7 +316,8 @@ public class GameLevel : MonoBehaviour
     byte[] bytes;
     public bool LoadBegin()
     {
-        bool bIsCustom = iLevelIndex >= 200;
+        bool bIsCustom = iLevelIndex >= 200 && iLevelIndex < 400;
+        bool bIsCustom2 = iLevelIndex >= 400;
         int substeps = 6;
         if (iLoadBeginState == 0)
         {
@@ -325,7 +326,7 @@ public class GameLevel : MonoBehaviour
 
             //load des pass 1 (unity: must be done from main thread)
             Debug.Log("Loading Level: " + szLevel);
-            LoadDesPass1(szLevel, bIsCustom);
+            LoadDesPass1(szLevel, bIsCustom, bIsCustom2);
             oMeshGen = GetComponent<MeshGenerator>();
 
             iLoadBeginState++;
@@ -375,17 +376,21 @@ public class GameLevel : MonoBehaviour
             //load map file (unity: must be done from main thread)
             aMap = new int[iHeight, iWidth];
             //load tile numbers
-            if (!bIsCustom)
+            if (bIsCustom2)
+            {
+                bytes = GameManager.theGM.oHigh.aLevelBinaryData;
+            }
+            else if (bIsCustom)
+            {
+                bytes = File.ReadAllBytes(Application.persistentDataPath + "/" + szMiniMapfile);
+            }
+            else
             {
                 string szFilenameNoExt = szMiniMapfile.Remove(szMapfile.LastIndexOf('.'));
                 TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
                 if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
                 //if (f == null) return false;
                 bytes = f.bytes;
-            }
-            else
-            {
-                bytes = File.ReadAllBytes(Application.persistentDataPath + "/" + szMiniMapfile);
             }
 
             for (int y = 0; y < iHeight; y++)
@@ -616,14 +621,44 @@ public class GameLevel : MonoBehaviour
         aDoorList[i_iDoorId].ToggleOpenClose();
     }
 
+    public static string FindMapFile(string szHeader)
+    {
+        string[] szLines = szHeader.Split((char)10);
+
+        int iLineIndex = -1;
+        while (iLineIndex < szLines.Length - 1)
+        {
+            iLineIndex++;
+            char[] szSeparator = { (char)32 };
+            string[] szTokens = szLines[iLineIndex].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+            if (szTokens.Length == 0) continue;
+            if (szTokens[0].Length == 0) continue;
+            if (!szTokens[0].StartsWith("*")) continue;
+
+            if (szTokens[0].CompareTo("*MAPFILE") == 0)
+            {
+                return szTokens[1];
+            }
+        }
+        return null;
+    }
+
     //gets only the info needed to generate the map mesh
-    bool LoadDesPass1(string i_szFilename, bool bIsCustom)
+    bool LoadDesPass1(string i_szFilename, bool bIsCustom, bool bIsCustom2)
     {
         //free old map if exists
         iLevelType = (int)LevelType.MAP_MISSION;
 
         String szFileText;
-        if (!bIsCustom)
+        if (bIsCustom2)
+        {
+            szFileText = GameManager.theGM.oHigh.szLevelTextData;
+        }
+        else if (bIsCustom)
+        {
+            szFileText = System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(Application.persistentDataPath + "/" + i_szFilename));
+        }
+        else
         {
             int iPos = i_szFilename.LastIndexOf('.');
             string szFilenameNoExt = i_szFilename;
@@ -633,10 +668,6 @@ public class GameLevel : MonoBehaviour
             if (f == null) return false;
 
             szFileText = System.Text.Encoding.UTF8.GetString(f.bytes);
-        }
-        else
-        {
-            szFileText = System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(Application.persistentDataPath + "/" + i_szFilename));
         }
 
         szLines = szFileText.Split((char)10);
@@ -1321,12 +1352,20 @@ public class GameLevel : MonoBehaviour
     static int iMiniWidth, iMiniHeight;
     static string szMiniMapfile;
     static string szMiniMapDescription;
-    static bool LoadDesForMiniMap(string i_szFilename, bool bIsCustom, out bool o_bIsTime)
+    static bool LoadDesForMiniMap(string i_szFilename, bool bIsCustom, bool bIsCustom2, out bool o_bIsTime)
     {
         o_bIsTime = false;
         szMiniMapDescription = "";
         String szFileText;
-        if (!bIsCustom)
+        if(bIsCustom2)
+        {
+            szFileText = GameManager.theGM.oHigh.szLevelTextData;
+        }
+        else if(bIsCustom)
+        {
+            szFileText = System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(Application.persistentDataPath + "/" + i_szFilename));
+        }
+        else
         {
             int iPos = i_szFilename.LastIndexOf('.');
             string szFilenameNoExt = i_szFilename;
@@ -1334,12 +1373,7 @@ public class GameLevel : MonoBehaviour
             TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
             if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
             if (f == null) return false;
-
             szFileText = System.Text.Encoding.UTF8.GetString(f.bytes);
-        }
-        else
-        {
-            szFileText = System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(Application.persistentDataPath+"/"+i_szFilename));
         }
 
         string[] szLines = szFileText.Split((char)10);
@@ -1383,7 +1417,7 @@ public class GameLevel : MonoBehaviour
         return false;
     }
 
-    public static Texture2D GetMiniMap(string i_szFilename, bool bIsCustom, out bool o_bIsTime, out string o_szDescription)
+    public static Texture2D GetMiniMap(string i_szFilename, bool bIsCustom, bool bIsCustom2, out bool o_bIsTime, out string o_szDescription)
     {
         int x, y;
 
@@ -1393,23 +1427,27 @@ public class GameLevel : MonoBehaviour
 
         //load des file
         o_szDescription = "";
-        if (!LoadDesForMiniMap(i_szFilename, bIsCustom, out o_bIsTime)) return null;
+        if (!LoadDesForMiniMap(i_szFilename, bIsCustom, bIsCustom2, out o_bIsTime)) return null;
         o_szDescription = szMiniMapDescription;
 
         //load tile numbers
         int[,] aMap = new int[iMiniHeight, iMiniWidth];
         byte[] bytes;
-        if(!bIsCustom)
+        if (bIsCustom2)
+        {
+            bytes = GameManager.theGM.oHigh.aLevelBinaryData;
+        }
+        else if (bIsCustom)
+        {
+            bytes = File.ReadAllBytes(Application.persistentDataPath + "/" + szMiniMapfile);
+        }
+        else
         {
             string szFilenameNoExt = szMiniMapfile.Remove(szMiniMapfile.LastIndexOf('.'));
             TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
             if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
             if (f == null) return null;
             bytes = f.bytes;
-        }
-        else
-        {
-            bytes = File.ReadAllBytes(Application.persistentDataPath+"/"+szMiniMapfile);
         }
 
         for (y = 0; y < iMiniHeight; y++)
