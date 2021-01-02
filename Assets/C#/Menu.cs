@@ -704,11 +704,6 @@ public class Menu : MonoBehaviour
         }
         if (iIncrementalInit == 10)
         {
-            //change fov if non VR since that default setting shows to wide fov
-            // and is not behaving reliably
-            if (GameManager.bNoVR)
-                Camera.main.fieldOfView = 45.0f;
-
             //prevent selection if trigger was held when menu is started
             iAllowSelection = 20;
 

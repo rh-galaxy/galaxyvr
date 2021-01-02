@@ -117,7 +117,7 @@ public class CameraController : MonoBehaviour
     {
         //emulate headset movement
         Keyboard keyboard = Keyboard.current;
-        if ((keyboard!=null && keyboard.fKey.isPressed) || GameManager.bNoVR)
+        if (keyboard!=null && keyboard.fKey.isPressed)
         {
             //using mouse smoothing to avoid jerkyness
             float fMouseX, fMouseY;

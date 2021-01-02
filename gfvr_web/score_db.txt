@@ -2,8 +2,8 @@
 -- version 4.9.5
 -- https://www.phpmyadmin.net/
 --
--- Värd: s679.loopia.se
--- Tid vid skapande: 21 nov 2020 kl 09:09
+-- Värd: s462.loopia.se
+-- Tid vid skapande: 21 nov 2020 kl 09:12
 -- Serverversion: 10.3.27-MariaDB-log
 -- PHP-version: 7.4.12
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Databas: `galaxy_forces_vr_com`
+-- Databas: `galaxy_forces_vr_com_db_1`
 --
 
 -- --------------------------------------------------------
@@ -32,7 +32,6 @@ CREATE TABLE `achievements_t` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_id` varchar(34) NOT NULL,
-  `name` varchar(34) NOT NULL,
   `level` varchar(40) NOT NULL,
   `score` int(11) NOT NULL,
   `replay` mediumblob DEFAULT NULL,
@@ -148,12 +147,8 @@ CREATE TABLE `statistics_t` (
 --
 
 INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
-(1, 'index.php', 13445),
-(2, 'achievements_post.php', 1952),
-(5, 'privacy.php', 62),
-(6, 'achievements_get.php', 9945),
-(8, 'mpgames_create.php', 4),
-(9, 'mpgames_join.php', 2);
+(1, 'achievements_post.php', 178),
+(3, 'achievements_get.php', 723);
 
 --
 -- Index för dumpade tabeller
@@ -209,7 +204,7 @@ ALTER TABLE `members_t`
 -- AUTO_INCREMENT för tabell `statistics_t`
 --
 ALTER TABLE `statistics_t`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

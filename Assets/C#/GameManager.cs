@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,8 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
-
-using Oculus.Platform;
+using System.Text;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,16 +16,13 @@ public class GameManager : MonoBehaviour
 
     public CameraController theCameraHolder;
 
-    internal static bool bOculusDevicePresent = false;
     internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
     internal static bool bUserValid = false;
     internal static bool bNoHiscore = false;
     internal static bool bNoInternet = false;
-    internal static bool bNoVR = false;
 
     string szLastLevel = "";
-    int iAchievementHellbentCounter = 0;
 
     AsyncOperation asyncLoad;
 
@@ -54,21 +51,41 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         bool bInited = false;
-        bInited = InitOculus();
+        UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
+        if (headDevice != null && headDevice.isValid)
+        {
+            Debug.Log("HMD: " + headDevice.name);
+
+            //init user
+            //szUserID = headDevice.serialNumber; //headDevice.serialNumber.Length.ToString() is 0
+            szUserID = SystemInfo.deviceUniqueIdentifier;
+            szUser = SystemInfo.deviceUniqueIdentifier;
+
+            string szFileText = "";
+            string szFile = Application.persistentDataPath + "/" + "name.txt";
+            if(File.Exists(szFile))
+            {
+                try
+                {
+                    szFileText = System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(szFile)).Trim();
+                    szFileText = szFileText.Substring(0, 32); //cap at 32 chars
+                }
+                catch (Exception e)
+                {
+                }
+            }
+            if (szFileText.Length > 0) szUser = szFileText;
+            bUserValid = true;
+
+            bInited = true;
+        }
+        Debug.Log("You are " + szUser);
 
         if (!bInited)
         {
-            //no VR
-            //bUserValid = true;
-            bNoHiscore = true;
-            bNoVR = true;
-            Screen.SetResolution(1280, 720, true);
-
-            Debug.Log("Error initing VR, continue with no VR");
-        }
-        else
-        {
-            Screen.SetResolution(864, 960, false);
+            Debug.Log("Error initing VR...");
+            bUserValid = true;
+            //let app continue anyway...
         }
 
         GameLevel.theReplay = oReplay;
@@ -86,8 +103,19 @@ public class GameManager : MonoBehaviour
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFade(0.01f, 0.0f, true);
 
-        if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
+
+        //try setting refresh rate to 90 Hz, only possible on Quest 2
+        OVRPlugin.SystemHeadset type = OVRPlugin.GetSystemHeadsetType();
+        bool bIsQuest = type == OVRPlugin.SystemHeadset.Oculus_Quest;
+        bool bIsQuest2 = type == OVRPlugin.SystemHeadset.Oculus_Quest_2;
+        if(!bIsQuest) //above quest 1
+        {
+            //it seams to work well on all levels (mission29 is the largest) so no need to switch off and on
+            OVRPlugin.systemDisplayFrequency = 90.0f;
+            //when this is done it takes a little while until it takes effect, so a readback is useless here
+            //File.WriteAllBytes(Application.persistentDataPath + "/" + "hz.txt", Encoding.ASCII.GetBytes(OVRPlugin.systemDisplayFrequency.ToString()));
+        }
 
 #if LOGPROFILERDATA
         Profiler.logFile = "log" + logProfilerFileCnt.ToString();
@@ -98,158 +126,7 @@ public class GameManager : MonoBehaviour
 
     private void AudioSettings_OnAudioConfigurationChanged(bool deviceWasChanged)
     {
-        if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
-        else AudioStateMachine.instance.SetOutput(0);
-    }
-
-    //////start of oculus specific code
-    bool InitOculus()
-    {
-        //init Oculus SDK
-        try
-        {
-            Core.AsyncInitialize("2005558116207772");
-            Entitlements.IsUserEntitledToApplication().OnComplete(EntitlementCallback);
-            Users.GetLoggedInUser().OnComplete(LoggedInUserCallback);
-        }
-        catch (UnityException e)
-        {
-            Debug.LogException(e);
-            UnityEngine.Application.Quit();
-        }
-
-        bOculusDevicePresent = true;
-        return true;
-    }
-
-    void EntitlementCallback(Message msg)
-    {
-        if (msg.IsError)
-        {
-            Debug.LogError("Not entitled to play this game");
-
-            UnityEngine.Application.Quit(); //it is possible to remove quit while developing
-        }
-        else
-        {
-            //ok
-            Debug.Log("You are entitled to play this game");
-        }
-    }
-
-    void LoggedInUserCallback(Message msg)
-    {
-        if (msg.IsError)
-        {
-            Debug.LogError("No Oculus user");
-        }
-        else
-        {
-            //save ID, and user name
-            szUserID = msg.GetUser().ID.ToString();
-            szUser = msg.GetUser().OculusID;
-            Debug.Log("You are " + szUser);
-            bUserValid = true;
-        }
-    }
-
-    void HandleOculusAchievements()
-    {
-        //handle achievements
-        if (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel)
-        {
-            //finished any level with ok result
-
-            //survivor achievement check
-            if (GameLevel.theMap.player.bAchieveNoDamage)
-                Achievements.Unlock("Survivor");
-            //hellbent achievement check
-            if (szLastLevel.CompareTo(GameLevel.szLevel) != 0) iAchievementHellbentCounter = 1;
-            else iAchievementHellbentCounter++;
-            if (iAchievementHellbentCounter == 8)
-                Achievements.Unlock("Hellbent");
-            //speedster achievement check
-            if (GameLevel.theMap.player.bAchieveFullThrottle)
-                Achievements.Unlock("Speedster");
-            //racer achievement check
-            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
-                Achievements.AddCount("Racer", 1);
-            //transporter achievement check (named loader)
-            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
-                Achievements.AddCount("Loader", 1);
-
-            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
-            {
-                //cargo beginner
-                if (GameLevel.szLevel.CompareTo("1mission00") == 0)
-                    Achievements.Unlock("Cargo1");
-                //cargo apprentice
-                if (GameLevel.szLevel.CompareTo("1mission03") == 0)
-                    Achievements.Unlock("Cargo2");
-                //cargo expert
-                if (GameLevel.szLevel.CompareTo("1mission06") == 0 && GameLevel.theMap.player.iAchieveShipsDestroyed == 0)
-                    Achievements.Unlock("Cargo3");
-                //cargo master
-                if (GameLevel.szLevel.CompareTo("1mission09") == 0 && GameLevel.theMap.player.bAchieveNoDamage)
-                    Achievements.Unlock("Cargo4");
-            }
-            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
-            {
-                //race beginner
-                if (GameLevel.szLevel.CompareTo("2race00") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
-                    Achievements.Unlock("Race1");
-                //race apprentice
-                if (GameLevel.szLevel.CompareTo("2race03") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
-                    Achievements.Unlock("Race2");
-                //race expert
-                if (GameLevel.szLevel.CompareTo("2race06") == 0 && GameLevel.theMap.player.fTotalTime < 60.0f)
-                    Achievements.Unlock("Race3");
-                //race master
-                if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime < 104.0f)
-                    Achievements.Unlock("Race4");
-            }
-            string szBits = "0000000000000000000000000000000000000000000000000000000";
-            char[] aBitsChars = szBits.ToCharArray();
-            aBitsChars[GameLevel.iLevelIndex] = '1';
-            string szBits2 = new string(aBitsChars, 0, aBitsChars.Length - 0);
-            Achievements.AddFields("Galaxy55", szBits2);
-        }
-        //fuelburner achievement check
-        int iTemp = (int)GameLevel.theMap.player.fAchieveFuelBurnt;
-        if (iTemp > 0)
-            Achievements.AddCount("Fuelburner", (ulong)iTemp);
-        //ravager achievement check
-        iTemp = GameLevel.theMap.iAchieveEnemiesKilled;
-        if (iTemp > 0)
-            Achievements.AddCount("Ravager", (ulong)iTemp);
-        //kamikaze achievement check (named doom)
-        iTemp = GameLevel.theMap.player.iAchieveShipsDestroyed;
-        if (iTemp > 0)
-            Achievements.AddCount("Doom", (ulong)iTemp);
-        //trigger achievement check
-        iTemp = GameLevel.theMap.player.iAchieveBulletsFired;
-        if (iTemp > 0)
-            Achievements.AddCount("Trigger", (ulong)iTemp);
-        //hitchhiker42 achievement check
-        iTemp = (int)GameLevel.theMap.player.fAchieveDistance;
-        if (iTemp > 0)
-            Achievements.AddCount("Hitchhiker42", (ulong)iTemp * 5); //5m per unit is reasonable
-    }
-    //////end of oculus specific code
-
-    void UnlockMissionGoldAchievement()
-    {
-        if (bOculusDevicePresent)
-        {
-            Achievements.Unlock("CargoGold30");
-        }
-    }
-    void UnlockRaceGoldAchievement()
-    {
-        if (bOculusDevicePresent)
-        {
-            Achievements.Unlock("RaceGold25");
-        }
+        AudioStateMachine.instance.SetOutput(0);
     }
 
     LevelInfo stLevel;
@@ -270,31 +147,6 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         if (iState == 9) oReplay.IncTimeSlot(); //everything regarding replay should be done in fixed update
-    }
-
-    /**/
-    //this is insane and totally like nothing else, but to avoid a 6 second freeze when the file is not in cache
-    // this is loaded here once hopefully while the user spend some seconds in the menu before this will be accessed by LoadSceneAsync.
-    //so much for async.
-    byte[] preLoadBytes = new byte[1024 * 1024]; //1MB buffer
-    string preLoadDataPath;
-    Thread preLoadThread;
-    void PreLoadAssetsToCache()
-    {
-        bool allRead = false;
-        int iChunkSize = preLoadBytes.Length;
-        int iChunkNr = 0;
-        FileStream fs = null;
-        try
-        {
-            fs = File.OpenRead(preLoadDataPath + "/sharedassets1.assets.resS");
-        } catch { }
-        while (fs != null && !allRead)
-        {
-            int fr = fs.Read(preLoadBytes, 0 + iChunkNr * iChunkSize, iChunkSize);
-            if (fr != iChunkSize) allRead = true;
-            Thread.Sleep(5);
-        }
     }
 
     //fading code
@@ -346,7 +198,6 @@ public class GameManager : MonoBehaviour
     //float t1;
     float fRecenterTimer = 0.0f;
     float fLongpressTimer = 0.0f;
-    bool bTrackingOriginSet = false;
     void Update()
     {
 #if LOGPROFILERDATA
@@ -380,15 +231,7 @@ public class GameManager : MonoBehaviour
 #endif
         }
         //recenter
-        if (!bTrackingOriginSet) //always do once
-        {
-            if(headDevice!=null && headDevice.isValid)
-            {
-                headDevice.subsystem.TrySetTrackingOriginMode(TrackingOriginModeFlags.Device);
-                bTrackingOriginSet = true;
-            }
-        }
-        if (Menu.bRecenter && !bNoVR)
+        if (Menu.bRecenter)
         {
             fRecenterTimer += Time.unscaledDeltaTime;
             if (fRecenterTimer > 3.0f)
@@ -402,7 +245,7 @@ public class GameManager : MonoBehaviour
 
         //long press on grip button is back
         bool bBackButton = false;
-        {
+        /*{
             bool gripRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.grip, out float gripR);
             bool gripLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.grip, out float gripL);
 
@@ -414,17 +257,17 @@ public class GameManager : MonoBehaviour
                 fLongpressTimer = 0;
                 bBackButton = true;
             }
-        }
+        }*/
+        //^back button on left controller used instead
 
         //get user present
         bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
 
-        //pause if in oculus home universal menu
-        // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
+        //pause?
         bool bPauseNow = bPause; //no change below
-        if (bOculusDevicePresent)
+
         {
-            bPauseNow = (!OVRPlugin.hasInputFocus || !OVRPlugin.hasVrFocus) /*|| !userPresent)*/;
+            bPauseNow = !userPresent;
         }
 
         /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
@@ -468,16 +311,7 @@ public class GameManager : MonoBehaviour
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 // and should be active here ("Scenes/GameStart")
                 Cursor.visible = false;
-                //Screen.SetResolution(1280, 720, true);
-                //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
-
-                //to avoid stalls of 5+ sec the first time a level is started after app start
-                preLoadDataPath = UnityEngine.Application.dataPath;
-                ThreadStart ts = new ThreadStart(PreLoadAssetsToCache);
-                preLoadThread = new Thread(ts);
-                preLoadThread.Priority = System.Threading.ThreadPriority.Lowest;
-                preLoadThread.Start();
 
                 StartCoroutine(LoadAsyncTileset());
 
@@ -541,15 +375,6 @@ public class GameManager : MonoBehaviour
                         bNoInternet = true; //set this so no further attempts are made at accessing the internet
                     }
 
-                    //handle gold achievements
-                    if (iMissionFinishedGold >= 30)
-                    {
-                        UnlockMissionGoldAchievement();
-                    }
-                    if (iRaceFinishedGold>=25)
-                    {
-                        UnlockRaceGoldAchievement();
-                    }
                     //handle unlocking
                     int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
                     if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
@@ -750,12 +575,6 @@ public class GameManager : MonoBehaviour
                         {
                             if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
-                                //////start of oculus specific code (achievements)
-                                if (bOculusDevicePresent && userPresent) //VR user must be present for achievements
-                                {
-                                    HandleOculusAchievements();
-                                }
-                                //////end of oculus specific code
                             }
                         }
 

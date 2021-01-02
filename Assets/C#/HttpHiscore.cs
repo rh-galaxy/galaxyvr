@@ -46,7 +46,7 @@ public class HttpHiscore
         bIsDone = false;
         dtLastAccess = DateTime.Now; //set this before request
 
-        string url = WEB_HOST + "/achievements_get.php?User=" + UnityWebRequest.EscapeURL(GameManager.szUser) + "&UserId=" + UnityWebRequest.EscapeURL(GameManager.szUserID) + "&IsSteam=" + iIsSteam;
+        string url = WEB_HOST + "/achievements_get_quest.php?User=" + UnityWebRequest.EscapeURL(GameManager.szUser) + "&UserId=" + UnityWebRequest.EscapeURL(GameManager.szUserID) + "&IsSteam=" + iIsSteam;
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
@@ -123,7 +123,7 @@ public class HttpHiscore
         string base64 = System.Convert.ToBase64String(bytes);
         int iCount = (int)(DateTime.Now - dtLastAccess).TotalSeconds ^ 1467;
 
-        string url = WEB_HOST + "/achievements_post.php";
+        string url = WEB_HOST + "/achievements_post_quest.php";
         string data= "LEVEL="+ i_szLevel + "&NAME="+ UnityWebRequest.EscapeURL(GameManager.szUser) + "&USERID="+ UnityWebRequest.EscapeURL(GameManager.szUserID) + "&COUNTER="+
             iCount + "&SCORE="+ i_iScoreMs + "&STEAM=" + iIsSteam + "&REPLAY="+ base64;
 
@@ -144,7 +144,7 @@ public class HttpHiscore
     {
         bIsDone = false;
 
-        string url = WEB_HOST + "/hiscore_getreplay2.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
+        string url = WEB_HOST + "/hiscore_getreplay2_quest.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 

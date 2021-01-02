@@ -256,11 +256,6 @@ public class GameLevel : MonoBehaviour
         //play area for motion movement, not visible
         oBackPlane.transform.localScale = new Vector3(vSize.x / 100, 1.0f, vSize.y / 100);
 
-        //change fov if non VR since the default setting shows to wide fov
-        // and is not behaving reliably
-        if (GameManager.bNoVR)
-            Camera.main.fieldOfView = 40.0f;
-
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);
         switch (iSkyBox)
@@ -290,6 +285,7 @@ public class GameLevel : MonoBehaviour
 
         //generate new high res map based on the textures of the tiles
         int substeps = 6;
+        if (iWidth * iHeight > 40 * 100) substeps = 5; //performance
         float pixelsamplepos = 32.0f / substeps;
         LoadGrid(substeps, pixelsamplepos);
 
@@ -318,6 +314,7 @@ public class GameLevel : MonoBehaviour
     {
         bool bIsCustom = iLevelIndex >= 200;
         int substeps = 6;
+        if (iWidth * iHeight > 40 * 100) substeps = 5; //performance
         if (iLoadBeginState == 0)
         {
             bMapLoaded = false;

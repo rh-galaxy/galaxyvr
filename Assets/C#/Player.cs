@@ -698,9 +698,9 @@ public class Player : MonoBehaviour
             bool stickLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickL);
 
             //get input from joystick
-            if (stickR.x > 0.35f || stickL.x > 0.35f) bRight = true;
-            if (stickR.x < -0.35f || stickL.x < -0.35f) bLeft = true;
-            if ((stickR.y < -0.75f || stickL.y < -0.75f) && bLeft == false && bRight == false) bAdjust = true;
+            if (stickR.x > 0.5f || stickL.x > 0.5f) bRight = true;
+            if (stickR.x < -0.5f || stickL.x < -0.5f) bLeft = true;
+            if ((stickR.y < -0.7f || stickL.y < -0.7f) && bLeft == false && bRight == false) bAdjust = true;
             if (stickR.y < -0.85f || stickL.y < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
 
             if (triggerR > 0.3f || triggerL > 0.3f) bThrottle = true;
