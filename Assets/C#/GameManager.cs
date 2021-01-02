@@ -209,11 +209,14 @@ public class GameManager : MonoBehaviour
                 if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime < 104.0f)
                     Achievements.Unlock("Race4");
             }
-            string szBits = "0000000000000000000000000000000000000000000000000000000";
-            char[] aBitsChars = szBits.ToCharArray();
-            aBitsChars[GameLevel.iLevelIndex] = '1';
-            string szBits2 = new string(aBitsChars, 0, aBitsChars.Length - 0);
-            Achievements.AddFields("Galaxy55", szBits2);
+            if(GameLevel.iLevelIndex<55)
+            {
+                string szBits = "0000000000000000000000000000000000000000000000000000000";
+                char[] aBitsChars = szBits.ToCharArray();
+                aBitsChars[GameLevel.iLevelIndex] = '1';
+                string szBits2 = new string(aBitsChars, 0, aBitsChars.Length - 0);
+                Achievements.AddFields("Galaxy55", szBits2);
+            }
         }
         //fuelburner achievement check
         int iTemp = (int)GameLevel.theMap.player.fAchieveFuelBurnt;
