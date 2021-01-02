@@ -21,11 +21,13 @@ public struct LevelInfo
     public string szWRId3;
     public string szWRName3;
     public int iWRScore3;
+
+    public string szCreateor; //on user levels
 }
 
 public class HttpHiscore
 {
-    const string WEB_HOST = "https://galaxy-forces-vr.com";
+    public static string WEB_HOST = "https://galaxy-forces-vr.com";
 
     public List<LevelInfo> oLevelList = new List<LevelInfo>();
     public bool bIsDone = false;
@@ -89,6 +91,8 @@ public class HttpHiscore
 
                 szTokens = szWithin[7].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
                 stLevel.iWRScore3 = int.Parse(szTokens[0]);
+                if (szWithin.Length >= 9) stLevel.szCreateor = szWithin[8].Trim(' ');
+                else stLevel.szCreateor = "none";
 
                 if (szTokens.Length < 4) continue;
                 stLevel.szWRId1 = szTokens[1].Trim(' ');
@@ -161,4 +165,27 @@ public class HttpHiscore
         }
         bIsDone = true;
     }
+
+    internal string szLevelTextData;
+    internal byte[] aLevelBinaryData;
+    public IEnumerator GetLevelFile(string i_szFilename, bool i_bBinary)
+    {
+        bIsDone = false;
+
+        string url = WEB_HOST + "/user_levels/" + i_szFilename;
+        www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            if (!i_bBinary) szLevelTextData = www.downloadHandler.text;
+            else aLevelBinaryData = www.downloadHandler.data;
+        }
+        bIsDone = true;
+    }
+
 }
