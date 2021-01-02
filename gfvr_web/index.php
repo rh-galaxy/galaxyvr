@@ -81,6 +81,7 @@ headline("Level editor");
 square_start("'100%'");
 ?>
 <p>The ability to create and play custom levels is now added. Use the <a href="MapEditor_for_custom_levels.zip">MapEditor</a> and read editor_readme.txt</p>
+<p>In the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> there is a channel for sharing levels with me and others and I can add them to the game's second level page for approved levels (soon to be implemented in all versions).</p>
 <?php
 square_end();
 ?>
@@ -109,7 +110,7 @@ headline("Multiplayer coders");
 square_start("'100%'");
 ?>
 <p>Contact me if you are interested in collaborating to get this vr game feature done.
-I have set a time frame to 6 months, and have more info of what is needed.</p>
+I have set a time frame to 6 months, and have more info of what is needed. Join the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> for this purpose</p>
 <?php
 square_end();
 ?>
@@ -122,7 +123,7 @@ headline("Public Domain");
 <?php
 square_start("'100%'");
 ?>
-<p>Since April 09 2020 the Unity projects source for both the Oculus and Steam versions are available on <a href="https://sourceforge.net/projects/galaxy-forces-vr/">SourceForge</a>.</p>
+<p>Since November 2020 the Unity projects source for both the Oculus Rift, Quest and Steam versions are available on <a href="https://sourceforge.net/projects/galaxy-forces-vr/">SourceForge</a>.</p>
 <p>If you find the source useful I'd like to hear from you.</p>
 <?php
 square_end();
