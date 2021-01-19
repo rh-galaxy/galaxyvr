@@ -296,7 +296,7 @@ public class Menu : MonoBehaviour
     internal Material oMaterialPentagonLocked, oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
     internal Material oMaterialOctagonPlay, oMaterialOctagonPlayHighlighted;
     internal Material oMaterialBar, oMaterialBarHighlighted;
-    internal Material oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
+    internal Material oMaterialRankGreen, oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
         CreateNetworkInfo();
@@ -538,7 +538,7 @@ public class Menu : MonoBehaviour
                 }
             }
             Material oMaterial = oMaterialGrey;
-            //if (iRank == 4 || iRank == 5) oMaterial = oMaterialGrey;
+            if (iRank == 4) oMaterial = oMaterialRankGreen;
             if (iRank == 3) oMaterial = oMaterialRankBronze;
             if (iRank == 2) oMaterial = oMaterialRankSilver;
             if (iRank == 1) oMaterial = oMaterialRankGold;
@@ -703,6 +703,7 @@ public class Menu : MonoBehaviour
         }
         if (iIncrementalInit == 4)
         {
+            oMaterialRankGreen = Resources.Load("RankGreen", typeof(Material)) as Material;
             oMaterialRankBronze = Resources.Load("RankBronze", typeof(Material)) as Material;
             oMaterialRankSilver = Resources.Load("RankSilver", typeof(Material)) as Material;
             oMaterialRankGold = Resources.Load("RankGold", typeof(Material)) as Material;
@@ -1430,6 +1431,7 @@ public class Menu : MonoBehaviour
                     }
                 }
                 Material oMaterial = null;
+                if (iRank == 4) oMaterial = Menu.theMenu.oMaterialRankGreen;
                 if (iRank == 3) oMaterial = Menu.theMenu.oMaterialRankBronze;
                 if (iRank == 2) oMaterial = Menu.theMenu.oMaterialRankSilver;
                 if (iRank == 1) oMaterial = Menu.theMenu.oMaterialRankGold;
