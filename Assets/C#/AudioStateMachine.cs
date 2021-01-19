@@ -187,9 +187,9 @@ public class AudioStateMachine : MonoBehaviour
         {
             float fClipped = player.fShipHealth;
             if (fClipped <= 0) fClipped = 0;
-            else fLifeBeforeZero = fClipped / Player.FULL_HEALTH;
+            else fLifeBeforeZero = fClipped / player.FULL_HEALTH;
             if (bFadeDone /**//*&& fClipped!=0*/)
-                SetLife(fClipped / Player.FULL_HEALTH);
+                SetLife(fClipped / player.FULL_HEALTH);
             SetFlow(player.fMeanSpeed / 10);
             fClipped = ((float)player.iCargoNumUsed / (float)Player.MAXSPACEINHOLDUNITS) - 0.15f;
             if (fClipped <= 0) fClipped = 0;

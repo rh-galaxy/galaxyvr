@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
     const float MAXFUELINTANK = 60.0f;
     const float MAXSPACEINHOLDWEIGHT = 50.0f;
     internal const int MAXSPACEINHOLDUNITS = 3;
-    internal const float FULL_HEALTH = 1.5f;
+    internal float FULL_HEALTH = 1.5f;
     const float SHIP_MASS = 4.8f;
     const float SHIP_STEERSPEED = 235.0f; //degree/second
     const float SHIP_THRUST = 1.40f;
@@ -85,8 +85,8 @@ public class Player : MonoBehaviour
 
     //ship status
     internal int iNumLifes = -1; //no limit
-    internal float fShipHealth = FULL_HEALTH;
-    float fLastShipHealth = FULL_HEALTH;
+    internal float fShipHealth;
+    float fLastShipHealth;
 
     float fFuel;
 
@@ -112,6 +112,11 @@ public class Player : MonoBehaviour
         oWallsCollEmission = oWallsColl.emission;
         oWallsCollEmission.enabled = false;
         asm = GameObject.Find("AudioStateMachineDND").GetComponent<AudioStateMachine>();
+
+        FULL_HEALTH = GameLevel.theReplay.bEasyMode ? 7.5f : 1.5f;
+
+        fShipHealth = FULL_HEALTH;
+        fLastShipHealth = FULL_HEALTH;
     }
 
     public void Init(string i_szName, int i_iPlayerID, Vector2 i_vStartPos, GameLevel i_oMap)
@@ -293,7 +298,7 @@ public class Player : MonoBehaviour
         //collide with enemy body
         if (szOtherObject.StartsWith("Enemy"))
         {
-            if (!bFreeFromBullets) fShipHealth -= 5.0f; //instant kill
+            if (!bFreeFromBullets) fShipHealth -= 8.0f; //instant kill
         }
 
         //enemy bullet, take damage
@@ -1039,6 +1044,7 @@ public class Player : MonoBehaviour
         {
             iResultScore -= (int)((fTotalTimeMission*1000) / 2); //long time is bad in mission
         }
+        if (GameLevel.theReplay.bEasyMode && iResultScore>0) iResultScore /= 2;
         return iResultScore;
     }
 
