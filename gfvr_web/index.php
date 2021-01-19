@@ -81,7 +81,7 @@ headline("Level editor");
 square_start("'100%'");
 ?>
 <p>The ability to create and play custom levels is now added. Use the <a href="MapEditor_for_custom_levels.zip">MapEditor</a> and read editor_readme.txt</p>
-<p>In the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> there is a channel for sharing levels with me and others and I can add them to the game's second level page for approved levels (soon to be implemented in all versions).</p>
+<p>In the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> there is a channel for sharing levels with me and others and I can add them to the game's user level page for approved levels (implemented in all versions January 2021).</p>
 <?php
 square_end();
 ?>
@@ -110,7 +110,7 @@ headline("Multiplayer coders");
 square_start("'100%'");
 ?>
 <p>Contact me if you are interested in collaborating to get this vr game feature done.
-I have set a time frame to 6 months, and have more info of what is needed. Join the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> for this purpose</p>
+I have set a time frame to 8 months, and have more info of what is needed. Join the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> for this purpose</p>
 <?php
 square_end();
 ?>
