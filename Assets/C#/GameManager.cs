@@ -28,12 +28,14 @@ public class GameManager : MonoBehaviour
     internal static bool bNoInternet = false;
     internal static bool bNoVR = false;
 
+    internal bool bEasyMode;
+
     string szLastLevel = "";
     int iAchievementHellbentCounter = 0;
 
     AsyncOperation asyncLoad;
 
-    Replay oReplay = new Replay(); //create one replay... this is recycled during the session
+    Replay oReplay = new Replay(); //create one replay... this is recycled during the session;
 
     SendRecv oSendRecv = new SendRecv();
 
@@ -1019,7 +1021,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    oReplay.Reset(1); //reset before recording a new one during play
+                    oReplay.Reset(2); //reset before recording a new one during play
                     GameLevel.bRunReplay = false;
                 }
                 bStartReplay = false; //we have seen it
@@ -1081,7 +1083,11 @@ public class GameManager : MonoBehaviour
                         //get score from GameLevel
                         int iScoreMs;
                         if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
-                        else iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
+                        else
+                        {
+                            iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
+                            if (GameLevel.theReplay.bEasyMode) iScoreMs *= 2;
+                        }
                         if (!GameLevel.bRunReplay) aLastScore[iLastLevelIndex] = iScoreMs;
 
                         if (!bNoHiscore && !bNoInternet && iLastLevelIndex<200)

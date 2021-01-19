@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MsgType { MOVEMENT, KEY_CHANGE, BULLETE_NEW, BULLETP_NEW, BULLET_REMOVE, PLAYER_KILL, REPLAY_VERSION, ENEMY_KILL }; //(DOOR_ACTION, ...)
+public enum MsgType { MOVEMENT, KEY_CHANGE, BULLETE_NEW, BULLETP_NEW, BULLET_REMOVE, PLAYER_KILL, REPLAY_VERSION, ENEMY_KILL, REPLAY_EASYMODE }; //(DOOR_ACTION, ...)
 
 public struct ReplayMessage
 {
@@ -27,6 +27,7 @@ public struct ReplayMessage
 public class Replay
 {
     internal int iVersion;
+    internal bool bEasyMode = false;
     int iCurTimeSlot;
 
     List<ReplayMessage> oReplayMessages;
@@ -35,7 +36,7 @@ public class Replay
     public Replay()
     {
         oReplayMessages = new List<ReplayMessage>();
-        Reset(1);
+        Reset(2);
     }
 
     public void Reset(int iReplayVersion)
@@ -49,6 +50,13 @@ public class Replay
         rm.iType = (byte)MsgType.REPLAY_VERSION;
         rm.iID = 0;
         rm.iGeneralByte1 = (byte)iReplayVersion;
+        Add(rm);
+        rm = new ReplayMessage();
+        rm.iType = (byte)MsgType.REPLAY_EASYMODE;
+        rm.iID = 0;
+        if(GameManager.theGM!=null) rm.iGeneralByte1 = GameManager.theGM.bEasyMode ? (byte)1 : (byte)0;
+        else rm.iGeneralByte1 = (byte)0;
+        bEasyMode = rm.iGeneralByte1 == (byte)1;
         Add(rm);
     }
     public void ResetBeforePlay()
@@ -130,6 +138,11 @@ public class Replay
         if (oReplayMessages.Count>0 && oReplayMessages[0].iType == (byte)MsgType.REPLAY_VERSION)
             iVersion = oReplayMessages[0].iGeneralByte1;
         else iVersion = 0;
+
+        if (oReplayMessages.Count > 1 && oReplayMessages[1].iType == (byte)MsgType.REPLAY_EASYMODE)
+            bEasyMode = oReplayMessages[1].iGeneralByte1 == 1;
+        else bEasyMode = false;
+
 
         return true;
     }
