@@ -275,6 +275,7 @@ public class Menu : MonoBehaviour
 
     public CameraController oCameraHolder;
 
+    C_Item2InMenu oMenuEasyMode;
     C_Item2InMenu oMenuRecenter;
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
@@ -688,6 +689,9 @@ public class Menu : MonoBehaviour
             oCameraHolder.SetMovementMode(CameraController.bPointMovement);
             oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
 
+            GameManager.theGM.bEasyMode = PlayerPrefs.GetInt("MyUseEasyMode", 1) != 0;
+            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
+
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             QualitySettings.SetQualityLevel(iQuality, true);
             oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 9.0f);
@@ -823,6 +827,7 @@ public class Menu : MonoBehaviour
         if (oMenuQuality3 != null) oMenuQuality3.oLevelQuadMeshRenderer.material = (iQuality == 4) ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuSnapMovement != null) oMenuSnapMovement.oLevelQuadMeshRenderer.material = CameraController.bSnapMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuPointMovement != null) oMenuPointMovement.oLevelQuadMeshRenderer.material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuEasyMode != null) oMenuEasyMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bEasyMode ? oMaterialBarHighlighted : oMaterialBar;
 
 
         bool bHitLevel = false;
@@ -961,6 +966,10 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("Point") == 0)
             {
                 oMenuPointMovement.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("EasyMode") == 0)
+            {
+                oMenuEasyMode.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
@@ -1147,6 +1156,14 @@ public class Menu : MonoBehaviour
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
                     oCameraHolder.SetMovementMode(CameraController.bPointMovement);
+                }
+                else if (oHitInfo.collider.name.CompareTo("EasyMode") == 0)
+                {
+                    GameManager.theGM.bEasyMode = !GameManager.theGM.bEasyMode;
+                    PlayerPrefs.SetInt("MyUseEasyMode", GameManager.theGM.bEasyMode ? 1 : 0);
+                    PlayerPrefs.Save();
+                    iAllowSelection = 20;
+                    bPlaySelectSound = true;
                 }
 
 
