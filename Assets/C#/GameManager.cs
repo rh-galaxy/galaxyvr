@@ -211,7 +211,7 @@ public class GameManager : MonoBehaviour
                 if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime < 104.0f)
                     Achievements.Unlock("Race4");
             }
-            if(GameLevel.iLevelIndex<55)
+            if (GameLevel.iLevelIndex < 55)
             {
                 string szBits = "0000000000000000000000000000000000000000000000000000000";
                 char[] aBitsChars = szBits.ToCharArray();
@@ -558,7 +558,8 @@ public class GameManager : MonoBehaviour
                     int iRaceFinished = 0;
                     int iMissionFinishedGold = 0;
                     int iRaceFinishedGold = 0;
-                    for (int i = 0; i < oHigh.oLevelList.Count; i++)
+                    int iToGo = oHigh.oLevelList.Count > 55 ? 55 : oHigh.oLevelList.Count; //only count original 55
+                    for (int i = 0; i < iToGo; i++)
                     {
                         stLevel = oHigh.oLevelList[i];
                         if (!stLevel.bIsTime)
