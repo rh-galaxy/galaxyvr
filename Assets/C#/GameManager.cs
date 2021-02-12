@@ -828,7 +828,8 @@ public class GameManager : MonoBehaviour
                     int iRaceFinished = 0;
                     int iMissionFinishedGold = 0;
                     int iRaceFinishedGold = 0;
-                    for (int i = 0; i < oHigh.oLevelList.Count; i++)
+                    int iToGo = oHigh.oLevelList.Count > 55 ? 55 : oHigh.oLevelList.Count; //only count original 55
+                    for (int i = 0; i < iToGo; i++)
                     {
                         stLevel = oHigh.oLevelList[i];
                         if (!stLevel.bIsTime)
