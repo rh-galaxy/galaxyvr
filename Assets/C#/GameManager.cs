@@ -10,12 +10,15 @@ using System.IO;
 using System.Threading;
 using System.Text;
 
+using Oculus.Platform;
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager theGM = null;
 
     public CameraController theCameraHolder;
 
+    internal static bool bOculusApiPresent = false;
     internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
     internal static bool bUserValid = false;
@@ -25,6 +28,7 @@ public class GameManager : MonoBehaviour
     internal bool bEasyMode;
 
     string szLastLevel = "";
+    int iAchievementHellbentCounter = 0;
 
     AsyncOperation asyncLoad;
 
@@ -54,6 +58,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         bool bInited = false;
+
         UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
         if (headDevice != null && headDevice.isValid)
         {
@@ -61,11 +66,11 @@ public class GameManager : MonoBehaviour
 
             //init user
             //szUserID = headDevice.serialNumber; //headDevice.serialNumber.Length.ToString() is 0
-            szUserID = SystemInfo.deviceUniqueIdentifier;
-            szUser = SystemInfo.deviceUniqueIdentifier;
+            szUserID = SystemInfo.deviceUniqueIdentifier; //this is overwrited if APPLAB
+            szUser = SystemInfo.deviceUniqueIdentifier; //this is overwrited if name.txt has a name, or overwrited if APPLAB
 
             string szFileText = "";
-            string szFile = Application.persistentDataPath + "/" + "name.txt";
+            string szFile = UnityEngine.Application.persistentDataPath + "/" + "name.txt";
             if(File.Exists(szFile))
             {
                 try
@@ -78,16 +83,12 @@ public class GameManager : MonoBehaviour
                 }
             }
             if (szFileText.Length > 0) szUser = szFileText;
-            bUserValid = true;
-
-            bInited = true;
         }
-        Debug.Log("You are " + szUser);
 
+        bInited = InitOculus();
         if (!bInited)
         {
-            Debug.Log("Error initing VR...");
-            bUserValid = true;
+            Debug.Log("Error initing Oculus API...");
             //let app continue anyway...
         }
 
@@ -130,6 +131,160 @@ public class GameManager : MonoBehaviour
     private void AudioSettings_OnAudioConfigurationChanged(bool deviceWasChanged)
     {
         AudioStateMachine.instance.SetOutput(0);
+    }
+
+    //////start of oculus specific code
+    bool InitOculus()
+    {
+#if APPLAB
+        //init Oculus SDK
+        try
+        {
+            Core.AsyncInitialize("4116487761695377");
+            Entitlements.IsUserEntitledToApplication().OnComplete(EntitlementCallback);
+            Users.GetLoggedInUser().OnComplete(LoggedInUserCallback);
+        }
+        catch (UnityException e)
+        {
+            bUserValid = true; //we will use default or name.txt that are set earlier
+            Debug.LogException(e);
+            return false;
+        }
+        bOculusApiPresent = true;
+#endif
+        return true;
+    }
+
+    void EntitlementCallback(Message msg)
+    {
+        if (msg.IsError)
+        {
+            Debug.LogError("Not entitled to play this game");
+
+            UnityEngine.Application.Quit(); //it is possible to remove quit while developing
+        }
+        else
+        {
+            //ok
+            Debug.Log("You are entitled to play this game");
+        }
+    }
+
+    void LoggedInUserCallback(Message msg)
+    {
+        if (msg.IsError)
+        {
+            Debug.LogError("No Oculus user");
+        }
+        else
+        {
+            //save ID, and user name
+            szUserID = msg.GetUser().ID.ToString();
+            szUser = msg.GetUser().OculusID;
+            bUserValid = true;
+        }
+    }
+
+    void HandleOculusAchievements()
+    {
+        //handle achievements
+        if (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel)
+        {
+            //finished any level with ok result
+
+            //survivor achievement check
+            if (GameLevel.theMap.player.bAchieveNoDamage)
+                Achievements.Unlock("Survivor");
+            //hellbent achievement check
+            if (szLastLevel.CompareTo(GameLevel.szLevel) != 0) iAchievementHellbentCounter = 1;
+            else iAchievementHellbentCounter++;
+            if (iAchievementHellbentCounter == 8)
+                Achievements.Unlock("Hellbent");
+            //speedster achievement check
+            if (GameLevel.theMap.player.bAchieveFullThrottle)
+                Achievements.Unlock("Speedster");
+            //racer achievement check
+            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
+                Achievements.AddCount("Racer", 1);
+            //transporter achievement check (named loader)
+            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
+                Achievements.AddCount("Loader", 1);
+
+            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
+            {
+                //cargo beginner
+                if (GameLevel.szLevel.CompareTo("1mission00") == 0)
+                    Achievements.Unlock("Cargo1");
+                //cargo apprentice
+                if (GameLevel.szLevel.CompareTo("1mission03") == 0)
+                    Achievements.Unlock("Cargo2");
+                //cargo expert
+                if (GameLevel.szLevel.CompareTo("1mission06") == 0 && GameLevel.theMap.player.iAchieveShipsDestroyed == 0)
+                    Achievements.Unlock("Cargo3");
+                //cargo master
+                if (GameLevel.szLevel.CompareTo("1mission09") == 0 && GameLevel.theMap.player.bAchieveNoDamage)
+                    Achievements.Unlock("Cargo4");
+            }
+            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
+            {
+                //race beginner
+                if (GameLevel.szLevel.CompareTo("2race00") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
+                    Achievements.Unlock("Race1");
+                //race apprentice
+                if (GameLevel.szLevel.CompareTo("2race03") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
+                    Achievements.Unlock("Race2");
+                //race expert
+                if (GameLevel.szLevel.CompareTo("2race06") == 0 && GameLevel.theMap.player.fTotalTime < 60.0f)
+                    Achievements.Unlock("Race3");
+                //race master
+                if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime < 104.0f)
+                    Achievements.Unlock("Race4");
+            }
+            if (GameLevel.iLevelIndex < 55)
+            {
+                string szBits = "0000000000000000000000000000000000000000000000000000000";
+                char[] aBitsChars = szBits.ToCharArray();
+                aBitsChars[GameLevel.iLevelIndex] = '1';
+                string szBits2 = new string(aBitsChars, 0, aBitsChars.Length - 0);
+                Achievements.AddFields("Galaxy55", szBits2);
+            }
+        }
+        //fuelburner achievement check
+        int iTemp = (int)GameLevel.theMap.player.fAchieveFuelBurnt;
+        if (iTemp > 0)
+            Achievements.AddCount("Fuelburner", (ulong)iTemp);
+        //ravager achievement check
+        iTemp = GameLevel.theMap.iAchieveEnemiesKilled;
+        if (iTemp > 0)
+            Achievements.AddCount("Ravager", (ulong)iTemp);
+        //kamikaze achievement check (named doom)
+        iTemp = GameLevel.theMap.player.iAchieveShipsDestroyed;
+        if (iTemp > 0)
+            Achievements.AddCount("Doom", (ulong)iTemp);
+        //trigger achievement check
+        iTemp = GameLevel.theMap.player.iAchieveBulletsFired;
+        if (iTemp > 0)
+            Achievements.AddCount("Trigger", (ulong)iTemp);
+        //hitchhiker42 achievement check
+        iTemp = (int)GameLevel.theMap.player.fAchieveDistance;
+        if (iTemp > 0)
+            Achievements.AddCount("Hitchhiker42", (ulong)iTemp * 5); //5m per unit is reasonable
+    }
+    //////end of oculus specific code
+
+    void UnlockMissionGoldAchievement()
+    {
+        if (bOculusApiPresent)
+        {
+            Achievements.Unlock("CargoGold30");
+        }
+    }
+    void UnlockRaceGoldAchievement()
+    {
+        if (bOculusApiPresent)
+        {
+            Achievements.Unlock("RaceGold25");
+        }
     }
 
     LevelInfo stLevel;
@@ -303,9 +458,14 @@ public class GameManager : MonoBehaviour
         //get user present
         bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
 
-        //pause?
+        //pause if in oculus home universal menu
+        // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
         bool bPauseNow = bPause; //no change below
-
+        if (bOculusApiPresent)
+        {
+            bPauseNow = (!OVRPlugin.hasInputFocus || !OVRPlugin.hasVrFocus);
+        }
+        else
         {
             bPauseNow = !userPresent;
         }
@@ -360,6 +520,7 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
+                    Debug.Log("You are " + szUser);
                     Menu.theMenu.oCameraHolder = theCameraHolder; //although theCameraHolder is DND the reference is to an old destroyed object the second time Menu is loaded, so we do this as a fix
                     StartFade(2.5f, 1.0f, false);
                     iState++;
@@ -389,7 +550,8 @@ public class GameManager : MonoBehaviour
                     int iRaceFinished = 0;
                     int iMissionFinishedGold = 0;
                     int iRaceFinishedGold = 0;
-                    for (int i = 0; i < oHigh.oLevelList.Count; i++)
+                    int iToGo = oHigh.oLevelList.Count > 55 ? 55 : oHigh.oLevelList.Count; //only count original 55
+                    for (int i = 0; i < iToGo; i++)
                     {
                         stLevel = oHigh.oLevelList[i];
                         if (!stLevel.bIsTime)
@@ -415,6 +577,15 @@ public class GameManager : MonoBehaviour
                         bNoInternet = true; //set this so no further attempts are made at accessing the internet
                     }
 
+                    //handle gold achievements
+                    if (iMissionFinishedGold >= 30)
+                    {
+                        UnlockMissionGoldAchievement();
+                    }
+                    if (iRaceFinishedGold >= 25)
+                    {
+                        UnlockRaceGoldAchievement();
+                    }
                     //handle unlocking
                     int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
                     if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
@@ -622,6 +793,12 @@ public class GameManager : MonoBehaviour
                         {
                             if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
+                                //////start of oculus specific code (achievements)
+                                if (bOculusApiPresent && userPresent) //VR user must be present for achievements
+                                {
+                                    HandleOculusAchievements();
+                                }
+                                //////end of oculus specific code
                             }
                         }
 
