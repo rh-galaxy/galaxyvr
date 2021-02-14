@@ -45,3 +45,4 @@ Achievements: (implemented for steam and oculus)
 - The answer is 42 - Travel 42 kilometers [counter unlock]                             Hitchhiker42
 - Race overachiever - Finish all races with gold score [normal unlock]                 RaceGold25
 - Cargo overachiever - Finish all missions with gold score [normal unlock]             CargoGold30
+- User Levels - Finish a user made level 20 times [counter unlock]                     UserLevels

@@ -122,6 +122,7 @@ public class GameManager : MonoBehaviour
     int iSteamStatsTotalMetersTravelled;
     int iSteamStatsLevelsPlayedBits1;
     int iSteamStatsLevelsPlayedBits2;
+	int iSteamStatsUserLevelsPlayed;
 
     protected Callback<UserStatsReceived_t> UserStatsReceived;
     protected Callback<UserStatsStored_t> UserStatsStored;
@@ -216,6 +217,7 @@ public class GameManager : MonoBehaviour
                 SteamUserStats.GetStat("TotalMetersTravelled", out iSteamStatsTotalMetersTravelled);
                 SteamUserStats.GetStat("LevelsPlayedBits1", out iSteamStatsLevelsPlayedBits1);
                 SteamUserStats.GetStat("LevelsPlayedBits2", out iSteamStatsLevelsPlayedBits2);
+				SteamUserStats.GetStat("TotalUserLevelsPlayed", out iSteamStatsUserLevelsPlayed);
             }
             else
             {
@@ -297,6 +299,13 @@ public class GameManager : MonoBehaviour
                 iSteamStatsTotalMissionPlayed++;
                 if (iSteamStatsTotalMissionPlayed >= 12) SteamUserStats.SetAchievement("Loader");
                 SteamUserStats.SetStat("TotalMissionPlayed", iSteamStatsTotalMissionPlayed);
+            }
+            //user levels achievement check
+            if (GameLevel.iLevelIndex >= 55)
+            {
+                iSteamStatsUserLevelsPlayed++;
+                if (iSteamStatsUserLevelsPlayed >= 20) SteamUserStats.SetAchievement("UserLevels");
+                SteamUserStats.SetStat("TotalUserLevelsPlayed", iSteamStatsUserLevelsPlayed);
             }
             if (GameLevel.theMap.bAchieveFinishedMissionLevel)
             {
