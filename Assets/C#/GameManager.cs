@@ -209,6 +209,9 @@ public class GameManager : MonoBehaviour
             //transporter achievement check (named loader)
             if (GameLevel.theMap.bAchieveFinishedMissionLevel)
                 Achievements.AddCount("Loader", 1);
+            //user levels achievement check
+            if (GameLevel.iLevelIndex >= 55)
+                Achievements.AddCount("UserLevels", 1);
 
             if (GameLevel.theMap.bAchieveFinishedMissionLevel)
             {
