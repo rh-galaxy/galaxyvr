@@ -689,7 +689,7 @@ public class GameManager : MonoBehaviour
         } while (iAction != 0);
 
         //in menu?
-        if (iState >= 1 || iState <= 4)
+        if (iState >= 1 || iState <= 5)
         {
             if(Menu.bMCreate)
             {
@@ -808,7 +808,7 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
-                    Menu.theMenu.oCameraHolder = theCameraHolder; //although theCameraHolder is DND the reference is to an old destroyed object the second time Menu is loaded, so we do this as a fix
+                    //Menu.theMenu.oCameraHolder = theCameraHolder; //although theCameraHolder is DND the reference is to an old destroyed object the second time Menu is loaded, so we do this as a fix
                     StartFade(2.5f, 1.0f, false);
                     iState++;
                 }
@@ -967,7 +967,9 @@ public class GameManager : MonoBehaviour
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
 
-                if (SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any) || bBackButton
+                bool bBackController = false;
+                try { bBackController = SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
+                if ( bBackController || bBackButton
                     || Input.GetKey(KeyCode.Escape) || Menu.bLevelUnSelected)
                 {
                     Menu.bLevelUnSelected = false;

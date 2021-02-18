@@ -691,12 +691,19 @@ public class Player : MonoBehaviour
             bThrottle = bLeft = bRight = bAdjust = false;
 
             //get input from joysticks
-            float fX = SteamVR_Actions.default_Steering.axis.x;
-            float fY = SteamVR_Actions.default_Steering.axis.y;
-            float fTrg2 = SteamVR_Actions.default_Throttle.axis;
+            float fX = 0;
+            float fY = 0;
+            float fTrg2 = 0;
+            try
+            {
+                fX = SteamVR_Actions.default_Steering.axis.x;
+                fY = SteamVR_Actions.default_Steering.axis.y;
+                fTrg2 = SteamVR_Actions.default_Throttle.axis;
+            }
+            catch { }
 
             if (fTrg2 > 0.3f) bThrottle = true;
-            if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true;
+            try { if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true; } catch { }
 
             if (fX > 0.3f) bRight = true;
             if (fX < -0.3f) bLeft = true;
@@ -704,7 +711,7 @@ public class Player : MonoBehaviour
             if (fY < -0.85f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
 
             //keyboard and joystick for fire (is a trigger once event)
-            if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true;
+            try { if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true; } catch { }
 
             if (bMotionMovementEnabled)
             {

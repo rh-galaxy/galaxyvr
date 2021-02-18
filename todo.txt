@@ -6,7 +6,6 @@ Goal: Implement 4 player multi-player for Galaxy Forces VR
 - You will need to be familiar with TcpListener and TcpCliend in C#
 - You will need some knowledge of Unity
 - You will need to download the "Galaxy Forces VR" Unity project and make sure you can run it and debug it.
- (that is a first test order of $20, then we can continue with the real order if you believe you can help me)
 *Current status of project
 - Unity and C# is used, PC windows.
 - Game is single player and in a mature state.
