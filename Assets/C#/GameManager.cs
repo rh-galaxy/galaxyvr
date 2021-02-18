@@ -944,9 +944,9 @@ public class GameManager : MonoBehaviour
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
 
-                    bool bBackController = false;
-                    try { bBackController = SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
-                    if ( bBackController || bBackButton
+                    bool bBackController2 = false;
+                    try { bBackController2 = SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
+                    if ( bBackController2 || bBackButton
                         || Input.GetKey(KeyCode.Escape)) //back to menu
                     {
                         bBackToMenu = true;
