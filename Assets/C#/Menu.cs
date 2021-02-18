@@ -447,6 +447,7 @@ public class Menu : MonoBehaviour
             szScore = (i_stLevelInfo.iBestScoreMs / 1000.0f).ToString("N3");
             if (i_stLevelInfo.bIsTime) szScore = GetTimeString(i_stLevelInfo.iBestScoreMs);
             if (i_stLevelInfo.iBestScoreMs == -1) szScore = "--";
+            else if(i_stLevelInfo.iYourPlace > 0 && i_stLevelInfo.iTotalPlaces > 0) szScore += " (" + i_stLevelInfo.iYourPlace.ToString() + "/" + i_stLevelInfo.iTotalPlaces.ToString() + ")";
             oYRScoreTextTextMesh.text = szScore;
         }
 
@@ -754,6 +755,11 @@ public class Menu : MonoBehaviour
         }
         if (iIncrementalInit == 10)
         {
+            //change fov if non VR since that default setting shows to wide fov
+            // and is not behaving reliably
+            if (GameManager.bNoVR)
+                Camera.main.fieldOfView = 45.0f;
+
             //prevent selection if trigger was held when menu is started
             iAllowSelection = 20;
 

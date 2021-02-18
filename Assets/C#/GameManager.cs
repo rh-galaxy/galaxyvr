@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     internal static bool bUserValid = false;
     internal static bool bNoHiscore = false;
     internal static bool bNoInternet = false;
+    internal static bool bNoVR = false;
 
     internal bool bEasyMode;
 
@@ -429,7 +430,7 @@ public class GameManager : MonoBehaviour
 #endif
         }
         //recenter
-        if (Menu.bRecenter)
+        if (Menu.bRecenter && !bNoVR)
         {
             fRecenterTimer += Time.unscaledDeltaTime;
             if (fRecenterTimer > 3.0f)

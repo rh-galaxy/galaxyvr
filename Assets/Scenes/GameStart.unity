@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.6140094, g: 0.33848, b: 0.3445918, a: 1}
+  m_IndirectSpecularColor: {r: 0.6126867, g: 0.33894667, b: 0.3459011, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6517,7 +6517,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 682318370}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8, y: 1.5, z: -0.1}
+  m_LocalPosition: {x: 2.6, y: 0.5, z: -0.1}
   m_LocalScale: {x: 1.1, y: 1.1, z: 1}
   m_Children: []
   m_Father: {fileID: 2040058285}
@@ -8635,9 +8635,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1604223132}
-  m_Text: 'Score
-
-'
+  m_Text: Score
   m_OffsetZ: 0
   m_CharacterSize: 4
   m_LineSpacing: 1
@@ -8849,7 +8847,6 @@ MonoBehaviour:
   oSkyBoxMat3: {fileID: 2100000, guid: 29f7eb4ef68545141b687e420fdb4b83, type: 2}
   oSkyBoxMat4: {fileID: 2100000, guid: e0315be70fe9cdb4ba42c102a8dc4f3f, type: 2}
   oSkyBoxMat5: {fileID: 2100000, guid: 2f830a8d4ed77994e83d5a131b7f1fd4, type: 2}
-  oCameraHolder: {fileID: 440394742}
   oTMProBaseObj: {fileID: 223630428}
   oTMProBaseObj1: {fileID: 1990641991}
   oTMProBaseObj2: {fileID: 1829146070}

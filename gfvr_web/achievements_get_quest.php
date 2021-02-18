@@ -97,8 +97,43 @@
 							echo $id1." ".$id2." ".$id3." "; //patch in id last for version compatibility
 						}
 						echo "\"".$row['Creator']."\" ";
-						echo "\n";
+						
 ////////////////////////////////////////////////////////////////////////////////////////////
+//part 3 (per level) total number of scores
+						$select_string = "SELECT count(*) AS Count FROM achievements_t WHERE achievements_t.level='".$row['Level']."'";
+						
+						$total = -1;
+						$result3 = @mysqli_query($db, $select_string);
+						if($result3) {
+							$num_rows3 = @mysqli_num_rows($result3);
+							if($num_rows3==1) {
+								$row3 = @mysqli_fetch_assoc($result3);
+								$total = $row3['Count'];
+							}
+						}
+						echo $total." ";
+						
+////////////////////////////////////////////////////////////////////////////////////////////
+//part 4 (per level) your place
+						$sort = ">";
+						if($row['IsTime'] != 0) $sort = "<";
+						$select_string = "SELECT count(*) AS Place FROM achievements_t WHERE achievements_t.level='".$row['Level']."' AND achievements_t.score".$sort.$score;
+						
+						$place = -1;
+						if($score!=-1) {
+							$result4 = @mysqli_query($db, $select_string);
+							if($result4) {
+								$num_rows4 = @mysqli_num_rows($result4);
+								if($num_rows4==1) {
+									$row4 = @mysqli_fetch_assoc($result4);
+									$place = $row4['Place'] +1;
+								}
+							}
+						}
+						echo $place." ";
+						
+////////////////////////////////////////////////////////////////////////////////////////////
+						echo "\n";
 						
 					}
 				}
