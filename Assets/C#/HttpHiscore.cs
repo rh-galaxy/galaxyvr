@@ -22,6 +22,9 @@ public struct LevelInfo
     public string szWRName3;
     public int iWRScore3;
 
+    public int iTotalPlaces;
+    public int iYourPlace;
+
     public string szCreateor; //on user levels
 }
 
@@ -79,6 +82,8 @@ public class HttpHiscore
                 stLevel.iLimit3 = int.Parse(szTokens[4]);
                 stLevel.iBestScoreMs = int.Parse(szTokens[5]);
                 stLevel.iLastScoreMs = -1;
+                stLevel.iTotalPlaces = -1;
+                stLevel.iYourPlace = -1;
 
                 //handle spaces in names
                 char[] szSeparator2 = { (char)'\"' };
@@ -98,6 +103,16 @@ public class HttpHiscore
                 stLevel.szWRId1 = szTokens[1].Trim(' ');
                 stLevel.szWRId2 = szTokens[2].Trim(' ');
                 stLevel.szWRId3 = szTokens[3].Trim(' ');
+
+                if (szWithin.Length >= 10)
+                {
+                    szTokens = szWithin[9].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    if (szTokens.Length >= 2)
+                    {
+                        stLevel.iTotalPlaces = int.Parse(szTokens[0].Trim(' '));
+                        stLevel.iYourPlace = int.Parse(szTokens[1].Trim(' '));
+                    }
+                }
 
                 oLevelList.Add(stLevel);
             }

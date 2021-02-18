@@ -1000,6 +1000,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 223630432}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!222 &223630430
@@ -1204,6 +1205,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 372070091}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!23 &372070091
@@ -6501,7 +6503,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 682318370}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8, y: 1.5, z: -0.1}
+  m_LocalPosition: {x: 2.6, y: 0.5, z: -0.1}
   m_LocalScale: {x: 1.1, y: 1.1, z: 1}
   m_Children: []
   m_Father: {fileID: 2040058285}
@@ -8050,6 +8052,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1314915071}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!23 &1314915071
@@ -8729,7 +8732,6 @@ MonoBehaviour:
   oSkyBoxMat3: {fileID: 2100000, guid: 29f7eb4ef68545141b687e420fdb4b83, type: 2}
   oSkyBoxMat4: {fileID: 2100000, guid: e0315be70fe9cdb4ba42c102a8dc4f3f, type: 2}
   oSkyBoxMat5: {fileID: 2100000, guid: 2f830a8d4ed77994e83d5a131b7f1fd4, type: 2}
-  oCameraHolder: {fileID: 440394742}
   oTMProBaseObj: {fileID: 223630428}
   oTMProBaseObj1: {fileID: 1990641991}
   oTMProBaseObj2: {fileID: 1829146070}
@@ -9069,6 +9071,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1829146075}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!222 &1829146073
@@ -9254,6 +9257,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1886277027}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!23 &1886277027
@@ -9601,6 +9605,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1933593349}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!23 &1933593349
@@ -9856,6 +9861,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1990641995}
   m_maskType: 0
+  _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
 --- !u!222 &1990641993
