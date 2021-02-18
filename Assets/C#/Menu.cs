@@ -273,7 +273,7 @@ public class Menu : MonoBehaviour
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
 
-    public CameraController oCameraHolder;
+    CameraController oCameraHolder;
 
     C_Item2InMenu oMenuEasyMode;
     C_Item2InMenu oMenuRecenter;
@@ -296,6 +296,8 @@ public class Menu : MonoBehaviour
     internal Material oMaterialRankGreen, oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
+        oCameraHolder = CameraController.instance;
+
         //done incrementally in Update
     }
 
@@ -776,8 +778,12 @@ public class Menu : MonoBehaviour
         //get input from joysticks
         bool bTrigger = false;
         if (GameManager.bValveDevicePresent)
-            bTrigger = (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f) ||
-                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any);
+            try
+            {
+                bTrigger = (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f) ||
+                    SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any);
+            }
+            catch { }
 
         float fAdjust = 0;
         //if (fAxisX > 0.5f) fAdjust = 1000;
