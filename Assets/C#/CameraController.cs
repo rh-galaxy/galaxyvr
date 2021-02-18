@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController instance;
+
     public bool bMapMode;
     public GameObject oPlayer;
     public GameLevel oMap;
@@ -27,6 +29,40 @@ public class CameraController : MonoBehaviour
     internal Vector3 vGazeDirection;
     internal Quaternion qRotation;
 
+    private void Awake()
+    {
+        //singleton
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            //enforce singleton pattern, meaning there can only ever be one instance of a CameraController.
+            for (int i=0; i< transform.childCount; i++) //this is ok, since destroy doesn't take it away immediatly
+                Destroy(transform.GetChild(i).gameObject);
+            Destroy(gameObject);
+            return;
+        }
+
+        //the rest is done once only...
+        DontDestroyOnLoad(gameObject);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //create a quad a circle for gazeing in VR or mouse cursor in non VR
+        oGazeQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        oGazeQuad.transform.parent = transform;
+        MonoBehaviour.DestroyImmediate(oGazeQuad.GetComponent<Collider>());
+        oCursorMaterial = Resources.Load("Cursor", typeof(Material)) as Material;
+        oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
+        oGazeQuad.transform.localScale = new Vector3(.38f, .38f, 1);
+        oGazeQuad.SetActive(false);
+
+        iRightHanded = 0;
+    }
 
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
     {
@@ -87,26 +123,6 @@ public class CameraController : MonoBehaviour
             o_fY = fCurY;
             fCurY = 0;
         }
-    }
-
-    private void Awake()
-    {
-        //DontDestroyOnLoad(this.gameObject);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //create a quad a circle for gazeing in VR or mouse cursor in non VR
-        oGazeQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        oGazeQuad.transform.parent = transform;
-        MonoBehaviour.DestroyImmediate(oGazeQuad.GetComponent<Collider>());
-        oCursorMaterial = Resources.Load("Cursor", typeof(Material)) as Material;
-        oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
-        oGazeQuad.transform.localScale = new Vector3(.38f, .38f, 1);
-        oGazeQuad.SetActive(false);
-
-        iRightHanded = 0;
     }
 
     // Update is called once per frame

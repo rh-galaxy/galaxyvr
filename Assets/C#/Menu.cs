@@ -273,7 +273,7 @@ public class Menu : MonoBehaviour
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
 
-    public CameraController oCameraHolder;
+    CameraController oCameraHolder;
 
     C_Item2InMenu oMenuEasyMode;
     C_Item2InMenu oMenuRecenter;
@@ -296,6 +296,8 @@ public class Menu : MonoBehaviour
     internal Material oMaterialRankGreen, oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
+        oCameraHolder = CameraController.instance;
+
         //done incrementally in Update
     }
 
