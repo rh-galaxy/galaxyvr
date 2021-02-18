@@ -1066,9 +1066,9 @@ public class GameManager : MonoBehaviour
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
 
-
-
-                    if (SteamVR_Actions.default_Back_instant.GetState(SteamVR_Input_Sources.Any) || bBackButton
+                    bool bBackController = false;
+                    try { bBackController = SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
+                    if ( bBackController || bBackButton
                         || Input.GetKey(KeyCode.Escape)) //back to menu
                     {
                         bBackToMenu = true;
