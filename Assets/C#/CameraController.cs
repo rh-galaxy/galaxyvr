@@ -200,8 +200,6 @@ public class CameraController : MonoBehaviour
     }
     public void SetPointingInfo(Vector3 vHitPoint, Quaternion qHitDir, Vector3 vOrigin, Quaternion qOriginDir)
     {
-        if (oGazeQuad == null)
-            oGazeQuad = null;
         //move the cursor to the point where the raycast hit
         oGazeQuad.transform.position = vHitPoint;
         //rotate the cursor to hug the surface
