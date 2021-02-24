@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     AsyncOperation asyncLoad;
 
-    Replay oReplay = new Replay(); //create one replay... this is recycled during the session;
+    Replay oReplay = new Replay(); //create one replay... this is recycled during the session
 
 
 #if LOGPROFILERDATA
@@ -92,6 +92,9 @@ public class GameManager : MonoBehaviour
             Debug.Log("Error initing Oculus API...");
             //let app continue anyway...
         }
+#if !APPLAB
+        bUserValid = true;
+#endif
 
         GameLevel.theReplay = oReplay;
 
