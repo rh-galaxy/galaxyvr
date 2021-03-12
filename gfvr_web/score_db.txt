@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: s679.loopia.se
--- Tid vid skapande: 12 feb 2021 kl 15:01
+-- Tid vid skapande: 12 mars 2021 kl 14:46
 -- Serverversion: 10.3.27-MariaDB-log
--- PHP-version: 7.4.14
+-- PHP-version: 7.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -188,12 +188,12 @@ CREATE TABLE `statistics_t` (
 --
 
 INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
-(1, 'index.php', 15209),
-(2, 'achievements_post.php', 2865),
-(5, 'privacy.php', 112),
-(6, 'achievements_get.php', 17337),
-(8, 'mpgames_create.php', 603),
-(9, 'mpgames_join.php', 873);
+(1, 'index.php', 15584),
+(2, 'achievements_post.php', 3009),
+(5, 'privacy.php', 168),
+(6, 'achievements_get.php', 18248),
+(8, 'mpgames_create.php', 905),
+(9, 'mpgames_join.php', 1192);
 
 --
 -- Index för dumpade tabeller
@@ -203,19 +203,24 @@ INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
 -- Index för tabell `achievements_t`
 --
 ALTER TABLE `achievements_t`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id_index` (`user_id`),
+  ADD KEY `level_index` (`level`),
+  ADD KEY `score_index` (`score`);
 
 --
 -- Index för tabell `levels_t`
 --
 ALTER TABLE `levels_t`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `level_index` (`level`) USING BTREE;
 
 --
 -- Index för tabell `members_t`
 --
 ALTER TABLE `members_t`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id_index` (`oculus_id`);
 
 --
 -- Index för tabell `mpgames_t`
