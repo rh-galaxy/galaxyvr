@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: s462.loopia.se
--- Tid vid skapande: 12 feb 2021 kl 15:02
+-- Tid vid skapande: 12 mars 2021 kl 14:52
 -- Serverversion: 10.3.27-MariaDB-log
--- PHP-version: 7.4.14
+-- PHP-version: 7.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -172,8 +172,8 @@ CREATE TABLE `statistics_t` (
 --
 
 INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
-(1, 'achievements_post.php', 1633),
-(3, 'achievements_get.php', 5323);
+(1, 'achievements_post.php', 1992),
+(3, 'achievements_get.php', 6449);
 
 --
 -- Index för dumpade tabeller
@@ -183,19 +183,24 @@ INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
 -- Index för tabell `achievements_t`
 --
 ALTER TABLE `achievements_t`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id_index` (`user_id`),
+  ADD KEY `level_index` (`level`),
+  ADD KEY `score_index` (`score`);
 
 --
 -- Index för tabell `levels_t`
 --
 ALTER TABLE `levels_t`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `level_index` (`level`);
 
 --
 -- Index för tabell `members_t`
 --
 ALTER TABLE `members_t`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id_index` (`oculus_id`);
 
 --
 -- Index för tabell `statistics_t`
