@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
 	<meta http-equiv="content-language" content="en-us">
-	<meta name="description" content="Galaxy Forces V2 - A multi-player space shooter with global hi-scores and achievements.">
+	<meta name="description" content="Galaxy Forces VR - A space shooter with global hi-scores and achievements.">
 	<meta name="keywords" content="hi-score top-list achievements">
 	<meta name="author" content="Ronnie Hedlund">
 
@@ -40,7 +40,7 @@ square_start("'100%'");
 	$id = $_GET["Id"];
 	$paramArray = array($name,$id);
 	if(checkstring($paramArray)) {
-		echo "<h3>Score for ".$name."</h3>";
+		echo "<h3>Score for ".$name." (on PC)</h3>";
 	
 		$db = connect_to_db();
 		if($db) {
@@ -86,10 +86,12 @@ square_start("'100%'");
 									if($row2["Score"]<$row2["limit1"]) $icon = "gold.png";
 									else if($row2["Score"]<$row2["limit2"]) $icon = "silver.png";
 									else if($row2["Score"]<$row2["limit3"]) $icon = "bronze.png";
+									else $icon = "green.png";
 								} else {
 									if($row2["Score"]>$row2["limit1"]) $icon = "gold.png";
 									else if($row2["Score"]>$row2["limit2"]) $icon = "silver.png";
 									else if($row2["Score"]>$row2["limit3"]) $icon = "bronze.png";
+									else $icon = "green.png";
 								}
 								echo "<td><img align=\"left\" src=\"images/a_".$icon."\" title=\"".$icon."\" alt=\"".$icon."\"></td>";
 								
