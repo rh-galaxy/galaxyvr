@@ -13,7 +13,7 @@
 		if($_POST["STEAM"]==1) $steam = 1;
 		$isok = 0; //no qualify
 
-		$db = connect_to_db();
+		$db = connect_to_db_quest();
 
 		$query = "SELECT * FROM members_t WHERE oculus_id='".$userid."'";
 		$result_member = mysqli_query($db, $query);

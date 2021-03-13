@@ -10,10 +10,16 @@
 	$paramArray = array($user,$userid,$steam_one);
 	$isok = 0; //no qualify
 
+	//this is a hack to make SideQuest version fail and then unlock all levels and disable internet access
+	// ($userid string is android unique id, 32 chars in that version, and oculus and steam id are about 17 numbers)
+	if(strlen($userid)>31) {
+		echo "0\n";
+	} else
+	
 	if(checkstring($paramArray) && $user!="" && $userid!="") {
 		if($steam_one==1) $steam=1;
 		
-		$db = connect_to_db();
+		$db = connect_to_db_quest();
 
 		$query = "SELECT * FROM members_t WHERE oculus_id='".$userid."'";
 		$result_member = mysqli_query($db, $query);

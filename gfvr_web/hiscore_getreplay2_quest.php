@@ -7,7 +7,7 @@
 	$userid = $_GET["UserId"];
 	$paramArray = array($level, $userid);
 	if(checkstring($paramArray) && $level!="" && $userid!="") {
-		$db = connect_to_db();
+		$db = connect_to_db_quest();
 
 		$query = "SELECT * FROM levels_t WHERE level='".$level."'";
 		$result = mysqli_query($db, $query);
