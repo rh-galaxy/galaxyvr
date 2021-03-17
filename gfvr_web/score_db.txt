@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: s679.loopia.se
--- Tid vid skapande: 12 mars 2021 kl 14:46
+-- Tid vid skapande: 17 mars 2021 kl 18:18
 -- Serverversion: 10.3.27-MariaDB-log
 -- PHP-version: 7.4.16
 
@@ -140,8 +140,15 @@ INSERT INTO `levels_t` (`id`, `level`, `is_time`, `ordering`, `limit1`, `limit2`
 (119, 'NineLives', 0, 1019, 800000, 600000, 50000, 1, 'mra'),
 (120, 'Genesis', 0, 1020, 565000, 450000, 150000, 1, 'mra'),
 (121, 'SuperSprint', 0, 1021, 260000, 200000, 80000, 1, 'mra'),
-(122, 'Mushroom', 0, 1022, 420000, 40000, 200000, 1, 'mra'),
-(123, 'TheCaverns2', 0, 1023, 800000, 600000, 200000, 1, 'mra');
+(122, 'Mushroom', 0, 1022, 420000, 340000, 200000, 1, 'mra'),
+(123, 'TheCaverns2', 0, 1023, 800000, 600000, 200000, 1, 'mra'),
+(124, 'TheTube', 0, 1024, 300000, 200000, 100000, 1, 'mra'),
+(125, 'Eliminator', 0, 1025, 540000, 420000, 100000, 1, 'mra'),
+(126, 'DeepDive', 0, 1026, 410000, 300000, 100000, 1, 'mra'),
+(127, 'SpiralSnail', 0, 1027, 170000, 110000, 50000, 1, 'mra'),
+(128, 'Pacman', 0, 1028, 540000, 320000, 100000, 1, 'mra'),
+(129, 'RuleBreaker', 0, 1029, 400000, 240000, 100000, 1, 'mra'),
+(130, 'EyeOfTheStorm', 0, 1030, 509000, 340000, 100000, 1, 'mra');
 
 -- --------------------------------------------------------
 
@@ -182,18 +189,6 @@ CREATE TABLE `statistics_t` (
   `page` varchar(32) NOT NULL,
   `count` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumpning av Data i tabell `statistics_t`
---
-
-INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
-(1, 'index.php', 15584),
-(2, 'achievements_post.php', 3009),
-(5, 'privacy.php', 168),
-(6, 'achievements_get.php', 18248),
-(8, 'mpgames_create.php', 905),
-(9, 'mpgames_join.php', 1192);
 
 --
 -- Index för dumpade tabeller
@@ -248,7 +243,7 @@ ALTER TABLE `achievements_t`
 -- AUTO_INCREMENT för tabell `levels_t`
 --
 ALTER TABLE `levels_t`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
 
 --
 -- AUTO_INCREMENT för tabell `members_t`
@@ -266,7 +261,7 @@ ALTER TABLE `mpgames_t`
 -- AUTO_INCREMENT för tabell `statistics_t`
 --
 ALTER TABLE `statistics_t`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
