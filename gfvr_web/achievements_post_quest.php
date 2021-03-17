@@ -93,7 +93,7 @@
 <?php
 	//update statistics
 	require_once("db_connect_quest.php");
-	$db = connect_to_db();
+	$db = connect_to_db_quest();
 	$query = "UPDATE statistics_t SET count=count+1 WHERE page='achievements_post.php'";
 	$info = mysqli_query($db, $query);
 	if($db) mysqli_close($db);
