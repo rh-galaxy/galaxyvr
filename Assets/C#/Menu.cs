@@ -334,6 +334,7 @@ public class Menu : MonoBehaviour
 
     public GameObject oLevelInfoContainer;
     public GameObject oLevelInfoLimitsContainer;
+    public GameObject oLevelInfoEMContainer;
     public GameObject oWRNameText1, oWRNameText2, oWRNameText3;
     private TextMesh oWRNameText1TextMesh, oWRNameText2TextMesh, oWRNameText3TextMesh;
     public GameObject oWRScoreText1, oWRScoreText2, oWRScoreText3;
@@ -342,6 +343,7 @@ public class Menu : MonoBehaviour
     private TextMesh oYLScoreTextTextMesh, oYRScoreTextTextMesh, oLevelTextTextMesh;
     public GameObject oRankQuad;
     public GameObject oCorner;
+    public GameObject oCorner2;
 
     public GameObject oLimitsText1, oLimitsText2, oLimitsText3;
     private TextMesh oLimitsText1TextMesh, oLimitsText2TextMesh, oLimitsText3TextMesh;
@@ -448,6 +450,7 @@ public class Menu : MonoBehaviour
     {
         oLevelInfoContainer.SetActive(false);
         oLevelInfoLimitsContainer.SetActive(false);
+        oLevelInfoEMContainer.SetActive(false);
     }
 
     string szLevelInfoDescription;
@@ -485,6 +488,9 @@ public class Menu : MonoBehaviour
             oLevelInfoLimitsContainer.transform.position = oCorner.transform.position;
             oLevelInfoLimitsContainer.transform.eulerAngles = vRotation;
             oLevelInfoLimitsContainer.transform.localScale = new Vector3(2.5f, 2.5f, 1.0f);
+            oLevelInfoEMContainer.transform.position = oCorner2.transform.position;
+            oLevelInfoEMContainer.transform.eulerAngles = vRotation;
+            oLevelInfoEMContainer.transform.localScale = new Vector3(2.5f, 2.5f, 1.0f);
 
             if (GameLevel.iLevelIndex >= 200) oLevelTextTextMesh.text = szLevelInfoDescription; //custom levels have description from .des file
             else oLevelTextTextMesh.text = aLevels[GameLevel.iLevelIndex].szLevelDescription; //non custom levels have description from hard array above
@@ -605,6 +611,8 @@ public class Menu : MonoBehaviour
 
         if (n == 4)
         {
+            oLevelInfoEMContainer.SetActive(GameManager.theGM.bEasyMode);
+
             return true;
         }
 
@@ -1297,6 +1305,8 @@ public class Menu : MonoBehaviour
                     PlayerPrefs.Save();
                     iAllowSelection = 20;
                     bPlaySelectSound = true;
+
+                    oLevelInfoEMContainer.SetActive(GameManager.theGM.bEasyMode && oLevelInfoLimitsContainer.activeSelf);
                 }
 
 
