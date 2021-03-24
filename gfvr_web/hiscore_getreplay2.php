@@ -14,9 +14,9 @@
 
 		$num_rows = @mysqli_num_rows($result);
 		if($num_rows==1) {
-			$levelrow = mysqli_fetch_row($result);
+			$levelrow = @mysqli_fetch_assoc($result);
 			$sort = "DESC";
-			if($levelrow[2] != 0) {
+			if($levelrow["is_time"] != 0) {
 				$sort = "ASC";
 			}
 			$query = "SELECT * FROM achievements_t WHERE level='".$level."' AND user_id='".$userid."' LIMIT 0,1";
@@ -24,8 +24,8 @@
 			$hiscore = mysqli_query($db, $query);
 			$num_rows = @mysqli_num_rows($hiscore);
 			if($num_rows==1) {
-				$row = mysqli_fetch_row($hiscore);
-				print_r($row[5]); //the wanted hiscore blob
+				$row = @mysqli_fetch_assoc($hiscore);
+				print_r($row["replay"]); //the wanted hiscore blob
 			}
 		}
 
