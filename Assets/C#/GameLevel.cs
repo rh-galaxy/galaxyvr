@@ -290,7 +290,7 @@ public class GameLevel : MonoBehaviour
 
         //generate new high res map based on the textures of the tiles
         int substeps = 6;
-        if (iWidth * iHeight > 40 * 100) substeps = 5; //performance
+        //if (iWidth * iHeight > 40 * 100) substeps = 5; //performance
         float pixelsamplepos = 32.0f / substeps;
         LoadGrid(substeps, pixelsamplepos);
 
@@ -320,7 +320,7 @@ public class GameLevel : MonoBehaviour
         bool bIsCustom = iLevelIndex >= 200 && iLevelIndex < 400;
         bool bIsCustom2 = iLevelIndex >= 400;
         int substeps = 6;
-        if (iWidth * iHeight > 40 * 100) substeps = 5; //performance
+        //if (iWidth * iHeight > 40 * 100) substeps = 5; //performance
         if (iLoadBeginState == 0)
         {
             bMapLoaded = false;
