@@ -7,7 +7,7 @@ function print_hiscore()
 	$db = connect_to_db();
 
 	if($db) {
-
+		
 		$select_string = "SELECT scr_t.id, scr_t.name, SUM(scr_t.pos_score) AS score_sum FROM".
 			" (SELECT members_t.oculus_id AS id, members_t.username AS name, achievements_t.level, achievements_t.score, levels_t.is_time, levels_t.limit3, levels_t.limit3 -achievements_t.score AS pos_score FROM members_t, achievements_t, levels_t WHERE members_t.oculus_id=achievements_t.user_id AND achievements_t.level = levels_t.level AND levels_t.is_time=1".
 			" UNION ALL".
@@ -16,7 +16,7 @@ function print_hiscore()
 			" ORDER BY score_sum DESC LIMIT 0,50";
 
 		$result = @mysqli_query($db, $select_string);
-		
+
 		// succeeded
 		if($result) {
 			
@@ -24,7 +24,7 @@ function print_hiscore()
 			$num_rows = @mysqli_num_rows($result);
 			// it better be more than 0
 			if($num_rows > 0) {
-			
+				
 				echo "<p>Top 50 players</p>";
 			
 				$num_per_table = 25;
