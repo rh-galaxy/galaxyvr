@@ -69,7 +69,7 @@ square_start("'100%'");
 				if($num_rows > 0) {
 
 					echo "<table class=data width='75%' cellspacing=2 cellpadding=0><tr>".
-						"<td width='55%'><span class='colored2'>Player</span></td><td></td><td><span class='colored2'>Score</span></td></tr>";
+						"<td width='55%'><span class='colored2'>Name</span></td><td></td><td><span class='colored2'>Score</span></td></tr>";
 					for($i=0; $i < $num_rows; $i++) {
 						$row = @mysqli_fetch_assoc($result);
 					

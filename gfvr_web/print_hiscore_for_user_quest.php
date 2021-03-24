@@ -7,7 +7,7 @@
 	<meta name="keywords" content="hi-score top-list achievements">
 	<meta name="author" content="Ronnie Hedlund">
 
-	<title>Galaxy Forces V2: Member achievements</title>
+	<title>Galaxy Forces V2: User achievements</title>
 	<link rel="stylesheet" type="text/css" href="gf.css">
 	<link rel="icon" type="image/gif" href="images/favicon.gif">
 	
