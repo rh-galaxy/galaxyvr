@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: s679.loopia.se
--- Tid vid skapande: 17 mars 2021 kl 18:18
+-- Tid vid skapande: 24 mars 2021 kl 17:31
 -- Serverversion: 10.3.27-MariaDB-log
 -- PHP-version: 7.4.16
 
@@ -32,7 +32,6 @@ CREATE TABLE `achievements_t` (
   `id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_id` varchar(34) NOT NULL,
-  `name` varchar(34) NOT NULL,
   `level` varchar(40) NOT NULL,
   `score` int(11) NOT NULL,
   `replay` mediumblob DEFAULT NULL,
@@ -191,6 +190,18 @@ CREATE TABLE `statistics_t` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
+-- Dumpning av Data i tabell `statistics_t`
+--
+
+INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
+(1, 'index.php', 16177),
+(2, 'achievements_post.php', 3076),
+(5, 'privacy.php', 227),
+(6, 'achievements_get.php', 18664),
+(8, 'mpgames_create.php', 905),
+(9, 'mpgames_join.php', 1192);
+
+--
 -- Index för dumpade tabeller
 --
 
@@ -261,7 +272,7 @@ ALTER TABLE `mpgames_t`
 -- AUTO_INCREMENT för tabell `statistics_t`
 --
 ALTER TABLE `statistics_t`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
