@@ -20,6 +20,7 @@
 				$sort = "ASC";
 			}
 			$query = "SELECT * FROM achievements_t WHERE level='".$level."' AND user_id='".$userid."' LIMIT 0,1";
+
 			$hiscore = mysqli_query($db, $query);
 			$num_rows = @mysqli_num_rows($hiscore);
 			if($num_rows==1) {
