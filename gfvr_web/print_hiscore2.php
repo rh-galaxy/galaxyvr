@@ -86,9 +86,9 @@ function print_hiscore()
 
 
 					echo "<tr><td><i>";
-					//if($row["IsSP"]>0) echo "<a href=\"web_play.php?Level=".$row["Level"]."&amp;Name=You\">";
+					echo "<a href=\"print_hiscore_for_level.php?Level=".$row["Level"]."\">";
 					echo $row["Level"];
-					//if($row["IsSP"]>0) echo "</a>";
+					echo "</a>";
 					echo "</i></td>";
 
 
