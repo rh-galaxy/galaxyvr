@@ -25,7 +25,7 @@
 			$num_rows = @mysqli_num_rows($hiscore);
 			if($num_rows==1) {
 				$row = mysqli_fetch_row($hiscore);
-				print_r($row[6]); //the wanted hiscore blob
+				print_r($row[5]); //the wanted hiscore blob
 			}
 		}
 
