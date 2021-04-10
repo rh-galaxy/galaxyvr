@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
     AsyncOperation asyncLoad;
 
-    Replay oReplay = new Replay(); //create one replay... this is recycled during the session;
+    Replay oReplay = new Replay(); //create one replay... this is recycled during the session
 
 
 #if LOGPROFILERDATA
@@ -740,6 +740,9 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 8:
+                //moved here from state 10 as a bug fix
+                szLastLevel = GameLevel.szLevel;
+
                 //begin loading the level (or replay)
                 //Debug.Log("Load map Begin");
                 szToLoad = "Scenes/PlayGame";
@@ -826,7 +829,8 @@ public class GameManager : MonoBehaviour
                         if (!bNoHiscore && !bNoInternet && iLastLevelIndex<200)
                         {
                             //always update last level played
-                            szLastLevel = GameLevel.szLevel;
+                            //szLastLevel = GameLevel.szLevel;
+                            //^now done above at the time the play button is pressed
 
                             if (!GameLevel.bRunReplay && (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel))
                             {
