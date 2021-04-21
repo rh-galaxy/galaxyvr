@@ -276,8 +276,9 @@ public class Menu : MonoBehaviour
 
     CameraController oCameraHolder;
 
+    C_Item2InMenu oMenuLayDown;
     C_Item2InMenu oMenuEasyMode;
-    C_Item2InMenu oMenuRecenter;
+    //C_Item2InMenu oMenuRecenter;
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
     C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
@@ -572,8 +573,8 @@ public class Menu : MonoBehaviour
                 Vector3 vPos = new Vector3(1000, (i % 9) * 1.05f - 4.70f, 2.81f);
                 float fRotateAngle = fStartAngle + (i / 9) * 23.0f;
                 S_Levels level = new S_Levels();
-                level.iLevelType = (int)LevelType.MAP_MISSION;
                 level.szLevelDescription = ""; //set when level info is set
+                level.iLevelType = li[iBase + i].bIsTime ? (int)LevelType.MAP_RACE : (int)LevelType.MAP_MISSION;
                 level.szLevelName = li[iBase + i].szName;
 
                 level.szLevelDisplayName = "[" + li[iBase + i].szCreateor + "]" + li[iBase + i].szName;
@@ -690,7 +691,7 @@ public class Menu : MonoBehaviour
             Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
             //menu options
-            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -36, "Recenter", "Recenter", 30.0f, 12.0f);
+            //oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -36, "Recenter", "Recenter", 30.0f, 12.0f);
             oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
             oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
             oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
@@ -704,6 +705,8 @@ public class Menu : MonoBehaviour
 
             GameManager.theGM.bEasyMode = PlayerPrefs.GetInt("MyUseEasyMode", 1) != 0;
             oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
+
+            oMenuLayDown = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -36, "Sky view", "LayDownView", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             QualitySettings.SetQualityLevel(iQuality, true);
@@ -841,7 +844,7 @@ public class Menu : MonoBehaviour
         if (oMenuNext2 != null) oMenuNext2.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
         if (oMenuPrev2 != null) oMenuPrev2.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
 
-        if (oMenuRecenter != null) oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialBar;
+        //if (oMenuRecenter != null) oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuQuit != null) oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuControls != null) oMenuControls.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuCredits != null) oMenuCredits.oLevelQuadMeshRenderer.material = oMaterialBar;
@@ -851,6 +854,8 @@ public class Menu : MonoBehaviour
         if (oMenuSnapMovement != null) oMenuSnapMovement.oLevelQuadMeshRenderer.material = CameraController.bSnapMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuPointMovement != null) oMenuPointMovement.oLevelQuadMeshRenderer.material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuEasyMode != null) oMenuEasyMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bEasyMode ? oMaterialBarHighlighted : oMaterialBar;
+
+        if (oMenuLayDown != null) oMenuLayDown.oLevelQuadMeshRenderer.material = oCameraHolder.bLayDown ? oMaterialBarHighlighted : oMaterialBar;
 
 
         bool bHitLevel = false;
@@ -954,10 +959,10 @@ public class Menu : MonoBehaviour
             {
                 oMenuReplayWR3.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
-            else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
+            /*else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
             {
                 oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
-            }
+            }*/
             else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
             {
                 oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
@@ -993,6 +998,10 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("EasyMode") == 0)
             {
                 oMenuEasyMode.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("LayDownView") == 0)
+            {
+                oMenuLayDown.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
@@ -1096,11 +1105,11 @@ public class Menu : MonoBehaviour
                     bWorldBestReplay3 = true;
                     bPlaySelectSound = true;
                 }
-                else if (oHitInfo.collider.name.CompareTo("Recenter") == 0 && !bRecenter)
+                /*else if (oHitInfo.collider.name.CompareTo("Recenter") == 0 && !bRecenter)
                 {
                     bRecenter = true;
                     bPlaySelectSound = true;
-                }
+                }*/
                 else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
                 {
                     bQuit = true;
@@ -1168,7 +1177,11 @@ public class Menu : MonoBehaviour
 
                     oLevelInfoEMContainer.SetActive(GameManager.theGM.bEasyMode && oLevelInfoLimitsContainer.activeSelf);
                 }
-
+                else if (oHitInfo.collider.name.CompareTo("LayDownView") == 0)
+                {
+                    oCameraHolder.SetLayDownView(!oCameraHolder.bLayDown);
+                    bPlaySelectSound = true;
+                }
 
                 if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
                 if (bPlaySelectSound) bAllowSelection = false;

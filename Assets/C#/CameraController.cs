@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour
     private Vector3 vCamOffset;
     private Vector3 vMapSize;
 
+    internal bool bLayDown = false;
     internal static bool bSnapMovement = false;
     internal static bool bPointMovement = false;
     bool bPointMovementInMenu = false;
@@ -196,6 +197,13 @@ public class CameraController : MonoBehaviour
     {
         bPointMovement = bMotionController;
     }
+    public void SetLayDownView(bool bLayDownView)
+    {
+        bLayDown = bLayDownView;
+        if(bLayDown) transform.Rotate(75.0f, 0, 0);
+        else transform.Rotate(-75.0f, 0, 0);
+    }
+
     public void SetPointingInfo(Vector3 vHitPoint, Quaternion qHitDir, Vector3 vOrigin, Quaternion qOriginDir)
     {
         //move the cursor to the point where the raycast hit
@@ -267,18 +275,20 @@ public class CameraController : MonoBehaviour
         if (iRightHanded == 1)
         {
             bool posRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posR);
-            vHeadPosition = posR + transform.position; //to world coords
+            vHeadPosition = transform.TransformPoint(posR); //to world coords
             bool rotRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotR);
-            qRotation = rotR;
-            vGazeDirection = qRotation * Vector3.forward;
+            vGazeDirection = rotR * Vector3.forward;
+            vGazeDirection = transform.TransformDirection(vGazeDirection);
+            qRotation = Quaternion.LookRotation(vGazeDirection);
         }
         if (iRightHanded == 2)
         {
             bool posLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posL);
-            vHeadPosition = posL + transform.position; //to world coords
+            vHeadPosition = transform.TransformPoint(posL); //to world coords
             bool rotLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotL);
-            qRotation = rotL;
-            vGazeDirection = qRotation * Vector3.forward;
+            vGazeDirection = rotL * Vector3.forward;
+            vGazeDirection = transform.TransformDirection(vGazeDirection);
+            qRotation = Quaternion.LookRotation(vGazeDirection);
         }
     }
 }
