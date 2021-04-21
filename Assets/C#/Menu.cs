@@ -641,8 +641,8 @@ public class Menu : MonoBehaviour
                 Vector3 vPos = new Vector3(1000, (i % 9) * 1.05f - 4.70f, 1.20f);
                 float fRotateAngle = fStartAngle + (i / 9) * 23.0f;
                 S_Levels level = new S_Levels();
-                level.iLevelType = (int)LevelType.MAP_MISSION;
                 level.szLevelDescription = ""; //set when level info is set
+                level.iLevelType = li[iBase + i].bIsTime ? (int)LevelType.MAP_RACE : (int)LevelType.MAP_MISSION;
                 level.szLevelName = li[iBase + i].szName;
 
                 level.szLevelDisplayName = "[" + li[iBase + i].szCreateor + "]" + li[iBase + i].szName;
