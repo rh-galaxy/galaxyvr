@@ -267,18 +267,20 @@ public class CameraController : MonoBehaviour
         if (iRightHanded == 1)
         {
             bool posRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posR);
-            vHeadPosition = posR + transform.position; //to world coords
+            vHeadPosition = transform.TransformPoint(posR); //to world coords
             bool rotRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotR);
-            qRotation = rotR;
-            vGazeDirection = qRotation * Vector3.forward;
+            vGazeDirection = rotR * Vector3.forward;
+            vGazeDirection = transform.TransformDirection(vGazeDirection);
+            qRotation = Quaternion.LookRotation(vGazeDirection);
         }
         if (iRightHanded == 2)
         {
             bool posLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posL);
-            vHeadPosition = posL + transform.position; //to world coords
+            vHeadPosition = transform.TransformPoint(posL); //to world coords
             bool rotLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotL);
-            qRotation = rotL;
-            vGazeDirection = qRotation * Vector3.forward;
+            vGazeDirection = rotL * Vector3.forward;
+            vGazeDirection = transform.TransformDirection(vGazeDirection);
+            qRotation = Quaternion.LookRotation(vGazeDirection);
         }
     }
 }
