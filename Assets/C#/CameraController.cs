@@ -100,7 +100,7 @@ public class CameraController : MonoBehaviour
 
         float fStep = Time.deltaTime / 0.050f; //% of movement to distribute each time called
         if (fStep > 1.0f) fStep = 1.0f;  //if frametime too long we must not move faster
-        if (fStep <= 0.0f) fStep = 1.0f; //if the timer has to low resolution compared to the framerate
+        if (fStep <= 0.0f) fStep = 1.0f; //if the timer has too low resolution compared to the framerate
 
         fStepX = fCurX * fStep;
         fStepY = fCurY * fStep;
