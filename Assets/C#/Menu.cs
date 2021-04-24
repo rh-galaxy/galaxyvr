@@ -728,7 +728,7 @@ public class Menu : MonoBehaviour
         {
             //custom levels, own files on device
             float fStartAngle = -45;
-            string s = Application.persistentDataPath;
+            string s = UnityEngine.Application.persistentDataPath;
             DirectoryInfo info = new DirectoryInfo(s);
             FileInfo[] fileInfo = info.GetFiles("*.des");
             aMenuCustomLevels = new C_LevelInMenu[fileInfo.Length];
@@ -804,6 +804,7 @@ public class Menu : MonoBehaviour
 
         if (bTrigger && !bLastTrigger) bAllowSelection = true; //pressed
         else bAllowSelection = false;
+        if (bLevelPlay) bAllowSelection = false; //fixes bug when after start, the user clicks again on another level in the menu (before the menu-scene has stopped)
         bLastTrigger = bTrigger;
 
         if ((bTextInfoActive && bAllowSelection) && bTrigger)
