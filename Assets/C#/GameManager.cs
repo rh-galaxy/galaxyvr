@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
 
     internal bool bEasyMode;
 
+    internal bool bIsQuest = true;
+    internal bool bIsQuest2 = false;
+
     string szLastLevel = "";
     int iAchievementHellbentCounter = 0;
 
@@ -115,15 +118,15 @@ public class GameManager : MonoBehaviour
 
         //try setting refresh rate to 90 Hz, only possible on Quest 2
         OVRPlugin.SystemHeadset type = OVRPlugin.GetSystemHeadsetType();
-        bool bIsQuest = type == OVRPlugin.SystemHeadset.Oculus_Quest;
-        bool bIsQuest2 = type == OVRPlugin.SystemHeadset.Oculus_Quest_2;
-        if(!bIsQuest) //above quest 1
+        bIsQuest = type == OVRPlugin.SystemHeadset.Oculus_Quest;
+        bIsQuest2 = type == OVRPlugin.SystemHeadset.Oculus_Quest_2;
+/*        if(!bIsQuest) //above quest 1
         {
             //it seams to work well on all levels (mission29 is the largest) so no need to switch off and on
             OVRPlugin.systemDisplayFrequency = 90.0f;
             //when this is done it takes a little while until it takes effect, so a readback is useless here
             //File.WriteAllBytes(Application.persistentDataPath + "/" + "hz.txt", Encoding.ASCII.GetBytes(OVRPlugin.systemDisplayFrequency.ToString()));
-        }
+        }*/
 
 #if LOGPROFILERDATA
         Profiler.logFile = "log" + logProfilerFileCnt.ToString();
