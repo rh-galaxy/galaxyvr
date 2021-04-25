@@ -634,11 +634,11 @@ public class Menu : MonoBehaviour
         {
             aMenuLevels2 = new C_LevelInMenu[iLen];
             Vector3 vAroundPoint = new Vector3(1000, 0, -9.0f);
-            int iNum = (iLen > 9 * 5 ? 9 * 5 : iLen); //limit to 45, if its a problem fix later
+            int iNum = (iLen > 10 * 4 ? 10 * 4 : iLen); //limit to 40, if its a problem fix later
             for (int i = 0; i < iNum; i++)
             {
-                Vector3 vPos = new Vector3(1000, (i % 9) * 1.05f - 4.70f, 1.20f);
-                float fRotateAngle = fStartAngle + (i / 9) * 23.0f;
+                Vector3 vPos = new Vector3(1000, (i % 10) * 1.05f - 5.00f, 1.20f);
+                float fRotateAngle = fStartAngle + (i / 10) * 23.0f;
                 S_Levels level = new S_Levels();
                 level.szLevelDescription = ""; //set when level info is set
                 level.iLevelType = li[iBase + i].bIsTime ? (int)LevelType.MAP_RACE : (int)LevelType.MAP_MISSION;
@@ -655,9 +655,8 @@ public class Menu : MonoBehaviour
         //level text
         GameObject oCustomPathText;
         oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-        oCustomPathText.transform.position = new Vector3(1000.0f, iLen < 22 ? 0.0f : 50.0f, 1.20f);
-        oCustomPathText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        //oCustomPathText.transform.RotateAround(vAroundPoint, Vector3.up, 0.0f);
+        oCustomPathText.transform.position = new Vector3(1000.0f, 6.3f, 1.20f);
+        oCustomPathText.transform.localScale = new Vector3(1.6f, 1.6f, 1.0f);
         oCustomPathText.GetComponent<TextMeshPro>().text = "User contributed levels";
         oCustomPathText.SetActive(true);
         //////////////////////////////////
@@ -800,11 +799,11 @@ public class Menu : MonoBehaviour
             FileInfo[] fileInfo = info.GetFiles("*.des");
             aMenuCustomLevels = new C_LevelInMenu[fileInfo.Length];
             Vector3 vAroundPoint = new Vector3(2000, 0, -9.0f);
-            int iNum = (fileInfo.Length > 9 * 5 ? 9 * 5 : fileInfo.Length); //limit to 45, if its a problem fix later
+            int iNum = (fileInfo.Length > 10 * 4 ? 10 * 4 : fileInfo.Length); //limit to 40, if its a problem fix later
             for (int i = 0; i < iNum; i++)
             {
-                Vector3 vPos = new Vector3(2000, (i % 9) * 1.05f - 4.70f, 1.20f);
-                float fRotateAngle = fStartAngle + (i / 9) * 23.0f;
+                Vector3 vPos = new Vector3(2000, (i % 10) * 1.05f - 5.00f, 1.20f);
+                float fRotateAngle = fStartAngle + (i / 10) * 23.0f;
                 S_Levels level = new S_Levels();
                 level.iLevelType = (int)LevelType.MAP_MISSION;
                 level.szLevelDescription = ""; //set when level info is set
@@ -817,9 +816,8 @@ public class Menu : MonoBehaviour
             //level text
             GameObject oCustomPathText;
             oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-            oCustomPathText.transform.position = new Vector3(2000.0f, fileInfo.Length < 22 ? 0.0f : 50.0f, 1.20f);
+            oCustomPathText.transform.position = new Vector3(2000.0f, fileInfo.Length < 22 ? 0.0f : 6.0f, 1.20f);
             oCustomPathText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            //oCustomPathText.transform.RotateAround(vAroundPoint, Vector3.up, 0.0f);
             oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels (" + s + "), download editor from www.galaxy-forces-vr.com";
             oCustomPathText.SetActive(true);
         }
