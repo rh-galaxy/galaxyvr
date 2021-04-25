@@ -116,17 +116,10 @@ public class GameManager : MonoBehaviour
 
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
 
-        //try setting refresh rate to 90 Hz, only possible on Quest 2
+        //used to set refresh rate to 90 Hz, only possible on Quest 2
         OVRPlugin.SystemHeadset type = OVRPlugin.GetSystemHeadsetType();
         bIsQuest = type == OVRPlugin.SystemHeadset.Oculus_Quest;
         bIsQuest2 = type == OVRPlugin.SystemHeadset.Oculus_Quest_2;
-/*        if(!bIsQuest) //above quest 1
-        {
-            //it seams to work well on all levels (mission29 is the largest) so no need to switch off and on
-            OVRPlugin.systemDisplayFrequency = 90.0f;
-            //when this is done it takes a little while until it takes effect, so a readback is useless here
-            //File.WriteAllBytes(Application.persistentDataPath + "/" + "hz.txt", Encoding.ASCII.GetBytes(OVRPlugin.systemDisplayFrequency.ToString()));
-        }*/
 
 #if LOGPROFILERDATA
         Profiler.logFile = "log" + logProfilerFileCnt.ToString();
@@ -530,6 +523,9 @@ public class GameManager : MonoBehaviour
                 //wait for oculus user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
+                    //quest2 in menu setting
+                    OVRPlugin.systemDisplayFrequency = 90;
+
                     Debug.Log("You are " + szUser);
                     //Menu.theMenu.oCameraHolder = theCameraHolder; //although theCameraHolder is DND the reference is to an old destroyed object the second time Menu is loaded, so we do this as a fix
                     StartFade(2.5f, 1.0f, false);
@@ -644,6 +640,7 @@ public class GameManager : MonoBehaviour
                     stLevel.iWRScore1 = stLevel.iWRScore2 = stLevel.iWRScore3 = -1;
                     stLevel.iLimit1 = stLevel.iLimit2 = stLevel.iLimit3 = -1;
                     stLevel.szWRName1 = "_None"; stLevel.szWRName2 = "_None"; stLevel.szWRName3 = "_None";
+                    stLevel.iQuest1Quality = 2; stLevel.iQuest2Quality = 1; stLevel.iQuest2Freq = 90;
 
                     string szLevelToLoad = stLevel.szName;
                     if (GameLevel.iLevelIndex >= 200 && GameLevel.iLevelIndex<400)
@@ -741,6 +738,8 @@ public class GameManager : MonoBehaviour
             case 8:
                 //moved here from state 10 as a bug fix
                 szLastLevel = GameLevel.szLevel;
+                OVRPlugin.systemDisplayFrequency = bIsQuest ? 72 : Menu.theMenu.iQuest2Frq;
+                QualitySettings.SetQualityLevel(bIsQuest ? Menu.theMenu.iQuest1Quality : Menu.theMenu.iQuest2Quality, true);
 
                 //begin loading the level (or replay)
                 //Debug.Log("Load map Begin");

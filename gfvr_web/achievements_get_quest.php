@@ -43,7 +43,7 @@
 		if($result) {
 			//user id and name now exist in mebers_t, with last_access=NOW()
 			
-			$select_string = "SELECT levels_t.level AS Level, levels_t.is_time AS IsTime, levels_t.creator AS Creator, levels_t.limit1,levels_t.limit2,levels_t.limit3 FROM levels_t ORDER BY levels_t.ordering ASC";
+			$select_string = "SELECT levels_t.level AS Level, levels_t.is_time AS IsTime, levels_t.creator AS Creator, levels_t.qst1_quality AS quality1, levels_t.qst2_quality AS quality2, levels_t.qst2_freq AS freq2, levels_t.limit1,levels_t.limit2,levels_t.limit3 FROM levels_t ORDER BY levels_t.ordering ASC";
 			// make query
 			$result = @mysqli_query($db, $select_string);
 			// succeeded
@@ -139,6 +139,10 @@
 						echo $place." ";
 						
 ////////////////////////////////////////////////////////////////////////////////////////////
+						echo $row['quality1']." ";
+						echo $row['quality2']." ";
+						echo $row['freq2']." ";
+
 						echo "\n";
 						
 					}

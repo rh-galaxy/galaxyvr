@@ -26,6 +26,11 @@ public struct LevelInfo
     public int iYourPlace;
 
     public string szCreateor; //on user levels
+
+    //only quest
+    public int iQuest1Quality;
+    public int iQuest2Quality;
+    public int iQuest2Freq;
 }
 
 public class HttpHiscore
@@ -111,6 +116,13 @@ public class HttpHiscore
                     {
                         stLevel.iTotalPlaces = int.Parse(szTokens[0].Trim(' '));
                         stLevel.iYourPlace = int.Parse(szTokens[1].Trim(' '));
+
+                        if (szTokens.Length >= 5)
+                        {
+                            stLevel.iQuest1Quality = int.Parse(szTokens[2].Trim(' '));
+                            stLevel.iQuest2Quality = int.Parse(szTokens[3].Trim(' '));
+                            stLevel.iQuest2Freq = int.Parse(szTokens[4].Trim(' '));
+                        }
                     }
                 }
 
