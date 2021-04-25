@@ -34,6 +34,7 @@ public class Enemy : MonoBehaviour
     bool bInited = false;
     int iNumHits = 1;
     bool bStartExplosion = false;
+    bool bExplosionStarted = false;
     float fExplosionTimer = 0.0f;
 
     int[] SENEMY_HITSTOKILL = { 4, 5, -1, -1, 8, 4, 4, 6 }; //-1=immortal
@@ -181,8 +182,12 @@ public class Enemy : MonoBehaviour
         if (iNumHits==0)
         {
             //start explosion
-            if (bStartExplosion)
+            //note: some bug above can make this run more than once if hit by rapid fire.
+            if (bStartExplosion && !bExplosionStarted)
             {
+                bStartExplosion = false;
+                bExplosionStarted = true; //hack: fixes bug
+
                 //create kill message
                 if (!GameLevel.bRunReplay && GameLevel.theReplay.iVersion >= 1)
                 {
@@ -221,7 +226,6 @@ public class Enemy : MonoBehaviour
 
                 oExplosionParticle.Play();
                 fExplosionTimer = 0.0f;
-                bStartExplosion = false;
             }
 
             fExplosionTimer += Time.fixedDeltaTime;
