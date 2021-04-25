@@ -19,7 +19,6 @@ public class Menu : MonoBehaviour
     public static bool bRecenter = false;
     public static bool bQuit = false;
     public static bool bPauseInput = false;
-    LevelInfo stLevel;
     bool bAllowSelection = false;
     bool bLastTrigger = true;
 
