@@ -15876,12 +15876,17 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: db665c3bc40825241b35d6c293bc5a9c,
         type: 3}
       propertyPath: m_Name
-      value: Barrels_VeryLowPoly
+      value: Barrels
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: db665c3bc40825241b35d6c293bc5a9c,
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: db665c3bc40825241b35d6c293bc5a9c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: db665c3bc40825241b35d6c293bc5a9c,
         type: 3}
@@ -15952,6 +15957,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 1.8000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926426679950814022, guid: db665c3bc40825241b35d6c293bc5a9c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db665c3bc40825241b35d6c293bc5a9c, type: 3}
