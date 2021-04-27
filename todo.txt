@@ -87,8 +87,6 @@ Non-multi-player todo.txt
 -------
 Release
 - Trailer: Seems only 30fps is shown not 60 (need fix by Oculus)
-Release for Oculus Quest
-- Get the concept approved by Oculus (currently denied)
 
 -------
 Known issues/small things undone
@@ -97,9 +95,10 @@ Known issues/small things undone
 - Test different textures for the single colored cave edges.
 - Test different background textures for the back-plate and borders.
 - Windows on the house is not exactly the same height.
-- There is no back wall of hangar building. Visible through door.
 - Make XBox-controller not be unresponsive after pause and unpause
  (after accessing Virtual Desktop) (Might not be possible, and not a requirement)
+- Add a texture on the landingzones with a pattern, it must work on
+ different platform widths, or maybe do per width (2..12) different textures.
 
 Must do:
 - Enable code for Oculus entitlement check (done, and keep it done later in Release version)
