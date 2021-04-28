@@ -19,6 +19,7 @@ public class LandingZone : MonoBehaviour
     public GameObject oZone;
     GameObject[] oZoneCargoList;
     GameObject oZoneAttentionMarker = null;
+    MeshRenderer oZoneAttentionMarkerRenderer;
 
     public GameObject oHangar, oTower, oSilo;
     public GameObject oExtraLife;
@@ -115,6 +116,8 @@ public class LandingZone : MonoBehaviour
             oZoneAttentionMarker.transform.position = new Vector3(vPos.x, vPos.y, -((i_fDepth + 0.04f) / 2.0f));
             oZoneAttentionMarker.transform.localScale = new Vector3(iZoneSize * .10f, 4.0f / 320.0f, 0.04f);
 
+            oZoneAttentionMarkerRenderer = oZoneAttentionMarker.GetComponent<MeshRenderer>();
+
             oMaterialHome = Resources.Load("LandingZoneHome", typeof(Material)) as Material;
             oMaterialCargo = Resources.Load("LandingZoneCargo", typeof(Material)) as Material;
         }
@@ -178,9 +181,9 @@ public class LandingZone : MonoBehaviour
         if(iCntr%50==0 && oZoneAttentionMarker!=null)
         {
             //update material on attention marker
-            if (bHomeBase) oZoneAttentionMarker.GetComponent<MeshRenderer>().material = oMaterialHome;
-            else if (GetTotalCargo() > 0) oZoneAttentionMarker.GetComponent<MeshRenderer>().material = oMaterialCargo;
-            else oZoneAttentionMarker.GetComponent<MeshRenderer>().material = oMaterialZone;
+            if (bHomeBase) oZoneAttentionMarkerRenderer.material = oMaterialHome;
+            else if (GetTotalCargo() > 0) oZoneAttentionMarkerRenderer.material = oMaterialCargo;
+            else oZoneAttentionMarkerRenderer.material = oMaterialZone;
         }
     }
 }
