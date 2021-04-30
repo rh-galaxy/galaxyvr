@@ -316,6 +316,17 @@ public class Player : MonoBehaviour
         if (szOtherObject.StartsWith("BulletP"))
         {
         }
+
+        //haptics, same on both hands
+        /*if(fShipHealth < fLastShipHealth)
+        {
+            UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+            UnityEngine.XR.InputDevice handLDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+            float fAmplitude = (fLastShipHealth - fShipHealth) / 1.5f; //easy mode is the same
+            if (fAmplitude > 1.0f) fAmplitude = 1.0f;
+            handRDevice.SendHapticImpulse(0u, fAmplitude, 0.35f + fAmplitude/2f);
+            handLDevice.SendHapticImpulse(0u, fAmplitude, 0.35f + fAmplitude/2f);
+        }*/
     }
 
     //OBS this was using Time.fixedDeltaTime but that is wrong for this method since it runs at framerate (90, 80 or even 144), while fixed update is 100Hz.
@@ -810,7 +821,7 @@ public class Player : MonoBehaviour
         //////end of get input
 
         //////react to input
-        if (fShipHealth < 0 && !GameLevel.bRunReplay) Kill(true); //only kill if not in replay
+        if (fShipHealth <= 0 && !GameLevel.bRunReplay) Kill(true); //only kill if not in replay
         if (fShipHealth != FULL_HEALTH) bAchieveNoDamage = false;
         if (fShipHealth < fLastShipHealth) fDamageTimer = 0.0f;
         fLastShipHealth = fShipHealth;
