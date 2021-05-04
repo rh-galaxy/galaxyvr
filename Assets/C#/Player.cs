@@ -315,18 +315,6 @@ public class Player : MonoBehaviour
         if (szOtherObject.StartsWith("BulletP"))
         {
         }
-
-        //haptics, same on both hands
-        //commeted because it sounds awful on my rift controllers with amplitude 0.5+, parameter channel doesn't matter what value you set
-        /**//*if (fShipHealth < fLastShipHealth)
-        {
-            UnityEngine.XR.InputDevice handRDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.RightHand);
-            UnityEngine.XR.InputDevice handLDevice = UnityEngine.XR.InputDevices.GetDeviceAtXRNode(UnityEngine.XR.XRNode.LeftHand);
-            float fAmplitude = (fLastShipHealth - fShipHealth) / 1.5f; //easy mode is the same
-            if (fAmplitude > 1.0f) fAmplitude = 1.0f;
-            handRDevice.SendHapticImpulse(0u, fAmplitude, 0.35f + fAmplitude / 2f);
-            handLDevice.SendHapticImpulse(0u, fAmplitude, 0.35f + fAmplitude / 2f);
-        }*/
     }
 
     //OBS this was using Time.fixedDeltaTime but that is wrong for this method since it runs at framerate (90, 80 or even 144), while fixed update is 100Hz.
