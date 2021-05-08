@@ -195,7 +195,6 @@ public class GameLevel : MonoBehaviour
     public Material oSkyBoxMat3;
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
-    public Planet oPlanet;
 
     public AudioClip oClipLevelStart;
     public AudioClip oClipLevelGameOver;
@@ -382,11 +381,11 @@ public class GameLevel : MonoBehaviour
             }
             else if (bIsCustom)
             {
-                bytes = File.ReadAllBytes(Application.persistentDataPath + "/" + szMiniMapfile);
+                bytes = File.ReadAllBytes(Application.persistentDataPath + "/" + szMapfile);
             }
             else
             {
-                string szFilenameNoExt = szMiniMapfile.Remove(szMapfile.LastIndexOf('.'));
+                string szFilenameNoExt = szMapfile.Remove(szMapfile.LastIndexOf('.'));
                 TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
                 if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
                 //if (f == null) return false;
@@ -446,8 +445,6 @@ public class GameLevel : MonoBehaviour
         }
         else if (iFinalizeCounter == 1)
         {
-///**/float t1 = Time.realtimeSinceStartup;
-
             //done: LoadDesPass2 is split in one iteration per object that needs loading
             // (max 5 ms each, but there may be variations)
             bool bFinished = LoadDesPass2();
@@ -455,7 +452,6 @@ public class GameLevel : MonoBehaviour
             //(user name not currently used in Player)
             string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
             player.Init(szUser, 0, stPlayerStartPos[0], this);
-///**/Debug.Log("LoadDesPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
             if (bFinished) iFinalizeCounter++;
         }
         else if (iFinalizeCounter >= 2 && iFinalizeCounter <= 4)
@@ -468,8 +464,6 @@ public class GameLevel : MonoBehaviour
             int n2 = iFinalizeCounter - 5;
             int segs = iHeight / 5;
 
-///**/float t1 = Time.realtimeSinceStartup;
-
             for (int y = n2 * segs; y < (n2 < 4 ? (n2 + 1) * segs : iHeight); y++)
             {
                 for (int x = 0; x < iWidth; x++)
@@ -478,12 +472,9 @@ public class GameLevel : MonoBehaviour
                 }
             }
             iFinalizeCounter++;
-
-///**/Debug.Log("ReplaceAndAddObjectPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
         else if (iFinalizeCounter == 10)
         {
-            oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
             GetComponent<AudioSource>().PlayOneShot(oClipLevelStart);
 
             //this must be done after init player (@ iFinalizeCounter == 1)
@@ -1349,7 +1340,7 @@ public class GameLevel : MonoBehaviour
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //minimap, made independant of other code, therefore there is some duplicate code here
-    static int iMiniWidth, iMiniHeight;
+/*    static int iMiniWidth, iMiniHeight;
     static string szMiniMapfile;
     static string szMiniMapDescription;
     static bool LoadDesForMiniMap(string i_szFilename, bool bIsCustom, bool bIsCustom2, out bool o_bIsTime)
@@ -1507,7 +1498,7 @@ public class GameLevel : MonoBehaviour
         oTileTexture.Apply();
         return oTileTexture;
     }
-
+*/
     void OnDrawGizmos()
     {
         /*

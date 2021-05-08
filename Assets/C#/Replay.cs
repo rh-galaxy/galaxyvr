@@ -54,8 +54,7 @@ public class Replay
         rm = new ReplayMessage();
         rm.iType = (byte)MsgType.REPLAY_EASYMODE;
         rm.iID = 0;
-        if(GameManager.theGM!=null) rm.iGeneralByte1 = GameManager.theGM.bEasyMode ? (byte)1 : (byte)0;
-        else rm.iGeneralByte1 = (byte)0;
+        rm.iGeneralByte1 = (byte)0;
         bEasyMode = rm.iGeneralByte1 == (byte)1;
         Add(rm);
     }
