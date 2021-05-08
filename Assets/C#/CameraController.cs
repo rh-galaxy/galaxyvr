@@ -16,11 +16,8 @@ public class CameraController : MonoBehaviour
     private Vector3 vMapSize;
 
     internal static bool bSnapMovement = false;
-    internal static bool bPointMovement = false;
-    bool bPointMovementInMenu = false;
     internal static Vector3 vCamPos = new Vector3(0, 0, -4.5f);
 
-    int iRightHanded = 0;
     public GameObject oRayQuad;
     GameObject oGazeQuad = null;
     Material oCursorMaterial;
@@ -61,7 +58,7 @@ public class CameraController : MonoBehaviour
         oGazeQuad.transform.localScale = new Vector3(.38f, .38f, 1);
         oGazeQuad.SetActive(false);
 
-        iRightHanded = 0;
+        oRayQuad.SetActive(false);
     }
 
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
@@ -126,13 +123,13 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    float fX = 5.0f, fY = 0, fZ = 0;
+    //float fX = 5.0f, fY = 0, fZ = 0;
     float fSnapTimer = 0;
     bool bFirst = true;
     void LateUpdate()
     {
         //emulate headset movement
-        Keyboard keyboard = Keyboard.current;
+        /*Keyboard keyboard = Keyboard.current;
         if ((keyboard!=null && keyboard.fKey.isPressed) || GameManager.bNoVR)
         {
             //using mouse smoothing to avoid jerkyness
@@ -145,7 +142,7 @@ public class CameraController : MonoBehaviour
             if (keyboard.rKey.isPressed) { fX = 5.0f; fY = 0; fZ = 0; }
 
             transform.eulerAngles = new Vector3(fX, fY, fZ);
-        }
+        }*/
 
         if(bMapMode)
         {
@@ -181,66 +178,8 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    bool bFadeDone = true;
-    public void Fade(bool bDone)
-    {
-        bFadeDone = bDone;
-        if (!bDone)
-        {
-            //begin
-            oRayQuad.SetActive(false);
-        }
-    }
-
-    public void SetMovementMode(bool bMotionController)
-    {
-        bPointMovement = bMotionController;
-    }
-    public void SetPointingInfo(Vector3 vHitPoint, Quaternion qHitDir, Vector3 vOrigin, Quaternion qOriginDir)
-    {
-        //move the cursor to the point where the raycast hit
-        oGazeQuad.transform.position = vHitPoint;
-        //rotate the cursor to hug the surface
-        oGazeQuad.transform.rotation = qHitDir;
-
-        //ray from origin to the point where the raycast hit
-        //direction of ray
-        oRayQuad.transform.SetPositionAndRotation((vHitPoint + vOrigin) / 2.0f, qOriginDir);
-        oRayQuad.transform.Rotate(new Vector3(90, 0, 0));
-        oRayQuad.transform.localScale = new Vector3(0.05f, ((vHitPoint - vOrigin).magnitude - 0.07f)/2.0f, 0.05f);
-    }
-
     private void Update()
     {
-        Mouse mouse = Mouse.current;
-        Gamepad gamepad = Gamepad.current;
-
-        //switch hand/use gamepad?
-        {
-            if (gamepad != null)
-            {
-                if (gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed)
-                {
-                    bPointMovementInMenu = false;
-                    iRightHanded = 0;
-                }
-            }
-            if (mouse != null)
-            {
-                if (mouse.leftButton.isPressed)
-                {
-                    bPointMovementInMenu = false;
-                    iRightHanded = 0;
-                }
-            }
-
-            if (bFadeDone)
-            {
-                oRayQuad.SetActive(bPointMovement || (!bMapMode && bPointMovementInMenu));
-                if (oGazeQuad != null) oGazeQuad.SetActive(!bPointMovementInMenu && !bMapMode);
-            }
-        }
-
         //update pointing movement
         vHeadPosition = Camera.main.transform.position;
         vGazeDirection = Camera.main.transform.forward;

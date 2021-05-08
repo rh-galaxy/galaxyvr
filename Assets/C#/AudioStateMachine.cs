@@ -53,7 +53,7 @@ public class AudioStateMachine : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
-            StartSound(main, mainEvent);
+            StartSound(mainEvent);
         }
         else
         {
@@ -66,8 +66,8 @@ public class AudioStateMachine : MonoBehaviour
     public void SetOutput(int i = 0) 
     {
         print("Using device " + i);
-        FMODUnity.RuntimeManager.LowlevelSystem.setOutput(FMOD.OUTPUTTYPE.AUTODETECT);
-        FMODUnity.RuntimeManager.LowlevelSystem.setDriver(i);
+        FMODUnity.RuntimeManager.CoreSystem.setOutput(FMOD.OUTPUTTYPE.AUTODETECT);
+        FMODUnity.RuntimeManager.CoreSystem.setDriver(i);
     }
 
     public void LevelTransition(float f)
@@ -202,15 +202,14 @@ public class AudioStateMachine : MonoBehaviour
         SetVolume();
     }
 
-    void StartSound(FMOD.Studio.EventInstance eventInstance, string eventRef, GameObject sender = null)
+    void StartSound(string eventRef, GameObject sender = null)
     {
         sender = sender ?? gameObject;
 
         // Spatialize audio
-        eventInstance = FMODUnity.RuntimeManager.CreateInstance(eventRef);
-        eventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(sender));
+        main = FMODUnity.RuntimeManager.CreateInstance(eventRef);
+        main.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(sender));
 
-        main = eventInstance;
         main.start();
     }
 
@@ -219,7 +218,7 @@ public class AudioStateMachine : MonoBehaviour
     {
         // do not send out of range values, breaks playback
         float eventValue = Mathf.Clamp01(val);
-        main.setParameterValue(s, eventValue);
+        main.setParameterByName(s, eventValue);
     }
 
     void SetVolume()

@@ -481,8 +481,6 @@ public class GameLevel : MonoBehaviour
             //so best do it the same time as the level has finished popping up
             GameManager.theGM.theCameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
-            player.bMotionMovementEnabled = CameraController.bPointMovement;
-
             iFinalizeCounter++;
 
             GameManager.theGM.StartFade(0.5f, 0.5f, false);
@@ -502,29 +500,6 @@ public class GameLevel : MonoBehaviour
         //end of init code
 
         if (!bMapLoaded || iFinalizeCounter <= 32) return;
-
-        //motion controller movement
-        if (CameraController.bPointMovement)
-        {
-            //raycast
-            CameraController oCC = GameManager.theGM.theCameraHolder;
-            RaycastHit oHitInfo;
-            if (Physics.Raycast(oCC.vHeadPosition, oCC.vGazeDirection, out oHitInfo, 400.0f, LayerMask.GetMask("MapPlane")))
-            {
-                //a hit, place cursor on object, show ray
-                oCC.SetPointingInfo(oHitInfo.point, Quaternion.identity, oCC.vHeadPosition, oCC.qRotation);
-
-                //set stearing to oHitInfo.point
-                player.vSteerToPoint = new Vector2(oHitInfo.point.x, oHitInfo.point.y);
-            }
-            else
-            {
-                //set at max distance
-                Vector3 vPoint = (oCC.vHeadPosition + oCC.vGazeDirection * 17.0f);
-
-                oCC.SetPointingInfo(vPoint, oCC.qRotation, oCC.vHeadPosition, oCC.qRotation);
-            }
-        }
 
         //game end conditions
         if (!bRunGameOverTimer)

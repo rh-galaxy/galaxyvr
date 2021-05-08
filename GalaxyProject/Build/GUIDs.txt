@@ -1,0 +1,9 @@
+{da98ac09-552f-4c57-942f-955e62d341db} event:/CargoEvent
+{f3fa1257-bf22-47c5-8afa-3810309fa897} event:/Gameplay
+{6d347565-dd80-4b7d-9b7f-ac4379d4d59d} event:/Main
+{20522a78-a60f-43b4-bc41-106b58eff30c} event:/Menu
+{f47e6ffd-92d8-4605-99d2-de6bb45b6654} event:/Mission
+{bacf9ab7-7654-4c17-b959-84b7abe30a33} bus:/
+{34317e33-a9fa-45da-a3e8-01ba35c87a14} bus:/Reverb
+{0c0e2d04-537f-4b60-a989-7c5c50f1482a} snapshot:/New Snapshot
+{09647a56-7cea-4185-b421-e86dc664e606} bank:/Master Bank

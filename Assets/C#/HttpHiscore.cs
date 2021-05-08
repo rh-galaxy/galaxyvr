@@ -30,7 +30,8 @@ public struct LevelInfo
 
 public class HttpHiscore
 {
-    public static string WEB_HOST = "https://galaxy-forces-vr.com";
+    //public static string WEB_HOST = "https://galaxy-forces-vr.com";
+    public static string WEB_HOST = ""; //local access
 
     public List<LevelInfo> oLevelList = new List<LevelInfo>();
     public bool bIsDone = false;

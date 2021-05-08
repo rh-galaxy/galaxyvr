@@ -44,10 +44,6 @@ public class Player : MonoBehaviour
     float fDirection = 90.0f;
     const float fGravityScale = 0.045f;
 
-    //motion movement
-    internal bool bMotionMovementEnabled = false;
-    internal Vector2 vSteerToPoint;
-
     //ship properties
     const float MAXFUELINTANK = 60.0f;
     const float MAXSPACEINHOLDWEIGHT = 50.0f;

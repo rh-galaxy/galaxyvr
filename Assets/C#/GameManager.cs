@@ -128,13 +128,11 @@ public class GameManager : MonoBehaviour
             {
                 //fade in done
                 oFadeBox.SetActive(false);
-                theCameraHolder.Fade(true);
             }
         }
     }
     public void StartFade(float fTime, float fDelay, bool bOut)
     {
-        if (bOut) theCameraHolder.Fade(false);
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
         fFadeDelay = fDelay;
