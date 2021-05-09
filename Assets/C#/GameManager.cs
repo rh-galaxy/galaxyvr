@@ -199,7 +199,8 @@ public class GameManager : MonoBehaviour
 
     float fDelayTime = 0;
     /**/string szLevel = "2race00";
-    /**/string szReplayId = "2075437975870745"; //quest 3544336575635483
+    ///**/string szReplayId = "2075437975870745"; //quest 3544336575635483
+    /**/string szReplayId = "0";
 
     void Update()
     {
@@ -225,9 +226,9 @@ public class GameManager : MonoBehaviour
         {
             case -3:
                 //get parameters
-                //szLevel = ParseURLParams(Application.absoluteURL, "Level");
+                szLevel = ParseURLParams(Application.absoluteURL, "Level");
                 GameLevel.szLevel = szLevel;
-                //szReplayId = "2075437975870745"; //ParseURLParams(Application.absoluteURL, "Id");
+                szReplayId = ParseURLParams(Application.absoluteURL, "Id");
 
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 // and should be active here ("Scenes/GameStart")
@@ -237,6 +238,8 @@ public class GameManager : MonoBehaviour
                 iState++;
 
                 StartCoroutine(LoadAsyncTileset());
+
+                /**/AudioStateMachine.instance.Init();
 
                 break;
             case -2:
@@ -267,11 +270,6 @@ public class GameManager : MonoBehaviour
                 break;
             case 5:
                 //menu part 2
-                if ((keyboard != null && keyboard.escapeKey.isPressed))
-                {
-                    iState = 1; //goto menu part 1 (back)
-                }
-
                 string szLevelToLoad = GameLevel.szLevel.Substring(1);
                 if (GameLevel.iLevelIndex >= 200) szLevelToLoad = GameLevel.szLevel;
 
@@ -291,7 +289,6 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case 7:
-                /**/AudioStateMachine.instance.Init();
                 iState++;
                 break;
 
@@ -372,7 +369,7 @@ public class GameManager : MonoBehaviour
             case 12:
                 //while menu is loading
                 fDelayTime += Time.deltaTime;
-                if (bLoadDone && fDelayTime>3.0f)
+                if (bLoadDone && fDelayTime>3.5f)
                 {
                     //restart at running start
                     iState = -2;

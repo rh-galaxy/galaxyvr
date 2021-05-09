@@ -4,7 +4,7 @@ public class GameStatus : MonoBehaviour
 {
     public GameObject oPlayer;
     private Vector3 vOffset = new Vector3(-8.0f / 10.0f, -17.0f / 10.0f, -5.8f / 10.0f); //from camera (x,y)
-    private Vector3 vOffsetNoVR = new Vector3(-6.0f / 10.0f, -6.0f / 10.0f, -5.8f / 10.0f); //from camera (x,y)
+    private Vector3 vOffsetNoVR = new Vector3(-8.0f / 10.0f, -5.0f / 10.0f, -5.8f / 10.0f); //from camera (x,y)
     //private Vector3 vOffsetNoVR = new Vector3(-9.15f / 10.0f, -6.3f / 10.0f, -5.8f / 10.0f); //from camera (x,y)
 
     public GameLevel oMap;

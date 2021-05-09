@@ -1,7 +1,8 @@
 Release
 - Take Level and UserId as parameters
+  https://www.galaxy-forces-vr.com/webreplay/index.html?Level=race00&Id=2075437975870745
 - Make FMOD music work
-- Remove looking with mouse
+  also with fading when scene is reloaded
 - Move status-panel into view
 
 - Create links on the website to view replays on the web
