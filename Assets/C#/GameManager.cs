@@ -178,14 +178,14 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    private static char[] m_SplitChars = new char[] { '&' };
+    private static char[] splitChars = new char[] { '&' };
     private static string ParseURLParams(string aFullURL, string aName)
     {
         if (aFullURL == null || aFullURL.Length <= 1 || aName == null || aName.Length <= 1)
             return null;
         // skip "?" and split parameters at "&"
         int q = Application.absoluteURL.IndexOf('?');
-        var parameters = aFullURL.Substring(q+1).Split(m_SplitChars);
+        var parameters = aFullURL.Substring(q+1).Split(splitChars);
         foreach (var p in parameters)
         {
             int pos = p.IndexOf('=');
@@ -197,8 +197,9 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    string szLevel = "2race00";
-    string szReplayId = "2075437975870745"; //quest 3544336575635483
+    float fDelayTime = 0;
+    /**/string szLevel = "2race00";
+    /**/string szReplayId = "2075437975870745"; //quest 3544336575635483
 
     void Update()
     {
@@ -290,6 +291,7 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case 7:
+                /**/AudioStateMachine.instance.Init();
                 iState++;
                 break;
 
@@ -350,7 +352,7 @@ public class GameManager : MonoBehaviour
 
                     if (bBackToMenu)
                     {
-                        StartFade(0.3f, 0.0f, true);
+                        StartFade(1.0f, 0.0f, true);
                         iState++;
                     }
                     break;
@@ -363,12 +365,14 @@ public class GameManager : MonoBehaviour
                     bLoadDone = false;
                     bIsMapScene = false;
                     StartCoroutine(LoadAsyncScene());
+                    fDelayTime = 0;
                     iState++;
                 }
                 break;
             case 12:
                 //while menu is loading
-                if (bLoadDone)
+                fDelayTime += Time.deltaTime;
+                if (bLoadDone && fDelayTime>3.0f)
                 {
                     //restart at running start
                     iState = -2;

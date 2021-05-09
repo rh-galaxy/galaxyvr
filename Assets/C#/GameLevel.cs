@@ -258,7 +258,7 @@ public class GameLevel : MonoBehaviour
         //change fov if non VR since the default setting shows to wide fov
         // and is not behaving reliably
         if (GameManager.bNoVR)
-            Camera.main.fieldOfView = 40.0f;
+            Camera.main.fieldOfView = 55.0f;
 
         //set random skybox
         int iSkyBox = UnityEngine.Random.Range(1, 5);
@@ -272,42 +272,6 @@ public class GameLevel : MonoBehaviour
         }
 
         Debug.Log("Start done");
-    }
-
-    Thread thread;
-    ManualResetEvent oEvent = new ManualResetEvent(false);
-    bool bMeshBkReady = false;
-    void LoadThread()
-    {
-        //create background plane first of all
-        //if (bSimpleBg) oMeshGen.GenerateMeshBackground(iWidth, iHeight, 6.00f, 0.0f, 32.0f);
-        //else
-        oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 0.105f, 1.0f);
-
-        bMeshBkReady = true;
-        oEvent.WaitOne();
-
-        //generate new high res map based on the textures of the tiles
-        int substeps = 6;
-        float pixelsamplepos = 32.0f / substeps;
-        LoadGrid(substeps, pixelsamplepos);
-
-        //generate final mesh, set tile material
-        oMeshGen.GenerateMeshInit(aMapHighres, 0.10f / substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
-
-        oMeshGen.GenerateMesh();
-
-        //create and set the walls mesh
-        oMeshGen.CalculateMeshOutlines();
-
-        oMeshGen.CreateWallMesh();
-
-        //create bumps on non outline vertices in the map mesh
-        oMeshGen.CreateBumps();
-
-        oMeshGen.GenerateUvs();
-
-        bMapLoaded = true;
     }
 
     int iLoadBeginState = 0;
@@ -407,11 +371,10 @@ public class GameLevel : MonoBehaviour
         {
             //create thread for all other work that can be done
             // (before needing work in main thread, handled in LoadDone() and thread)
-            ThreadStart ts = new ThreadStart(LoadThread);
-            thread = new Thread(ts);
-            thread.Priority = System.Threading.ThreadPriority.Lowest;
-            thread.Start();
-
+//            ThreadStart ts = new ThreadStart(LoadThread);
+//            thread = new Thread(ts);
+//            thread.Priority = System.Threading.ThreadPriority.Highest;
+//            thread.Start();
             iLoadBeginState = 0;
             return true;
         }
@@ -419,17 +382,37 @@ public class GameLevel : MonoBehaviour
         return false;
     }
 
+    //we can't use threads in WebGL so the thread code is moved to here
+    // and this will be done while faded to black and it will block for
+    // a number of seconds.
     public bool LoadDone()
     {
-        if (bMeshBkReady)
-        {
-            oMeshGen.SetGenerateMeshBackgroundToUnity();
+        //create background plane first of all
+        oMeshGen.GenerateMeshBackground(iWidth, iHeight, 1.10f, 0.105f, 1.0f);
+        oMeshGen.SetGenerateMeshBackgroundToUnity();
 
-            bMeshBkReady = false;
-            oEvent.Set();
-        }
+        //generate new high res map based on the textures of the tiles
+        int substeps = 6;
+        float pixelsamplepos = 32.0f / substeps;
+        LoadGrid(substeps, pixelsamplepos);
 
-        return !thread.IsAlive;
+        //generate final mesh, set tile material
+        oMeshGen.GenerateMeshInit(aMapHighres, 0.10f / substeps, fWallHeight, fBumpHeight, oMaterial, oMaterialWalls);
+
+        oMeshGen.GenerateMesh();
+
+        //create and set the walls mesh
+        oMeshGen.CalculateMeshOutlines();
+
+        oMeshGen.CreateWallMesh();
+
+        //create bumps on non outline vertices in the map mesh
+        oMeshGen.CreateBumps();
+
+        oMeshGen.GenerateUvs();
+
+        bMapLoaded = true;
+        return true;
     }
 
     void Update()
@@ -439,7 +422,6 @@ public class GameLevel : MonoBehaviour
         {
             //pause physics
             Time.timeScale = 0.0f;
-
             LoadDesPass2Init();
             iFinalizeCounter++;
         }
@@ -488,6 +470,7 @@ public class GameLevel : MonoBehaviour
         else if (iFinalizeCounter >= 11 && iFinalizeCounter <= 31)
         {
             //let the fade in take 0.25 sec (~21 frames)
+            //note: don't know how this happened, but it's not good
             iFinalizeCounter++;
         }
         else if (iFinalizeCounter == 32)

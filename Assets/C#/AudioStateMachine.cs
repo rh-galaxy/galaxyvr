@@ -53,12 +53,16 @@ public class AudioStateMachine : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
-            StartSound(mainEvent);
+            /**///StartSound(mainEvent);
         }
         else
         {
             Destroy(this.gameObject);
         }
+    }
+    /**/public void Init()
+    {
+        StartSound(mainEvent);
     }
 
     //sets the output to # i in the device list
