@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour
     internal static bool bNoInternet = false;
     internal static bool bNoVR = false;
 
-    string szLastLevel = "";
-
     AsyncOperation asyncLoad;
 
     Replay oReplay = new Replay(); //create one replay... this is recycled during the session
@@ -184,15 +182,17 @@ public class GameManager : MonoBehaviour
         if (aFullURL == null || aFullURL.Length <= 1 || aName == null || aName.Length <= 1)
             return null;
         // skip "?" and split parameters at "&"
-        int q = Application.absoluteURL.IndexOf('?');
+        int q = aFullURL.IndexOf('?');
         var parameters = aFullURL.Substring(q+1).Split(splitChars);
+
         foreach (var p in parameters)
         {
             int pos = p.IndexOf('=');
             if (pos > 0)
-                if(p.Substring(0, pos).Equals(aName) ) return p.Substring(pos + 1);
-            else
-                return null;
+            {
+                if (p.Substring(0, pos).Equals(aName)) return p.Substring(pos + 1);
+            }
+            else return null;
         }
         return null;
     }
@@ -200,9 +200,7 @@ public class GameManager : MonoBehaviour
     float fReinitAudioTimer = 4.0f;
     float fDelayTime = 0;
 
-    /**/string szLevel = "2race00";
-    ///**/string szLevel = "1mission00";
-    /**/string szReplayId = "2075437975870745";
+    string szReplayId;
 
     void Update()
     {
@@ -242,9 +240,14 @@ public class GameManager : MonoBehaviour
         {
             case -3:
                 //get parameters
-                /**///szLevel = ParseURLParams(Application.absoluteURL, "Level");
-                /**///szReplayId = ParseURLParams(Application.absoluteURL, "Id");
-                /**/GameLevel.szLevel = szLevel;
+#if UNITY_EDITOR
+                //to make it run in editor where we have no web page url
+                GameLevel.szLevel = "2race01";
+                szReplayId = "2075437975870745";
+#else
+                GameLevel.szLevel = ParseURLParams(Application.absoluteURL, "Level");
+                szReplayId = ParseURLParams(Application.absoluteURL, "Id");
+#endif
 
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 // and should be active here ("Scenes/GameStart")
@@ -304,9 +307,6 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 8:
-                //moved here from state 10 as a bug fix
-                szLastLevel = GameLevel.szLevel;
-
                 //begin loading the level (or replay)
                 //Debug.Log("Load map Begin");
                 szToLoad = "Scenes/PlayGame";
