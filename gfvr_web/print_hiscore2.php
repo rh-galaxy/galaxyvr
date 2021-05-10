@@ -81,7 +81,7 @@ function print_hiscore()
 					$row = @mysqli_fetch_assoc($result);
 					$sort = "DESC";
 					if($row["IsTime"] != 0) $sort = "ASC";
-					$select_string  = "SELECT members_t.username AS Name, achievements_t.score AS Score FROM achievements_t, members_t WHERE achievements_t.user_id=members_t.oculus_id AND achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
+					$select_string  = "SELECT members_t.username AS Name, achievements_t.score AS Score, achievements_t.user_id AS Id FROM achievements_t, members_t WHERE achievements_t.user_id=members_t.oculus_id AND achievements_t.level='".$row['Level']."' ORDER BY achievements_t.score ".$sort." LIMIT 0,3";
 					$result2 = @mysqli_query($db, $select_string);
 
 
@@ -106,7 +106,10 @@ function print_hiscore()
 							echo "<br>";
 
 							// score
-							//echo "<a href=\"web_replay2.php?Level=".$row["Level"]."&amp;Name=".$row2["Name"]."\">";
+							$prefix = "1";
+							if($row["IsTime"] != 0) $prefix = "2";
+							if($i > 54) $prefix = "";
+							echo "<a href=\"webreplay/index.html?Level=".$prefix.$row["Level"]."&amp;Id=".$row2["Id"]."&amp;IsQuest=0\">";
 
 							if($row["IsTime"] != 0) {
 								// convert to time
@@ -129,8 +132,7 @@ function print_hiscore()
 								if($remain<0) $remain *= -1;
 								printf("%d.%02d", $part1, $remain/10);
 							}
-							//echo "</a></td>";
-							echo "</td>";
+							echo "</a></td>";
 						}
 					}
 					for($j=0; $j < 3-$num_rows2; $j++) {
