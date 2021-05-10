@@ -97,6 +97,12 @@ square_start("'100%'");
 								
 								//score
 								echo "<td>";
+								
+								$prefix = "1";
+								if($is_time != 0) $prefix = "2";
+								if($i > 54) $prefix = "";
+								echo "<a href=\"webreplay/index.html?Level=".$prefix.$row['level']."&amp;Id=".$id."&amp;IsQuest=1\">";
+								
 								if($is_time != 0) {
 									// convert to time
 									$remain = $row2["Score"];
@@ -118,7 +124,7 @@ square_start("'100%'");
 									if($remain<0) $remain *= -1;
 									printf("%d.%02d", $part1, $remain/10);
 								}
-								echo "</td></tr>";
+								echo "</a></td></tr>";
 							}
 						} else {
 							//should never happen

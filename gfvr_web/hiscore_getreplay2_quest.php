@@ -14,11 +14,6 @@
 
 		$num_rows = @mysqli_num_rows($result);
 		if($num_rows==1) {
-			$levelrow = @mysqli_fetch_assoc($result);
-			$sort = "DESC";
-			if($levelrow["is_time"] != 0) {
-				$sort = "ASC";
-			}
 			$query = "SELECT * FROM achievements_t WHERE level='".$level."' AND user_id='".$userid."' LIMIT 0,1";
 
 			$hiscore = mysqli_query($db, $query);

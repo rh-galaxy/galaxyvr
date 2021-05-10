@@ -893,7 +893,7 @@ public class GameManager : MonoBehaviour
     IEnumerator LoadAsyncScene()
     {
         //start fading music
-        AudioStateMachine.instance.Transition(szToLoad);
+        AudioStateMachine.instance.LevelTransition(bIsMapScene ? 1.0f : 0.0f);
         if (!bIsMapScene) AudioStateMachine.instance.player = null; //set before switching scene
 
         //the Application loads the scene in the background as the current scene runs

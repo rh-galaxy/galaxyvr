@@ -53,12 +53,25 @@ public class AudioStateMachine : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
-            StartSound(main, mainEvent);
+            Init();
         }
         else
         {
             Destroy(this.gameObject);
         }
+    }
+    public bool Init()
+    {
+        if (!main.hasHandle())
+        {
+            // Spatialize audio
+            main = FMODUnity.RuntimeManager.CreateInstance(mainEvent);
+            main.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+
+            main.start();
+            return main.hasHandle();
+        }
+        return false;
     }
 
     //sets the output to # i in the device list
@@ -202,19 +215,6 @@ public class AudioStateMachine : MonoBehaviour
         SetVolume();
     }
 
-    void StartSound(FMOD.Studio.EventInstance eventInstance, string eventRef, GameObject sender = null)
-    {
-        sender = sender ?? gameObject;
-
-        // Spatialize audio
-        eventInstance = FMODUnity.RuntimeManager.CreateInstance(eventRef);
-        eventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(sender));
-
-        main = eventInstance;
-        main.start();
-    }
-
-
     void SetParam(string s, float val)
     {
         // do not send out of range values, breaks playback
@@ -235,18 +235,4 @@ public class AudioStateMachine : MonoBehaviour
         //print("ResetLife, "+ fLifeBeforeZero.ToString()+" -> 0");
     }
 
-    public void Transition(string sceneName)
-    {
-        switch (sceneName)
-        {
-            case "Scenes/GameStart":
-                LevelTransition(0.0f);
-                break;
-
-            case "Scenes/PlayGame":
-                LevelTransition(1.0f);
-                break;
-        }
-    }
 }
-
