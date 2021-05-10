@@ -201,6 +201,7 @@ public class GameManager : MonoBehaviour
     float fDelayTime = 0;
 
     /**/string szLevel = "2race00";
+    ///**/string szLevel = "1mission00";
     /**/string szReplayId = "2075437975870745";
 
     void Update()
@@ -247,9 +248,6 @@ public class GameManager : MonoBehaviour
 
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 // and should be active here ("Scenes/GameStart")
-                //Cursor.visible = false;
-                //Screen.SetResolution(1280, 720, true);
-                //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
 
                 StartCoroutine(LoadAsyncTileset());

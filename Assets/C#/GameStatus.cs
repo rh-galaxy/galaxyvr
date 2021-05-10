@@ -4,7 +4,7 @@ public class GameStatus : MonoBehaviour
 {
     public GameObject oPlayer;
     private Vector3 vOffset = new Vector3(-8.0f / 10.0f, -17.0f / 10.0f, -5.8f / 10.0f); //from camera (x,y)
-    private Vector3 vOffsetNoVR = new Vector3(-8.0f / 10.0f, -5.0f / 10.0f, -5.8f / 10.0f); //from camera (x,y)
+    private Vector3 vOffsetNoVR = new Vector3(-8.0f / 10.0f, -3.6f / 10.0f, -5.8f / 10.0f); //from camera (x,y)
     //private Vector3 vOffsetNoVR = new Vector3(-9.15f / 10.0f, -6.3f / 10.0f, -5.8f / 10.0f); //from camera (x,y)
 
     public GameLevel oMap;
@@ -34,7 +34,7 @@ public class GameStatus : MonoBehaviour
         gameObject.SetActive(true);
 
         if (!GameManager.bNoVR) transform.eulerAngles = new Vector3(45, 0, 0);
-        transform.localScale = new Vector3(0.68f, 0.68f, 0.68f);
+        transform.localScale = new Vector3(0.60f, 0.60f, 0.60f);
 
         string szMaterial = i_bIsRace ? "Status2" : "Status";
         Material oMaterial = Resources.Load(szMaterial, typeof(Material)) as Material;
