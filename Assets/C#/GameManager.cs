@@ -197,10 +197,11 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    float fReinitAudioTimer = 4.0f;
     float fDelayTime = 0;
+
     /**/string szLevel = "2race00";
-    ///**/string szReplayId = "2075437975870745"; //quest 3544336575635483
-    /**/string szReplayId = "0";
+    /**/string szReplayId = "2075437975870745";
 
     void Update()
     {
@@ -221,14 +222,28 @@ public class GameManager : MonoBehaviour
 
         UpdateFade();
 
+        //try reinit sound since the user must activate sound by clicking the app window
+        // so it's not enough to just init once at the beginning
+        fReinitAudioTimer += Time.deltaTime;
+        if(fReinitAudioTimer>8.0f)
+        {
+            if(AudioStateMachine.instance.Init())
+            {
+                AudioStateMachine.instance.LevelTransition(bIsMapScene ? 1.0f : 0.0f);
+                AudioStateMachine.instance.player = bIsMapScene ? GameLevel.theMap.player : null;
+                AudioStateMachine.instance.SetOutput(0);
+            }
+            fReinitAudioTimer = 0.0f;
+        }
+
         //the main state machine
         switch (iState)
         {
             case -3:
                 //get parameters
-                szLevel = ParseURLParams(Application.absoluteURL, "Level");
-                GameLevel.szLevel = szLevel;
-                szReplayId = ParseURLParams(Application.absoluteURL, "Id");
+                /**///szLevel = ParseURLParams(Application.absoluteURL, "Level");
+                /**///szReplayId = ParseURLParams(Application.absoluteURL, "Id");
+                /**/GameLevel.szLevel = szLevel;
 
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 // and should be active here ("Scenes/GameStart")
@@ -238,8 +253,6 @@ public class GameManager : MonoBehaviour
                 iState++;
 
                 StartCoroutine(LoadAsyncTileset());
-
-                /**/AudioStateMachine.instance.Init();
 
                 break;
             case -2:
@@ -385,7 +398,7 @@ public class GameManager : MonoBehaviour
     IEnumerator LoadAsyncScene()
     {
         //start fading music
-        AudioStateMachine.instance.Transition(szToLoad);
+        AudioStateMachine.instance.LevelTransition(bIsMapScene ? 1.0f : 0.0f);
         if (!bIsMapScene) AudioStateMachine.instance.player = null; //set before switching scene
 
         //the Application loads the scene in the background as the current scene runs

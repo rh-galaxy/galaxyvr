@@ -264,7 +264,7 @@ public class Player : MonoBehaviour
                 oWallsCollEmission.enabled = true;
             }
 
-            oASGeneral.PlayOneShot(oClipLand);
+            oASGeneral.PlayOneShot(oClipLand, 0.8f);
         }
 
         //map or door, or map decorations
@@ -465,7 +465,7 @@ public class Player : MonoBehaviour
                     GameObject o = Instantiate(oMap.oBulletObjBase, oMap.transform);
                     o.GetComponent<Bullet>().Init(stBulletInfo, 0/*iOwnerID*/);
 
-                    oASGeneral.PlayOneShot(oClipFire);
+                    oASGeneral.PlayOneShot(oClipFire, 0.8f);
                 }
                 if (rm.iType == (byte)MsgType.PLAYER_KILL)
                 {
@@ -610,7 +610,7 @@ public class Player : MonoBehaviour
                 {
                     oThrusterEmission.enabled = true;
                     bEngineFadeOut = false;
-                    oASEngine.volume = 0.40f;
+                    /**/oASEngine.volume = 0.15f;
                     oASEngine.Play();
                 }
                 else
@@ -724,7 +724,7 @@ public class Player : MonoBehaviour
                 bFireTriggered = false; //reset so we can fire again
                 CreateBullet();
 
-                oASGeneral.PlayOneShot(oClipFire);
+                oASGeneral.PlayOneShot(oClipFire, 0.8f);
 
                 iAchieveBulletsFired++;
             }
@@ -805,7 +805,7 @@ public class Player : MonoBehaviour
                     if (iCurLap == iTotalLaps)
                     {
                         bTimeCounting = false;
-                        oASGeneral.PlayOneShot(oClipCPEnd);
+                        oASGeneral.PlayOneShot(oClipCPEnd, 0.7f);
 
                         bAchieveFinishedRaceLevel = true;
                     }
@@ -821,7 +821,7 @@ public class Player : MonoBehaviour
 
                 if (iCurLap < iTotalLaps)
                 {
-                    oASGeneral.PlayOneShot(oClipCP);
+                    oASGeneral.PlayOneShot(oClipCP, 0.7f);
 
                     oMap.aCheckPointList[iCurCP].GetComponent<CheckPoint>().SetBlinkState(true);
                 }
@@ -879,7 +879,7 @@ public class Player : MonoBehaviour
         oExplosionParticle.Play();
         fExplosionTimer = 0.0f;
 
-        oASGeneral.PlayOneShot(oClipExplosion);
+        oASGeneral.PlayOneShot(oClipExplosion, 0.8f);
 
         //to prevent movement during explosion
         Stop();

@@ -457,7 +457,7 @@ public class GameLevel : MonoBehaviour
         }
         else if (iFinalizeCounter == 10)
         {
-            GetComponent<AudioSource>().PlayOneShot(oClipLevelStart);
+            GetComponent<AudioSource>().PlayOneShot(oClipLevelStart, 0.8f);
 
             //this must be done after init player (@ iFinalizeCounter == 1)
             //so best do it the same time as the level has finished popping up
@@ -511,12 +511,12 @@ public class GameLevel : MonoBehaviour
             //delay sounds 0.5 sec
             if(bPlayClipWin && fGameOverTimer > 0.5f)
             {
-                GetComponent<AudioSource>().PlayOneShot(oClipLevelWin);
+                GetComponent<AudioSource>().PlayOneShot(oClipLevelWin, 0.8f);
                 bPlayClipWin = false;
             }
             if (bPlayClipGameOver && fGameOverTimer > 0.5f)
             {
-                GetComponent<AudioSource>().PlayOneShot(oClipLevelGameOver);
+                GetComponent<AudioSource>().PlayOneShot(oClipLevelGameOver, 0.8f);
                 bPlayClipGameOver = false;
             }
 
