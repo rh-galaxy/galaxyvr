@@ -200,7 +200,8 @@ public class GameManager : MonoBehaviour
     float fReinitAudioTimer = 4.0f;
     float fDelayTime = 0;
 
-    string szReplayId;
+    internal string szReplayId;
+    internal bool bReplayQuest;
 
     void Update()
     {
@@ -244,9 +245,11 @@ public class GameManager : MonoBehaviour
                 //to make it run in editor where we have no web page url
                 GameLevel.szLevel = "2race01";
                 szReplayId = "2075437975870745";
+                bReplayQuest = false;
 #else
                 GameLevel.szLevel = ParseURLParams(Application.absoluteURL, "Level");
                 szReplayId = ParseURLParams(Application.absoluteURL, "Id");
+                bReplayQuest = ParseURLParams(Application.absoluteURL, "IsQuest").CompareTo("1") == 0;
 #endif
 
                 //by use of the EditorAutoLoad script the main scene should be loaded first
@@ -288,7 +291,7 @@ public class GameManager : MonoBehaviour
                 if (GameLevel.iLevelIndex >= 200) szLevelToLoad = GameLevel.szLevel;
 
                 //get replay
-                StartCoroutine(oHigh.GetReplay(szLevelToLoad, szReplayId, oReplay));
+                StartCoroutine(oHigh.GetReplay(szLevelToLoad, szReplayId, bReplayQuest, oReplay));
                 iState++;
 
                 //set in the above, but since StartCoroutine returns before it has a chance
