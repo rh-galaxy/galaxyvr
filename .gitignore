@@ -3,6 +3,7 @@ obj
 Library
 Logs
 .vs
+.cache
 Assembly-CSharp.csproj
 Assembly-CSharp-Editor.csproj
 Oculus.VR.csproj
