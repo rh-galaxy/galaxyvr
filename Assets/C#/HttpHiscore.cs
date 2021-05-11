@@ -42,11 +42,8 @@ public class HttpHiscore
     UnityWebRequestAsyncOperation async;
     DateTime dtLastAccess; //when GetLimits() has run
 
-    int iIsSteam = 0;
-
     public HttpHiscore()
     {
-
     }
 
     UnityWebRequest www;
