@@ -1,9 +1,2 @@
 Release
-- Take Level and UserId as parameters like this
-  https://www.galaxy-forces-vr.com/webreplay/index.html?Level=race00&Id=2075437975870745
-- Move status-panel into view
-
-- Create links on the website to view replays on the web
-
--------
-- Make FMOD music work //probably working now, keep under observation
+-Empty
