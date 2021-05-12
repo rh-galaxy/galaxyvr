@@ -179,7 +179,7 @@ public class Enemy : MonoBehaviour
         //////
 
         //wait for explosion to finish and remove object
-        if (iNumHits==0)
+        if (iNumHits==0 || bExplosionStarted)
         {
             //start explosion
             //note: some bug above can make this run more than once if hit by rapid fire.
