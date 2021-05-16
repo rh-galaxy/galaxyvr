@@ -32,7 +32,7 @@ It is possible to implement this with C# tcp sockets and is well on the way.
 7. Get the rest of the GUI in menu working to present the result of a match.
 
 
-Begin to download the project either from github (https://github.com/rh-galaxy/galaxyvr/tree/multiplayer) or this link: https://www.galaxy-forces-vr.com/GFVR_multip_dev.zip
+Begin to download the project either from github (https://github.com/rh-galaxy/galaxyvr/tree/multiplayer) or this link: https://www.galaxy-forces-vr.com/20210427_gfvr_dev_multip.zip
 Then install UnityHub and go to https://unity3d.com/get-unity/download/archive and select version Unity 2019.2.10f1.
 Here is the game website, with other links https://www.galaxy-forces-vr.com/
 
