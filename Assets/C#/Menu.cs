@@ -58,11 +58,11 @@ public class Menu : MonoBehaviour
         aLevels[2].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[2].szLevelName = "2race02";
         aLevels[2].szLevelDisplayName = "02";
-        aLevels[2].szLevelDescription = "Race02 - Double Infinity";
+        aLevels[2].szLevelDescription = "Race02 - Double infinity";
         aLevels[3].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[3].szLevelName = "2race03";
         aLevels[3].szLevelDisplayName = "03";
-        aLevels[3].szLevelDescription = "Race03 - Snake Race";
+        aLevels[3].szLevelDescription = "Race03 - Snake race";
         aLevels[4].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[4].szLevelName = "2race04";
         aLevels[4].szLevelDisplayName = "04";
@@ -70,7 +70,7 @@ public class Menu : MonoBehaviour
         aLevels[5].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[5].szLevelName = "2race05";
         aLevels[5].szLevelDisplayName = "05";
-        aLevels[5].szLevelDescription = "Race05 - Optimization oppotunity";
+        aLevels[5].szLevelDescription = "Race05 - Optimization opportunity";
         aLevels[6].iLevelType = (int)LevelType.MAP_RACE;
         aLevels[6].szLevelName = "2race06";
         aLevels[6].szLevelDisplayName = "06";
