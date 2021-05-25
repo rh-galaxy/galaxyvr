@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using System.IO;
 using System.Text;
 using System.Net.Sockets;
@@ -27,21 +29,6 @@ namespace FMODUnity
         }
 
         public const string BuildFolder = "Build";
-
-        public static string GetBankDirectory()
-        {
-            if (Settings.Instance.HasSourceProject && !String.IsNullOrEmpty(Settings.Instance.SourceProjectPath))
-            {
-                string projectPath = Settings.Instance.SourceProjectPath;
-                string projectFolder = Path.GetDirectoryName(projectPath);
-                return Path.Combine(projectFolder, BuildFolder);
-            }
-            else if (!String.IsNullOrEmpty(Settings.Instance.SourceBankPath))
-            {
-                return Path.GetFullPath(Settings.Instance.SourceBankPath);
-            }
-            return null;
-        }
 
         public static void ValidateSource(out bool valid, out string reason)
         {
@@ -141,6 +128,34 @@ namespace FMODUnity
             uint patch = (version & 0x000000FF);
 
             return major.ToString("X1") + "." + minor.ToString("X2") + "." + patch.ToString("X2");
+        }
+
+        public static string DurationString(float seconds)
+        {
+            float minutes = seconds / 60;
+            float hours = minutes / 60;
+
+            if (hours >= 1)
+            {
+                return Pluralize(Mathf.FloorToInt(hours), "hour", "hours");
+            }
+            else if (minutes >= 1)
+            {
+                return Pluralize(Mathf.FloorToInt(minutes), "minute", "minutes");
+            }
+            else if (seconds >= 1)
+            {
+                return Pluralize(Mathf.FloorToInt(seconds), "second", "seconds");
+            }
+            else
+            {
+                return "a moment";
+            }
+        }
+
+        public static string Pluralize(int count, string singular, string plural)
+        {
+            return string.Format("{0} {1}", count, (count == 1) ? singular : plural);
         }
 
         static EditorUtils()
@@ -299,28 +314,52 @@ namespace FMODUnity
             }
         }
 
-        [MenuItem("FMOD/Help/Integration Manual", priority = 3)]
-        static void OnlineManual()
+        [MenuItem("FMOD/Help/Getting Started", priority = 2)]
+        static void OnlineGettingStarted()
         {
-            Application.OpenURL("https://fmod.com/resources/documentation-unity");
+            OpenOnlineDocumentation("unity", "user-guide");
         }
 
-        [MenuItem("FMOD/Help/API Documentation", priority = 4)]
+        [MenuItem("FMOD/Help/Integration Manual", priority = 3)]
+        public static void OnlineManual()
+        {
+            OpenOnlineDocumentation("unity");
+        }
+
+        [MenuItem("FMOD/Help/API Manual", priority = 4)]
         static void OnlineAPIDocs()
         {
-            Application.OpenURL("https://fmod.com/resources/documentation-api");
+            OpenOnlineDocumentation("api");
         }
 
-        [MenuItem("FMOD/Help/Support Forum", priority = 5)]
+        [MenuItem("FMOD/Help/Support Forum", priority = 16)]
         static void OnlineQA()
         {
             Application.OpenURL("https://qa.fmod.com/");
         }
 
-        [MenuItem("FMOD/Help/Revision History", priority = 6)]
+        [MenuItem("FMOD/Help/Revision History", priority = 5)]
         static void OnlineRevisions()
         {
-            Application.OpenURL("https://fmod.com/resources/documentation-api?version=2.0&page=welcome-revision-history.html");
+            OpenOnlineDocumentation("api", "welcome-revision-history");
+        }
+
+        static void OpenOnlineDocumentation(string section, string page = null)
+        {
+            const string Prefix = "https://fmod.com/resources/documentation-";
+            string version = string.Format("{0:X}.{1:X}", FMOD.VERSION.number >> 16, (FMOD.VERSION.number >> 8) & 0xFF);
+            string url;
+
+            if (!string.IsNullOrEmpty(page))
+            {
+                url = string.Format("{0}{1}?version={2}&page={3}.html", Prefix, section, version, page);
+            }
+            else
+            {
+                url = string.Format("{0}{1}?version={2}", Prefix, section, version);
+            }
+                
+            Application.OpenURL(url);
         }
 
         [MenuItem("FMOD/About Integration", priority = 7)]
@@ -332,7 +371,7 @@ namespace FMODUnity
             uint version;
             CheckResult(lowlevel.getVersion(out version));
 
-            EditorUtility.DisplayDialog("FMOD Studio Unity Integration", "Version: " + VerionNumberToString(version) + "\n\nCopyright \u00A9 Firelight Technologies Pty, Ltd. 2014-2020 \n\nSee LICENSE.TXT for additional license information.", "OK");
+            EditorUtility.DisplayDialog("FMOD Studio Unity Integration", "Version: " + VerionNumberToString(version) + "\n\nCopyright \u00A9 Firelight Technologies Pty, Ltd. 2014-2021 \n\nSee LICENSE.TXT for additional license information.", "OK");
         }
 
         [MenuItem("FMOD/Consolidate Plugin Files")]
@@ -724,8 +763,8 @@ namespace FMODUnity
                         if (header.StartsWith("log():"))
                         {
                             UnityEngine.Debug.Log("FMOD Studio: Script Client returned " + header.Substring(6));
-                        }    
-                    }        
+                        }
+                    }
                     catch (Exception e)
                     {
                         UnityEngine.Debug.Log("FMOD Studio: Script Client failed to connect - Check FMOD Studio is running");
@@ -830,23 +869,6 @@ namespace FMODUnity
             }
         }
 
-        public static bool IsFileOpenByStudio(string path)
-        {
-            bool open = true;
-            try
-            {
-                using (var file = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    open = false;
-                }
-            }
-            catch (Exception)
-            {
-                Debug.LogWarning("[FMOD] File used by another application. Failed to open " + path);
-            }
-            return open;
-        }
-
         private static string GetMasterBank()
         {
             GetScriptOutput(string.Format("masterBankFolder = studio.project.workspace.masterBankFolder;"));
@@ -866,32 +888,44 @@ namespace FMODUnity
 
         private static bool CheckForNameConflict(string folderGuid, string eventName)
         {
-            GetScriptOutput(string.Format("nameConflict = false;"));
-            GetScriptOutput(string.Format("checkFunction = function(val) {{ nameConflict |= val.name == \"{0}\"; }};", eventName));
-            GetScriptOutput(string.Format("studio.project.lookup(\"{0}\").items.forEach(checkFunction, this); ", folderGuid));
-            string conflictBool = GetScriptOutput(string.Format("nameConflict;"));
+            const string checkForNameConflictFunc =
+                @"function(folderGuid, eventName) {
+                    var nameConflict = false;
+                    studio.project.lookup(folderGuid).items.forEach(function(val) {
+                        nameConflict |= val.name == eventName;
+                    });
+                    return nameConflict;
+                }";
+
+            string conflictBool = GetScriptOutput(string.Format("({0})(\"{1}\", \"{2}\")", checkForNameConflictFunc, folderGuid, eventName));
             return conflictBool == "1";
         }
 
         public static string CreateStudioEvent(string eventPath, string eventName)
         {
             var folders = eventPath.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            string folderGuid = GetScriptOutput("studio.project.workspace.masterEventFolder.id;");
 
-            string folderGuid = EditorUtils.GetScriptOutput("studio.project.workspace.masterEventFolder.id;");
+            const string getFolderGuidFunc =
+                @"function(parentGuid, folderName) {
+                    folderGuid = """";
+                    studio.project.lookup(parentGuid).items.forEach(function(val) {
+                        folderGuid = val.isOfType(""EventFolder"") && val.name == folderName ? val.id : folderGuid;
+                    });
+                    if (folderGuid == """")
+                    {
+                        var newFolder = studio.project.create(""EventFolder"");
+                        newFolder.name = folderName;
+                        newFolder.folder = studio.project.lookup(parentGuid);
+                        folderGuid = newFolder.id;
+                    }
+                    return folderGuid;
+                }";
+
             for (int i = 0; i < folders.Length; i++)
             {
                 string parentGuid = folderGuid;
-                GetScriptOutput(string.Format("guid = \"\";"));
-                GetScriptOutput(string.Format("findFunc = function(val) {{ guid = val.isOfType(\"EventFolder\") && val.name == \"{0}\" ? val.id : guid; }};", folders[i]));
-                GetScriptOutput(string.Format("studio.project.lookup(\"{0}\").items.forEach(findFunc, this);", folderGuid));
-                folderGuid = GetScriptOutput(string.Format("guid;"));
-                if (folderGuid == "")
-                {
-                    GetScriptOutput(string.Format("folder = studio.project.create(\"EventFolder\");"));
-                    GetScriptOutput(string.Format("folder.name = \"{0}\"", folders[i]));
-                    GetScriptOutput(string.Format("folder.folder = studio.project.lookup(\"{0}\");", parentGuid));
-                    folderGuid = GetScriptOutput(string.Format("folder.id;"));
-                }
+                folderGuid = GetScriptOutput(string.Format("({0})(\"{1}\", \"{2}\")", getFolderGuidFunc, parentGuid, folders[i]));
             }
 
             if (CheckForNameConflict(folderGuid, eventName))
@@ -900,30 +934,38 @@ namespace FMODUnity
                 return null;
             }
 
-            GetScriptOutput("event = studio.project.create(\"Event\");");
-            GetScriptOutput("event.note = \"Placeholder created via Unity\";");
-            GetScriptOutput(string.Format("event.name = \"{0}\"", eventName));
-            GetScriptOutput(string.Format("event.folder = studio.project.lookup(\"{0}\");", folderGuid));
+            const string createEventFunc =
+                @"function(eventName, folderGuid) {
+                    event = studio.project.create(""Event"");
+                    event.note = ""Placeholder created via Unity"";
+                    event.name = eventName;
+                    event.folder = studio.project.lookup(folderGuid);
 
-            // Add a group track
-            GetScriptOutput("track = studio.project.create(\"GroupTrack\");");
-            GetScriptOutput("track.mixerGroup.output = event.mixer.masterBus;");
-            GetScriptOutput("track.mixerGroup.name = \"Audio 1\";");
-            GetScriptOutput("event.relationships.groupTracks.add(track);");
+                    track = studio.project.create(""GroupTrack"");
+                    track.mixerGroup.output = event.mixer.masterBus;
+                    track.mixerGroup.name = ""Audio 1"";
+                    event.relationships.groupTracks.add(track);
 
-            // Add tags
-            GetScriptOutput("tag = studio.project.create(\"Tag\");");
-            GetScriptOutput("tag.name = \"placeholder\";");
-            GetScriptOutput("tag.folder = studio.project.workspace.masterTagFolder;");
-            GetScriptOutput("event.relationships.tags.add(tag);");
+                    tag = studio.project.create(""Tag"");
+                    tag.name = ""placeholder"";
+                    tag.folder = studio.project.workspace.masterTagFolder;
+                    event.relationships.tags.add(tag);
 
-            string eventGuid = GetScriptOutput(string.Format("event.id;"));
+                    return event.id;
+                }";
+
+            string eventGuid = GetScriptOutput(string.Format("({0})(\"{1}\", \"{2}\")", createEventFunc, eventName, folderGuid));
             return eventGuid;
         }
 
         [InitializeOnLoadMethod]
         private static void CleanObsoleteFiles()
         {
+            if (Environment.GetCommandLineArgs().Any(a => a == "-exportPackage"))
+            {
+                // Don't delete anything or it won't be included in the package
+                return;
+            }
             if (EditorApplication.isPlayingOrWillChangePlaymode)
             {
                 // Messing with the asset database while entering play mode causes a NullReferenceException
@@ -948,6 +990,207 @@ namespace FMODUnity
                 }
                 EditorApplication.UnlockReloadAssemblies();
             }
+        }
+
+        struct LibInfo
+        {
+            public string cpu;
+            public string os;
+            public string lib;
+            public BuildTarget buildTarget;
+        };
+
+        const string LibPrefix = "Assets/Plugins/FMOD/lib";
+        const string StagingPrefix = "Assets/Plugins/FMOD/staging";
+
+        [InitializeOnLoadMethod]
+        private static void BeginSharedLibraryUpdate()
+        {
+            EditorApplication.delayCall += UpdateSharedLibraries;
+        }
+
+        private static void UpdateSharedLibraries()
+        {
+            if (AssetDatabase.IsValidFolder(StagingPrefix))
+            {
+                List<LibInfo> libInfoList = new List<LibInfo>
+                {
+                    new LibInfo() {cpu = "x86", os = "Windows",  lib = "/win/x86/fmodstudioL.dll", buildTarget = BuildTarget.StandaloneWindows},
+                    new LibInfo() {cpu = "x86_64", os = "Windows", lib = "/win/x86_64/fmodstudioL.dll",  buildTarget = BuildTarget.StandaloneWindows64},
+#if !UNITY_2019_2_OR_NEWER
+                    new LibInfo() {cpu = "x86", os = "Linux", lib = "/linux/x86/libfmodstudioL.so",  buildTarget = BuildTarget.StandaloneLinux},
+#endif
+                    new LibInfo() {cpu = "x86_64", os = "Linux", lib = "/linux/x86_64/libfmodstudioL.so",  buildTarget = BuildTarget.StandaloneLinux64},
+                    new LibInfo() {cpu = "AnyCPU", os = "OSX", lib = "/mac/fmodstudioL.bundle",  buildTarget = BuildTarget.StandaloneOSX},
+                };
+
+                if (Settings.Instance.SharedLibraryUpdateStage == Settings.SharedLibraryUpdateStages.DisableExistingLibraries)
+                {
+                    bool areLibsThere = false;
+                    foreach (LibInfo libInfo in libInfoList)
+                    {
+                        string targetPath = LibPrefix + libInfo.lib;
+                        PluginImporter pluginImporter = AssetImporter.GetAtPath(targetPath) as PluginImporter;
+                        if (pluginImporter != null && pluginImporter.GetCompatibleWithEditor())
+                        {
+                            pluginImporter.SetCompatibleWithEditor(false);
+                            pluginImporter.SetCompatibleWithAnyPlatform(false);
+                            EditorUtility.SetDirty(pluginImporter);
+                            pluginImporter.SaveAndReimport();
+                            areLibsThere = true;
+                        }
+                    }
+                    if (areLibsThere)
+                    {
+                        Settings.Instance.SharedLibraryUpdateStage = Settings.SharedLibraryUpdateStages.RestartUnity;
+                        Settings.Instance.SharedLibraryTimeSinceStart = EditorApplication.timeSinceStartup;
+                        EditorUtility.SetDirty(Settings.Instance);
+
+                        if (EditorUtility.DisplayDialog("Restart Unity", "Please restart Unity to update the FMOD native libraries.", "Restart Unity", "Cancel"))
+                        {
+                            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                            {
+                                Settings.Instance.SharedLibraryUpdateStage = Settings.SharedLibraryUpdateStages.CopyNewLibraries;
+                                EditorUtility.SetDirty(Settings.Instance);
+
+                                // Restart Unity
+                                EditorApplication.OpenProject(Environment.CurrentDirectory);
+
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Settings.Instance.SharedLibraryUpdateStage = Settings.SharedLibraryUpdateStages.CopyNewLibraries;
+                    }
+                }
+                if (Settings.Instance.SharedLibraryUpdateStage == Settings.SharedLibraryUpdateStages.RestartUnity)
+                {
+                    if(EditorApplication.timeSinceStartup < Settings.Instance.SharedLibraryTimeSinceStart)
+                    {
+                        // Unity has been closed down since Settings.SharedLibraryUpdateStages.RestartUnity was set
+                        Settings.Instance.SharedLibraryUpdateStage = Settings.SharedLibraryUpdateStages.CopyNewLibraries;
+                    }
+                }
+                if (Settings.Instance.SharedLibraryUpdateStage == Settings.SharedLibraryUpdateStages.CopyNewLibraries)
+                {
+                    Settings.Instance.SharedLibraryUpdateStage = Settings.SharedLibraryUpdateStages.DisableExistingLibraries;
+                    EditorUtility.SetDirty(Settings.Instance);
+
+                    foreach (LibInfo libInfo in libInfoList)
+                    {
+                        string targetPath = LibPrefix + libInfo.lib;
+                        string sourcePath = StagingPrefix + libInfo.lib;
+
+                        AssetDatabase.DeleteAsset(targetPath);
+                        if (!AssetDatabase.CopyAsset(sourcePath, targetPath))
+                        {
+                            Debug.LogError(string.Format("FMOD: Could not copy {0} to {1}", sourcePath, targetPath));
+                        }
+                        PluginImporter pluginImporter = AssetImporter.GetAtPath(targetPath) as PluginImporter;
+                        if (pluginImporter != null)
+                        {
+                            pluginImporter.ClearSettings();
+                            pluginImporter.SetCompatibleWithEditor(true);
+                            pluginImporter.SetCompatibleWithAnyPlatform(false);
+                            pluginImporter.SetCompatibleWithPlatform(libInfo.buildTarget, true);
+                            pluginImporter.SetEditorData("CPU", libInfo.cpu);
+                            pluginImporter.SetEditorData("OS", libInfo.os);
+                            EditorUtility.SetDirty(pluginImporter);
+                            pluginImporter.SaveAndReimport();
+                        }
+                    }
+                    if (AssetDatabase.MoveAssetToTrash(StagingPrefix))
+                    {
+                        Debug.LogFormat("FMOD: Removed staging folder " + StagingPrefix);
+                    }
+                }
+            }
+        }
+    }
+
+    public static class SerializedPropertyExtensions
+    {
+        public static bool ArrayContains(this SerializedProperty array, Func<SerializedProperty, bool> predicate)
+        {
+            return FindArrayIndex(array, predicate) >= 0;
+        }
+
+        public static bool ArrayContains(this SerializedProperty array, string subPropertyName,
+            Func<SerializedProperty, bool> predicate)
+        {
+            return FindArrayIndex(array, subPropertyName, predicate) >= 0;
+        }
+
+        public static int FindArrayIndex(this SerializedProperty array, Func<SerializedProperty, bool> predicate)
+        {
+            for (int i = 0; i < array.arraySize; ++i)
+            {
+                SerializedProperty current = array.GetArrayElementAtIndex(i);
+
+                if (predicate(current))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public static int FindArrayIndex(this SerializedProperty array, string subPropertyName,
+            Func<SerializedProperty, bool> predicate)
+        {
+            for (int i = 0; i < array.arraySize; ++i)
+            {
+                SerializedProperty current = array.GetArrayElementAtIndex(i);
+                SerializedProperty subProperty = current.FindPropertyRelative(subPropertyName);
+
+                if (predicate(subProperty))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public static void ArrayAdd(this SerializedProperty array, Action<SerializedProperty> initialize)
+        {
+            array.InsertArrayElementAtIndex(array.arraySize);
+            initialize(array.GetArrayElementAtIndex(array.arraySize - 1));
+        }
+
+        public static void ArrayClear(this SerializedProperty array)
+        {
+            while (array.arraySize > 0)
+            {
+                array.DeleteArrayElementAtIndex(array.arraySize - 1);
+            }
+        }
+    }
+
+    public class NoIndentScope : IDisposable
+    {
+        int oldIndentLevel;
+
+        public NoIndentScope()
+        {
+            oldIndentLevel = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
+        }
+
+        public void Dispose()
+        {
+            EditorGUI.indentLevel = oldIndentLevel;
+        }
+    }
+
+    public class NaturalComparer : IComparer<string>
+    {
+        public int Compare(string a, string b)
+        {
+            return EditorUtility.NaturalCompare(a, b);
         }
     }
 }
