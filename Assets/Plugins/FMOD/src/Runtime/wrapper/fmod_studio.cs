@@ -1,6 +1,6 @@
 /* ======================================================================================== */
 /* FMOD Studio API - C# wrapper.                                                            */
-/* Copyright (c), Firelight Technologies Pty, Ltd. 2004-2020.                               */
+/* Copyright (c), Firelight Technologies Pty, Ltd. 2004-2021.                               */
 /*                                                                                          */
 /* For more detail visit:                                                                   */
 /* https://fmod.com/resources/documentation-api?version=2.0&page=page=studio-api.html       */
@@ -118,6 +118,8 @@ namespace FMOD.Studio
         PREUPDATE = 0x00000001,
         POSTUPDATE = 0x00000002,
         BANK_UNLOAD = 0x00000004,
+        LIVEUPDATE_CONNECTED = 0x00000008,
+        LIVEUPDATE_DISCONNECTED = 0x00000010,
         ALL = 0xFFFFFFFF,
     }
 
@@ -386,7 +388,7 @@ namespace FMOD.Studio
         }
         public RESULT setAdvancedSettings(ADVANCEDSETTINGS settings)
         {
-            settings.cbsize = Marshal.SizeOf(typeof(ADVANCEDSETTINGS));
+            settings.cbsize = MarshalHelper.SizeOf(typeof(ADVANCEDSETTINGS));
             return FMOD_Studio_System_SetAdvancedSettings(this.handle, ref settings);
         }
         public RESULT setAdvancedSettings(ADVANCEDSETTINGS settings, string encryptionKey)
@@ -402,7 +404,7 @@ namespace FMOD.Studio
         }
         public RESULT getAdvancedSettings(out ADVANCEDSETTINGS settings)
         {
-            settings.cbsize = Marshal.SizeOf(typeof(ADVANCEDSETTINGS));
+            settings.cbsize = MarshalHelper.SizeOf(typeof(ADVANCEDSETTINGS));
             return FMOD_Studio_System_GetAdvancedSettings(this.handle, out settings);
         }
         public RESULT initialize(int maxchannels, INITFLAGS studioflags, FMOD.INITFLAGS flags, IntPtr extradriverdata)
@@ -602,7 +604,7 @@ namespace FMOD.Studio
         }
         public RESULT loadBankCustom(BANK_INFO info, LOAD_BANK_FLAGS flags, out Bank bank)
         {
-            info.size = Marshal.SizeOf(info);
+            info.size = MarshalHelper.SizeOf(typeof(BANK_INFO));
             return FMOD_Studio_System_LoadBankCustom(this.handle, ref info, flags, out bank.handle);
         }
         public RESULT unloadAll()
@@ -968,6 +970,10 @@ namespace FMOD.Studio
         {
             return FMOD_Studio_EventDescription_Is3D(this.handle, out is3D);
         }
+        public RESULT isDopplerEnabled(out bool doppler)
+        {
+            return FMOD_Studio_EventDescription_IsDopplerEnabled(this.handle, out doppler);
+        }
         public RESULT hasCue(out bool cue)
         {
             return FMOD_Studio_EventDescription_HasCue(this.handle, out cue);
@@ -1089,6 +1095,8 @@ namespace FMOD.Studio
         private static extern RESULT FMOD_Studio_EventDescription_IsStream              (IntPtr eventdescription, out bool isStream);
         [DllImport(STUDIO_VERSION.dll)]
         private static extern RESULT FMOD_Studio_EventDescription_Is3D                  (IntPtr eventdescription, out bool is3D);
+        [DllImport(STUDIO_VERSION.dll)]
+        private static extern RESULT FMOD_Studio_EventDescription_IsDopplerEnabled      (IntPtr eventdescription, out bool doppler);
         [DllImport(STUDIO_VERSION.dll)]
         private static extern RESULT FMOD_Studio_EventDescription_HasCue                (IntPtr eventdescription, out bool cue);
         [DllImport(STUDIO_VERSION.dll)]

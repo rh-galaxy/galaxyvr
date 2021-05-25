@@ -1,5 +1,7 @@
 ﻿#if (UNITY_TIMELINE_EXIST || !UNITY_2019_1_OR_NEWER)
 
+using System;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -13,8 +15,11 @@ namespace FMODUnity
     [TrackColor(0.066f, 0.134f, 0.244f)]
     [TrackClipType(typeof(FMODEventPlayable))]
     [TrackBindingType(typeof(GameObject))]
+    [DisplayName("FMOD/Event Track")]
     public class FMODEventTrack : TrackAsset
     {
+        public FMODEventMixerBehaviour template = new FMODEventMixerBehaviour();
+
         public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
         {
             var director = go.GetComponent<PlayableDirector>();
@@ -31,13 +36,17 @@ namespace FMODUnity
                 }
             }
 
-            var scriptPlayable = ScriptPlayable<FMODEventMixerBehaviour>.Create(graph, inputCount);
+            var scriptPlayable = ScriptPlayable<FMODEventMixerBehaviour>.Create(graph, template, inputCount);
             return scriptPlayable;
         }
     }
 
+    [Serializable]
     public class FMODEventMixerBehaviour : PlayableBehaviour
     {
+        [Range(0, 1)]
+        public float volume = 1;
+
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {
 #if UNITY_EDITOR
@@ -66,7 +75,7 @@ namespace FMODUnity
                 ScriptPlayable<FMODEventPlayableBehavior> inputPlayable = (ScriptPlayable<FMODEventPlayableBehavior>)playable.GetInput(i);
                 FMODEventPlayableBehavior input = inputPlayable.GetBehaviour();
 
-                input.UpdateBehaviour(time);
+                input.UpdateBehavior(time, volume);
             }
         }
     }

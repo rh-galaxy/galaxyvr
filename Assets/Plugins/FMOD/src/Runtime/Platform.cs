@@ -52,7 +52,7 @@ namespace FMODUnity
     // [InitializeOnLoad] and a static constructor to register themselves as supported platforms by
     // calling Settings.AddPlatformTemplate. The user can also create instances of the PlatformGroup
     // class and use them to group platforms that have settings in common.
-    public abstract class Platform : ScriptableObject, IComparable<Platform>
+    public abstract class Platform : ScriptableObject
     {
         // This is a persistent identifier. It is used:
         // * To link platforms together at load time
@@ -258,33 +258,23 @@ namespace FMODUnity
         }
 
         // Loads static FMOD plugins for this platform.
-#if ENABLE_IL2CPP
         public virtual void LoadStaticPlugins(FMOD.System coreSystem, Action<FMOD.RESULT, string> reportResult)
         {
             if (StaticPlugins.Count > 0)
             {
-                FMOD.RESULT result = FMOD_Unity_RegisterStaticPlugins(FMOD.VERSION.dll, coreSystem.handle);
-                reportResult(result, "Registering static plugins");
-            }
-        }
-
-        // This function's name needs to match the contents of RegisterStaticPluginsFunctionName below
-        [DllImport("__Internal")]
-        private static extern FMOD.RESULT FMOD_Unity_RegisterStaticPlugins(string coreLibraryName, IntPtr system);
+#if !UNITY_EDITOR && ENABLE_IL2CPP
+                StaticPluginManager.Register(coreSystem, reportResult);
 #else
-        public virtual void LoadStaticPlugins(FMOD.System coreSystem, Action<FMOD.RESULT, string> reportResult)
-        {
-            if (StaticPlugins.Count > 0)
-            {
                 Debug.LogWarningFormat(
-                    "{0} static plugins specified, but static plugins are only supported on the IL2CPP scripting backend",
+                    "FMOD: {0} static plugins specified, but static plugins are only supported on the IL2CPP scripting backend",
                     StaticPlugins.Count);
+#endif
             }
         }
-#endif
 
-        // This needs to match the DllImport function called by LoadStaticPlugins above
-        public const string RegisterStaticPluginsFunctionName = "FMOD_Unity_RegisterStaticPlugins";
+        // These need to match the function called by LoadStaticPlugins above
+        public const string RegisterStaticPluginsClassName = "StaticPluginManager";
+        public const string RegisterStaticPluginsFunctionName = "Register";
 
         // Ensures that this platform has properties.
         public void AffirmProperties()
@@ -304,6 +294,9 @@ namespace FMODUnity
             {
                 Properties = new PropertyStorage();
                 active = false;
+#if UNITY_EDITOR
+                DisplaySortOrder = 0;
+#endif
             }
         }
 
@@ -341,6 +334,7 @@ namespace FMODUnity
             }
         }
 
+#if UNITY_EDITOR
         [SerializeField]
         private float displaySortOrder;
 
@@ -353,17 +347,10 @@ namespace FMODUnity
 
             set
             {
-                if (displaySortOrder != value)
-                {
-                    displaySortOrder = value;
-
-                    if (Parent != null)
-                    {
-                        Parent.children.Sort();
-                    }
-                }
+                displaySortOrder = value;
             }
         }
+#endif
 
         public bool IsLiveUpdateEnabled
         {
@@ -386,18 +373,6 @@ namespace FMODUnity
 #else
                 return Overlay == TriStateBool.Enabled;
 #endif
-            }
-        }
-
-        public int CompareTo(Platform other)
-        {
-            if (other == null)
-            {
-                return 1;
-            }
-            else
-            {
-                return DisplaySortOrder.CompareTo(other.DisplaySortOrder);
             }
         }
 
@@ -439,10 +414,16 @@ namespace FMODUnity
         {
         }
 
+        public interface PropertyOverrideControl
+        {
+            bool HasValue(Platform platform);
+            void Clear(Platform platform);
+        }
+
         // This class provides access to a specific property on any Platform object; the property to
         // operate on is determined by the Getter function. This allows client code to operate on
         // platform properties in a generic manner.
-        public struct PropertyAccessor<T>
+        public struct PropertyAccessor<T> : PropertyOverrideControl
         {
             private readonly Func<PropertyStorage, Property<T>> Getter;
             private readonly T DefaultValue;
@@ -619,41 +600,26 @@ namespace FMODUnity
                     = new PropertyAccessor<PlatformCallbackHandler>(properties => properties.CallbackHandler, null);
         }
 
-        [NonSerialized]
-        private Platform parent;
-
+#if UNITY_EDITOR
         // The parent platform from which this platform inherits its property values.
         public Platform Parent
         {
-            get { return parent; }
-
-            set
+            get
             {
-                if (value != parent)
-                {
-                    if (parent != null)
-                    {
-                        parent.children.Remove(this);
-                    }
-
-                    parent = value;
-
-                    if (parent != null)
-                    {
-                        parent.children.Add(this);
-                        parent.children.Sort();
-                    }
-
-                    ParentIdentifier = (parent != null) ? parent.Identifier : null;
-                }
+                return (ParentIdentifier != null) ? Settings.Instance.FindPlatform(ParentIdentifier) : null;
             }
         }
 
-        [NonSerialized]
-        private readonly List<Platform> children = new List<Platform>();
+        [SerializeField]
+        private List<string> childIdentifiers = new List<string>();
 
         // The platforms which inherit their property values from this platform.
-        public List<Platform> Children { get { return children; } }
+        public List<string> ChildIdentifiers { get { return childIdentifiers; } }
+#else
+        // The parent platform from which this platform inherits its property values.
+        [NonSerialized]
+        public Platform Parent;
+#endif
 
         // Checks whether this platform inherits from the given platform, so we can avoid creating
         // inheritance loops.

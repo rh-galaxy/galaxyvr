@@ -15,7 +15,7 @@ namespace FMODUnity
 
         public const string ConstIdentifier = "default";
 
-        public override string DisplayName { get { return "Default Settings"; } }
+        public override string DisplayName { get { return "Default"; } }
         public override void DeclareUnityMappings(Settings settings) { }
 #if UNITY_EDITOR
         public override Legacy.Platform LegacyIdentifier { get { return Legacy.Platform.Default; } }

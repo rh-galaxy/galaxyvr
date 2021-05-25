@@ -78,6 +78,7 @@
     <Compile Include="Assets\Plugins\FMOD\platforms\win\src\PlatformWindows.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Runtime\Timeline\FMODEventTrack.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Runtime\wrapper\fmod.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Runtime\AutomatableSlots.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Runtime\StudioParameterTrigger.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Runtime\Timeline\FMODEventPlayable.cs" />
     <Compile Include="Assets\Plugins\FMOD\platforms\mac\src\PlatformMac.cs" />
@@ -98,8 +99,9 @@
      <None Include="Assets\Plugins\FMOD\lib\uwp\x86\fmodL.dll" />
      <None Include="Assets\Plugins\FMOD\lib\uwp\arm\fmodstudioL.dll" />
      <None Include="Assets\Plugins\FMOD\lib\win\x86\fmodstudio.dll" />
-     <None Include="Assets\Plugins\FMOD\lib\win\x86_64\fmodstudioL.dll" />
+     <None Include="Assets\Plugins\FMOD\lib\win\x86\fmodstudioL.dll" />
      <None Include="Assets\Plugins\FMOD\lib\uwp\arm\fmodstudio.dll" />
+     <None Include="Assets\Plugins\FMOD\README.txt" />
      <None Include="Assets\Plugins\FMOD\lib\uwp\x64\fmod.dll" />
      <None Include="Assets\Plugins\FMOD\lib\win\x86_64\fmodstudio.dll" />
      <None Include="Assets\Plugins\FMOD\lib\uwp\x64\fmodstudio.dll" />
@@ -107,7 +109,7 @@
      <None Include="Assets\Plugins\FMOD\FMODUnity.asmdef" />
      <None Include="Assets\Plugins\FMOD\lib\win\x86_64\resonanceaudio.dll" />
      <None Include="Assets\Plugins\FMOD\lib\uwp\x86\fmodstudio.dll" />
-     <None Include="Assets\Plugins\FMOD\lib\win\x86\fmodstudioL.dll" />
+     <None Include="Assets\Plugins\FMOD\lib\win\x86_64\fmodstudioL.dll" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.1.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

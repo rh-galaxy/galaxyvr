@@ -58,7 +58,9 @@
     <Compile Include="Assets\Plugins\FMOD\src\Editor\SettingsEditor.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\ParamRefDrawer.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EventManager.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Editor\Timeline\FMODEventTrackEditor.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\FindAndReplace.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Editor\BankRefreshWindow.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\CreateEventPopup.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EventCache.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EventBrowser.cs" />
@@ -74,6 +76,9 @@
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EditorEventRef.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\Timeline\FMODEventPlayableEditor.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\StudioEventEmitterEditor.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Editor\BankRefresher.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Editor\SetupWizard.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Editor\ListView.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\BoltIntegration.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -680,6 +685,12 @@
     </Reference>
     <Reference Include="System.Xml.XPath.XDocument">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.1.6f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline">
+      <HintPath>Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>

@@ -32,7 +32,7 @@ namespace FMODUnity
             Identifier = "playInEditor";
         }
 
-        public override string DisplayName { get { return "Play In Editor Settings"; } }
+        public override string DisplayName { get { return "Editor"; } }
         public override void DeclareUnityMappings(Settings settings)
         {
             settings.DeclareRuntimePlatform(RuntimePlatform.OSXEditor, this);
