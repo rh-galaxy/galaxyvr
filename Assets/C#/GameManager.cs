@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
                 return false;
             }
         }
-        catch (System.DllNotFoundException e)
+        catch (System.Exception e) //System.DllNotFoundException e
         {
             Debug.LogError("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. It's likely not in the correct location.\n" + e, this);
             return false;

@@ -62,30 +62,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Plugins\FMOD\BankRefAttribute.cs" />
-    <Compile Include="Assets\Plugins\FMOD\EventRefAttribute.cs" />
-    <Compile Include="Assets\Plugins\FMOD\FMOD_Listener.cs" />
-    <Compile Include="Assets\Plugins\FMOD\FMOD_StudioEventEmitter.cs" />
-    <Compile Include="Assets\Plugins\FMOD\FMODAsset.cs" />
-    <Compile Include="Assets\Plugins\FMOD\OneshotList.cs" />
-    <Compile Include="Assets\Plugins\FMOD\ParamRef.cs" />
-    <Compile Include="Assets\Plugins\FMOD\RuntimeManager.cs" />
-    <Compile Include="Assets\Plugins\FMOD\RuntimeUtils.cs" />
-    <Compile Include="Assets\Plugins\FMOD\Settings.cs" />
-    <Compile Include="Assets\Plugins\FMOD\StudioBankLoader.cs" />
-    <Compile Include="Assets\Plugins\FMOD\StudioEventEmitter.cs" />
-    <Compile Include="Assets\Plugins\FMOD\StudioListener.cs" />
-    <Compile Include="Assets\Plugins\FMOD\StudioParameterTrigger.cs" />
-    <Compile Include="Assets\Plugins\FMOD\Timeline\FMODEventPlayable.cs" />
-    <Compile Include="Assets\Plugins\FMOD\Timeline\FMODEventTrack.cs" />
-    <Compile Include="Assets\Plugins\FMOD\Wrapper\fmod.cs" />
-    <Compile Include="Assets\Plugins\FMOD\Wrapper\fmod_dsp.cs" />
-    <Compile Include="Assets\Plugins\FMOD\Wrapper\fmod_errors.cs" />
-    <Compile Include="Assets\Plugins\FMOD\Wrapper\fmod_studio.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamapplist.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamapps.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamclient.cs" />
-    <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamcontroller.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamfriends.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameserver.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameserverapps.cs" />
@@ -93,17 +72,24 @@
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameserverhttp.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameserverinventory.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameservernetworking.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameservernetworkingsockets.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameservernetworkingutils.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameserverstats.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameserverugc.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamgameserverutils.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamhtmlsurface.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamhttp.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteaminput.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteaminventory.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteammatchmaking.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteammusic.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteammusicremote.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamnetworking.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamnetworkingmessages.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamnetworkingsockets.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamnetworkingutils.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamparentalsettings.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamremoteplay.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamremotestorage.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamscreenshots.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\autogen\isteamugc.cs" />
@@ -125,22 +111,24 @@
     <Compile Include="Assets\Plugins\Steamworks.NET\Steam.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\MatchmakingTypes\gameserveritem_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\MatchmakingTypes\servernetadr_t.cs" />
-    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamClient\HSteamPipe.cs" />
-    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamClient\HSteamUser.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\Steam_api_common\HSteamPipe.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\Steam_api_common\HSteamUser.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamClient\SteamAPI_CheckCallbackRegistered_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamClient\SteamAPI_PostAPIResultInProcess_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamClient\SteamAPIWarningMessageHook_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamClientPublic\CGameID.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamClientPublic\CSteamID.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamClientPublic\HAuthTicket.cs" />
-    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamController\ControllerActionSetHandle_t.cs" />
-    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamController\ControllerAnalogActionHandle_t.cs" />
-    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamController\ControllerDigitalActionHandle_t.cs" />
-    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamController\ControllerHandle_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamDatagramTickets\SteamDatagramHostedAddress.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamDatagramTickets\SteamDatagramRelayAuthTicket.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamFriends\FriendsGroupID_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamHTMLSurface\HHTMLBrowser.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamHTTP\HTTPCookieContainerHandle.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamHTTP\HTTPRequestHandle.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamInput\InputActionSetHandle_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamInput\InputAnalogActionHandle_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamInput\InputDigitalActionHandle_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamInput\InputHandle_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamInventory\SteamInventoryResult_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamInventory\SteamInventoryUpdateHandle_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamInventory\SteamItemDef_t.cs" />
@@ -149,6 +137,20 @@
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamMatchmaking\HServerQuery.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworking\SNetListenSocket_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworking\SNetSocket_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingSockets\ISteamNetworkingConnectionSignaling.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingSockets\ISteamNetworkingSignalingRecvContext.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\FSteamNetworkingSocketsDebugOutput.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\HSteamListenSocket.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\HSteamNetConnection.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\HSteamNetPollGroup.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\SteamNetworkingConfigValue_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\SteamNetworkingErrMsg.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\SteamNetworkingIdentity.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\SteamNetworkingIPAddr.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\SteamNetworkingMessage_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\SteamNetworkingMicroseconds.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamNetworkingtypes\SteamNetworkingPOPID.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamRemoteplay\RemotePlaySessionID_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamRemoteStorage\PublishedFileId_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamRemoteStorage\PublishedFileUpdateHandle_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamRemoteStorage\UGCFileWriteStreamHandle_t.cs" />
@@ -158,13 +160,17 @@
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamTypes\AppId_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamTypes\DepotId_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamTypes\ManifestId_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamTypes\PartyBeaconID_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamTypes\RTime32.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamTypes\SiteId_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamTypes\SteamAPICall_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamTypes\SteamIPAddress_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamUGC\UGCQueryHandle_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamUGC\UGCUpdateHandle_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamUnifiedMessages\ClientUnifiedMessageHandle.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamUserStats\SteamLeaderboard_t.cs" />
     <Compile Include="Assets\Plugins\Steamworks.NET\types\SteamUserStats\SteamLeaderboardEntries_t.cs" />
+    <Compile Include="Assets\Plugins\Steamworks.NET\Version.cs" />
     <None Include="Assets\Plugins\Steamworks.NET\redist\steam_appid.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Prog/unity/Galaxy Forces VR/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
@@ -759,6 +765,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="FMODUnity.csproj">
+      <Project>{340660F6-B9D5-AFB0-EFE8-A21AD76E702C}</Project>
+      <Name>FMODUnity</Name>
+    </ProjectReference>
+    <ProjectReference Include="FMODUnityResonance.csproj">
+      <Project>{602B9D56-E7DA-AEE2-F5CE-EFC9F523A959}</Project>
+      <Name>FMODUnityResonance</Name>
+    </ProjectReference>
+    <ProjectReference Include="FMODUnityResonanceEditor.csproj">
+      <Project>{C3D75A94-021D-C4CF-6291-84DE4EF4C3ED}</Project>
+      <Name>FMODUnityResonanceEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="SteamVR_Input_Editor.csproj">
       <Project>{CC8D91E8-6213-5876-F93D-0E8F45F01E3F}</Project>
       <Name>SteamVR_Input_Editor</Name>
@@ -778,6 +796,10 @@
     <ProjectReference Include="SteamVR_Windows_EditorHelper.csproj">
       <Project>{11D3F371-4290-B42A-B6AB-D67E34D2F3F2}</Project>
       <Name>SteamVR_Windows_EditorHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="FMODUnityEditor.csproj">
+      <Project>{E52D039F-C74C-1379-8256-823117417E87}</Project>
+      <Name>FMODUnityEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
