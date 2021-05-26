@@ -9,16 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef8d824ea7b63742966aaa0e94ac383, type: 3}
+  m_Script: {fileID: 0}
   m_Name: FMODStudioSettings
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp-firstpass:FMODUnity:Settings
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: GalaxyProject/GalaxyProject.fspro
-  SourceProjectPathUnformatted: GalaxyProject/GalaxyProject.fspro
-  SourceBankPathUnformatted: GalaxyProject/Build
+  sourceProjectPath: 
+  SourceProjectPathUnformatted: 
+  sourceBankPath: 
+  SourceBankPathUnformatted: 
   AutomaticEventLoading: 1
-  AutomaticSampleLoading: 1
+  AutomaticSampleLoading: 0
   ImportType: 0
   TargetAssetPath: 
   LoggingLevel: 2
@@ -32,10 +33,8 @@ MonoBehaviour:
     Value: 0
   LiveUpdateSettings:
   - Platform: 1
-    Value: 0
+    Value: 1
   - Platform: 2
-    Value: 2
-  - Platform: 3
     Value: 0
   OverlaySettings:
   - Platform: 1
@@ -47,9 +46,7 @@ MonoBehaviour:
     Value: 1
   - Platform: 2
     Value: 0
-  BankDirectorySettings:
-  - Platform: 2
-    Value: Desktop
+  BankDirectorySettings: []
   VirtualChannelSettings:
   - Platform: 1
     Value: 1024
@@ -61,7 +58,5 @@ MonoBehaviour:
   - Platform: 2
     Value: 32
   Plugins: []
-  MasterBanks:
-  - Master Bank
+  MasterBanks: []
   Banks: []
-  LiveUpdatePort: 9264
