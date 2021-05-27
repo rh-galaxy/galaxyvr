@@ -11,6 +11,8 @@ public class CameraController : MonoBehaviour
     public GameObject oPlayer;
     public GameLevel oMap;
 
+    public Transform cameraRig;
+
     private Vector3 vCamOffset;
     private Vector3 vMapSize;
 
@@ -82,7 +84,7 @@ public class CameraController : MonoBehaviour
     public void InitForMenu()
     {
         bMapMode = false;
-        vCamPos = new Vector3(0, 0, -5.5f);
+        vCamPos = new Vector3(0, 0, -4.3f);
         transform.position = vCamPos;
     }
 
@@ -259,14 +261,14 @@ public class CameraController : MonoBehaviour
         qRotation = Camera.main.transform.rotation;
         if (iRightHanded == 1)
         {
-            vHeadPosition = GameManager.theGM.cameraRig.position + poseActionR[SteamVR_Input_Sources.RightHand].localPosition;
-            qRotation = GameManager.theGM.cameraRig.rotation * poseActionR[SteamVR_Input_Sources.RightHand].localRotation;
+            vHeadPosition = cameraRig.position + poseActionR[SteamVR_Input_Sources.RightHand].localPosition;
+            qRotation = cameraRig.rotation * poseActionR[SteamVR_Input_Sources.RightHand].localRotation;
             vGazeDirection = qRotation * Vector3.forward;
         }
         if (iRightHanded == 2)
         {
-            vHeadPosition = GameManager.theGM.cameraRig.position + poseActionL[SteamVR_Input_Sources.LeftHand].localPosition;
-            qRotation = GameManager.theGM.cameraRig.rotation * poseActionL[SteamVR_Input_Sources.LeftHand].localRotation;
+            vHeadPosition = cameraRig.position + poseActionL[SteamVR_Input_Sources.LeftHand].localPosition;
+            qRotation = cameraRig.rotation * poseActionL[SteamVR_Input_Sources.LeftHand].localRotation;
             vGazeDirection = qRotation * Vector3.forward;
         }
     }

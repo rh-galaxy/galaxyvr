@@ -17,9 +17,6 @@ public class GameManager : MonoBehaviour
 
     public CameraController theCameraHolder;
 
-    /**/public Transform steamCamera;
-    /**/public Transform cameraRig;
-
     internal static bool bValveDevicePresent = false;
     internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
@@ -591,22 +588,10 @@ public class GameManager : MonoBehaviour
             fRecenterTimer += Time.unscaledDeltaTime;
             if (fRecenterTimer > 3.0f)
             {
-                //no effect!
-                //XRDevice.SetTrackingSpaceType(TrackingSpaceType.Stationary);
-                //InputTracking.Recenter();
-
-                //ROTATION
-                // Get current head heading in scene (y-only, to avoid tilting the floor)
-                float offsetAngle = steamCamera.rotation.eulerAngles.y;
-                // Now rotate CameraRig in opposite direction to compensate
-                cameraRig.Rotate(0f, -offsetAngle, 0f);
-
-                //POSITION
-                // Calculate positional offset between CameraRig and Camera
-                Vector3 offsetPos = steamCamera.position - cameraRig.position;
-                // Reposition CameraRig to desired position minus offset
-                Vector3 v = new Vector3(0,0,-5.5f);
-                cameraRig.position = (v - offsetPos);
+                //Valve.VR.OpenVR.Compositor.SetTrackingSpace(ETrackingUniverseOrigin.TrackingUniverseSeated);
+                //the above needs to be set in SteamVR settings for ResetSeatedZeroPose() to work.
+                //Window->SteamVR Input->Advanced Settings->SteamVR Settings->"Tracking Space Origin" drop-down, "Tracking Universe Seated"
+                Valve.VR.OpenVR.System.ResetSeatedZeroPose();
 
                 Menu.bRecenter = false;
                 fRecenterTimer = 0.0f;

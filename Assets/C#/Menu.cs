@@ -295,6 +295,7 @@ public class Menu : MonoBehaviour
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     internal Material oMaterialPentagonLocked, oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
     internal Material oMaterialOctagonPlay, oMaterialOctagonPlayHighlighted;
+    internal Material oMaterialNext, oMaterialNextHighlighted;
     internal Material oMaterialBar, oMaterialBarHighlighted;
     internal Material oMaterialRankGreen, oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
@@ -637,7 +638,7 @@ public class Menu : MonoBehaviour
             int iNum = (iLen > 10 * 4 ? 10 * 4 : iLen); //limit to 40, if its a problem fix later
             for (int i = 0; i < iNum; i++)
             {
-                Vector3 vPos = new Vector3(1000, (i % 10) * 1.05f - 5.00f, 1.20f);
+                Vector3 vPos = new Vector3(1000, (i % 10) * 1.05f - 5.00f, 2.81f);
                 float fRotateAngle = fStartAngle + (i / 10) * 23.0f;
                 S_Levels level = new S_Levels();
                 level.szLevelDescription = ""; //set when level info is set
@@ -655,7 +656,7 @@ public class Menu : MonoBehaviour
         //level text
         GameObject oCustomPathText;
         oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-        oCustomPathText.transform.position = new Vector3(1000.0f, 6.3f, 1.20f);
+        oCustomPathText.transform.position = new Vector3(1000.0f, 6.3f, 2.81f);
         oCustomPathText.transform.localScale = new Vector3(1.6f, 1.6f, 1.0f);
         oCustomPathText.GetComponent<TextMeshPro>().text = "User contributed levels";
         oCustomPathText.SetActive(true);
@@ -691,6 +692,8 @@ public class Menu : MonoBehaviour
             oMaterialPentagonHighlighted = Resources.Load("LevelPentagonHigh", typeof(Material)) as Material;
             oMaterialOctagonPlay = Resources.Load("LevelOctagonPlay", typeof(Material)) as Material;
             oMaterialOctagonPlayHighlighted = Resources.Load("LevelOctagonPlayHigh", typeof(Material)) as Material;
+            oMaterialNext = Resources.Load("256_Next", typeof(Material)) as Material;
+            oMaterialNextHighlighted = Resources.Load("256_NextHigh", typeof(Material)) as Material;
             oMaterialBar = Resources.Load("LevelBar150", typeof(Material)) as Material;
             oMaterialBarHighlighted = Resources.Load("LevelBar150High", typeof(Material)) as Material;
         }
@@ -733,14 +736,14 @@ public class Menu : MonoBehaviour
             Vector3 vPos, vAroundPoint = new Vector3(0, 0, -9.0f);
             for (int i = 0; i < iNumRace; i++)
             {
-                vPos = new Vector3(0, (i % 3) * 1.00f - 2.40f, 1.20f);
+                vPos = new Vector3(0, (i % 3) * 1.00f - 2.40f, 2.81f);
                 float fRotateAngle = fStartAngle + i * (fAngleRange / (iNumRace - 1));
                 aMenuLevels[i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, aLevels[i], i);
             }
             int iStartOffs = iNumRace;
             for (int i = 0; i < iNumMission; i++)
             {
-                vPos = new Vector3(0, (i % 3) * 1.00f + 2.40f, 1.20f);
+                vPos = new Vector3(0, (i % 3) * 1.00f + 2.40f, 2.81f);
                 float fRotateAngle = fStartAngle + i * (fAngleRange / (iNumMission - 1));
                 aMenuLevels[iStartOffs + i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, aLevels[iStartOffs + i], iStartOffs + i);
             }
@@ -750,45 +753,45 @@ public class Menu : MonoBehaviour
             Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
             //menu options
-            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -36, "Recenter", "Recenter", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -36, "Recenter", "Recenter", 30.0f, 12.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 9.0f);
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
             oCameraHolder.SetMovementMode(CameraController.bPointMovement);
-            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
+            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
 
             GameManager.theGM.bEasyMode = PlayerPrefs.GetInt("MyUseEasyMode", 1) != 0;
-            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -7.5f, 1.20f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
+            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             QualitySettings.SetQualityLevel(iQuality, true);
-            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 9.0f);
-            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 45, "High", "Qual2", 30.0f, 9.0f);
-            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -6.0f, 1.20f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 9.0f);
+            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 9.0f);
+            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 45, "High", "Qual2", 30.0f, 9.0f);
+            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 9.0f);
         }
         if (iIncrementalInit == 8)
         {
             //next/prev buttons
-            Vector3 vPos = new Vector3(0.0f, 1.0f, -0.1f);
+            Vector3 vPos = new Vector3(0.0f, 1.0f, 3.1f);
             if (oMenuNext1 != null) oMenuNext1.DestroyObj();
-            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -9.0f), 50, ">", "Next1", 18.0f, 9.0f);
-            vPos = new Vector3(1000.0f, 1.0f, -0.1f);
+            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -9.0f), 55, ">", "Next1", 26.0f, 9.0f);
+            vPos = new Vector3(1000.0f, 1.0f, 3.1f);
             if (oMenuPrev1 != null) oMenuPrev1.DestroyObj();
-            oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), -50, "<", "Prev1", 18.0f, 9.0f);
+            oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), -55, "<", "Prev1", 26.0f, 9.0f);
 
             //additional official levels with hiscore (user levels approved levels)
             // can't be initialized here, only after webpage has run (InitLevelRanking())
-            vPos = new Vector3(1000.0f, 1.0f, -0.1f);
+            vPos = new Vector3(1000.0f, 1.0f, 3.1f);
             if (oMenuNext2 != null) oMenuNext2.DestroyObj();
-            oMenuNext2 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), 50, ">", "Next2", 18.0f, 9.0f);
-            vPos = new Vector3(2000.0f, 1.0f, -0.1f);
+            oMenuNext2 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), 55, ">", "Next2", 26.0f, 9.0f);
+            vPos = new Vector3(2000.0f, 1.0f, 3.1f);
             if (oMenuPrev2 != null) oMenuPrev2.DestroyObj();
-            oMenuPrev2 = new C_Item2InMenu(vPos, new Vector3(2000, 0, -9.0f), -50, "<", "Prev2", 18.0f, 9.0f);
+            oMenuPrev2 = new C_Item2InMenu(vPos, new Vector3(2000, 0, -9.0f), -55, "<", "Prev2", 26.0f, 9.0f);
         }
         if (iIncrementalInit == 9)
         {
@@ -802,7 +805,7 @@ public class Menu : MonoBehaviour
             int iNum = (fileInfo.Length > 10 * 4 ? 10 * 4 : fileInfo.Length); //limit to 40, if its a problem fix later
             for (int i = 0; i < iNum; i++)
             {
-                Vector3 vPos = new Vector3(2000, (i % 10) * 1.05f - 5.00f, 1.20f);
+                Vector3 vPos = new Vector3(2000, (i % 10) * 1.05f - 5.00f, 2.81f);
                 float fRotateAngle = fStartAngle + (i / 10) * 23.0f;
                 S_Levels level = new S_Levels();
                 level.iLevelType = (int)LevelType.MAP_MISSION;
@@ -816,7 +819,7 @@ public class Menu : MonoBehaviour
             //level text
             GameObject oCustomPathText;
             oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-            oCustomPathText.transform.position = new Vector3(2000.0f, fileInfo.Length < 22 ? 0.0f : 6.0f, 1.20f);
+            oCustomPathText.transform.position = new Vector3(2000.0f, fileInfo.Length < 22 ? 0.0f : 6.0f, 2.81f);
             oCustomPathText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels (" + s + "), download editor from www.galaxy-forces-vr.com";
             oCustomPathText.SetActive(true);
@@ -894,10 +897,10 @@ public class Menu : MonoBehaviour
         if (oMenuReplayYR != null) oMenuReplayYR.oLevelQuadMeshRenderer.material = oMaterialOctagonUnlocked;
         if (oMenuPlay != null) oMenuPlay.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
 
-        if (oMenuNext1 != null) oMenuNext1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
-        if (oMenuPrev1 != null) oMenuPrev1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
-        if (oMenuNext2 != null) oMenuNext2.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
-        if (oMenuPrev2 != null) oMenuPrev2.oLevelQuadMeshRenderer.material = oMaterialOctagonPlay;
+        if (oMenuNext1 != null) oMenuNext1.oLevelQuadMeshRenderer.material = oMaterialNext;
+        if (oMenuPrev1 != null) oMenuPrev1.oLevelQuadMeshRenderer.material = oMaterialNext;
+        if (oMenuNext2 != null) oMenuNext2.oLevelQuadMeshRenderer.material = oMaterialNext;
+        if (oMenuPrev2 != null) oMenuPrev2.oLevelQuadMeshRenderer.material = oMaterialNext;
 
         if (oMenuRecenter != null) oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuQuit != null) oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBar;
@@ -1054,19 +1057,19 @@ public class Menu : MonoBehaviour
             }
             else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
-                oMenuNext1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
+                oMenuNext1.oLevelQuadMeshRenderer.material = oMaterialNextHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Prev1") == 0)
             {
-                oMenuPrev1.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
+                oMenuPrev1.oLevelQuadMeshRenderer.material = oMaterialNextHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Next2") == 0)
             {
-                oMenuNext2.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
+                oMenuNext2.oLevelQuadMeshRenderer.material = oMaterialNextHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Prev2") == 0)
             {
-                oMenuPrev2.oLevelQuadMeshRenderer.material = oMaterialOctagonPlayHighlighted;
+                oMenuPrev2.oLevelQuadMeshRenderer.material = oMaterialNextHighlighted;
             }
 
             else if (oHitInfo.collider.name.CompareTo("MCancelAll") == 0)
@@ -1531,12 +1534,13 @@ public class Menu : MonoBehaviour
 
             //create a quad with a text on, in the pos of each menu object
             float fScaleX = ((i_szText.CompareTo(">") == 0) || (i_szText.CompareTo("<") == 0)) ? 1.0f : 1.5f;
+            float fScaleY = ((i_szText.CompareTo(">") == 0) || (i_szText.CompareTo("<") == 0)) ? 4.0f : 1.0f;
             oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             oLevelQuad.transform.parent = Menu.theMenu.transform;
             oLevelQuad.AddComponent<BoxCollider>();
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);
-            oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f * fScaleX, i_fScale * 0.4f, 1.0f);
+            oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f * fScaleX, i_fScale * 0.4f * fScaleY, 1.0f);
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             if (i_szText.CompareTo(">") == 0)
                 i_szText = "";
