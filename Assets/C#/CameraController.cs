@@ -7,9 +7,9 @@ public class CameraController : MonoBehaviour
 {
     public static CameraController instance;
 
-    public bool bMapMode;
-    public GameObject oPlayer;
-    public GameLevel oMap;
+    bool bMapMode;
+    GameObject oPlayer;
+    GameLevel oMap;
 
     public Transform cameraRig;
 
