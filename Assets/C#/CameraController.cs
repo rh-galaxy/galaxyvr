@@ -8,9 +8,9 @@ public class CameraController : MonoBehaviour
 {
     public static CameraController instance;
 
-    public bool bMapMode;
-    public GameObject oPlayer;
-    public GameLevel oMap;
+    bool bMapMode;
+    GameObject oPlayer;
+    GameLevel oMap;
 
     private Vector3 vCamOffset;
     private Vector3 vMapSize;
