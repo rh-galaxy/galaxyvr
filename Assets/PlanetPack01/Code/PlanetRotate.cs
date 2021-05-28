@@ -16,7 +16,7 @@ public class PlanetRotate : MonoBehaviour
     void Start()
     {
 #if UNITY_EDITOR
-        EditorUtility.SetSelectedWireframeHidden(GetComponent<Renderer>(), true);
+        EditorUtility.SetSelectedRenderState(GetComponent<Renderer>(), EditorSelectedRenderState.Wireframe);
 #endif
     }
 

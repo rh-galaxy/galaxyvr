@@ -60,7 +60,7 @@ public class HttpHiscore
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
+        if ((www.result == UnityWebRequest.Result.ConnectionError) || (www.result == UnityWebRequest.Result.ProtocolError))
         {
             Debug.Log(www.error);
         }
@@ -161,7 +161,7 @@ public class HttpHiscore
         www = CreateUnityWebRequest(url, data); //UnityWebRequest.Post(url, data); <- didn't work
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
+        if ((www.result == UnityWebRequest.Result.ConnectionError) || (www.result == UnityWebRequest.Result.ProtocolError))
         {
             Debug.Log(www.error);
         }
@@ -179,7 +179,7 @@ public class HttpHiscore
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
+        if ((www.result == UnityWebRequest.Result.ConnectionError) || (www.result == UnityWebRequest.Result.ProtocolError))
         {
             Debug.Log(www.error);
         }
@@ -203,7 +203,7 @@ public class HttpHiscore
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
+        if ((www.result == UnityWebRequest.Result.ConnectionError) || (www.result == UnityWebRequest.Result.ProtocolError))
         {
             Debug.Log(www.error);
         }
