@@ -58,7 +58,7 @@ public class HttpHiscore
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
-        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        if ((www.result == UnityWebRequest.Result.ConnectionError) || (www.result == UnityWebRequest.Result.ProtocolError))
         {
             Debug.Log(www.error);
         }
@@ -82,7 +82,7 @@ public class HttpHiscore
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
-        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        if ((www.result == UnityWebRequest.Result.ConnectionError) || (www.result == UnityWebRequest.Result.ProtocolError))
         {
             Debug.Log(www.error);
         }
