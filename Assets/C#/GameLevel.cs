@@ -290,7 +290,6 @@ public class GameLevel : MonoBehaviour
 
         //generate new high res map based on the textures of the tiles
         int substeps = 6;
-        //if (iWidth * iHeight > 40 * 100) substeps = 5; //performance
         float pixelsamplepos = 32.0f / substeps;
         LoadGrid(substeps, pixelsamplepos);
 
@@ -320,7 +319,6 @@ public class GameLevel : MonoBehaviour
         bool bIsCustom = iLevelIndex >= 200 && iLevelIndex < 400;
         bool bIsCustom2 = iLevelIndex >= 400;
         int substeps = 6;
-        //if (iWidth * iHeight > 40 * 100) substeps = 5; //performance
         if (iLoadBeginState == 0)
         {
             bMapLoaded = false;
@@ -453,12 +451,16 @@ public class GameLevel : MonoBehaviour
             //done: LoadDesPass2 is split in one iteration per object that needs loading
             // (max 5 ms each, but there may be variations)
             bool bFinished = LoadDesPass2();
-
-            //(user name not currently used in Player)
-            string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
-            player.Init(szUser, 0, stPlayerStartPos[0], this);
 ///**/Debug.Log("LoadDesPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
-            if (bFinished) iFinalizeCounter++;
+
+            if (bFinished)
+            {
+                //(user name not currently used in Player)
+                string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
+                player.Init(szUser, 0, stPlayerStartPos[0], this);
+
+                iFinalizeCounter++;
+            }
         }
         else if (iFinalizeCounter >= 2 && iFinalizeCounter <= 4)
         {
