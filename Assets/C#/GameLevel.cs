@@ -422,6 +422,7 @@ public class GameLevel : MonoBehaviour
         {
             //pause physics
             Time.timeScale = 0.0f;
+
             LoadDesPass2Init();
             iFinalizeCounter++;
         }
@@ -431,10 +432,14 @@ public class GameLevel : MonoBehaviour
             // (max 5 ms each, but there may be variations)
             bool bFinished = LoadDesPass2();
 
-            //(user name not currently used in Player)
-            string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
-            player.Init(szUser, 0, stPlayerStartPos[0], this);
-            if (bFinished) iFinalizeCounter++;
+            if (bFinished)
+            {
+                //(user name not currently used in Player)
+                string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
+                player.Init(szUser, 0, stPlayerStartPos[0], this);
+
+                iFinalizeCounter++;
+            }
         }
         else if (iFinalizeCounter >= 2 && iFinalizeCounter <= 4)
         {

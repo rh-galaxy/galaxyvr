@@ -240,9 +240,12 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
                 //to make it run in editor where we have no web page url
                 //GameLevel.szLevel = "2race01";
-                GameLevel.szLevel = "EntryLevel";
-                szReplayId = "2075437975870745";
-                bReplayQuest = false;
+                //GameLevel.szLevel = "EntryLevel";
+                //szReplayId = "2075437975870745";
+                GameLevel.szLevel = "SpiralSnail";
+                szReplayId = "3660795390684463";
+                bReplayQuest = true;
+                //bReplayQuest = false;
                 GameLevel.iLevelIndex = 400; //make it handle as a userlevel (above original 55)
 #else
                 GameLevel.szLevel = ParseURLParams(Application.absoluteURL, "Level");
