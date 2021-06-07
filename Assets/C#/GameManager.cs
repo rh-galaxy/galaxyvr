@@ -542,12 +542,14 @@ public class GameManager : MonoBehaviour
     //float t1;
     float fRecenterTimer = 0.0f;
     float fLongpressTimer = 0.0f;
+
+    //////////////////////////////////////////////////////////////////////////////////////////
     float fMultiplayerTimer = 25.0f;
     bool bMultiplayerUpdateJoinInProgress = false;
     bool bMultiplayerUpdateCreateInProgress = false;
-
     bool bWeHaveJoined = false;
     bool bWeHaveCreated = false;
+    //////////////////////////////////////////////////////////////////////////////////////////
     void Update()
     {
 #if LOGPROFILERDATA
@@ -650,6 +652,7 @@ public class GameManager : MonoBehaviour
 
         UpdateFade();
 
+        //////////////////////////////////////////////////////////////////////////////////////
         //start network code
         int iAction = 0;
         do
@@ -763,6 +766,7 @@ public class GameManager : MonoBehaviour
             }
         }
         //end network code
+        //////////////////////////////////////////////////////////////////////////////////////
 
         //to ignore input below, only way back is to unpause
         if (bPause) return;

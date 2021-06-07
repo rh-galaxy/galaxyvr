@@ -966,14 +966,12 @@ public class Menu : MonoBehaviour
                     for (int i = 0; i < aMenuLevels2.Length; i++)
                     {
                         oMatTemp = oMaterialOctagonUnlocked;
+                        if (aMenuLevels2[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonUnlocked;
+
                         if (i == iIndex - 400)
                         {
                             if (aMenuLevels2[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonHighlighted;
                             else oMatTemp = oMaterialOctagonHighlighted;
-                        }
-                        else
-                        {
-                            if (aMenuLevels2[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonUnlocked;
                         }
                         aMenuLevels2[i].oLevelQuadMeshRenderer.material = oMatTemp;
                     }
@@ -981,14 +979,12 @@ public class Menu : MonoBehaviour
                 for (int i = 0; i < aMenuCustomLevels.Length; i++)
                 {
                     oMatTemp = oMaterialOctagonUnlocked;
+                    if (aMenuCustomLevels[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonUnlocked;
+
                     if (i == iIndex - 200)
                     {
                         if (aMenuCustomLevels[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonHighlighted;
                         else oMatTemp = oMaterialOctagonHighlighted;
-                    }
-                    else
-                    {
-                        if (aMenuCustomLevels[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonUnlocked;
                     }
                     aMenuCustomLevels[i].oLevelQuadMeshRenderer.material = oMatTemp;
                 }
@@ -1329,12 +1325,16 @@ public class Menu : MonoBehaviour
                 for (int i = 0; i < aMenuLevels2.Length; i++)
                 {
                     oMatTemp = oMaterialOctagonUnlocked;
+                    if (aMenuLevels2[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonUnlocked;
+
                     aMenuLevels2[i].oLevelQuadMeshRenderer.material = oMatTemp;
                 }
             }
             for (int i = 0; i < aMenuCustomLevels.Length; i++)
             {
                 oMatTemp = oMaterialOctagonUnlocked;
+                if (aMenuCustomLevels[i].oLevel.iLevelType == (int)LevelType.MAP_RACE) oMatTemp = oMaterialPentagonUnlocked;
+
                 aMenuCustomLevels[i].oLevelQuadMeshRenderer.material = oMatTemp;
             }
         }
