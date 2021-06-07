@@ -5,13 +5,16 @@ Release
 Known issues/small things undone
 - Maybe have a "remove bullet"-msg in the replay data.
 - Maybe have a "door movement"-msg in the replay data.
-- Test different textures for the single colored cave edges.
-- Test different background textures for the back-plate and borders.
 - Windows on the house is not exactly the same height.
 - Make XBox-controller not be unresponsive after pause and unpause
  (after accessing Virtual Desktop) (Might not be possible, and not a requirement)
+- Test different textures for the single colored cave edges.
+ (done - no good)
+- Test different background textures for the back-plate and borders.
+ (done - no good)
 - Add a texture on the landingzones with a pattern, it must work on
  different platform widths, or maybe do per width (2..12) different textures.
+ (done - no good)
 
 Must do:
 - Enable code for Oculus entitlement check (done, and keep it done later in Release version)
