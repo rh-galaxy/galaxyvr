@@ -236,7 +236,7 @@ public class GameManager : MonoBehaviour
         switch (iState)
         {
             case -3:
-                //get parameters
+            //get parameters
 #if UNITY_EDITOR
                 //to make it run in editor where we have no web page url
                 //GameLevel.szLevel = "2race01";
