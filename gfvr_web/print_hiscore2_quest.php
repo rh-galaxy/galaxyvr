@@ -63,7 +63,7 @@ function print_hiscore_quest()
 		}
 		
 		////////////////////////////////////////////////////////////////////////////////////////////
-		$select_string = "SELECT levels_t.level AS Level, levels_t.is_time AS IsTime, levels_t.is_singleplayer AS IsSP FROM levels_t ORDER BY levels_t.is_time DESC, levels_t.ordering ASC";
+		$select_string = "SELECT levels_t.level AS Level, levels_t.is_time AS IsTime, levels_t.is_singleplayer AS IsSP FROM levels_t ORDER BY levels_t.ordering ASC, levels_t.is_time DESC";
 		// make query
 		$result = @mysqli_query($db, $select_string);
 		// succeeded
