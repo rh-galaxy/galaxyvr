@@ -450,6 +450,7 @@ public class GameManager : MonoBehaviour
         {
             int fr = fs.Read(preLoadBytes, 0 + iChunkNr * iChunkSize, iChunkSize);
             if (fr != iChunkSize) allRead = true;
+            iChunkNr++;
             Thread.Sleep(5);
         }
     }
