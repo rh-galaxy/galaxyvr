@@ -8,6 +8,7 @@ using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
 
+
 using Oculus.Platform;
 
 public class GameManager : MonoBehaviour
@@ -302,6 +303,7 @@ public class GameManager : MonoBehaviour
         {
             int fr = fs.Read(preLoadBytes, 0 + iChunkNr * iChunkSize, iChunkSize);
             if (fr != iChunkSize) allRead = true;
+            iChunkNr++;
             Thread.Sleep(5);
         }
     }
@@ -387,7 +389,6 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
-
 
     //float t1;
     float fRecenterTimer = 0.0f;
