@@ -535,7 +535,7 @@ MonoBehaviour:
   HasSourceProject: 1
   HasPlatforms: 1
   sourceProjectPath: GalaxyProject/GalaxyProject.fspro
-  sourceBankPath: GalaxyProject\Build
+  sourceBankPath: GalaxyProject/Build
   SourceBankPathUnformatted: GalaxyProject/Build
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1

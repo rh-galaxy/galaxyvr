@@ -109,6 +109,12 @@ public class GameManager : MonoBehaviour
     //////start of oculus specific code
     bool InitOculus()
     {
+        //hack for handling mac platform which will throw uncatched exception
+        if (UnityEngine.Application.platform != RuntimePlatform.WindowsEditor
+         && UnityEngine.Application.platform != RuntimePlatform.WindowsPlayer
+         && UnityEngine.Application.platform != RuntimePlatform.Android)
+            return false;
+
         //init Oculus SDK
         try
         {
@@ -119,7 +125,8 @@ public class GameManager : MonoBehaviour
         catch (UnityException e)
         {
             Debug.LogException(e);
-            UnityEngine.Application.Quit();
+            //UnityEngine.Application.Quit();
+            return false;
         }
 
         bOculusDevicePresent = true;
