@@ -433,6 +433,7 @@ public class GameManager : MonoBehaviour
     //this is insane and totally like nothing else, but to avoid a 6 second freeze when the file is not in cache
     // this is loaded here once hopefully while the user spend some seconds in the menu before this will be accessed by LoadSceneAsync.
     //so much for async.
+	//note: with planet texture data now 100MB instead of 1000MB this is not needed as much
     byte[] preLoadBytes = new byte[1024 * 1024]; //1MB buffer
     string preLoadDataPath;
     Thread preLoadThread;
