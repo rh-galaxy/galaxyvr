@@ -189,3 +189,4 @@ QualitySettings:
   m_PerPlatformDefaultQuality:
     Android: 0
     Standalone: 1
+    WebGL: 0

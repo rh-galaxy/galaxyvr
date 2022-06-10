@@ -91,7 +91,7 @@ public class CameraController : MonoBehaviour
     public void GetMouseMovementSmooth(out float o_fX, out float o_fY)
     {
         Mouse mouse = Mouse.current;
-        Vector2 v = mouse.delta.ReadValue();
+        Vector2 v = mouse.delta.ReadValue() * Time.deltaTime * 7.0f;
         fCurX += v.x;
         fCurY += v.y;
 
@@ -246,7 +246,7 @@ public class CameraController : MonoBehaviour
             }
             if (mouse != null)
             {
-                if (mouse.rightButton.isPressed)
+                if (mouse.rightButton.isPressed || mouse.leftButton.isPressed)
                 {
                     bPointMovementInMenu = false;
                     iRightHanded = 0;

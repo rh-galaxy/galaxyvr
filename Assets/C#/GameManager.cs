@@ -60,6 +60,12 @@ public class GameManager : MonoBehaviour
         bool bInited = false;
         bInited = InitOculus();
 
+        if(bInited) //extra check for headset
+        {
+            UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
+            if (headDevice == null || !headDevice.isValid) bInited = false;
+        }
+
         if (!bInited)
         {
             //no VR
@@ -293,6 +299,7 @@ public class GameManager : MonoBehaviour
     //this is insane and totally like nothing else, but to avoid a 6 second freeze when the file is not in cache
     // this is loaded here once hopefully while the user spend some seconds in the menu before this will be accessed by LoadSceneAsync.
     //so much for async.
+    //note: with planet texture data now 100MB instead of 1000MB this is not needed as much
     byte[] preLoadBytes = new byte[1024 * 1024]; //1MB buffer
     string preLoadDataPath;
     Thread preLoadThread;
@@ -436,7 +443,7 @@ public class GameManager : MonoBehaviour
         //recenter
         if (!bTrackingOriginSet) //always do once
         {
-            if(headDevice!=null && headDevice.isValid)
+            if (headDevice!=null && headDevice.isValid)
             {
                 headDevice.subsystem.TrySetTrackingOriginMode(TrackingOriginModeFlags.Device);
                 bTrackingOriginSet = true;
@@ -476,7 +483,7 @@ public class GameManager : MonoBehaviour
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
         bool bPauseNow = bPause; //no change below
-        if (bOculusDevicePresent)
+        if (bOculusDevicePresent && !bNoVR)
         {
             bPauseNow = (!OVRPlugin.hasInputFocus || !OVRPlugin.hasVrFocus) /*|| !userPresent)*/;
         }
