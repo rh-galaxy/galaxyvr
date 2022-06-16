@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour
     private Vector3 vCamOffset;
     private Vector3 vMapSize;
 
+    internal bool bLayDown = false;
     internal static bool bSnapMovement = false;
     internal static bool bPointMovement = false;
     bool bPointMovementInMenu = false;
@@ -61,7 +62,7 @@ public class CameraController : MonoBehaviour
         oGazeQuad.transform.localScale = new Vector3(.38f, .38f, 1);
         oGazeQuad.SetActive(false);
 
-        iRightHanded = 0;
+        oRayQuad.SetActive(false);
     }
 
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
@@ -90,37 +91,49 @@ public class CameraController : MonoBehaviour
     float fStepX = 0, fStepY = 0;
     public void GetMouseMovementSmooth(out float o_fX, out float o_fY)
     {
+        o_fX = 0;
+        o_fY = 0;
+
         Mouse mouse = Mouse.current;
-        Vector2 v = mouse.delta.ReadValue() * Time.deltaTime * 7.0f;
-        fCurX += v.x;
-        fCurY += v.y;
-
-        float fStep = Time.deltaTime / 0.050f; //% of movement to distribute each time called
-        if (fStep > 1.0f) fStep = 1.0f;  //if frametime too long we must not move faster
-        if (fStep <= 0.0f) fStep = 1.0f; //if the timer has too low resolution compared to the framerate
-
-        fStepX = fCurX * fStep;
-        fStepY = fCurY * fStep;
-
-        if (Mathf.Abs(fCurX) > Mathf.Abs(fStepX))
+        if (mouse != null && mouse.leftButton.isPressed)
         {
-            fCurX -= fStepX;
-            o_fX = fStepX;
+            Vector2 v = mouse.delta.ReadValue() * Time.deltaTime * 7.0f;
+            fCurX += v.x;
+            fCurY += v.y;
+
+            float fStep = Time.deltaTime / 0.050f; //% of movement to distribute each time called
+            if (fStep > 1.0f) fStep = 1.0f;  //if frametime too long we must not move faster
+            if (fStep <= 0.0f) fStep = 1.0f; //if the timer has too low resolution compared to the framerate
+
+            fStepX = fCurX * fStep;
+            fStepY = fCurY * fStep;
+
+            if (Mathf.Abs(fCurX) > Mathf.Abs(fStepX))
+            {
+                fCurX -= fStepX;
+                o_fX = fStepX;
+            }
+            else
+            {
+                o_fX = fCurX;
+                fCurX = 0;
+            }
+
+            if (Mathf.Abs(fCurY) > Mathf.Abs(fStepY))
+            {
+                fCurY -= fStepY;
+                o_fY = fStepY;
+            }
+            else
+            {
+                o_fY = fCurY;
+                fCurY = 0;
+            }
         }
         else
         {
-            o_fX = fCurX;
+            //reset so old values does nothing when mouse pressed again
             fCurX = 0;
-        }
-
-        if (Mathf.Abs(fCurY) > Mathf.Abs(fStepY))
-        {
-            fCurY -= fStepY;
-            o_fY = fStepY;
-        }
-        else
-        {
-            o_fY = fCurY;
             fCurY = 0;
         }
     }
@@ -142,12 +155,12 @@ public class CameraController : MonoBehaviour
             else fY += fMouseX * 3.0f;
             fX -= fMouseY * 3.0f;
 
-            if (keyboard.rKey.isPressed) { fX = 5.0f; fY = 0; fZ = 0; }
+            if (keyboard != null && keyboard.rKey.isPressed) { fX = 5.0f; fY = 0; fZ = 0; }
 
             transform.eulerAngles = new Vector3(fX, fY, fZ);
         }
 
-        if(bMapMode)
+        if (bMapMode)
         {
             Vector3 v = oPlayer.transform.position;
             float fLeftLimit = -(vMapSize.x / 20.0f) + 0.5f;
@@ -196,6 +209,13 @@ public class CameraController : MonoBehaviour
     {
         bPointMovement = bMotionController;
     }
+    public void SetLayDownView(bool bLayDownView)
+    {
+        bLayDown = bLayDownView;
+        if(bLayDown) transform.Rotate(75.0f, 0, 0);
+        else transform.Rotate(-75.0f, 0, 0);
+    }
+
     public void SetPointingInfo(Vector3 vHitPoint, Quaternion qHitDir, Vector3 vOrigin, Quaternion qOriginDir)
     {
         //move the cursor to the point where the raycast hit
