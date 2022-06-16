@@ -97,9 +97,9 @@ public class CameraController : MonoBehaviour
         Mouse mouse = Mouse.current;
         if (mouse != null && mouse.leftButton.isPressed)
         {
-            Vector2 v = mouse.delta.ReadValue();
-            fCurX += v.x * 0.15f;
-            fCurY += v.y * 0.15f;
+            Vector2 v = mouse.delta.ReadValue() * Time.deltaTime * 7.0f;
+            fCurX += v.x;
+            fCurY += v.y;
 
             float fStep = Time.deltaTime / 0.050f; //% of movement to distribute each time called
             if (fStep > 1.0f) fStep = 1.0f;  //if frametime too long we must not move faster
@@ -266,7 +266,7 @@ public class CameraController : MonoBehaviour
             }
             if (mouse != null)
             {
-                if (mouse.rightButton.isPressed)
+                if (mouse.rightButton.isPressed || mouse.leftButton.isPressed)
                 {
                     bPointMovementInMenu = false;
                     iRightHanded = 0;

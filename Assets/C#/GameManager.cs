@@ -392,8 +392,6 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-
-    //float t1;
     float fRecenterTimer = 0.0f;
     float fLongpressTimer = 0.0f;
     void Update()
