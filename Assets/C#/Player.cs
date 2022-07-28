@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public GameLevel oMap;
+    Vector3 vMapSize;
 
     public GameObject oShip;
     public ParticleSystem oThruster;
@@ -117,6 +118,7 @@ public class Player : MonoBehaviour
         bInited = true;
 
         oMap = i_oMap;
+        vMapSize = oMap.GetMapSize();
         vStartPos = i_vStartPos;
         fLandTime = 0.0f;
 
@@ -271,28 +273,35 @@ public class Player : MonoBehaviour
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
             szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
             szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
-            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
+            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0 ||
+            szOtherObject.StartsWith("Enemy"))
         {
-            //minimum impulse to damage (0 - always damage on map)
-            fImpulse -= 0.0f;
-            if (fImpulse <= 0) fImpulse = 0.0f;
+            if (szOtherObject.StartsWith("Enemy4") || szOtherObject.StartsWith("Enemy5"))
+            {
+                fShipHealth -= 8.0f; //instant kill
+            }
+            else
+            {
+                //minimum impulse to damage (0 - always damage on map)
+                fImpulse -= 0.0f;
+                if (fImpulse <= 0) fImpulse = 0.0f;
 
-            fShipHealth -= (fImpulse / 80.0f) * 0.5f;
+                fShipHealth -= (fImpulse / 80.0f) * 0.5f;
 
-            bScrapeFadeOut = false;
-            oASScrape.volume = 1.0f;
-            oASScrape.Play();
+                bScrapeFadeOut = false;
+                oASScrape.volume = 1.0f;
+                oASScrape.Play();
 
-            c = collision.GetContact(0);
-            oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
-            oWallsCollEmission.enabled = true;
+                c = collision.GetContact(0);
+                oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
+                oWallsCollEmission.enabled = true;
+            }
         }
 
         //collide with enemy body
-        if (szOtherObject.StartsWith("Enemy"))
-        {
-            if (!bFreeFromBullets) fShipHealth -= 8.0f; //instant kill
-        }
+        //if (szOtherObject.StartsWith("Enemy"))
+        //{
+        //}
 
         //enemy bullet, take damage
         if (szOtherObject.StartsWith("BulletE"))
@@ -357,7 +366,8 @@ public class Player : MonoBehaviour
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
             szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
             szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
-            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
+            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0 ||
+            szOtherObject.StartsWith("Enemy"))
         {
             fShipHealth -= 0.5f * Time.deltaTime;
 
@@ -382,7 +392,8 @@ public class Player : MonoBehaviour
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
             szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
             szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
-            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
+            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0 ||
+            szOtherObject.StartsWith("Enemy"))
         {
             bScrapeFadeOut = true;
             oWallsCollEmission.enabled = false;
@@ -397,12 +408,19 @@ public class Player : MonoBehaviour
     Vector2 vForceDir = new Vector2(0, 0);
     int iLastInput = 0; //bool bitfield
     float fReplayMessageTimer = 0;
-    Vector2 vLastPosition;
     float[] fMeanSpeeds = new float[16];
     internal float fMeanSpeed = 0.0f;
     internal int iNumEnemiesNear = 0;
     internal int iNumBulletsNear = 0;
     float fCurrentSpeedSeg = 0;
+
+    Vector2 vLastPosition;
+    Vector2 vLastVel;
+    float fLastDirection;
+
+    Vector2 vLastPositionNotOverlapped;
+    float fLastDirectionNotOverlapped;
+
     void FixedUpdate()
     {
         if (!bInited)
@@ -410,6 +428,18 @@ public class Player : MonoBehaviour
 
         float fDist = (oRb.position - vLastPosition).magnitude;
         if (fDist > 0.80f) fDist = 0.0f; //detect when player has jumped to a new position (after death)
+
+        //this is a safety for if the ship is thrown outside the map area by first getting stuck then getting loose
+        if (oRb.position.x < -vMapSize.x / 20.0f || oRb.position.x > vMapSize.x / 20.0f
+            || oRb.position.y < -vMapSize.y / 20.0f || oRb.position.y > vMapSize.y / 20.0f) fShipHealth = 0.0f;
+
+        //this is for sudden velocity increase when getting loose
+        float m1 = vLastVel.magnitude;
+        float m2 = oRb.velocity.magnitude;
+        if (m2 - m1 > 0.10f)
+        {
+            oRb.velocity = vLastVel;
+        }
 
         //mean speed calculation (used in race music)
         int iLastSec = (int)fCurrentSpeedSeg;
@@ -434,7 +464,9 @@ public class Player : MonoBehaviour
         //distance achievement
         fAchieveDistance += fDist * 10;
 
+        fLastDirection = oRb.rotation;
         vLastPosition = oRb.position;
+        vLastVel = oRb.velocity;
         fTotalTimeMission += Time.fixedDeltaTime;
         if (bTimeCounting) fTotalTime += Time.fixedDeltaTime;
 
@@ -604,8 +636,6 @@ public class Player : MonoBehaviour
             fTemp = (fFuel != 0 && bThrottle) ? SHIP_THRUST : 0.0f;
             if (fTemp != fAcceleration)
             {
-                //ParticleSystem.EmissionModule oEM = m_oThruster.emission;
-                //using that does not work: (oEM.enabled = false;), but oThruster.enableEmission = false; is depricated...
                 if (fTemp != 0)
                 {
                     oThrusterEmission.enabled = true;
