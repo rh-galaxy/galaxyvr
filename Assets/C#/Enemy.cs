@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     internal static int iOwnerIdBase = 10; //must be set to 10 also before load of every level
     int iOwnerId;
-    S_EnemyInfo stInfo;
+    internal S_EnemyInfo stInfo;
 
     GameLevel oMap;
     public GameObject enemy0;
@@ -98,7 +98,7 @@ public class Enemy : MonoBehaviour
 
         iNumHits = SENEMY_HITSTOKILL[stInfo.iEnemyType];
 
-        name = "Enemy";
+        name = "Enemy" + stInfo.iEnemyType.ToString();
     }
 
     public void HitByBullet()

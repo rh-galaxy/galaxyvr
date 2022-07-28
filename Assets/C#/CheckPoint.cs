@@ -17,7 +17,7 @@ public class CheckPoint : MonoBehaviour
 
     void Start()
     {
-
+        
     }
 
     public void Init(Vector2 i_vPos1, Vector2 i_vPos2, int i_iCPNum)
