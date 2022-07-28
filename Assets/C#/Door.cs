@@ -13,7 +13,7 @@ public class Door : MonoBehaviour
     Material oMaterialRed;
     Material oMaterialGreen;
 
-    GameObject[] oButtons;
+    internal GameObject[] oButtons;
 
     S_DoorInfo stDoorInfo;
 
