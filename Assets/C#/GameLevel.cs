@@ -104,6 +104,7 @@ public class GameLevel : MonoBehaviour
 
     int[,] aMapHighres;
     int[,] aMap;
+    internal EdgeCollider2D[] mapColliders;
 
     int iTilesetInfoIndex = 0;
     S_TilesetInfo[] m_stTilesetInfos = {
@@ -139,7 +140,7 @@ public class GameLevel : MonoBehaviour
 
     //map objects
     public LandingZone oLandingZoneObjBase;
-    List<LandingZone> aLandingZoneList;
+    internal List<LandingZone> aLandingZoneList;
 
     public CheckPoint oCheckPointObjBase;
     internal List<CheckPoint> aCheckPointList;
@@ -465,6 +466,11 @@ public class GameLevel : MonoBehaviour
         else if (iFinalizeCounter >= 2 && iFinalizeCounter <= 4)
         {
             oMeshGen.GenerateMeshFinalize(iFinalizeCounter - 2);
+            mapColliders = gameObject.GetComponents<EdgeCollider2D>();
+            for (int i = 0; i < mapColliders.Length; i++)
+            {
+                mapColliders[i].edgeRadius = 0.000002f;
+            }
             iFinalizeCounter++;
         }
         else if (iFinalizeCounter >= 5 && iFinalizeCounter <= 9)

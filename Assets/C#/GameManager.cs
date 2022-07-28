@@ -393,7 +393,6 @@ public class GameManager : MonoBehaviour
     }
 
     float fRecenterTimer = 0.0f;
-    float fLongpressTimer = 0.0f;
     void Update()
     {
 #if LOGPROFILERDATA

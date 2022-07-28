@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public GameLevel oMap;
+    Vector3 vMapSize;
 
     public GameObject oShip;
     public ParticleSystem oThruster;
@@ -101,6 +102,7 @@ public class Player : MonoBehaviour
     float fExplosionTimer = 0.0f;
 
     float fMovementTimer = 0.0f;
+    float fFireTimer = 0.0f;
     float fFullThrottleTimer = 0.0f;
 
     bool bInited;
@@ -124,6 +126,7 @@ public class Player : MonoBehaviour
         bInited = true;
 
         oMap = i_oMap;
+        vMapSize = oMap.GetMapSize();
         vStartPos = i_vStartPos;
         fLandTime = 0.0f;
 
@@ -278,28 +281,35 @@ public class Player : MonoBehaviour
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
             szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
             szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
-            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
+            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0 ||
+            szOtherObject.StartsWith("Enemy"))
         {
-            //minimum impulse to damage (0 - always damage on map)
-            fImpulse -= 0.0f;
-            if (fImpulse <= 0) fImpulse = 0.0f;
+            if (szOtherObject.StartsWith("Enemy4") || szOtherObject.StartsWith("Enemy5"))
+            {
+                fShipHealth -= 8.0f; //instant kill
+            }
+            else
+            {
+                //minimum impulse to damage (0 - always damage on map)
+                fImpulse -= 0.0f;
+                if (fImpulse <= 0) fImpulse = 0.0f;
 
-            fShipHealth -= (fImpulse / 80.0f) * 0.5f;
+                fShipHealth -= (fImpulse / 80.0f) * 0.5f;
 
-            bScrapeFadeOut = false;
-            oASScrape.volume = 1.0f;
-            oASScrape.Play();
+                bScrapeFadeOut = false;
+                oASScrape.volume = 1.0f;
+                oASScrape.Play();
 
-            c = collision.GetContact(0);
-            oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
-            oWallsCollEmission.enabled = true;
+                c = collision.GetContact(0);
+                oWallsColl.transform.position = new Vector3(c.point.x, c.point.y, .15f);
+                oWallsCollEmission.enabled = true;
+            }
         }
 
         //collide with enemy body
-        if (szOtherObject.StartsWith("Enemy"))
-        {
-            if (!bFreeFromBullets) fShipHealth -= 8.0f; //instant kill
-        }
+        //if (szOtherObject.StartsWith("Enemy"))
+        //{
+        //}
 
         //enemy bullet, take damage
         if (szOtherObject.StartsWith("BulletE"))
@@ -364,7 +374,8 @@ public class Player : MonoBehaviour
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
             szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
             szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
-            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
+            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0 ||
+            szOtherObject.StartsWith("Enemy"))
         {
             fShipHealth -= 0.5f * Time.deltaTime;
 
@@ -389,7 +400,8 @@ public class Player : MonoBehaviour
         if (szOtherObject.CompareTo("Map") == 0 || szOtherObject.StartsWith("Slider") ||
             szOtherObject.CompareTo("Balk") == 0 || szOtherObject.StartsWith("Knapp") ||
             szOtherObject.CompareTo("Barrels") == 0 || szOtherObject.StartsWith("Tree") ||
-            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0)
+            szOtherObject.StartsWith("House") || szOtherObject.CompareTo("RadioTower") == 0 ||
+            szOtherObject.StartsWith("Enemy"))
         {
             bScrapeFadeOut = true;
             oWallsCollEmission.enabled = false;
@@ -606,13 +618,22 @@ public class Player : MonoBehaviour
     Vector2 vForceDir = new Vector2(0, 0);
     int iLastInput = 0; //bool bitfield
     float fReplayMessageTimer = 0;
-    Vector2 vLastPosition;
     float[] fMeanSpeeds = new float[16];
     internal float fMeanSpeed = 0.0f;
     internal int iNumEnemiesNear = 0;
     internal int iNumBulletsNear = 0;
     float fCurrentSpeedSeg = 0;
     int iBestMove = 0;
+
+    Vector2 vEnemyFirePos = new Vector2(0, 0);
+
+    Vector2 vLastPosition;
+    Vector2 vLastVel;
+    float fLastDirection;
+
+    Vector2 vLastPositionNotOverlapped;
+    float fLastDirectionNotOverlapped;
+
     void FixedUpdate()
     {
         if (!bInited)
@@ -620,6 +641,18 @@ public class Player : MonoBehaviour
 
         float fDist = (oRb.position - vLastPosition).magnitude;
         if (fDist > 0.80f) fDist = 0.0f; //detect when player has jumped to a new position (after death)
+
+        //this is a safety for if the ship is thrown outside the map area by first getting stuck then getting loose
+        if (oRb.position.x < -vMapSize.x / 20.0f || oRb.position.x > vMapSize.x / 20.0f
+            || oRb.position.y < -vMapSize.y / 20.0f || oRb.position.y > vMapSize.y / 20.0f) fShipHealth = 0.0f;
+
+        //this is for sudden velocity increase when getting loose
+        float m1 = vLastVel.magnitude;
+        float m2 = oRb.velocity.magnitude;
+        if (m2 - m1 > 0.10f)
+        {
+            oRb.velocity = vLastVel;
+        }
 
         //mean speed calculation (used in race music)
         int iLastSec = (int)fCurrentSpeedSeg;
@@ -644,7 +677,9 @@ public class Player : MonoBehaviour
         //distance achievement
         fAchieveDistance += fDist * 10;
 
+        fLastDirection = oRb.rotation;
         vLastPosition = oRb.position;
+        vLastVel = oRb.velocity;
         fTotalTimeMission += Time.fixedDeltaTime;
         if (bTimeCounting) fTotalTime += Time.fixedDeltaTime;
 
@@ -703,17 +738,20 @@ public class Player : MonoBehaviour
             bool stickLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickL);
 
             //get input from joystick
-            if (stickR.x > 0.5f || stickL.x > 0.5f) bRight = true;
-            if (stickR.x < -0.5f || stickL.x < -0.5f) bLeft = true;
-            if ((stickR.y < -0.7f || stickL.y < -0.7f) && bLeft == false && bRight == false) bAdjust = true;
-            if (stickR.y < -0.85f || stickL.y < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
+            if(!bMotionMovementEnabled)
+            {
+                if (stickR.x > 0.5f || stickL.x > 0.5f) bRight = true;
+                if (stickR.x < -0.5f || stickL.x < -0.5f) bLeft = true;
+                if ((stickR.y < -0.7f || stickL.y < -0.7f) && bLeft == false && bRight == false) bAdjust = true;
+                if (stickR.y < -0.85f || stickL.y < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
 
+                if (button1R || button1L) bNewFireState = true; //button A (X)
+            }
             if (triggerR > 0.3f || triggerL > 0.3f) bThrottle = true;
             if (button2R || button2L) bThrottle = true; //button B (Y)
-            if (button1R || button1L) bNewFireState = true; //button A (X)
 
             Gamepad gamepad = Gamepad.current;
-            if (gamepad != null)
+            if (gamepad != null && !bMotionMovementEnabled)
             {
                 Vector2 stickG1 = gamepad.rightStick.ReadValue();
                 Vector2 stickG2 = gamepad.leftStick.ReadValue();
@@ -732,11 +770,63 @@ public class Player : MonoBehaviour
 
             if (bMotionMovementEnabled)
             {
+                fFireTimer += Time.fixedDeltaTime;
                 fMovementTimer += Time.fixedDeltaTime;
                 if(!bLanded) fFullThrottleTimer -= Time.fixedDeltaTime;
                 else fFullThrottleTimer = 0.3f;
+                
+                //auto landing
+                if (!bThrottle && fDirection!=90.0f)
+                {
+                    for (int i = 0; i < oMap.aLandingZoneList.Count; i++)
+                    {
+                        float w = oMap.aLandingZoneList[i].iZoneSize * 0.1f;
+                        if (transform.position.y > oMap.aLandingZoneList[i].vPos.y &&
+                            transform.position.y < oMap.aLandingZoneList[i].vPos.y + 0.4f &&
+                            transform.position.x > (oMap.aLandingZoneList[i].vPos.x - w / 2) &&
+                            transform.position.x < (oMap.aLandingZoneList[i].vPos.x + w / 2))
+                        {
+                            bAdjust = true;
+                        }
+                    }
+                }
 
-                if ((triggerR > 0.3f || triggerL > 0.3f) && !bAdjust && !bRight && !bLeft)
+                //auto fire
+                if (fFireTimer > 0.25f)
+                {
+                    for (int i = 0; i < oMap.aEnemyList.Count; i++)
+                    {
+                        if (oMap.aEnemyList[i] == null) continue;
+                        vEnemyFirePos.x = oMap.aEnemyList[i].vPos.x;
+                        vEnemyFirePos.y = oMap.aEnemyList[i].vPos.y;
+                        float d = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
+                        if (d < 0.035f)
+                        {
+                            bNewFireState = true;
+                            fFireTimer = 0.0f;
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < oMap.aDoorList.Count; i++)
+                    {
+                        if (bNewFireState) break;
+                        int numButtons = oMap.aDoorList[i].oButtons.GetLength(0);
+                        for (int j = 0; j < numButtons; j++)
+                        {
+                            vEnemyFirePos.x = oMap.aDoorList[i].oButtons[j].transform.position.x;
+                            vEnemyFirePos.y = oMap.aDoorList[i].oButtons[j].transform.position.y;
+                            float d = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
+                            if (d < 0.04f)
+                            {
+                                bNewFireState = true;
+                                fFireTimer = -0.4f;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (bThrottle && !bAdjust && !bRight && !bLeft)
                 {
                     //new move descicion
                     if (fMovementTimer > 0.07f)
@@ -777,11 +867,11 @@ public class Player : MonoBehaviour
             //keyboard
             Keyboard keyboard = Keyboard.current;
             if(keyboard != null) {
-                if (keyboard.enterKey.isPressed || keyboard.spaceKey.isPressed) bNewFireState = true;
+                if (!bMotionMovementEnabled) if (keyboard.enterKey.isPressed || keyboard.spaceKey.isPressed) bNewFireState = true;
                 if (keyboard.upArrowKey.isPressed || keyboard.wKey.isPressed) bThrottle = true;
                 if (keyboard.downArrowKey.isPressed || keyboard.sKey.isPressed) bAdjust = true;
-                if (keyboard.leftArrowKey.isPressed || keyboard.aKey.isPressed) bLeft = true;
-                if (keyboard.rightArrowKey.isPressed || keyboard.dKey.isPressed) bRight = true;
+                if (keyboard.leftArrowKey.isPressed || keyboard.aKey.isPressed) { bLeft = true; bAdjust = false; }
+                if (keyboard.rightArrowKey.isPressed || keyboard.dKey.isPressed) { bRight = true; bAdjust = false; }
             }
 
             if (!bFire)
@@ -878,8 +968,6 @@ public class Player : MonoBehaviour
             fTemp = (fFuel != 0 && bThrottle) ? SHIP_THRUST : 0.0f;
             if (fTemp != fAcceleration)
             {
-                //ParticleSystem.EmissionModule oEM = m_oThruster.emission;
-                //using that does not work: (oEM.enabled = false;), but oThruster.enableEmission = false; is depricated...
                 if (fTemp != 0)
                 {
                     oThrusterEmission.enabled = true;
@@ -1018,6 +1106,25 @@ public class Player : MonoBehaviour
 
         float fSin = Mathf.Sin(fDirection * (Mathf.PI / 180.0f));
         float fCos = Mathf.Cos(fDirection * (Mathf.PI / 180.0f));
+        if (bMotionMovementEnabled)
+        {
+            //compensate for player velocity
+            //not done
+            //compensate for enemy velocity
+            //not done
+
+            //we fire at where the hand points
+            vEnemyFirePos = vSteerToPoint;
+
+            float fD = Vector2.SignedAngle(Vector2.right, vEnemyFirePos - oRb.position);
+            int iNumCounts = 0;
+            if (fD < 0)
+                iNumCounts = (int)(fD / 360.0f) - 1;
+            fD -= iNumCounts * 360.0f;
+
+            fSin = Mathf.Sin(fD * (Mathf.PI / 180.0f));
+            fCos = Mathf.Cos(fD * (Mathf.PI / 180.0f));
+        }
         stBulletInfo.vPos = oRb.position + new Vector2(fCos * 0.094f, fSin * 0.094f);
         stBulletInfo.vVel = oRb.velocity + new Vector2(fCos * Bullet.BULLETBASEVEL, fSin * Bullet.BULLETBASEVEL);
         stBulletInfo.fDirection = fDirection;
