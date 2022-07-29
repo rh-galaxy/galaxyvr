@@ -151,7 +151,7 @@ public class CameraController : MonoBehaviour
             transform.eulerAngles = new Vector3(fX, fY, fZ);
         }
 
-        if(bMapMode)
+        if (bMapMode)
         {
             Vector3 v = oPlayer.transform.position;
             float fLeftLimit = -(vMapSize.x / 20.0f) + 0.5f;
