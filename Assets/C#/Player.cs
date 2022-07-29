@@ -432,14 +432,12 @@ public class Player : MonoBehaviour
         //this is a safety for if the ship is thrown outside the map area by first getting stuck then getting loose
         if (oRb.position.x < -vMapSize.x / 20.0f || oRb.position.x > vMapSize.x / 20.0f
             || oRb.position.y < -vMapSize.y / 20.0f || oRb.position.y > vMapSize.y / 20.0f) fShipHealth = 0.0f;
-
         //this is for sudden velocity increase when getting loose
-        float m1 = vLastVel.magnitude;
-        float m2 = oRb.velocity.magnitude;
-        if (m2 - m1 > 0.10f)
+        if (oRb.velocity.magnitude - vLastVel.magnitude > 0.10f)
         {
             oRb.velocity = vLastVel;
         }
+        //^may not be needed, v1.85 fixed collision issues
 
         //mean speed calculation (used in race music)
         int iLastSec = (int)fCurrentSpeedSeg;

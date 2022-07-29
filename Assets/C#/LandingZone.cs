@@ -5,10 +5,10 @@ using UnityEngine;
 public class LandingZone : MonoBehaviour
 {
     internal int iId;
-    Vector2 vPos;
+    internal Vector2 vPos;
 
     int iWidth, iHeight;
-    int iZoneSize; //width in tiles
+    internal int iZoneSize; //width in tiles
 
     //other
     internal bool bHomeBase;
