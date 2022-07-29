@@ -438,22 +438,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //long press on grip button is back
         bool bBackButton = false;
-        /*{
-            bool gripRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.grip, out float gripR);
-            bool gripLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.grip, out float gripL);
-
-            if (gripR > 0.5f || gripL > 0.5f) fLongpressTimer += Time.unscaledDeltaTime;
-            else fLongpressTimer = 0;
-
-            if (fLongpressTimer > 2.0f)
-            {
-                fLongpressTimer = 0;
-                bBackButton = true;
-            }
-        }*/
-        //^back button on left controller used instead
 
         //get user present
         bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
