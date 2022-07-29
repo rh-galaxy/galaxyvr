@@ -630,9 +630,6 @@ public class Player : MonoBehaviour
     Vector2 vLastVel;
     float fLastDirection;
 
-    Vector2 vLastPositionNotOverlapped;
-    float fLastDirectionNotOverlapped;
-
     void FixedUpdate()
     {
         if (!bInited)
@@ -644,14 +641,12 @@ public class Player : MonoBehaviour
         //this is a safety for if the ship is thrown outside the map area by first getting stuck then getting loose
         if (oRb.position.x < -vMapSize.x / 20.0f || oRb.position.x > vMapSize.x / 20.0f
             || oRb.position.y < -vMapSize.y / 20.0f || oRb.position.y > vMapSize.y / 20.0f) fShipHealth = 0.0f;
-
         //this is for sudden velocity increase when getting loose
-        float m1 = vLastVel.magnitude;
-        float m2 = oRb.velocity.magnitude;
-        if (m2 - m1 > 0.10f)
+        if (oRb.velocity.magnitude - vLastVel.magnitude > 0.10f)
         {
             oRb.velocity = vLastVel;
         }
+        //^may not be needed, v1.85 fixed collision issues
 
         //mean speed calculation (used in race music)
         int iLastSec = (int)fCurrentSpeedSeg;
@@ -731,7 +726,7 @@ public class Player : MonoBehaviour
             float fTrg2 = 0;
             try
             {
-                if (!bMotionMovementEnabled) fX = SteamVR_Actions.default_Steering.axis.x;
+                fX = SteamVR_Actions.default_Steering.axis.x;
                 if (!bMotionMovementEnabled) fY = SteamVR_Actions.default_Steering.axis.y;
                 fTrg2 = SteamVR_Actions.default_Throttle.axis;
             }
@@ -753,7 +748,7 @@ public class Player : MonoBehaviour
                 fFireTimer += Time.fixedDeltaTime;
                 fMovementTimer += Time.fixedDeltaTime;
                 if(!bLanded) fFullThrottleTimer -= Time.fixedDeltaTime;
-                else fFullThrottleTimer = 0.3f;
+                else fFullThrottleTimer = 0.28f;
                 
                 //auto landing
                 if (!bThrottle && fDirection!=90.0f)
@@ -772,15 +767,19 @@ public class Player : MonoBehaviour
                 }
 
                 //auto fire
-                if (fFireTimer > 0.25f)
+                if (fFireTimer > 0.2f)
                 {
                     for (int i = 0; i < oMap.aEnemyList.Count; i++)
                     {
                         if (oMap.aEnemyList[i] == null) continue;
                         vEnemyFirePos.x = oMap.aEnemyList[i].vPos.x;
                         vEnemyFirePos.y = oMap.aEnemyList[i].vPos.y;
-                        float d = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
-                        if (d < 0.035f)
+
+                        float d1 = (oRb.position - vEnemyFirePos).sqrMagnitude;
+                        if (d1 > (570.0f / 320.0f)) continue;
+
+                        float d2 = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
+                        if (d2 < 0.035f)
                         {
                             bNewFireState = true;
                             fFireTimer = 0.0f;
@@ -795,11 +794,15 @@ public class Player : MonoBehaviour
                         {
                             vEnemyFirePos.x = oMap.aDoorList[i].oButtons[j].transform.position.x;
                             vEnemyFirePos.y = oMap.aDoorList[i].oButtons[j].transform.position.y;
-                            float d = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
-                            if (d < 0.04f)
+
+                            float d1 = (oRb.position - vEnemyFirePos).sqrMagnitude;
+                            if (d1 > (570.0f / 320.0f)) continue;
+
+                            float d2 = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
+                            if (d2 < 0.04f)
                             {
                                 bNewFireState = true;
-                                fFireTimer = -0.4f;
+                                fFireTimer = -0.4f; //extra time between shots if aiming at door
                                 break;
                             }
                         }
