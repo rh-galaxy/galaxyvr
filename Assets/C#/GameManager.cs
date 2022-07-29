@@ -885,8 +885,6 @@ public class GameManager : MonoBehaviour
                 }
                 break;
         }
-        //if (((Time.realtimeSinceStartup - t1) * 1000.0f) > 20) Debug.Log("GMUpdate: " + ((Time.realtimeSinceStartup - t1) * 1000.0f) + " State " + iState.ToString());
-        //t1 = Time.realtimeSinceStartup;
     }
 
     bool bIsMapScene = false;

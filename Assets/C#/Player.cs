@@ -645,14 +645,12 @@ public class Player : MonoBehaviour
         //this is a safety for if the ship is thrown outside the map area by first getting stuck then getting loose
         if (oRb.position.x < -vMapSize.x / 20.0f || oRb.position.x > vMapSize.x / 20.0f
             || oRb.position.y < -vMapSize.y / 20.0f || oRb.position.y > vMapSize.y / 20.0f) fShipHealth = 0.0f;
-
         //this is for sudden velocity increase when getting loose
-        float m1 = vLastVel.magnitude;
-        float m2 = oRb.velocity.magnitude;
-        if (m2 - m1 > 0.10f)
+        if (oRb.velocity.magnitude - vLastVel.magnitude > 0.10f)
         {
             oRb.velocity = vLastVel;
         }
+        //^may not be needed, v1.85 fixed collision issues
 
         //mean speed calculation (used in race music)
         int iLastSec = (int)fCurrentSpeedSeg;
@@ -738,10 +736,10 @@ public class Player : MonoBehaviour
             bool stickLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickL);
 
             //get input from joystick
+            if (stickR.x > 0.35f || stickL.x > 0.35f) bRight = true;
+            if (stickR.x < -0.35f || stickL.x < -0.35f) bLeft = true;
             if(!bMotionMovementEnabled)
             {
-                if (stickR.x > 0.35f || stickL.x > 0.35f) bRight = true;
-                if (stickR.x < -0.35f || stickL.x < -0.35f) bLeft = true;
                 if ((stickR.y < -0.75f || stickL.y < -0.75f) && bLeft == false && bRight == false) bAdjust = true;
                 if (stickR.y < -0.85f || stickL.y < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
 
@@ -773,7 +771,7 @@ public class Player : MonoBehaviour
                 fFireTimer += Time.fixedDeltaTime;
                 fMovementTimer += Time.fixedDeltaTime;
                 if(!bLanded) fFullThrottleTimer -= Time.fixedDeltaTime;
-                else fFullThrottleTimer = 0.3f;
+                else fFullThrottleTimer = 0.28f;
                 
                 //auto landing
                 if (!bThrottle && fDirection!=90.0f)
@@ -792,15 +790,19 @@ public class Player : MonoBehaviour
                 }
 
                 //auto fire
-                if (fFireTimer > 0.25f)
+                if (fFireTimer > 0.2f)
                 {
                     for (int i = 0; i < oMap.aEnemyList.Count; i++)
                     {
                         if (oMap.aEnemyList[i] == null) continue;
                         vEnemyFirePos.x = oMap.aEnemyList[i].vPos.x;
                         vEnemyFirePos.y = oMap.aEnemyList[i].vPos.y;
-                        float d = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
-                        if (d < 0.035f)
+
+                        float d1 = (oRb.position - vEnemyFirePos).sqrMagnitude;
+                        if (d1 > (570.0f / 320.0f)) continue;
+
+                        float d2 = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
+                        if (d2 < 0.035f)
                         {
                             bNewFireState = true;
                             fFireTimer = 0.0f;
@@ -815,11 +817,15 @@ public class Player : MonoBehaviour
                         {
                             vEnemyFirePos.x = oMap.aDoorList[i].oButtons[j].transform.position.x;
                             vEnemyFirePos.y = oMap.aDoorList[i].oButtons[j].transform.position.y;
-                            float d = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
-                            if (d < 0.04f)
+
+                            float d1 = (oRb.position - vEnemyFirePos).sqrMagnitude;
+                            if (d1 > (570.0f / 320.0f)) continue;
+
+                            float d2 = (vSteerToPoint - vEnemyFirePos).sqrMagnitude;
+                            if (d2 < 0.04f)
                             {
                                 bNewFireState = true;
-                                fFireTimer = -0.4f;
+                                fFireTimer = -0.4f; //extra time between shots if aiming at door
                                 break;
                             }
                         }
