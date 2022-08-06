@@ -5,7 +5,7 @@ using Valve.VR;
 
 public class CameraController : MonoBehaviour
 {
-    public static CameraController instance;
+    public static CameraController instance = null;
 
     bool bMapMode;
     GameObject oPlayer;
@@ -131,7 +131,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    float fX = 5.0f, fY = 0, fZ = 0;
+    float fX = 0.0f, fY = 0, fZ = 0;
     float fSnapTimer = 0;
     bool bFirst = true;
     void LateUpdate()
@@ -146,7 +146,7 @@ public class CameraController : MonoBehaviour
             else fY += fMouseX * 3.0f;
             fX -= fMouseY * 3.0f;
 
-            if (Input.GetKey(KeyCode.R)) { fX = 5.0f; fY = 0; fZ = 0; }
+            if (Input.GetKey(KeyCode.R)) { fX = 0.0f; fY = 0; fZ = 0; }
 
             transform.eulerAngles = new Vector3(fX, fY, fZ);
         }

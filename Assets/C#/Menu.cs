@@ -268,6 +268,8 @@ public class Menu : MonoBehaviour
         aLevels[54].szLevelName = "1mission29";
         aLevels[54].szLevelDisplayName = "29";
         aLevels[54].szLevelDescription = "Mission29 - Last mission";
+
+        cameraHolder = CameraController.instance;
     }
 
     public Material oSkyBoxMat1;
@@ -276,7 +278,7 @@ public class Menu : MonoBehaviour
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
 
-    CameraController oCameraHolder;
+    CameraController cameraHolder;
 
     C_Item2InMenu oMenuEasyMode;
     C_Item2InMenu oMenuRecenter;
@@ -300,7 +302,6 @@ public class Menu : MonoBehaviour
     internal Material oMaterialRankGreen, oMaterialRankBronze, oMaterialRankSilver, oMaterialRankGold;
     void Start()
     {
-        oCameraHolder = CameraController.instance;
         CreateNetworkInfo();
 
         //done incrementally in Update
@@ -470,12 +471,8 @@ public class Menu : MonoBehaviour
     Vector3 vHeadPosition;
     Vector3 vGazeDirection;
     Vector3 vRotation;
-    //float t1 = 0;
     public bool SetLevelInfoPass2(LevelInfo i_stLevelInfo, int n)
     {
-        //Debug.Log("SetLevelInfoPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f +" n "+ n.ToString());
-        //t1 = Time.realtimeSinceStartup;
-
         if (n == 0)
         {
             oLevelInfoContainer.SetActive(false);
@@ -617,7 +614,6 @@ public class Menu : MonoBehaviour
             return true;
         }
 
-        //Debug.Log("SetLevelInfoPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         return false;
     }
 
@@ -682,7 +678,7 @@ public class Menu : MonoBehaviour
                 case 5: RenderSettings.skybox = oSkyBoxMat5; break;
             }
         }
-        if (iIncrementalInit == 2)
+        else if (iIncrementalInit == 2)
         {
             oMaterialOctagonLocked = Resources.Load("LevelOctagonGrey", typeof(Material)) as Material;
             oMaterialOctagonUnlocked = Resources.Load("LevelOctagon", typeof(Material)) as Material;
@@ -697,7 +693,7 @@ public class Menu : MonoBehaviour
             oMaterialBar = Resources.Load("LevelBar150", typeof(Material)) as Material;
             oMaterialBarHighlighted = Resources.Load("LevelBar150High", typeof(Material)) as Material;
         }
-        if (iIncrementalInit == 3)
+        else if (iIncrementalInit == 3)
         {
             oWRScoreText1TextMesh = oWRScoreText1.GetComponent<TextMesh>();
             oWRScoreText2TextMesh = oWRScoreText2.GetComponent<TextMesh>();
@@ -713,7 +709,7 @@ public class Menu : MonoBehaviour
             oLimitsText2TextMesh = oLimitsText2.GetComponent<TextMesh>();
             oLimitsText3TextMesh = oLimitsText3.GetComponent<TextMesh>();
         }
-        if (iIncrementalInit == 4)
+        else if (iIncrementalInit == 4)
         {
             oMaterialRankGreen = Resources.Load("RankGreen", typeof(Material)) as Material;
             oMaterialRankBronze = Resources.Load("RankBronze", typeof(Material)) as Material;
@@ -724,11 +720,11 @@ public class Menu : MonoBehaviour
             oMiniMapMaterial = Resources.Load("MiniMap", typeof(Material)) as Material;
             oRankQuadRenderer = oRankQuad.GetComponent<MeshRenderer>();
         }
-        if (iIncrementalInit == 5)
+        else if (iIncrementalInit == 5)
         {
 
         }
-        if (iIncrementalInit == 6)
+        else if (iIncrementalInit == 6)
         {
             //original 55 levels
             float fStartAngle = -45;
@@ -748,7 +744,7 @@ public class Menu : MonoBehaviour
                 aMenuLevels[iStartOffs + i] = new C_LevelInMenu(vPos, vAroundPoint, fRotateAngle, aLevels[iStartOffs + i], iStartOffs + i);
             }
         }
-        if (iIncrementalInit == 7)
+        else if (iIncrementalInit == 7)
         {
             Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
@@ -762,7 +758,7 @@ public class Menu : MonoBehaviour
             oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 9.0f);
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
-            oCameraHolder.SetMovementMode(CameraController.bPointMovement);
+            cameraHolder.SetMovementMode(CameraController.bPointMovement);
             oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
 
             GameManager.theGM.bEasyMode = PlayerPrefs.GetInt("MyUseEasyMode", 1) != 0;
@@ -774,7 +770,7 @@ public class Menu : MonoBehaviour
             oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 45, "High", "Qual2", 30.0f, 9.0f);
             oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 9.0f);
         }
-        if (iIncrementalInit == 8)
+        else if (iIncrementalInit == 8)
         {
             //next/prev buttons
             Vector3 vPos = new Vector3(0.0f, 1.0f, 3.1f);
@@ -793,7 +789,7 @@ public class Menu : MonoBehaviour
             if (oMenuPrev2 != null) oMenuPrev2.DestroyObj();
             oMenuPrev2 = new C_Item2InMenu(vPos, new Vector3(2000, 0, -9.0f), -55, "<", "Prev2", 26.0f, 9.0f);
         }
-        if (iIncrementalInit == 9)
+        else if (iIncrementalInit == 9)
         {
             //custom levels, own files on device
             float fStartAngle = -45;
@@ -824,7 +820,7 @@ public class Menu : MonoBehaviour
             oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels (" + s + "), download editor from www.galaxy-forces-vr.com";
             oCustomPathText.SetActive(true);
         }
-        if (iIncrementalInit == 10)
+        else if (iIncrementalInit == 10)
         {
             //change fov if non VR since that default setting shows to wide fov
             // and is not behaving reliably
@@ -843,7 +839,7 @@ public class Menu : MonoBehaviour
         }
 
         iIncrementalInit++;
-        if(iIncrementalInit<11) return;
+        if (iIncrementalInit < 11) return;
 
         Material oMatTemp;
         if (aMenuLevels == null || aMenuLevels[0] == null)
@@ -917,10 +913,10 @@ public class Menu : MonoBehaviour
         bool bHitLevel = false;
         RaycastHit oHitInfo;
 
-        if (Physics.Raycast(oCameraHolder.vHeadPosition, oCameraHolder.vGazeDirection, out oHitInfo, 400.0f))
+        if (Physics.Raycast(cameraHolder.vHeadPosition, cameraHolder.vGazeDirection, out oHitInfo, 400.0f))
         {
             //a hit, place cursor on object, show ray
-            oCameraHolder.SetPointingInfo(oHitInfo.point, Quaternion.FromToRotation(Vector3.back, oHitInfo.normal), oCameraHolder.vHeadPosition, oCameraHolder.qRotation);
+            cameraHolder.SetPointingInfo(oHitInfo.point, Quaternion.FromToRotation(Vector3.back, oHitInfo.normal), cameraHolder.vHeadPosition, cameraHolder.qRotation);
 
             //find which object we hit
 
@@ -1274,7 +1270,7 @@ public class Menu : MonoBehaviour
                     PlayerPrefs.SetInt("MyUsePointMovement", CameraController.bPointMovement ? 1 : 0);
                     PlayerPrefs.Save();
                     bPlaySelectSound = true;
-                    oCameraHolder.SetMovementMode(CameraController.bPointMovement);
+                    cameraHolder.SetMovementMode(CameraController.bPointMovement);
                 }
                 else if (oHitInfo.collider.name.CompareTo("EasyMode") == 0)
                 {
@@ -1305,8 +1301,8 @@ public class Menu : MonoBehaviour
             }
 
             //set at max distance
-            Vector3 vPoint = (oCameraHolder.vHeadPosition + oCameraHolder.vGazeDirection * 17.0f);
-            oCameraHolder.SetPointingInfo(vPoint, oCameraHolder.qRotation, oCameraHolder.vHeadPosition, oCameraHolder.qRotation);
+            Vector3 vPoint = (cameraHolder.vHeadPosition + cameraHolder.vGazeDirection * 17.0f);
+            cameraHolder.SetPointingInfo(vPoint, cameraHolder.qRotation, cameraHolder.vHeadPosition, cameraHolder.qRotation);
         }
 
         //nothing highlighted?
@@ -1342,10 +1338,10 @@ public class Menu : MonoBehaviour
         //next/prev
         if (fAdjust != 0)
         {
-            float x = oCameraHolder.transform.position.x + fAdjust;
-            float z = oCameraHolder.transform.position.z;
+            float x = cameraHolder.transform.position.x + fAdjust;
+            float z = cameraHolder.transform.position.z;
             if (x >= 0.0f && x <= 2000.0f)
-                oCameraHolder.transform.position = new Vector3(x, 0, z);
+                cameraHolder.transform.position = new Vector3(x, 0, z);
         }
     }
 
@@ -1371,6 +1367,7 @@ public class Menu : MonoBehaviour
             //create a quad with a text on, in the pos of each menu object
             oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             oLevelQuad.transform.parent = Menu.theMenu.transform;
+            MonoBehaviour.DestroyImmediate(oLevelQuad.GetComponent<MeshCollider>());
             oLevelQuad.AddComponent<BoxCollider>();
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = "Coll"+i_iLevelId.ToString();
             oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);
@@ -1492,6 +1489,7 @@ public class Menu : MonoBehaviour
             oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
             oLevelQuad.transform.rotation = i_oParent.transform.rotation; //why doesn't this come from the parent already
+            MonoBehaviour.DestroyImmediate(oLevelQuad.GetComponent<MeshCollider>());
             oLevelQuad.AddComponent<BoxCollider>();
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
@@ -1537,6 +1535,7 @@ public class Menu : MonoBehaviour
             float fScaleY = ((i_szText.CompareTo(">") == 0) || (i_szText.CompareTo("<") == 0)) ? 4.0f : 1.0f;
             oLevelQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
             oLevelQuad.transform.parent = Menu.theMenu.transform;
+            MonoBehaviour.DestroyImmediate(oLevelQuad.GetComponent<MeshCollider>());
             oLevelQuad.AddComponent<BoxCollider>();
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
             oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);

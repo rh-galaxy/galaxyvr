@@ -1878,7 +1878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1de1f554d6823b34ea4a3f6760c43946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  theCameraHolder: {fileID: 440394742}
+  cameraHolder: {fileID: 440394742}
   oFadeMat: {fileID: 2100000, guid: ceb4ba0228a97b74aa8eb72f013b42fe, type: 2}
   oFadeBox: {fileID: 547676456}
 --- !u!114 &440394742
@@ -1893,9 +1893,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65e264929714eb7449c52a39691f67c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bMapMode: 0
-  oPlayer: {fileID: 0}
-  oMap: {fileID: 0}
   cameraRig: {fileID: 1662236141}
   oRayQuad: {fileID: 1389238177}
 --- !u!4 &440394743
