@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager theGM = null;
 
-    public CameraController theCameraHolder;
+    public CameraController cameraHolder;
 
     internal static bool bOculusDevicePresent = false;
     internal static string szUserID = "1";
@@ -91,7 +91,6 @@ public class GameManager : MonoBehaviour
         Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 
         //init to black
-        theCameraHolder.InitForMenu();
         oFadeMatCopy = new Material(oFadeMat);
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFade(0.01f, 0.0f, true);
@@ -99,6 +98,7 @@ public class GameManager : MonoBehaviour
         if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
 
+        cameraHolder.InitForMenu();
 #if LOGPROFILERDATA
         Profiler.logFile = "log" + logProfilerFileCnt.ToString();
         Profiler.enableBinaryLog = true;
@@ -352,13 +352,13 @@ public class GameManager : MonoBehaviour
             {
                 //fade in done
                 oFadeBox.SetActive(false);
-                theCameraHolder.Fade(true);
+                cameraHolder.Fade(true);
             }
         }
     }
     public void StartFade(float fTime, float fDelay, bool bOut)
     {
-        if (bOut) theCameraHolder.Fade(false);
+        if (bOut) cameraHolder.Fade(false);
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
         fFadeDelay = fDelay;
@@ -404,7 +404,6 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    //float t1;
     float fRecenterTimer = 0.0f;
     bool bTrackingOriginSet = false;
     void Update()
@@ -529,7 +528,7 @@ public class GameManager : MonoBehaviour
 
                 break;
             case -2:
-                //wait for oculus user id/name to be ready
+                //wait for user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
                     StartFade(1.5f, 1.0f, false);
@@ -862,7 +861,7 @@ public class GameManager : MonoBehaviour
             case 11:
                 if (iFade==0) //fading done?
                 {
-                    theCameraHolder.InitForMenu();
+                    cameraHolder.InitForMenu();
                     szToLoad = "Scenes/GameStart";
                     bLoadDone = false;
                     bIsMapScene = false;

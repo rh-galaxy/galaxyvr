@@ -491,7 +491,7 @@ public class GameLevel : MonoBehaviour
 
             //this must be done after init player (@ iFinalizeCounter == 1)
             //so best do it the same time as the level has finished popping up
-            GameManager.theGM.theCameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
+            GameManager.theGM.cameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
             player.bMotionMovementEnabled = CameraController.bPointMovement;
 
@@ -519,7 +519,7 @@ public class GameLevel : MonoBehaviour
         if (CameraController.bPointMovement)
         {
             //raycast
-            CameraController oCC = GameManager.theGM.theCameraHolder;
+            CameraController oCC = GameManager.theGM.cameraHolder;
             RaycastHit oHitInfo;
             if (Physics.Raycast(oCC.vHeadPosition, oCC.vGazeDirection, out oHitInfo, 400.0f, LayerMask.GetMask("MapPlane")))
             {
