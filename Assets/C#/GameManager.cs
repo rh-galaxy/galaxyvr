@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager theGM = null;
 
-    public CameraController theCameraHolder;
+    public CameraController cameraHolder;
 
     internal static bool bOculusApiPresent = false;
     internal static string szUserID = "1";
@@ -109,12 +109,13 @@ public class GameManager : MonoBehaviour
         Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 
         //init to black
-        theCameraHolder.InitForMenu();
         oFadeMatCopy = new Material(oFadeMat);
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFade(0.01f, 0.0f, true);
 
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
+
+        cameraHolder.InitForMenu();
 
         //used to set refresh rate to 90 Hz, only possible on Quest 2
         OVRPlugin.SystemHeadset type = OVRPlugin.GetSystemHeadsetType();
@@ -340,13 +341,13 @@ public class GameManager : MonoBehaviour
             {
                 //fade in done
                 oFadeBox.SetActive(false);
-                theCameraHolder.Fade(true);
+                cameraHolder.Fade(true);
             }
         }
     }
     public void StartFade(float fTime, float fDelay, bool bOut)
     {
-        if (bOut) theCameraHolder.Fade(false);
+        if (bOut) cameraHolder.Fade(false);
         fFadeFinishTime = fTime;
         fFadeTimer = 0.0f;
         fFadeDelay = fDelay;
@@ -502,7 +503,7 @@ public class GameManager : MonoBehaviour
 
                 break;
             case -2:
-                //wait for oculus user id/name to be ready
+                //wait for user id/name to be ready
                 if (bUserValid || bNoHiscore)
                 {
                     //quest2 in menu setting
@@ -842,7 +843,7 @@ public class GameManager : MonoBehaviour
             case 11:
                 if (iFade==0) //fading done?
                 {
-                    theCameraHolder.InitForMenu();
+                    cameraHolder.InitForMenu();
                     szToLoad = "Scenes/GameStart";
                     bLoadDone = false;
                     bIsMapScene = false;
@@ -865,8 +866,6 @@ public class GameManager : MonoBehaviour
                 }
                 break;
         }
-        //if (((Time.realtimeSinceStartup - t1) * 1000.0f) > 20) Debug.Log("GMUpdate: " + ((Time.realtimeSinceStartup - t1) * 1000.0f) + " State " + iState.ToString());
-        //t1 = Time.realtimeSinceStartup;
     }
 
     bool bIsMapScene = false;

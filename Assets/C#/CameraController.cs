@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
-    public static CameraController instance;
+    public static CameraController instance = null;
 
     bool bMapMode;
     GameObject oPlayer;
