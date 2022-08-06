@@ -418,9 +418,6 @@ public class Player : MonoBehaviour
     Vector2 vLastVel;
     float fLastDirection;
 
-    Vector2 vLastPositionNotOverlapped;
-    float fLastDirectionNotOverlapped;
-
     void FixedUpdate()
     {
         if (!bInited)

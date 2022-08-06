@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager theGM = null;
 
-    public CameraController theCameraHolder;
+    public CameraController cameraHolder;
 
     internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
@@ -61,13 +61,13 @@ public class GameManager : MonoBehaviour
         Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 
         //init to black
-        theCameraHolder.InitForMenu();
         oFadeMatCopy = new Material(oFadeMat);
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFade(0.01f, 0.0f, true);
 
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
 
+        cameraHolder.InitForMenu();
 #if LOGPROFILERDATA
         Profiler.logFile = "log" + logProfilerFileCnt.ToString();
         Profiler.enableBinaryLog = true;
@@ -373,7 +373,7 @@ public class GameManager : MonoBehaviour
             case 11:
                 if (iFade==0) //fading done?
                 {
-                    theCameraHolder.InitForMenu();
+                    cameraHolder.InitForMenu();
                     szToLoad = "Scenes/GameStart";
                     bLoadDone = false;
                     bIsMapScene = false;
