@@ -447,12 +447,9 @@ public class GameLevel : MonoBehaviour
         }
         else if (iFinalizeCounter == 1)
         {
-///**/float t1 = Time.realtimeSinceStartup;
-
             //done: LoadDesPass2 is split in one iteration per object that needs loading
             // (max 5 ms each, but there may be variations)
             bool bFinished = LoadDesPass2();
-///**/Debug.Log("LoadDesPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
 
             if (bFinished)
             {
@@ -478,8 +475,6 @@ public class GameLevel : MonoBehaviour
             int n2 = iFinalizeCounter - 5;
             int segs = iHeight / 5;
 
-///**/float t1 = Time.realtimeSinceStartup;
-
             for (int y = n2 * segs; y < (n2 < 4 ? (n2 + 1) * segs : iHeight); y++)
             {
                 for (int x = 0; x < iWidth; x++)
@@ -488,8 +483,6 @@ public class GameLevel : MonoBehaviour
                 }
             }
             iFinalizeCounter++;
-
-///**/Debug.Log("ReplaceAndAddObjectPass2: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
         }
         else if (iFinalizeCounter == 10)
         {
@@ -498,7 +491,7 @@ public class GameLevel : MonoBehaviour
 
             //this must be done after init player (@ iFinalizeCounter == 1)
             //so best do it the same time as the level has finished popping up
-            GameManager.theGM.theCameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
+            GameManager.theGM.cameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
             player.bMotionMovementEnabled = CameraController.bPointMovement;
 
@@ -526,7 +519,7 @@ public class GameLevel : MonoBehaviour
         if (CameraController.bPointMovement)
         {
             //raycast
-            CameraController oCC = GameManager.theGM.theCameraHolder;
+            CameraController oCC = GameManager.theGM.cameraHolder;
             RaycastHit oHitInfo;
             if (Physics.Raycast(oCC.vHeadPosition, oCC.vGazeDirection, out oHitInfo, 400.0f, LayerMask.GetMask("MapPlane")))
             {
