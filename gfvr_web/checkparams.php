@@ -4,8 +4,8 @@ function checkstring($strArray) {
    //,"@","_" ,"(",")","-"
    $wrongchars=array("~","`","!","#","\$","%","^","&","*","+","=","|","\\","{","}",":",";","\"","'",",","<",".",">","?","/");
 
-   while(list(,$postvars)=each($strArray)) {
-      while(list(,$val)=each($wrongchars)) {
+   foreach ($strArray as $postvars) {
+      foreach ($wrongchars as $val) {
          $wrong=strchr($postvars,$val);
          if($wrong!=false) {
             return false;
