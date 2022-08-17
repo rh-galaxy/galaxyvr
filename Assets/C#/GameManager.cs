@@ -196,8 +196,8 @@ public class GameManager : MonoBehaviour
     float fReinitAudioTimer = 4.0f;
     float fDelayTime = 0;
 
-    internal string szReplayId;
-    internal bool bReplayQuest;
+    string szReplayId;
+    int iReplayQuest;
 
     void Update()
     {
@@ -244,13 +244,13 @@ public class GameManager : MonoBehaviour
                 //szReplayId = "2075437975870745";
                 GameLevel.szLevel = "SpiralSnail";
                 szReplayId = "3660795390684463";
-                bReplayQuest = true;
-                //bReplayQuest = false;
+                iReplayQuest = 1;
+                //iReplayQuest = 0;
                 GameLevel.iLevelIndex = 400; //make it handle as a userlevel (above original 55)
 #else
                 GameLevel.szLevel = ParseURLParams(Application.absoluteURL, "Level");
                 szReplayId = ParseURLParams(Application.absoluteURL, "Id");
-                bReplayQuest = ParseURLParams(Application.absoluteURL, "IsQuest").CompareTo("1") == 0;
+                iReplayQuest = int.Parse(ParseURLParams(Application.absoluteURL, "IsQuest"));
                 if (!GameLevel.szLevel.StartsWith("1") && !GameLevel.szLevel.StartsWith("2")) GameLevel.iLevelIndex = 400;
 #endif
 
@@ -293,7 +293,7 @@ public class GameManager : MonoBehaviour
                 if (GameLevel.iLevelIndex >= 200) szLevelToLoad = GameLevel.szLevel;
 
                 //get replay
-                StartCoroutine(oHigh.GetReplay(szLevelToLoad, szReplayId, bReplayQuest, oReplay));
+                StartCoroutine(oHigh.GetReplay(szLevelToLoad, szReplayId, iReplayQuest, oReplay));
                 iState++;
 
                 //set in the above, but since StartCoroutine returns before it has a chance
