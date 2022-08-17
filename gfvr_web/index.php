@@ -96,6 +96,29 @@ square_end();
 <br><br><br>
 
 
+<a name="hiscore3"></a>
+<?php
+headline("Hiscores JioGlass");
+?>
+<br>
+
+<?php
+square_start("'100%'");
+?>
+<table width="95%">
+<tr><td>
+<?php
+require_once("print_hiscore2_jio.php");
+print_hiscore_jio();
+?>
+</td></tr>
+</table>
+<?php
+square_end();
+?>
+<br><br><br>
+
+
 <?php
 headline("Level editor");
 ?>
