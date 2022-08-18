@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
             //init user
             //szUserID = headDevice.serialNumber; //headDevice.serialNumber.Length.ToString() is 0
             szUserID = SystemInfo.deviceUniqueIdentifier; //this is overwrited if APPLAB
-            szUser = SystemInfo.deviceUniqueIdentifier; //this is overwrited if name.txt has a name, or overwrited if APPLAB
+            szUser = "DefaultUser"; //this is overwrited if name.txt has a name, or overwrited if APPLAB
 
             string szFileText = "";
             string szFile = UnityEngine.Application.persistentDataPath + "/" + "name.txt";

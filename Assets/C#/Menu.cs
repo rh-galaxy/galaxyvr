@@ -279,13 +279,8 @@ public class Menu : MonoBehaviour
 
     C_Item2InMenu oMenuLayDown;
     C_Item2InMenu oMenuEasyMode;
-    //C_Item2InMenu oMenuRecenter;
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
-    /*C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
-    int iQuality = 2;
-    C_Item2InMenu oMenuHz1, oMenuHz2;
-    bool b90Hz = false;*/
     C_Item2InMenu oMenuSnapMovement;
     C_Item2InMenu oMenuPointMovement;
     C_Item2InMenu oMenuNext1, oMenuPrev1, oMenuNext2, oMenuPrev2;
@@ -394,8 +389,6 @@ public class Menu : MonoBehaviour
     string szLevelInfoDescription;
     public void SetLevelInfoPass1(LevelInfo i_stLevelInfo)
     {
-        //float t1 = Time.realtimeSinceStartup;
-
         //i_stLevelInfo.szName is in the form "race00", but we need the filename "2race00"
         //we rely on GameLevel.szLevel for that
         oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel, GameLevel.iLevelIndex >= 200 && GameLevel.iLevelIndex<400, GameLevel.iLevelIndex>=400, out i_stLevelInfo.bIsTime, out szLevelInfoDescription);
@@ -712,18 +705,6 @@ public class Menu : MonoBehaviour
             oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
 
             oMenuLayDown = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -36, "Sky view", "LayDownView", 30.0f, 9.0f);
-
-            /*iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
-            QualitySettings.SetQualityLevel(iQuality, true);
-            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 34, "Low", "Qual1", 30.0f, 9.0f);
-            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 45, "Med", "Qual2", 30.0f, 9.0f);
-            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 56, "High", "Qual3", 30.0f, 9.0f);
-
-            b90Hz = PlayerPrefs.GetInt("MyUnityGraphicsFreq", 0) != 0;
-            if (!GameManager.theGM.bIsQuest) //above quest 1
-                OVRPlugin.systemDisplayFrequency = b90Hz? 90.0f : 72.0f;
-            oMenuHz1 = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, 34, "72Hz", "Hz1", 30.0f, 9.0f);
-            oMenuHz2 = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, 45, "90Hz", "Hz2", 30.0f, 9.0f);*/
         }
         else if (iIncrementalInit == 8)
         {
@@ -855,15 +836,9 @@ public class Menu : MonoBehaviour
         if (oMenuNext2 != null) oMenuNext2.oLevelQuadMeshRenderer.material = oMaterialNext;
         if (oMenuPrev2 != null) oMenuPrev2.oLevelQuadMeshRenderer.material = oMaterialNext;
 
-        //if (oMenuRecenter != null) oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuQuit != null) oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuControls != null) oMenuControls.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuCredits != null) oMenuCredits.oLevelQuadMeshRenderer.material = oMaterialBar;
-        /*if (oMenuQuality1 != null) oMenuQuality1.oLevelQuadMeshRenderer.material = (iQuality == 0) ? oMaterialBarHighlighted : oMaterialBar;
-        if (oMenuQuality2 != null) oMenuQuality2.oLevelQuadMeshRenderer.material = (iQuality == 1) ? oMaterialBarHighlighted : oMaterialBar;
-        if (oMenuQuality3 != null) oMenuQuality3.oLevelQuadMeshRenderer.material = (iQuality == 2) ? oMaterialBarHighlighted : oMaterialBar;
-        if (oMenuHz1 != null) oMenuHz1.oLevelQuadMeshRenderer.material = (b90Hz == false) ? oMaterialBarHighlighted : oMaterialBar;
-        if (oMenuHz2 != null) oMenuHz2.oLevelQuadMeshRenderer.material = (b90Hz == true) ? oMaterialBarHighlighted : oMaterialBar;*/
         if (oMenuSnapMovement != null) oMenuSnapMovement.oLevelQuadMeshRenderer.material = CameraController.bSnapMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuPointMovement != null) oMenuPointMovement.oLevelQuadMeshRenderer.material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuEasyMode != null) oMenuEasyMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bEasyMode ? oMaterialBarHighlighted : oMaterialBar;
@@ -967,10 +942,6 @@ public class Menu : MonoBehaviour
             {
                 oMenuReplayWR3.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
             }
-            /*else if (oHitInfo.collider.name.CompareTo("Recenter") == 0)
-            {
-                oMenuRecenter.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
-            }*/
             else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
             {
                 oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
@@ -983,26 +954,6 @@ public class Menu : MonoBehaviour
             {
                 oMenuCredits.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
-            /*else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
-            {
-                oMenuQuality1.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
-            }
-            else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
-            {
-                oMenuQuality2.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
-            }
-            else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
-            {
-                oMenuQuality3.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
-            }
-            else if (oHitInfo.collider.name.CompareTo("Hz1") == 0)
-            {
-                oMenuHz1.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
-            }
-            else if (oHitInfo.collider.name.CompareTo("Hz2") == 0)
-            {
-                oMenuHz2.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
-            }*/
             else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
             {
                 oMenuSnapMovement.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
@@ -1121,11 +1072,6 @@ public class Menu : MonoBehaviour
                     bWorldBestReplay3 = true;
                     bPlaySelectSound = true;
                 }
-                /*else if (oHitInfo.collider.name.CompareTo("Recenter") == 0 && !bRecenter)
-                {
-                    bRecenter = true;
-                    bPlaySelectSound = true;
-                }*/
                 else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
                 {
                     bQuit = true;
@@ -1145,50 +1091,6 @@ public class Menu : MonoBehaviour
 
                     bPlaySelectSound = true;
                 }
-                /*else if (oHitInfo.collider.name.CompareTo("Qual1") == 0)
-                {
-                    iQuality = 0;
-                    PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
-                    PlayerPrefs.Save();
-                    QualitySettings.SetQualityLevel(iQuality, true);
-                    bPlaySelectSound = true;
-                }
-                else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
-                {
-                    iQuality = 1;
-                    PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
-                    PlayerPrefs.Save();
-                    QualitySettings.SetQualityLevel(iQuality, true);
-                    bPlaySelectSound = true;
-                }
-                else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
-                {
-                    iQuality = 2;
-                    PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
-                    PlayerPrefs.Save();
-                    QualitySettings.SetQualityLevel(iQuality, true);
-                    bPlaySelectSound = true;
-                }
-                else if (oHitInfo.collider.name.CompareTo("Hz1") == 0)
-                {
-                    b90Hz = false;
-                    PlayerPrefs.SetInt("MyUnityGraphicsFreq", 0);
-                    PlayerPrefs.Save();
-                    if(!GameManager.theGM.bIsQuest) //above quest 1
-                       OVRPlugin.systemDisplayFrequency = 72.0f;
-                    bPlaySelectSound = true;
-                }
-                else if (oHitInfo.collider.name.CompareTo("Hz2") == 0)
-                {
-                    if (!GameManager.theGM.bIsQuest) //above quest 1
-                    {
-                        b90Hz = true;
-                        PlayerPrefs.SetInt("MyUnityGraphicsFreq", 1);
-                        PlayerPrefs.Save();
-                        OVRPlugin.systemDisplayFrequency = 90.0f;
-                        bPlaySelectSound = true;
-                    }
-                }*/
                 else if (oHitInfo.collider.name.CompareTo("Snap") == 0)
                 {
                     CameraController.bSnapMovement = !CameraController.bSnapMovement;
@@ -1386,12 +1288,6 @@ public class Menu : MonoBehaviour
         public GameObject oLevelText;
 
         Vector3 vPos;
-
-        /*public void DestroyObj()
-        {
-            Destroy(oLevelQuad);
-            Destroy(oLevelText);
-        }*/
 
         public void Reinit(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText, GameObject i_oParent)
         {
