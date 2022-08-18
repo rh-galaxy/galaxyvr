@@ -160,7 +160,7 @@ v1.80<br>
 v1.75<br>
 - fix EyeOfTheStorm<br>
 - fade in is 1sec shorter<br>
-- optimization of RadioTower<br>
+- optimize radiotower<br>
 - fixed house and hangar<br>
 - optimized toxic barrels<br>
 - bugfix duplicate enemy kill<br>
@@ -186,11 +186,12 @@ v1.57<br>
 <br>
 v1.53<br>
 - add less than bronze indication (green)<br>
-- EasyMode implemented<br>
+- Easy mode implemented<br>
 - custom levels page<br>
 - crashfix<br>
 <br>
 v1.48<br>
+- first quest version<br>
 - explosion fix<br>
 - radiotower perf fix<br>
 - point in menu<br>
@@ -226,20 +227,18 @@ v1.11<br>
 - add gold, silver and bronze limits to menu<br>
 - tracking reset button in menu<br>
 - game status position fix. snap movement fix<br>
-- damage reduced<br>
 - shadows, credits, controls<br>
 - bugfixes to camera position and damage taken<br>
 - 6DoF dollhouse impl finished<br>
 <br>
 v1.00<br>
 - add two new achievements<br>
-- fix death fade, always exit flow on death<br>
 - fix cargo sound<br>
+- music: always exit flow on death<br>
 - music: fixed transitions<br>
 - music: added EnemyVol parameter<br>
-- music: increased cargo volume<br>
 - music: changed death filter<br>
-- music restarts sooner after death<br>
+- music: restarts sooner after death<br>
 - mission music feature when enemies/bullets are nearby<br>
 - pitch variation on death sweep<br>
 - small drum sounds occur intermittently with higher cargo<br>
