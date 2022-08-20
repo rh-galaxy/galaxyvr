@@ -486,32 +486,27 @@ public class Menu : MonoBehaviour
             oLevelInfoContainer.SetActive(true);
 
             Vector3 vPos = new Vector3(-8.9f, 1.5f, -0.1f);
-            if (oMenuReplayWR1 != null) oMenuReplayWR1.Reinit(vPos, "1", "ReplayWR1", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayWR1.oLevelQuad.SetActive(i_stLevelInfo.iWRScore1 != -1);
             oMenuReplayWR1.oLevelText.SetActive(i_stLevelInfo.iWRScore1 != -1);
 
             vPos = new Vector3(-8.9f, -1.0f, -0.1f);
-            if (oMenuReplayWR2 != null) oMenuReplayWR2.Reinit(vPos, "2", "ReplayWR2", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuReplayWR2 = new C_ItemInMenu(vPos, "2", "ReplayWR2", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuReplayWR2 = new C_ItemInMenu(vPos, "2", "ReplayWR2", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayWR2.oLevelQuad.SetActive(i_stLevelInfo.iWRScore2 != -1);
             oMenuReplayWR2.oLevelText.SetActive(i_stLevelInfo.iWRScore2 != -1);
 
             vPos = new Vector3(-8.9f, -3.5f, -0.1f);
-            if (oMenuReplayWR3 != null) oMenuReplayWR3.Reinit(vPos, "3", "ReplayWR3", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuReplayWR3 = new C_ItemInMenu(vPos, "3", "ReplayWR3", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuReplayWR3 = new C_ItemInMenu(vPos, "3", "ReplayWR3", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayWR3.oLevelQuad.SetActive(i_stLevelInfo.iWRScore3 != -1);
             oMenuReplayWR3.oLevelText.SetActive(i_stLevelInfo.iWRScore3 != -1);
 
             vPos = new Vector3(0.5f, 1.5f, -0.1f);
-            if (oMenuReplayYR != null) oMenuReplayYR.Reinit(vPos, "", "ReplayYR", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayYR.oLevelQuad.SetActive(i_stLevelInfo.iBestScoreMs != -1);
             oMenuReplayYR.oLevelText.SetActive(i_stLevelInfo.iBestScoreMs != -1);
 
             vPos = new Vector3(0.5f, -2.5f, -0.1f);
-            if (oMenuPlay != null) oMenuPlay.Reinit(vPos, "", "Play", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuPlay = new C_ItemInMenu(vPos, "", "Play", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuPlay = new C_ItemInMenu(vPos, "", "Play", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
 
             oWRNameText1.SetActive(true); oWRNameText2.SetActive(true); oWRNameText3.SetActive(true);
             oWRScoreText1.SetActive(true); oWRScoreText2.SetActive(true); oWRScoreText3.SetActive(true);
@@ -1335,28 +1330,6 @@ public class Menu : MonoBehaviour
             Destroy(oLevelQuad);
             Destroy(oLevelText);
         }*/
-
-        public void Reinit(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText, GameObject i_oParent)
-        {
-            vPos = i_vPos;
-
-            //create a quad with a text on, in the pos of each menu object
-            oLevelQuad.transform.parent = i_oParent.transform;
-            oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
-            oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
-            oLevelQuad.transform.rotation = i_oParent.transform.rotation; //why doesn't this come from the parent already
-            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
-            oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
-            oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialPentagonUnlocked;
-
-            //create text
-            oLevelText.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
-            oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.08f, i_fScaleText * 0.08f, 1.0f);
-            oLevelText.transform.rotation = i_oParent.transform.rotation; //why doesn't this come from the parent already
-
-            TextMesh oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();
-            oLevelTextTextMesh.text = i_szText;
-        }
 
         public C_ItemInMenu(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText, GameObject i_oParent)
         {

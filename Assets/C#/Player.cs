@@ -763,6 +763,15 @@ public class Player : MonoBehaviour
                 if (gamepad.buttonSouth.isPressed || gamepad.buttonWest.isPressed) bNewFireState = true; //button A (X)
             }
 
+            Mouse mouse = Mouse.current;
+            if (mouse != null && bMotionMovementEnabled)
+            {
+                if (mouse.rightButton.isPressed || mouse.leftButton.isPressed)
+                {
+                    bThrottle = true;
+                }
+            }
+
             if (bMotionMovementEnabled)
             {
                 fFireTimer += Time.fixedDeltaTime;
