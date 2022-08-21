@@ -1,11 +1,11 @@
 <?php
 
 function checkstring($strArray) {
-   //,"@","_" ,"(",")","-","/","="
-   $wrongchars=array("~","`","!","#","\$","%","^","&","*","+","|","\\","{","}",":",";","\"","'",",","<",".",">","?");
+   //,"@","_" ,"(",")","-"
+   $wrongchars=array("~","`","!","#","\$","%","^","&","*","+","=","|","\\","{","}",":",";","\"","'",",","<",".",">","?","/");
 
-   foreach ($strArray as $postvars) {
-      foreach ($wrongchars as $val) {
+   while(list(,$postvars)=each($strArray)) {
+      while(list(,$val)=each($wrongchars)) {
          $wrong=strchr($postvars,$val);
          if($wrong!=false) {
             return false;

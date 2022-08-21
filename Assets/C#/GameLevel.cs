@@ -472,7 +472,7 @@ public class GameLevel : MonoBehaviour
 
             //this must be done after init player (@ iFinalizeCounter == 1)
             //so best do it the same time as the level has finished popping up
-            GameManager.theGM.cameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
+            GameManager.theGM.theCameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
             iFinalizeCounter++;
 

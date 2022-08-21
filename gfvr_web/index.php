@@ -96,29 +96,6 @@ square_end();
 <br><br><br>
 
 
-<a name="hiscore3"></a>
-<?php
-headline("Hiscores JioGlass");
-?>
-<br>
-
-<?php
-square_start("'100%'");
-?>
-<table width="95%">
-<tr><td>
-<?php
-require_once("print_hiscore2_jio.php");
-print_hiscore_jio();
-?>
-</td></tr>
-</table>
-<?php
-square_end();
-?>
-<br><br><br>
-
-
 <?php
 headline("Level editor");
 ?>
@@ -135,7 +112,7 @@ square_end();
 
 
 <?php
-headline("Future and past");
+headline("Future");
 ?>
 <br>
 <?php
@@ -143,106 +120,6 @@ square_start("'100%'");
 ?>
 <p>Point-movement (now done for both Steam and Oculus v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
-<p>v1.86<br>
-- controls-info update<br>
-- collision stuck fix<br>
-- door base collision fix<br>
-- auto land with point motion<br>
-- auto fire with point motion<br>
-- not instant kill on stationary enemies<br>
-<br>
-v1.80<br>
-- new user levels<br>
-- recenter bugfix<br>
-- update FMOD and SteamWorks.NET<br>
-- level editor, max 10wp<br>
-<br>
-v1.75<br>
-- fix EyeOfTheStorm<br>
-- fade in is 1sec shorter<br>
-- optimize radiotower<br>
-- fixed house and hangar<br>
-- optimized toxic barrels<br>
-- bugfix duplicate enemy kill<br>
-- support 4*10 user levels<br>
-- ship status, mipmap fix<br>
-<br>
-v1.70<br>
-- race08, race22 optimized<br>
-- choppyness fixed<br>
-- add skyview<br>
-<br>
-v1.65<br>
-- gui selection bugfix<br>
-- add linux editor<br>
-<br>
-v1.57<br>
-- add gui marker for Easy mode<br>
-- optimized LandingZone.mat<br>
-- fix errors when no steamvrinput connected<br>
-- CameraHolder singleton fix<br>
-- add best score<br>
-- add achievement 22<br>
-<br>
-v1.53<br>
-- add less than bronze indication (green)<br>
-- Easy mode implemented<br>
-- custom levels page<br>
-- crashfix<br>
-<br>
-v1.48<br>
-- first quest version<br>
-- explosion fix<br>
-- radiotower perf fix<br>
-- point in menu<br>
-- fix menu selection bug<br>
-- install size 1/3<br>
-- lower engine vol<br>
-- bigger status box<br>
-<br>
-v1.44<br>
-- fix flying particle fx<br>
-- bugfix in first menu level selection<br>
-- add enemy-kill msg to replay<br>
-- fix max steam user name length<br>
-- fix web score spacing<br>
-- fix steam gold achievement<br>
-- frame rate fix in CollisionStay2D<br>
-- point motion implemented<br>
-<br>
-v1.26<br>
-- add flying score text<br>
-- hiscore security increased<br>
-- move game status up<br>
-- major fix: replays working<br>
-<br>
-v1.20<br>
-- move view up 20cm<br>
-- fix menu options positions<br>
-- fix for distance achievement<br>
-- changed controller bindings for recenter and back<br>
-- add recenter action, only in menu (for now)<br>
-<br>
-v1.11<br>
-- add gold, silver and bronze limits to menu<br>
-- tracking reset button in menu<br>
-- game status position fix. snap movement fix<br>
-- shadows, credits, controls<br>
-- bugfixes to camera position and damage taken<br>
-- 6DoF dollhouse impl finished<br>
-<br>
-v1.00<br>
-- add two new achievements<br>
-- fix cargo sound<br>
-- music: always exit flow on death<br>
-- music: fixed transitions<br>
-- music: added EnemyVol parameter<br>
-- music: changed death filter<br>
-- music: restarts sooner after death<br>
-- mission music feature when enemies/bullets are nearby<br>
-- pitch variation on death sweep<br>
-- small drum sounds occur intermittently with higher cargo<br>
-</p>
 <?php
 square_end();
 ?>

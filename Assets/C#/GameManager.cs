@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager theGM = null;
 
-    public CameraController cameraHolder;
+    public CameraController theCameraHolder;
 
     internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
@@ -61,13 +61,13 @@ public class GameManager : MonoBehaviour
         Thread.CurrentThread.Priority = System.Threading.ThreadPriority.AboveNormal;
 
         //init to black
+        theCameraHolder.InitForMenu();
         oFadeMatCopy = new Material(oFadeMat);
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFade(0.01f, 0.0f, true);
 
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
 
-        cameraHolder.InitForMenu();
 #if LOGPROFILERDATA
         Profiler.logFile = "log" + logProfilerFileCnt.ToString();
         Profiler.enableBinaryLog = true;
@@ -196,8 +196,8 @@ public class GameManager : MonoBehaviour
     float fReinitAudioTimer = 4.0f;
     float fDelayTime = 0;
 
-    string szReplayId;
-    int iReplayQuest;
+    internal string szReplayId;
+    internal bool bReplayQuest;
 
     void Update()
     {
@@ -244,13 +244,13 @@ public class GameManager : MonoBehaviour
                 //szReplayId = "2075437975870745";
                 GameLevel.szLevel = "SpiralSnail";
                 szReplayId = "3660795390684463";
-                iReplayQuest = 1;
-                //iReplayQuest = 0;
+                bReplayQuest = true;
+                //bReplayQuest = false;
                 GameLevel.iLevelIndex = 400; //make it handle as a userlevel (above original 55)
 #else
                 GameLevel.szLevel = ParseURLParams(Application.absoluteURL, "Level");
                 szReplayId = ParseURLParams(Application.absoluteURL, "Id");
-                iReplayQuest = int.Parse(ParseURLParams(Application.absoluteURL, "IsQuest"));
+                bReplayQuest = ParseURLParams(Application.absoluteURL, "IsQuest").CompareTo("1") == 0;
                 if (!GameLevel.szLevel.StartsWith("1") && !GameLevel.szLevel.StartsWith("2")) GameLevel.iLevelIndex = 400;
 #endif
 
@@ -293,7 +293,7 @@ public class GameManager : MonoBehaviour
                 if (GameLevel.iLevelIndex >= 200) szLevelToLoad = GameLevel.szLevel;
 
                 //get replay
-                StartCoroutine(oHigh.GetReplay(szLevelToLoad, szReplayId, iReplayQuest, oReplay));
+                StartCoroutine(oHigh.GetReplay(szLevelToLoad, szReplayId, bReplayQuest, oReplay));
                 iState++;
 
                 //set in the above, but since StartCoroutine returns before it has a chance
@@ -373,7 +373,7 @@ public class GameManager : MonoBehaviour
             case 11:
                 if (iFade==0) //fading done?
                 {
-                    cameraHolder.InitForMenu();
+                    theCameraHolder.InitForMenu();
                     szToLoad = "Scenes/GameStart";
                     bLoadDone = false;
                     bIsMapScene = false;
