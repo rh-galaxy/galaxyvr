@@ -1,18 +1,22 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Licensed under the Oculus Master SDK License Version 1.0 (the "License"); you may not use
-the Utilities SDK except in compliance with the License, which is provided at the time of installation
-or download, or which otherwise accompanies this software in either electronic or hard copy form.
-
-You may obtain a copy of the License at
-https://developer.oculus.com/licenses/oculusmastersdk-1.0/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -35,12 +39,12 @@ internal class OVRCompositionUtil {
 
 	public static void SafeDestroy(ref GameObject obj)
 	{
-        if (obj != null)
-        {
-            SafeDestroy(obj);
-            obj = null;
-        }
-    }
+		if (obj != null)
+		{
+			SafeDestroy(obj);
+			obj = null;
+		}
+	}
 
 	public static OVRPlugin.CameraDevice ConvertCameraDevice(OVRManager.CameraDevice cameraDevice)
 	{
@@ -64,27 +68,33 @@ internal class OVRCompositionUtil {
 
 	public static OVRBoundary.BoundaryType ToBoundaryType(OVRManager.VirtualGreenScreenType type)
 	{
-		if (type == OVRManager.VirtualGreenScreenType.OuterBoundary)
+		/*if (type == OVRManager.VirtualGreenScreenType.OuterBoundary)
 		{
 			return OVRBoundary.BoundaryType.OuterBoundary;
 		}
-		else if (type == OVRManager.VirtualGreenScreenType.PlayArea)
+		else */if (type == OVRManager.VirtualGreenScreenType.PlayArea)
 		{
 			return OVRBoundary.BoundaryType.PlayArea;
 		}
 		else
 		{
 			Debug.LogWarning("Unmatched VirtualGreenScreenType");
-			return OVRBoundary.BoundaryType.OuterBoundary;
+			return OVRBoundary.BoundaryType.PlayArea;
 		}
 	}
 
+	[System.Obsolete("GetWorldPosition should be invoked with an explicit camera parameter")]
 	public static Vector3 GetWorldPosition(Vector3 trackingSpacePosition)
+	{
+		return GetWorldPosition(Camera.main, trackingSpacePosition);
+	}
+
+	public static Vector3 GetWorldPosition(Camera camera, Vector3 trackingSpacePosition)
 	{
 		OVRPose tsPose;
 		tsPose.position = trackingSpacePosition;
 		tsPose.orientation = Quaternion.identity;
-		OVRPose wsPose = OVRExtensions.ToWorldSpacePose(tsPose);
+		OVRPose wsPose = OVRExtensions.ToWorldSpacePose(tsPose, camera);
 		Vector3 pos = wsPose.position;
 		return pos;
 	}
@@ -105,7 +115,7 @@ internal class OVRCompositionUtil {
 		float maxDistance = -float.MaxValue;
 		foreach (Vector3 v in geometry)
 		{
-			Vector3 pos = GetWorldPosition(v);
+			Vector3 pos = GetWorldPosition(camera, v);
 			float distance = Vector3.Dot(camera.transform.forward, pos);
 			if (maxDistance < distance)
 			{

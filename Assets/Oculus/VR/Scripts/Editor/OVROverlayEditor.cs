@@ -1,3 +1,24 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,7 +44,7 @@ public class OVROverlayEditor : Editor
 	{
 		Custom = 0,
 		Full = 1,
-		Half = 2
+		Half = 2,
 	}
 
 	private bool sourceRectsVisible = false;
@@ -95,6 +116,26 @@ public class OVROverlayEditor : Editor
 		Bottom
 	}
 
+	private GUIContent[] selectableShapeNames;
+	private OVROverlay.OverlayShape[] selectableShapeValues;
+
+	private void Awake()
+	{
+		List<GUIContent> selectableShapeNameList = new List<GUIContent>();
+		List<OVROverlay.OverlayShape> selectableShapesValueList = new List<OVROverlay.OverlayShape>();
+		foreach (OVROverlay.OverlayShape value in Enum.GetValues(typeof(OVROverlay.OverlayShape)))
+		{
+			if (!OVROverlay.IsPassthroughShape(value))
+			{
+				string name = Enum.GetName(typeof(OVROverlay.OverlayShape), value);
+				selectableShapeNameList.Add(new GUIContent(name, name));
+				selectableShapesValueList.Add(value);
+			}
+		}
+		selectableShapeNames = selectableShapeNameList.ToArray();
+		selectableShapeValues = selectableShapesValueList.ToArray();
+	}
+
 	public override void OnInspectorGUI()
 	{
 		OVROverlay overlay = (OVROverlay)target;
@@ -110,7 +151,35 @@ public class OVROverlayEditor : Editor
 		EditorGUILayout.Space();
 
 		EditorGUILayout.LabelField(new GUIContent("Overlay Shape", "The shape of this overlay"), EditorStyles.boldLabel);
-		overlay.currentOverlayShape = (OVROverlay.OverlayShape)EditorGUILayout.EnumPopup(new GUIContent("Overlay Shape", "The shape of this overlay"), overlay.currentOverlayShape);
+		// If the overlay shape has been set to a passthrough shape (via scripting), do not allow to change it.
+		if (!OVROverlay.IsPassthroughShape(overlay.currentOverlayShape))
+		{
+			int currentShapeIndex = Array.IndexOf(selectableShapeValues, overlay.currentOverlayShape);
+			if (currentShapeIndex == -1)
+			{
+				Debug.LogError("Invalid shape encountered");
+				currentShapeIndex = 0;
+			}
+			currentShapeIndex = EditorGUILayout.Popup(new GUIContent("Overlay Shape", "The shape of this overlay"), currentShapeIndex, selectableShapeNames);
+			overlay.currentOverlayShape = selectableShapeValues[currentShapeIndex];
+		}
+
+		if (overlay.currentOverlayShape == OVROverlay.OverlayShape.Cubemap)
+		{
+			overlay.useLegacyCubemapRotation = EditorGUILayout.Toggle(new GUIContent("Use Legacy Cubemap Rotation",
+				"Whether the cubemap should use the legacy rotation which was rotated 180 degrees around the Y axis comapred to Unity's definition of cubemaps. This setting will be deprecated in the near future, therefore it is recommended to fix the cubemap texture instead."), overlay.useLegacyCubemapRotation);
+		}
+
+		EditorGUILayout.Space();
+
+		EditorGUILayout.LabelField("Layer Properties", EditorStyles.boldLabel);
+		overlay.useBicubicFiltering = EditorGUILayout.Toggle(new GUIContent("Bicubic Filtering",
+			"Whether this layer should use bicubic filtering. This can increase quality for small details on text and icons being viewed at farther distances."), overlay.useBicubicFiltering);
+		overlay.useEfficientSupersample = EditorGUILayout.Toggle(new GUIContent("Super Sample",
+			"Whether this layer should use an efficient super sample filter. This can help reduce flicker artifacts."), overlay.useEfficientSupersample);
+		overlay.useEfficientSharpen = EditorGUILayout.Toggle(new GUIContent("Sharpen",
+			"Whether this layer should use a sharpen filter. This amplifies contrast and fine details"), overlay.useEfficientSharpen);
+
 		EditorGUILayout.Space();
 
 		EditorGUILayout.Separator();
@@ -166,7 +235,7 @@ public class OVROverlayEditor : Editor
 			overlay.isProtectedContent = EditorGUILayout.Toggle(new GUIContent("Is Protected Content", "The texture has copy protection, e.g., HDCP"), overlay.isProtectedContent);
 #endif
 		}
-		if (overlay.currentOverlayShape == OVROverlay.OverlayShape.Cylinder || overlay.currentOverlayShape == OVROverlay.OverlayShape.Equirect || overlay.currentOverlayShape == OVROverlay.OverlayShape.Quad)
+		if (overlay.currentOverlayShape == OVROverlay.OverlayShape.Cylinder || overlay.currentOverlayShape == OVROverlay.OverlayShape.Equirect || overlay.currentOverlayShape == OVROverlay.OverlayShape.Quad || overlay.currentOverlayShape == OVROverlay.OverlayShape.Fisheye)
 		{
 
 			EditorGUILayout.Separator();
@@ -319,6 +388,7 @@ public class OVROverlayEditor : Editor
 				overlay.invertTextureRects = EditorGUILayout.Toggle(new GUIContent("Invert Rect Coordinates", "Check this box to use the top left corner of the texture as the origin"), overlay.invertTextureRects);
 			}
 		}
+
 		EditorGUILayout.Separator();
 		EditorGUILayout.LabelField("Color Scale", EditorStyles.boldLabel);
 		EditorGUILayout.Space();
@@ -333,6 +403,8 @@ public class OVROverlayEditor : Editor
 		EditorGUILayout.Separator();
 		EditorGUILayout.LabelField("Preview", EditorStyles.boldLabel);
 		overlay.previewInEditor = EditorGUILayout.Toggle(new GUIContent("Preview in Editor (Experimental)", "Preview the overlay in the editor using a mesh renderer."), overlay.previewInEditor);
+
+
 
 		EditorUtility.SetDirty(overlay);
 	}
@@ -411,6 +483,7 @@ public class OVROverlayEditor : Editor
 			case DisplayType.Half:
 				destRectLeft = destRectRight = new Rect(0.25f, 0, 0.5f, 1);
 				break;
+
 			default:
 				destRectLeft = overlay.destRectLeft;
 				destRectRight = overlay.destRectRight;

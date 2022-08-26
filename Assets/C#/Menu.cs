@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using TMPro;
 using UnityEngine.XR;
 using UnityEngine.InputSystem;
-using TMPro;
 
 public class Menu : MonoBehaviour
 {
@@ -274,6 +274,8 @@ public class Menu : MonoBehaviour
     public Material oSkyBoxMat3;
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
+    public Material oSkyBoxMat6;
+    public Material oSkyBoxMat7;
 
     CameraController cameraHolder;
 
@@ -593,14 +595,16 @@ public class Menu : MonoBehaviour
             aMenuLevels = new C_LevelInMenu[NUM_LEVELS];
 
             //set random skybox
-            int iSkyBox = UnityEngine.Random.Range(1, 5);
+            int iSkyBox = UnityEngine.Random.Range(3, 7);
             switch (iSkyBox)
             {
-                case 1: RenderSettings.skybox = oSkyBoxMat1; break;
-                case 2: RenderSettings.skybox = oSkyBoxMat2; break;
-                case 3: RenderSettings.skybox = oSkyBoxMat3; break;
+                //case 2: RenderSettings.skybox = oSkyBoxMat2; break; //avoid blue sky
+                //case 3: RenderSettings.skybox = oSkyBoxMat3; break; //avoid red sky
+                case 3: RenderSettings.skybox = oSkyBoxMat1; break;
                 case 4: RenderSettings.skybox = oSkyBoxMat4; break;
                 case 5: RenderSettings.skybox = oSkyBoxMat5; break;
+                case 6: RenderSettings.skybox = oSkyBoxMat6; break;
+                case 7: RenderSettings.skybox = oSkyBoxMat7; break;
             }
         }
         else if (iIncrementalInit == 2)
@@ -754,11 +758,6 @@ public class Menu : MonoBehaviour
         }
         else if (iIncrementalInit == 10)
         {
-            //change fov if non VR since that default setting shows to wide fov
-            // and is not behaving reliably
-            if (GameManager.bNoVR)
-                Camera.main.fieldOfView = 45.0f;
-
             //prevent selection if trigger was held when menu is started
             bAllowSelection = false;
             bLastTrigger = true;
@@ -782,6 +781,7 @@ public class Menu : MonoBehaviour
         //exit if input shall be ignored
         if (Menu.bPauseInput) return;
 
+        Keyboard keyboard = Keyboard.current;
         Mouse mouse = Mouse.current;
         Gamepad gamepad = Gamepad.current;
         UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
@@ -795,10 +795,8 @@ public class Menu : MonoBehaviour
         bool button2LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2L);
         bool stickLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickL);
 
-        //get input from joysticks
+        //get input
         float fAdjust = 0;
-        //if (stickR.x > 0.5f || stickL.x > 0.5f) fAdjust = 1000;
-        //if (stickR.x < -0.5f || stickL.x < -0.5f) fAdjust = -1000;
 
         bool bTrigger = (triggerR > 0.5f) || (triggerL > 0.5f) || button1R || button2R || button1L || button2L;
         if (gamepad != null)
@@ -806,6 +804,7 @@ public class Menu : MonoBehaviour
             bTrigger = bTrigger || gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed;
         }
         if (mouse != null) bTrigger = bTrigger || mouse.rightButton.isPressed || mouse.leftButton.isPressed;
+        if (keyboard != null) bTrigger = bTrigger || keyboard.hKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
         if (bTrigger && !bLastTrigger) bAllowSelection = true; //pressed
         else bAllowSelection = false;
         if (bLevelPlay) bAllowSelection = false; //fixes bug when after start, the user clicks again on another level in the menu (before the menu-scene has stopped)

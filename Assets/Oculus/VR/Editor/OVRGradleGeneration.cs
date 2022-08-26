@@ -1,27 +1,26 @@
-/************************************************************************************
-
-Copyright   :   Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
-
-Licensed under the Oculus SDK License Version 3.4.1 (the "License");
-you may not use the Oculus SDK except in compliance with the License,
-which is provided at the time of installation or download, or which
-otherwise accompanies this software in either electronic or hard copy form.
-
-You may obtain a copy of the License at
-
-https://developer.oculus.com/licenses/sdk-3.4.1
-
-Unless required by applicable law or agreed to in writing, the Oculus SDK
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-************************************************************************************/
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 //#define BUILDSESSION
 
-#if USING_XR_MANAGEMENT && USING_XR_SDK_OCULUS
+#if USING_XR_MANAGEMENT && (USING_XR_SDK_OCULUS || USING_XR_SDK_OPENXR)
 #define USING_XR_SDK
 #endif
 
@@ -41,6 +40,11 @@ using UnityEditor.Build.Reporting;
 using UnityEditor.Android;
 #endif
 
+#if USING_XR_SDK_OPENXR
+using UnityEngine.XR.OpenXR;
+using UnityEditor.XR.OpenXR.Features;
+#endif
+
 [InitializeOnLoad]
 public class OVRGradleGeneration
 	: IPreprocessBuildWithReport, IPostprocessBuildWithReport
@@ -51,12 +55,14 @@ public class OVRGradleGeneration
 	public OVRADBTool adbTool;
 	public Process adbProcess;
 
-	public int callbackOrder { get { return 99999; } }
+	private int _callbackOrder = 3;
+
+	public int callbackOrder { get { return _callbackOrder; } }
 	static private System.DateTime buildStartTime;
 	static private System.Guid buildGuid;
 
 #if UNITY_ANDROID
-	private const string prefName = "OVRAutoIncrementVersionCode_Enabled";
+	public const string prefName = "OVRAutoIncrementVersionCode_Enabled";
 	private const string menuItemAutoIncVersion = "Oculus/Tools/Auto Increment Version Code";
 	static bool autoIncrementVersion = false;
 #endif
@@ -76,7 +82,7 @@ public class OVRGradleGeneration
 
 #if UNITY_ANDROID
 	[MenuItem(menuItemAutoIncVersion)]
-	static void ToggleUtilities()
+	public static void ToggleUtilities()
 	{
 		autoIncrementVersion = !autoIncrementVersion;
 		Menu.SetChecked(menuItemAutoIncVersion, autoIncrementVersion);
@@ -91,6 +97,48 @@ public class OVRGradleGeneration
 
 	public void OnPreprocessBuild(BuildReport report)
 	{
+		bool useOpenXR = OVRPluginUpdater.IsOVRPluginOpenXRActivated();
+
+#if USING_XR_SDK_OPENXR
+		UnityEngine.Debug.LogWarning("The installation of Unity OpenXR Plugin is detected, which should NOT be used in production when developing Oculus apps for production. Please uninstall the package, and install the Oculus XR Plugin from the Package Manager.");
+
+		// OpenXR Plugin will remove all native plugins if they are not under the Feature folder. Include OVRPlugin to the build if OculusXRFeature is enabled.
+		var oculusXRFeature = FeatureHelpers.GetFeatureWithIdForBuildTarget(report.summary.platformGroup, Oculus.XR.OculusXRFeature.featureId);
+		if (oculusXRFeature.enabled)
+		{
+			if (!useOpenXR)
+			{
+				throw new BuildFailedException("OpenXR backend for Oculus Plugin is disabled, which is required to support Unity OpenXR Plugin. Please enable OpenXR backend for Oculus Plugin through the 'Oculus -> Tools -> OpenXR' menu.");
+			}
+
+			string ovrRootPath = OVRPluginUpdater.GetUtilitiesRootPath();
+			var importers = PluginImporter.GetAllImporters();
+			foreach (var importer in importers)
+			{
+				if (!importer.GetCompatibleWithPlatform(report.summary.platform))
+					continue;
+				string fullAssetPath = Path.Combine(Directory.GetCurrentDirectory(), importer.assetPath);
+#if UNITY_EDITOR_WIN
+				fullAssetPath = fullAssetPath.Replace("/", "\\");
+#endif
+				if (fullAssetPath.StartsWith(ovrRootPath) && fullAssetPath.Contains("OVRPlugin"))
+				{
+					UnityEngine.Debug.LogFormat("[Oculus] Native plugin included in build because of enabled OculusXRFeature: {0}", importer.assetPath);
+					importer.SetIncludeInBuildDelegate(path => true);
+				}
+				if (!fullAssetPath.StartsWith(ovrRootPath) && fullAssetPath.Contains("libopenxr_loader.so"))
+				{
+					UnityEngine.Debug.LogFormat("[Oculus] libopenxr_loader.so from other packages will be disabled because of enabled OculusXRFeature: {0}", importer.assetPath);
+					importer.SetIncludeInBuildDelegate(path => false);
+				}
+			}
+		}
+		else
+		{
+			UnityEngine.Debug.LogWarning("OculusXRFeature is not enabled in OpenXR Settings. Oculus Integration scripts will not be functional.");
+		}
+#endif
+
 #if UNITY_ANDROID && !(USING_XR_SDK && UNITY_2019_3_OR_NEWER)
 		// Generate error when Vulkan is selected as the perferred graphics API, which is not currently supported in Unity XR
 		if (!PlayerSettings.GetUseDefaultGraphicsAPIs(BuildTarget.Android))
@@ -103,25 +151,34 @@ public class OVRGradleGeneration
 		}
 #endif
 
+#if UNITY_ANDROID
+#if USING_XR_SDK
+		if (useOpenXR)
+		{
+			UnityEngine.Debug.LogWarning("Oculus Utilities Plugin with OpenXR is being used, which is under experimental status");
+
+			if (PlayerSettings.colorSpace != ColorSpace.Linear)
+			{
+				throw new BuildFailedException("Oculus Utilities Plugin with OpenXR only supports linear lighting. Please set 'Rendering/Color Space' to 'Linear' in Player Settings");
+			}
+		}
+#else
+		if (useOpenXR)
+		{
+			throw new BuildFailedException("Oculus Utilities Plugin with OpenXR only supports XR Plug-in Managmenent with Oculus XR Plugin.");
+		}
+#endif
+#endif
+
+#if UNITY_ANDROID && USING_XR_SDK && !USING_COMPATIBLE_OCULUS_XR_PLUGIN_VERSION
+		if (PlayerSettings.Android.targetArchitectures != AndroidArchitecture.ARM64)
+			throw new BuildFailedException("Your project is using an Oculus XR Plugin version with known issues. Please navigate to the Package Manager and upgrade the Oculus XR Plugin to the latest verified version. When performing the upgrade" +
+				", you must first \"Remove\" the Oculus XR Plugin package, and then \"Install\" the package at the verified version. Be sure to remove, then install, not just upgrade.");
+#endif
+
 		buildStartTime = System.DateTime.Now;
 		buildGuid = System.Guid.NewGuid();
 
-		if (!report.summary.outputPath.Contains("OVRGradleTempExport"))
-		{
-			OVRPlugin.SetDeveloperMode(OVRPlugin.Bool.True);
-			OVRPlugin.AddCustomMetadata("build_type", "standard");
-		}
-
-		OVRPlugin.AddCustomMetadata("build_guid", buildGuid.ToString());
-		OVRPlugin.AddCustomMetadata("target_platform", report.summary.platform.ToString());
-#if !UNITY_2019_3_OR_NEWER
-		OVRPlugin.AddCustomMetadata("scripting_runtime_version", UnityEditor.PlayerSettings.scriptingRuntimeVersion.ToString());
-#endif
-		if (report.summary.platform == UnityEditor.BuildTarget.StandaloneWindows
-			|| report.summary.platform == UnityEditor.BuildTarget.StandaloneWindows64)
-		{
-			OVRPlugin.AddCustomMetadata("target_oculus_platform", "rift");
-		}
 #if BUILDSESSION
 		StreamWriter writer = new StreamWriter("build_session", false);
 		UnityEngine.Debug.LogFormat("Build Session: {0}", buildGuid.ToString());
@@ -139,58 +196,38 @@ public class OVRGradleGeneration
 		{
 			targetOculusPlatform.Add("quest");
 		}
-		OVRPlugin.AddCustomMetadata("target_oculus_platform", String.Join("_", targetOculusPlatform.ToArray()));
-		UnityEngine.Debug.LogFormat("QuestFamily = {0}: Quest = {1}, Quest2 = {2}", 
+		UnityEngine.Debug.LogFormat("QuestFamily = {0}: Quest = {1}, Quest2 = {2}",
 			OVRDeviceSelector.isTargetDeviceQuestFamily,
 			OVRDeviceSelector.isTargetDeviceQuest,
 			OVRDeviceSelector.isTargetDeviceQuest2);
 
-#if UNITY_2019_3_OR_NEWER
-		string gradleBuildPath = Path.Combine(path, "../launcher/build.gradle");
-#else
-		string gradleBuildPath = Path.Combine(path, "build.gradle");
-#endif
-		bool v2SigningEnabled = true;
-
-		if (File.Exists(gradleBuildPath))
+		OVRProjectConfig projectConfig = OVRProjectConfig.GetProjectConfig();
+		if (projectConfig != null && projectConfig.systemSplashScreen != null)
 		{
-			try
+			if (PlayerSettings.virtualRealitySplashScreen != null)
 			{
-				string gradle = File.ReadAllText(gradleBuildPath);
-				int v2Signingindex = gradle.IndexOf("v2SigningEnabled false");
-
-				if (v2Signingindex != -1)
+				UnityEngine.Debug.LogWarning("Virtual Reality Splash Screen (in Player Settings) is active. It would be displayed after the system splash screen, before the first game frame be rendered.");
+			}
+			string splashScreenAssetPath = AssetDatabase.GetAssetPath(projectConfig.systemSplashScreen);
+			if (Path.GetExtension(splashScreenAssetPath).ToLower() != ".png")
+			{
+				throw new BuildFailedException("Invalid file format of System Splash Screen. It has to be a PNG file to be used by the Quest OS. The asset path: " + splashScreenAssetPath);
+			}
+			else
+			{
+				string sourcePath = splashScreenAssetPath;
+				string targetFolder = Path.Combine(path, "src/main/assets");
+				string targetPath = targetFolder + "/vr_splash.png";
+				UnityEngine.Debug.LogFormat("Copy splash screen asset from {0} to {1}", sourcePath, targetPath);
+				try
 				{
-					//v2 Signing flag found, ensure the correct value is set based on platform.
-					if (v2SigningEnabled)
-					{
-						gradle = gradle.Replace("v2SigningEnabled false", "v2SigningEnabled true");
-						System.IO.File.WriteAllText(gradleBuildPath, gradle);
-					}
+					File.Copy(sourcePath, targetPath, true);
 				}
-				else
+				catch(Exception e)
 				{
-					//v2 Signing flag missing, add it right after the key store password and set the value based on platform.
-					int keyPassIndex = gradle.IndexOf("keyPassword");
-					if (keyPassIndex != -1)
-					{
-						int v2Index = gradle.IndexOf("\n", keyPassIndex) + 1;
-						if(v2Index != -1)
-						{
-							gradle = gradle.Insert(v2Index, "v2SigningEnabled " + (v2SigningEnabled ? "true" : "false") + "\n");
-							System.IO.File.WriteAllText(gradleBuildPath, gradle);
-						}
-					}
+					throw new BuildFailedException(e.Message);
 				}
 			}
-			catch (System.Exception e)
-			{
-				UnityEngine.Debug.LogWarningFormat("Unable to overwrite build.gradle, error {0}", e.Message);
-			}
-		}
-		else
-		{
-			UnityEngine.Debug.LogWarning("Unable to locate build.gradle");
 		}
 
 		PatchAndroidManifest(path);
@@ -280,8 +317,6 @@ public class OVRGradleGeneration
 				|| step.name.Contains("Exporting project")
 				|| step.name.Contains("Building Gradle project"))
 			{
-				OVRPlugin.SendEvent("build_step_" + step.name.ToLower().Replace(' ', '_'),
-					step.duration.TotalSeconds.ToString(), "ovrbuild");
 #if BUILDSESSION
 				UnityEngine.Debug.LogFormat("build_step_" + step.name.ToLower().Replace(' ', '_') + ": {0}", step.duration.TotalSeconds.ToString());
 #endif
@@ -291,16 +326,9 @@ public class OVRGradleGeneration
 				}
 			}
 		}
-		OVRPlugin.AddCustomMetadata("build_step_count", report.steps.Length.ToString());
-		if (report.summary.outputPath.Contains("apk")) // Exclude Gradle Project Output
-		{
-			var fileInfo = new System.IO.FileInfo(report.summary.outputPath);
-			OVRPlugin.AddCustomMetadata("build_output_size", fileInfo.Length.ToString());
-		}
 #endif
 		if (!report.summary.outputPath.Contains("OVRGradleTempExport"))
 		{
-			OVRPlugin.SendEvent("build_complete", (System.DateTime.Now - buildStartTime).TotalSeconds.ToString(), "ovrbuild");
 #if BUILDSESSION
 			UnityEngine.Debug.LogFormat("build_complete: {0}", (System.DateTime.Now - buildStartTime).TotalSeconds.ToString());
 #endif
@@ -410,17 +438,6 @@ public class OVRGradleGeneration
 				if (!WaitForProcess)
 				{
 					adbProcess.Kill();
-					float UploadTime = (float)(UploadEnd - UploadStart).TotalMilliseconds / 1000f;
-					float InstallTime = (float)(InstallEnd - UploadEnd).TotalMilliseconds / 1000f;
-
-					if (UploadTime > 0f)
-					{
-						OVRPlugin.SendEvent("deploy_task", UploadTime.ToString(), "ovrbuild");
-					}
-					if (InstallTime > 0f)
-					{
-						OVRPlugin.SendEvent("install_task", InstallTime.ToString(), "ovrbuild");
-					}
 				}
 
 				if (!TransferStarted && transferTimeout.ElapsedMilliseconds > 5000)

@@ -15,7 +15,7 @@
 			CGPROGRAM
 				#pragma vertex vert
 				#pragma fragment frag
-				
+
 				#include "UnityCG.cginc"
 
 				struct appdata_t
@@ -35,6 +35,7 @@
 				int _face;
 				int _linearToSrgb;
 				int _premultiply;
+				int _flip;
 
 				v2f vert (appdata_t va)
 				{
@@ -51,7 +52,7 @@
 
 					return vo;
 				}
-				
+
 				fixed4 frag (v2f vi) : COLOR
 				{
 					fixed4 col = texCUBE(_MainTex, vi.cubedir);

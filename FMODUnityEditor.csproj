@@ -56,7 +56,6 @@
     <Compile Include="Assets\Plugins\FMOD\src\Editor\LogViewer.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\BankRefDrawer.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\SettingsEditor.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Editor\ParamRefDrawer.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EventManager.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\Timeline\FMODEventTrackEditor.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\FindAndReplace.cs" />
@@ -64,20 +63,21 @@
     <Compile Include="Assets\Plugins\FMOD\src\Editor\CreateEventPopup.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EventCache.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EventBrowser.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Editor\EditorParamRef.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\StudioParameterTriggerEditor.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EditorUtils.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\StudioBankLoaderEditor.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Editor\Timeline\FMODEventPlayableEditor.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Editor\SetupWizard.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Editor\ParamRefDrawer.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Editor\EditorParamRef.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EventRefDrawer.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EditorBankRef.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\StudioListenerEditor.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\StudioEventEmitterGizmoDrawer.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\StudioGlobalParameterTriggerEditor.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\EditorEventRef.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Editor\Timeline\FMODEventPlayableEditor.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\StudioEventEmitterEditor.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\BankRefresher.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Editor\SetupWizard.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\ListView.cs" />
     <Compile Include="Assets\Plugins\FMOD\src\Editor\BoltIntegration.cs" />
   </ItemGroup>
@@ -355,11 +355,23 @@
     <Reference Include="Unity.Analytics.Editor">
       <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst.Unsafe">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.Tracker">
       <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Unity.Burst.Cecil.Pdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Cecil.Mdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Cecil">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Cecil.Rocks">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>

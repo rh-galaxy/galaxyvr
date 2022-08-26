@@ -39,7 +39,7 @@ public class Decoration : MonoBehaviour
         if (i_iType == 7) oHouseLeftRender.GetComponent<MeshRenderer>().material = oBlueHouse;
         if (i_iType == 8) oHouseMidRender.GetComponent<MeshRenderer>().material = oBlueHouse;
         if (i_iType == 9) oHouseRightRender.GetComponent<MeshRenderer>().material = oBlueHouse;
-        
+
         transform.position = new Vector3(i_vPos.x, i_vPos.y, -0.0f);
     }
 

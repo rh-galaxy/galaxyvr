@@ -763,9 +763,14 @@ public class Player : MonoBehaviour
                 if (gamepad.buttonSouth.isPressed || gamepad.buttonWest.isPressed) bNewFireState = true; //button A (X)
             }
 
+            Keyboard keyboard = Keyboard.current;
             Mouse mouse = Mouse.current;
             if (mouse != null && bMotionMovementEnabled)
             {
+                if (keyboard!=null && keyboard.hKey.isPressed)
+                {
+                    bThrottle = true;
+                }
                 if (mouse.rightButton.isPressed || mouse.leftButton.isPressed)
                 {
                     bThrottle = true;
@@ -877,8 +882,7 @@ public class Player : MonoBehaviour
             }
 
             //keyboard
-            Keyboard keyboard = Keyboard.current;
-            if(keyboard != null) {
+            if (keyboard != null) {
                 if (!bMotionMovementEnabled) if (keyboard.enterKey.isPressed || keyboard.spaceKey.isPressed) bNewFireState = true;
                 if (keyboard.upArrowKey.isPressed || keyboard.wKey.isPressed) bThrottle = true;
                 if (keyboard.downArrowKey.isPressed || keyboard.sKey.isPressed) bAdjust = true;
