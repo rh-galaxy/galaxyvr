@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.XR;
 using UnityEngine.InputSystem;
 using UnityEngine.Profiling;
 using System.IO;
@@ -17,7 +16,6 @@ public class GameManager : MonoBehaviour
 
     public CameraController cameraHolder;
 
-    internal static bool bValveDevicePresent = false;
     internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
     internal static bool bUserValid = false;
@@ -60,27 +58,6 @@ public class GameManager : MonoBehaviour
         bool bInited = false;
         this.enabled = true;
         bInited = InitValve();
-
-        if(bInited) //extra check for headset
-        {
-            UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
-            if (headDevice == null || !headDevice.isValid) bInited = false;
-        }
-
-        if (!bInited)
-        {
-            //no VR
-            //bUserValid = true;
-            bNoHiscore = true;
-            bNoVR = true;
-            Screen.SetResolution(1280, 720, true);
-
-            Debug.Log("Error initing VR, continue with no VR");
-        }
-        else
-        {
-            Screen.SetResolution(864, 960, false);
-        }
 
         GameLevel.theReplay = oReplay;
 
@@ -170,17 +147,7 @@ public class GameManager : MonoBehaviour
         szUser = "s_" + SteamFriends.GetPersonaName();
         bUserValid = true;
 
-        UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
-        if (headDevice != null && headDevice.isValid)
-        {
-            bValveDevicePresent = true;
-        }
-        if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeFailure)
-        {
-            SteamVR.settings.lockPhysicsUpdateRateToRenderFrequency = false;
-        }
-
-        return bValveDevicePresent;
+        return true;
     }
 
     //cannot do this, because it is called when Awake is called a second time when loading another scene!
@@ -568,16 +535,50 @@ public class GameManager : MonoBehaviour
         if (bSteamAPIInited)
             SteamAPI.RunCallbacks(); //must run every frame for some reason or garbage collector takes something and unity crashes
 
+        /**/if (iInitState < 2)
+        {
+            fInitTimer += Time.deltaTime;
+            switch (iInitState)
+            {
+                case 0:
+                    if (fInitTimer > 1f)
+                    {
+                        iInitState++;
+                        SteamVR.enabled = true;
+                    }
+                    return;
+                case 1:
+                    if (SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess)
+                    {
+                        //Screen.SetResolution(864, 960, false);
+                        SteamVR.settings.lockPhysicsUpdateRateToRenderFrequency = false;
+                        Debug.Log("VR inited");
+                        iInitState++;
+                    }
+                    if (fInitTimer > 8f)
+                    {
+                        //no VR
+                        bNoHiscore = true;
+                        bNoVR = true;
+                        Screen.SetResolution(1280, 720, true);
+                        Debug.Log("Error initing VR, continue with no VR");
+                        iInitState++;
+                    }
+                    return;
+            }
+        }
+
         //get input devices
         Gamepad gamepad = Gamepad.current;
         Keyboard keyboard = Keyboard.current;
-        UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
 
         //quit
         if (Menu.bQuit)
         {
             if (bSteamAPIInited)
                 SteamAPI.Shutdown();
+
+            /**/SteamVR.enabled = false;
 #if UNITY_EDITOR
             //Application.Quit() does not work in the editor so
             // this need to be set to false to end the game
@@ -607,7 +608,7 @@ public class GameManager : MonoBehaviour
 
         //pause
         bool bPauseNow = bPause; //no change below
-        if (bValveDevicePresent && !bNoVR)
+        if (!bNoVR)
         {
             //bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
             /**///bPauseNow = Valve.VR.OpenVR.System.ShouldApplicationPause(); //!userPresent;

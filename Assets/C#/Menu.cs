@@ -788,13 +788,12 @@ public class Menu : MonoBehaviour
         Mouse mouse = Mouse.current;
         Gamepad gamepad = Gamepad.current;
         bool bTrigger = false;
-        if (GameManager.bValveDevicePresent)
-            try
-            {
-                bTrigger = (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f) ||
-                    SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any);
-            }
-            catch { }
+        try
+        {
+            bTrigger = (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f) ||
+                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any);
+        }
+        catch { }
 
         float fAdjust = 0;
 
