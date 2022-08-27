@@ -440,7 +440,7 @@ public class GameManager : MonoBehaviour
     }
 
     /**/
-    //this is insane and totally like nothing else, but to avoid a 6 second freeze when the file is not in cache
+    //to avoid a 6 second freeze when the file is not in cache
     // this is loaded here once hopefully while the user spend some seconds in the menu before this will be accessed by LoadSceneAsync.
     //so much for async.
     //note: with planet texture data now 100MB instead of 1000MB this is not needed as much
@@ -459,8 +459,8 @@ public class GameManager : MonoBehaviour
         } catch { }
         while (fs != null && !allRead)
         {
-            int fr = fs.Read(preLoadBytes, 0 + iChunkNr * iChunkSize, iChunkSize);
-            if (fr != iChunkSize) allRead = true;
+            int fr = fs.Read(preLoadBytes, 0, iChunkSize);
+            if (fr == 0) allRead = true;
             iChunkNr++;
             Thread.Sleep(5);
         }
@@ -550,6 +550,8 @@ public class GameManager : MonoBehaviour
 
     //float fRecenterTimer = 0.0f;
     float fLongpressTimer = 0.0f;
+    float fInitTimer = 0.0f;
+    int iInitState = 0;
     void Update()
     {
 #if LOGPROFILERDATA
@@ -570,9 +572,6 @@ public class GameManager : MonoBehaviour
         Gamepad gamepad = Gamepad.current;
         Keyboard keyboard = Keyboard.current;
         UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
-        //UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-        //UnityEngine.XR.InputDevice handLDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
-        //bool buttonSelLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.menuButton, out bool buttonSelL);
 
         //quit
         if (Menu.bQuit)
@@ -587,29 +586,12 @@ public class GameManager : MonoBehaviour
             UnityEngine.Application.Quit();
 #endif
         }
+
         //recenter
         //not working in new steamvr/openvr
-        /*if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any) && iState<=5) //for now only recenter if in menu
-        {
-            Menu.bRecenter = true;
-            fRecenterTimer = 3.1f; //make it instant
-        }
-        if (Menu.bRecenter && !bNoVR)
-        {
-            fRecenterTimer += Time.unscaledDeltaTime;
-            if (fRecenterTimer > 3.0f)
-            {
-                //Valve.VR.OpenVR.Compositor.SetTrackingSpace(ETrackingUniverseOrigin.TrackingUniverseSeated);
-                //the above needs to be set in SteamVR settings for ResetSeatedZeroPose() to work.
-                //Window->SteamVR Input->Advanced Settings->SteamVR Settings->"Tracking Space Origin" drop-down, "Tracking Universe Seated"
-                Valve.VR.OpenVR.System.ResetSeatedZeroPose();
-
-                Menu.bRecenter = false;
-                fRecenterTimer = 0.0f;
-            }
-        }*/
 
         //long press on grip button is back
+        //left menu button is occupied by steamvr
         bool bBackButton = false;
         if (SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any))
         {
@@ -623,15 +605,12 @@ public class GameManager : MonoBehaviour
         }
         else fLongpressTimer = 0.0f;
 
-        //get user present
-        bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
-
-        //pause if in oculus home universal menu
-        // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
+        //pause
         bool bPauseNow = bPause; //no change below
         if (bValveDevicePresent && !bNoVR)
         {
-            bPauseNow = !userPresent;
+            //bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
+            /**///bPauseNow = Valve.VR.OpenVR.System.ShouldApplicationPause(); //!userPresent;
         }
 
         /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
@@ -674,9 +653,6 @@ public class GameManager : MonoBehaviour
             case -3:
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 // and should be active here ("Scenes/GameStart")
-                Cursor.visible = false;
-                //Screen.SetResolution(1280, 720, true);
-                //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
 
                 //to avoid stalls of 5+ sec the first time a level is started after app start
