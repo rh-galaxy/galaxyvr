@@ -315,8 +315,8 @@ public class GameManager : MonoBehaviour
         } catch { }
         while (fs != null && !allRead)
         {
-            int fr = fs.Read(preLoadBytes, 0 + iChunkNr * iChunkSize, iChunkSize);
-            if (fr != iChunkSize) allRead = true;
+            int fr = fs.Read(preLoadBytes, 0, iChunkSize);
+            if (fr == 0) allRead = true;
             iChunkNr++;
             Thread.Sleep(5);
         }
