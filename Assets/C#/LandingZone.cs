@@ -20,7 +20,6 @@ public class LandingZone : MonoBehaviour
     GameObject[] oZoneCargoList;
     GameObject oZoneAttentionMarker = null;
     MeshRenderer oZoneAttentionMarkerRenderer;
-    //SelectiveBloom sb;
 
     public GameObject oHangar, oTower, oSilo;
     public GameObject oExtraLife;
@@ -120,12 +119,6 @@ public class LandingZone : MonoBehaviour
 
             oZoneAttentionMarkerRenderer = oZoneAttentionMarker.GetComponent<MeshRenderer>();
 
-            /*oZoneAttentionMarker.AddComponent<SelectiveBloom>();
-            sb = oZoneAttentionMarker.GetComponent<SelectiveBloom>();
-            if(bHomeBase) sb.Color = new Color(0.0f, 158.0f / 255.0f, 183.0f / 255.0f, 1f);
-            else sb.Color = new Color(0.0f, 228.0f / 255.0f, 39.0f / 255.0f, 1f);
-            sb.Strength = 1f;*/
-
             oMaterialHome = Resources.Load("LandingZoneHome", typeof(Material)) as Material;
             oMaterialCargo = Resources.Load("LandingZoneCargo", typeof(Material)) as Material;
         }
@@ -185,28 +178,16 @@ public class LandingZone : MonoBehaviour
     int iCntr = 0;
     void Update()
     {
-        //if(GameManager.theGM.oFadeBox.activeSelf) sb.Strength = 0f;
-        //else sb.Strength = 1f;
-
         iCntr++;
         if(iCntr%50==0 && oZoneAttentionMarker!=null)
         {
             //update material on attention marker
             if (bHomeBase)
-            {
                 oZoneAttentionMarkerRenderer.material = oMaterialHome;
-                //sb.Color = new Color(0.0f, 158.0f / 255.0f, 183.0f / 255.0f, 1f);
-            }
             else if (GetTotalCargo() > 0)
-            {
                 oZoneAttentionMarkerRenderer.material = oMaterialCargo;
-                //sb.Color = new Color(0.0f, 228.0f / 255.0f, 39.0f / 255.0f, 1f);
-            }
             else
-            {
                 oZoneAttentionMarkerRenderer.material = oMaterialZone;
-                //sb.enabled = false;
-            }
         }
     }
 }

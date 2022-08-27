@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
+using UnityEngine.InputSystem;
 using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
@@ -60,6 +61,12 @@ public class GameManager : MonoBehaviour
         this.enabled = true;
         bInited = InitValve();
 
+        if(bInited) //extra check for headset
+        {
+            UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
+            if (headDevice == null || !headDevice.isValid) bInited = false;
+        }
+
         if (!bInited)
         {
             //no VR
@@ -106,7 +113,6 @@ public class GameManager : MonoBehaviour
 
     //////start of valve specific code
     bool bSteamAPIInited = false;
-    float fBackTimerForViveController = 0.0f;
 
     CGameID gameID;
     bool bSteamStatsValid = false;
@@ -164,9 +170,13 @@ public class GameManager : MonoBehaviour
         szUser = "s_" + SteamFriends.GetPersonaName();
         bUserValid = true;
 
-        if (XRDevice.isPresent && SteamVR.initializedState!=SteamVR.InitializedStates.InitializeFailure)
+        UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
+        if (headDevice != null && headDevice.isValid)
         {
             bValveDevicePresent = true;
+        }
+        if (SteamVR.initializedState != SteamVR.InitializedStates.InitializeFailure)
+        {
             SteamVR.settings.lockPhysicsUpdateRateToRenderFrequency = false;
         }
 
@@ -538,7 +548,7 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    float fRecenterTimer = 0.0f;
+    //float fRecenterTimer = 0.0f;
     float fLongpressTimer = 0.0f;
     void Update()
     {
@@ -556,6 +566,14 @@ public class GameManager : MonoBehaviour
         if (bSteamAPIInited)
             SteamAPI.RunCallbacks(); //must run every frame for some reason or garbage collector takes something and unity crashes
 
+        //get input devices
+        Gamepad gamepad = Gamepad.current;
+        Keyboard keyboard = Keyboard.current;
+        UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
+        //UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        //UnityEngine.XR.InputDevice handLDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+        //bool buttonSelLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.menuButton, out bool buttonSelL);
+
         //quit
         if (Menu.bQuit)
         {
@@ -570,7 +588,8 @@ public class GameManager : MonoBehaviour
 #endif
         }
         //recenter
-        if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any) && iState<=5) //for now only recenter if in menu
+        //not working in new steamvr/openvr
+        /*if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any) && iState<=5) //for now only recenter if in menu
         {
             Menu.bRecenter = true;
             fRecenterTimer = 3.1f; //make it instant
@@ -588,7 +607,7 @@ public class GameManager : MonoBehaviour
                 Menu.bRecenter = false;
                 fRecenterTimer = 0.0f;
             }
-        }
+        }*/
 
         //long press on grip button is back
         bool bBackButton = false;
@@ -604,12 +623,15 @@ public class GameManager : MonoBehaviour
         }
         else fLongpressTimer = 0.0f;
 
+        //get user present
+        bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
+
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
         bool bPauseNow = bPause; //no change below
-        if (bValveDevicePresent)
+        if (bValveDevicePresent && !bNoVR)
         {
-            bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent); //|| bSteamOverlayActive;
+            bPauseNow = !userPresent;
         }
 
         /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
@@ -828,11 +850,10 @@ public class GameManager : MonoBehaviour
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
-
-                bool bBackController = false;
-                try { bBackController = SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
-                if ( bBackController || bBackButton
-                    || Input.GetKey(KeyCode.Escape) || Menu.bLevelUnSelected)
+                if (gamepad != null) bBackButton = bBackButton || gamepad.selectButton.isPressed;
+                if (keyboard != null) bBackButton = bBackButton || keyboard.escapeKey.isPressed;
+                try { bBackButton = bBackButton || SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
+                if (Menu.bLevelUnSelected || bBackButton)
                 {
                     Menu.bLevelUnSelected = false;
                     iState = 1; //goto menu part 1 (back)
@@ -931,10 +952,10 @@ public class GameManager : MonoBehaviour
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
 
-                    bool bBackController2 = false;
-                    try { bBackController2 = SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
-                    if ( bBackController2 || bBackButton
-                        || Input.GetKey(KeyCode.Escape)) //back to menu
+                    if (gamepad != null) bBackButton = bBackButton || gamepad.selectButton.isPressed;
+                    if (keyboard != null) bBackButton = bBackButton || keyboard.escapeKey.isPressed;
+                    try { bBackButton = bBackButton || SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
+                    if (bBackButton) //back to menu
                     {
                         bBackToMenu = true;
                         bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level

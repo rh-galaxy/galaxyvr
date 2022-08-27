@@ -88,7 +88,7 @@ public class AudioStateMachine : MonoBehaviour
     /*public void SetOutputByRiftSetting()
     {
         FMOD.System sys;
-        FMODUnity.RuntimeManager.StudioSystem.getLowLevelSystem(out sys);
+        FMODUnity.RuntimeManager.StudioSystem.getCoreSystem(out sys);
 
         int i, driverCount = 0;
         sys.getNumDrivers(out driverCount);

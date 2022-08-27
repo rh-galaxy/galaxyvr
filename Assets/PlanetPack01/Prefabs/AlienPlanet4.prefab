@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 465034}
   - component: {fileID: 3322576}
   - component: {fileID: 2335356}
-  - component: {fileID: 9581450}
-  - component: {fileID: 11466180}
   m_Layer: 0
   m_Name: AlienPlanet4
   m_TagString: Untagged
@@ -27,9 +25,10 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 171316}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.5951738, z: -0, w: 0.8035971}
   m_LocalPosition: {x: 0, y: 0, z: 9}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 405966}
   m_Father: {fileID: 0}
@@ -54,9 +53,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -81,40 +83,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!95 &9581450
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 171316}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 7c4c4db7a9f004b40ac29f2ffcd10605, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &11466180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 171316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
-  m_Script: {fileID: 11500000, guid: 1cc1e10ea387e2a4095767e0bf939ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InitialOrientation: {x: -20, y: 0, z: 0}
-  RotationOrientation: {x: 0, y: 1, z: 0}
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &189234
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +95,6 @@ GameObject:
   - component: {fileID: 405966}
   - component: {fileID: 3364230}
   - component: {fileID: 2389466}
-  - component: {fileID: 9577920}
   - component: {fileID: 11477354}
   m_Layer: 0
   m_Name: AlienAtmosphere4
@@ -145,6 +113,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 465034}
   m_RootOrder: 0
@@ -168,9 +137,12 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -195,25 +167,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!95 &9577920
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 189234}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 7c4c4db7a9f004b40ac29f2ffcd10605, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &11477354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,7 +177,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 189234}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 1cc1e10ea387e2a4095767e0bf939ed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

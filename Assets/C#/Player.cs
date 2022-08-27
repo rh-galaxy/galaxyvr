@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using UnityEngine.XR;
+using UnityEngine.InputSystem;
 using Valve.VR;
 
 public class Player : MonoBehaviour
@@ -735,13 +737,47 @@ public class Player : MonoBehaviour
             if (fTrg2 > 0.3f) bThrottle = true;
             try { if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true; } catch { }
 
-            if (fX > 0.3f) bRight = true;
-            if (fX < -0.3f) bLeft = true;
-            if (fY < -0.75f && bLeft == false && bRight == false) bAdjust = true;
-            if (fY < -0.85f) bAdjust = true; //safety if for some reason there is trouble getting adjust activated, if all the way down activate always
+            if (fX > 0.35f) bRight = true;
+            if (fX < -0.35f) bLeft = true;
+            if(!bMotionMovementEnabled)
+            {
+                if ((fY < -0.75f) && bLeft == false && bRight == false) bAdjust = true;
+                if (fY < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
 
-            //keyboard and joystick for fire (is a trigger once event)
-            if (!bMotionMovementEnabled) try { if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true; } catch { }
+                try { if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true; } catch { }
+            }
+
+            Gamepad gamepad = Gamepad.current;
+            if (gamepad != null && !bMotionMovementEnabled)
+            {
+                Vector2 stickG1 = gamepad.rightStick.ReadValue();
+                Vector2 stickG2 = gamepad.leftStick.ReadValue();
+                float trgG1 = gamepad.rightTrigger.ReadValue();
+                float trgG2 = gamepad.leftTrigger.ReadValue();
+
+                if (stickG1.x > 0.5f || stickG2.x > 0.5f) bRight = true;
+                if (stickG1.x < -0.5f || stickG2.x < -0.5f) bLeft = true;
+                if ((stickG1.y < -0.7f || stickG2.y < -0.7f) && bLeft == false && bRight == false) bAdjust = true;
+                if (stickG1.y < -0.85f || stickG2.y < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
+
+                if (trgG1 > 0.3f || trgG2 > 0.3f) bThrottle = true;
+                if (gamepad.buttonEast.isPressed || gamepad.buttonNorth.isPressed) bThrottle = true; //button B (Y)
+                if (gamepad.buttonSouth.isPressed || gamepad.buttonWest.isPressed) bNewFireState = true; //button A (X)
+            }
+
+            Keyboard keyboard = Keyboard.current;
+            Mouse mouse = Mouse.current;
+            if (mouse != null && bMotionMovementEnabled)
+            {
+                if (keyboard!=null && keyboard.hKey.isPressed)
+                {
+                    bThrottle = true;
+                }
+                if (mouse.rightButton.isPressed || mouse.leftButton.isPressed)
+                {
+                    bThrottle = true;
+                }
+            }
 
             if (bMotionMovementEnabled)
             {
@@ -848,11 +884,13 @@ public class Player : MonoBehaviour
             }
 
             //keyboard
-            if (!bMotionMovementEnabled) if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Space)) bNewFireState = true;
-            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) bThrottle = true;
-            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) bAdjust = true;
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) { bLeft = true; bAdjust = false; }
-            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) { bRight = true; bAdjust = false; }
+            if (keyboard != null) {
+                if (!bMotionMovementEnabled) if (keyboard.enterKey.isPressed || keyboard.spaceKey.isPressed) bNewFireState = true;
+                if (keyboard.upArrowKey.isPressed || keyboard.wKey.isPressed) bThrottle = true;
+                if (keyboard.downArrowKey.isPressed || keyboard.sKey.isPressed) bAdjust = true;
+                if (keyboard.leftArrowKey.isPressed || keyboard.aKey.isPressed) { bLeft = true; bAdjust = false; }
+                if (keyboard.rightArrowKey.isPressed || keyboard.dKey.isPressed) { bRight = true; bAdjust = false; }
+            }
 
             if (!bFire)
             {

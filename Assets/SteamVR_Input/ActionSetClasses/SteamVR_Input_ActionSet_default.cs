@@ -104,5 +104,13 @@ namespace Valve.VR
                 return SteamVR_Actions.default_Pose_left_tip;
             }
         }
+        
+        public virtual SteamVR_Action_Pose Pose
+        {
+            get
+            {
+                return SteamVR_Actions.default_Pose;
+            }
+        }
     }
 }
