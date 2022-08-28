@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using UnityEngine.XR;
+using UnityEngine.InputSystem;
 using Valve.VR;
 
 public class CameraController : MonoBehaviour
@@ -16,6 +18,7 @@ public class CameraController : MonoBehaviour
     private Vector3 vCamOffset;
     private Vector3 vMapSize;
 
+    internal bool bLayDown = false;
     internal static bool bSnapMovement = false;
     internal static bool bPointMovement = false;
     bool bPointMovementInMenu = false;
@@ -68,7 +71,7 @@ public class CameraController : MonoBehaviour
         poseActionR = SteamVR_Input.GetAction<SteamVR_Action_Pose>("Pose_right_tip");
         poseActionL = SteamVR_Input.GetAction<SteamVR_Action_Pose>("Pose_left_tip");
 
-        iRightHanded = 0;
+        oRayQuad.SetActive(false);
     }
 
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
@@ -95,60 +98,98 @@ public class CameraController : MonoBehaviour
     // now: 2 2 1 2 2 1 
     float fCurX = 0, fCurY = 0;
     float fStepX = 0, fStepY = 0;
-    public void GetMouseMovementSmooth(out float o_fX, out float o_fY)
+    public void GetMouseMovementSmooth(out float o_fX, out float o_fY, out float o_fXScreen, out float o_fYScreen)
     {
-        fCurX += Input.GetAxis("Mouse X");
-        fCurY += Input.GetAxis("Mouse Y");
+        o_fX = 0;
+        o_fY = 0;
+        o_fXScreen = 0;
+        o_fYScreen = 0;
 
-        float fStep = Time.deltaTime / 0.050f; //% of movement to distribute each time called
-        if (fStep > 1.0f) fStep = 1.0f;  //if frametime too long we must not move faster
-        if (fStep <= 0.0f) fStep = 1.0f; //if the timer has too low resolution compared to the framerate
-
-        fStepX = fCurX * fStep;
-        fStepY = fCurY * fStep;
-
-        if (Mathf.Abs(fCurX) > Mathf.Abs(fStepX))
+        Mouse mouse = Mouse.current;
+        if (mouse != null)
         {
-            fCurX -= fStepX;
-            o_fX = fStepX;
+            //InputSystem
+            Vector2 v = mouse.position.ReadValue();
+            o_fXScreen = v.x;
+            o_fYScreen = v.y;
+            v = mouse.delta.ReadValue() * Time.deltaTime * 7.0f;
+            fCurX += v.x;
+            fCurY += v.y;
+
+            float fStep = Time.deltaTime / 0.050f; //% of movement to distribute each time called
+            if (fStep > 1.0f) fStep = 1.0f;  //if frametime too long we must not move faster
+            if (fStep <= 0.0f) fStep = 1.0f; //if the timer has too low resolution compared to the framerate
+
+            fStepX = fCurX * fStep;
+            fStepY = fCurY * fStep;
+
+            if (Mathf.Abs(fCurX) > Mathf.Abs(fStepX))
+            {
+                fCurX -= fStepX;
+                o_fX = fStepX;
+            }
+            else
+            {
+                o_fX = fCurX;
+                fCurX = 0;
+            }
+
+            if (Mathf.Abs(fCurY) > Mathf.Abs(fStepY))
+            {
+                fCurY -= fStepY;
+                o_fY = fStepY;
+            }
+            else
+            {
+                o_fY = fCurY;
+                fCurY = 0;
+            }
         }
         else
         {
-            o_fX = fCurX;
+            //reset so old values does nothing when mouse pressed again
             fCurX = 0;
-        }
-
-        if (Mathf.Abs(fCurY) > Mathf.Abs(fStepY))
-        {
-            fCurY -= fStepY;
-            o_fY = fStepY;
-        }
-        else
-        {
-            o_fY = fCurY;
             fCurY = 0;
         }
     }
 
     // Update is called once per frame
-    float fX = 0.0f, fY = 0, fZ = 0;
+    float fX_cam = 0.0f, fY_cam = 0, fZ_cam = 0;
+    Vector3 mousePoint;
     float fSnapTimer = 0;
     bool bFirst = true;
     void LateUpdate()
     {
+        /**/
+        if (GameManager.bNoVR)
+        {
+            Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
+            Camera.main.fieldOfView = 45.0f;
+        }
+
         //emulate headset movement
-        if (Input.GetKey(KeyCode.F) || GameManager.bNoVR)
+        Keyboard keyboard = Keyboard.current;
+        if ((keyboard!=null && keyboard.fKey.isPressed) || GameManager.bNoVR)
         {
             //using mouse smoothing to avoid jerkyness
-            float fMouseX, fMouseY;
-            GetMouseMovementSmooth(out fMouseX, out fMouseY);
-            if (Input.GetKey(KeyCode.G)) fZ += fMouseX * 3.0f;
-            else fY += fMouseX * 3.0f;
-            fX -= fMouseY * 3.0f;
+            float fMouseX, fMouseY, fMouseXScreen, fMouseYScreen;
+            GetMouseMovementSmooth(out fMouseX, out fMouseY, out fMouseXScreen, out fMouseYScreen);
+            Mouse mouse = Mouse.current;
+            if (mouse != null && mouse.middleButton.isPressed)
+            {
+                if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 3.0f;
+                else fY_cam += fMouseX * 3.0f;
+                fX_cam -= fMouseY * 3.0f;
+            }
+            if (mouse!=null)
+            {
+                Vector3 scr = new Vector3(fMouseXScreen, fMouseYScreen, 5.0f);
+                mousePoint = Camera.main.ScreenToWorldPoint(scr, Camera.MonoOrStereoscopicEye.Mono);
+            }
 
-            if (Input.GetKey(KeyCode.R)) { fX = 0.0f; fY = 0; fZ = 0; }
+            if (keyboard != null && keyboard.rKey.isPressed) { fX_cam = 0.0f; fY_cam = 0; fZ_cam = 0; }
 
-            transform.eulerAngles = new Vector3(fX, fY, fZ);
+            transform.eulerAngles = new Vector3(fX_cam, fY_cam, fZ_cam);
         }
 
         if (bMapMode)
@@ -200,6 +241,13 @@ public class CameraController : MonoBehaviour
     {
         bPointMovement = bMotionController;
     }
+    public void SetLayDownView(bool bLayDownView)
+    {
+        bLayDown = bLayDownView;
+        if(bLayDown) transform.Rotate(75.0f, 0, 0);
+        else transform.Rotate(-75.0f, 0, 0);
+    }
+
     public void SetPointingInfo(Vector3 vHitPoint, Quaternion qHitDir, Vector3 vOrigin, Quaternion qOriginDir)
     {
         //move the cursor to the point where the raycast hit
@@ -216,6 +264,9 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        Mouse mouse = Mouse.current;
+        Gamepad gamepad = Gamepad.current;
+
         //switch hand/use gamepad?
         {
             try
@@ -242,10 +293,21 @@ public class CameraController : MonoBehaviour
             }
             catch { }
 
-            if (Input.GetMouseButton(0) && iRightHanded != 0)
+            if (gamepad != null)
             {
-                bPointMovementInMenu = false;
-                iRightHanded = 0;
+                if (gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed)
+                {
+                    bPointMovementInMenu = false;
+                    iRightHanded = 0;
+                }
+            }
+            if (mouse != null)
+            {
+                if (mouse.rightButton.isPressed || mouse.leftButton.isPressed)
+                {
+                    bPointMovementInMenu = true;
+                    iRightHanded = 0;
+                }
             }
 
             if (bFadeDone)
@@ -269,6 +331,13 @@ public class CameraController : MonoBehaviour
         {
             vHeadPosition = cameraRig.position + poseActionL[SteamVR_Input_Sources.LeftHand].localPosition;
             qRotation = cameraRig.rotation * poseActionL[SteamVR_Input_Sources.LeftHand].localRotation;
+            vGazeDirection = qRotation * Vector3.forward;
+        }
+        if (iRightHanded == 0 && bPointMovementInMenu) //on mouse only (gamepad uses head to point in menu, and cannot point in game)
+        {
+            vHeadPosition = new Vector3(vHeadPosition.x, vHeadPosition.y-0.5f, vHeadPosition.z); //below head
+            Ray r = new Ray(vHeadPosition, (mousePoint - vHeadPosition).normalized);
+            qRotation = Quaternion.LookRotation(r.direction);
             vGazeDirection = qRotation * Vector3.forward;
         }
     }

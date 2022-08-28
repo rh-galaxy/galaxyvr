@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.galaxyforcesvr.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "D:\\Prog\\unity\\Galaxy Forces VR_multip\\actions.json",
+      "action_manifest_path": "D:\\Prog\\unity\\Galaxy Forces VR_multip\\Assets\\StreamingAssets\\SteamVR\\actions.json",
       "strings": {
         "en_us": {
           "name": "Galaxy Forces VR [Testing]"

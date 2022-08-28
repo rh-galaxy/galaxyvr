@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.XR;
+using UnityEngine.InputSystem;
 using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
 
     public CameraController cameraHolder;
 
-    internal static bool bValveDevicePresent = false;
     internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
     internal static bool bUserValid = false;
@@ -62,21 +61,6 @@ public class GameManager : MonoBehaviour
         this.enabled = true;
         bInited = InitValve();
 
-        if (!bInited)
-        {
-            //no VR
-            //bUserValid = true;
-            bNoHiscore = true;
-            bNoVR = true;
-            Screen.SetResolution(1280, 720, true);
-
-            Debug.Log("Error initing VR, continue with no VR");
-        }
-        else
-        {
-            Screen.SetResolution(864, 960, false);
-        }
-
         GameLevel.theReplay = oReplay;
 
         //this list keeps the last scores for each level for the entire game session, beginning with no score
@@ -108,7 +92,6 @@ public class GameManager : MonoBehaviour
 
     //////start of valve specific code
     bool bSteamAPIInited = false;
-    float fBackTimerForViveController = 0.0f;
 
     CGameID gameID;
     bool bSteamStatsValid = false;
@@ -166,13 +149,7 @@ public class GameManager : MonoBehaviour
         szUser = "s_" + SteamFriends.GetPersonaName();
         bUserValid = true;
 
-        if (XRDevice.isPresent && SteamVR.initializedState!=SteamVR.InitializedStates.InitializeFailure)
-        {
-            bValveDevicePresent = true;
-            SteamVR.settings.lockPhysicsUpdateRateToRenderFrequency = false;
-        }
-
-        return bValveDevicePresent;
+        return true;
     }
 
     //cannot do this, because it is called when Awake is called a second time when loading another scene!
@@ -432,7 +409,7 @@ public class GameManager : MonoBehaviour
     }
 
     /**/
-    //this is insane and totally like nothing else, but to avoid a 6 second freeze when the file is not in cache
+    //to avoid a 6 second freeze when the file is not in cache
     // this is loaded here once hopefully while the user spend some seconds in the menu before this will be accessed by LoadSceneAsync.
     //so much for async.
     //note: with planet texture data now 100MB instead of 1000MB this is not needed as much
@@ -451,8 +428,8 @@ public class GameManager : MonoBehaviour
         } catch { }
         while (fs != null && !allRead)
         {
-            int fr = fs.Read(preLoadBytes, 0 + iChunkNr * iChunkSize, iChunkSize);
-            if (fr != iChunkSize) allRead = true;
+            int fr = fs.Read(preLoadBytes, 0, iChunkSize);
+            if (fr == 0) allRead = true;
             iChunkNr++;
             Thread.Sleep(5);
         }
@@ -540,8 +517,10 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    float fRecenterTimer = 0.0f;
+    //float fRecenterTimer = 0.0f;
     float fLongpressTimer = 0.0f;
+    float fInitTimer = 0.0f;
+    int iInitState = 0;
 
     //////////////////////////////////////////////////////////////////////////////////////////
     float fMultiplayerTimer = 25.0f;
@@ -566,11 +545,50 @@ public class GameManager : MonoBehaviour
         if (bSteamAPIInited)
             SteamAPI.RunCallbacks(); //must run every frame for some reason or garbage collector takes something and unity crashes
 
+        /**/if (iInitState < 2)
+        {
+            fInitTimer += Time.deltaTime;
+            switch (iInitState)
+            {
+                case 0:
+                    if (fInitTimer > 1f)
+                    {
+                        iInitState++;
+                        SteamVR.enabled = true;
+                    }
+                    return;
+                case 1:
+                    if (SteamVR.initializedState == SteamVR.InitializedStates.InitializeSuccess)
+                    {
+                        //Screen.SetResolution(864, 960, false);
+                        SteamVR.settings.lockPhysicsUpdateRateToRenderFrequency = false;
+                        Debug.Log("VR inited");
+                        iInitState++;
+                    }
+                    if (fInitTimer > 8f)
+                    {
+                        //no VR
+                        bNoHiscore = true;
+                        bNoVR = true;
+                        Screen.SetResolution(1280, 720, true);
+                        Debug.Log("Error initing VR, continue with no VR");
+                        iInitState++;
+                    }
+                    return;
+            }
+        }
+
+        //get input devices
+        Gamepad gamepad = Gamepad.current;
+        Keyboard keyboard = Keyboard.current;
+
         //quit
         if (Menu.bQuit)
         {
             if (bSteamAPIInited)
                 SteamAPI.Shutdown();
+
+            /**/SteamVR.enabled = false;
 #if UNITY_EDITOR
             //Application.Quit() does not work in the editor so
             // this need to be set to false to end the game
@@ -579,28 +597,12 @@ public class GameManager : MonoBehaviour
             UnityEngine.Application.Quit();
 #endif
         }
-        //recenter
-        if(SteamVR_Actions.default_Recenter.GetStateDown(SteamVR_Input_Sources.Any) && iState<=5) //for now only recenter if in menu
-        {
-            Menu.bRecenter = true;
-            fRecenterTimer = 3.1f; //make it instant
-        }
-        if (Menu.bRecenter && !bNoVR)
-        {
-            fRecenterTimer += Time.unscaledDeltaTime;
-            if (fRecenterTimer > 3.0f)
-            {
-                //Valve.VR.OpenVR.Compositor.SetTrackingSpace(ETrackingUniverseOrigin.TrackingUniverseSeated);
-                //the above needs to be set in SteamVR settings for ResetSeatedZeroPose() to work.
-                //Window->SteamVR Input->Advanced Settings->SteamVR Settings->"Tracking Space Origin" drop-down, "Tracking Universe Seated"
-                Valve.VR.OpenVR.System.ResetSeatedZeroPose();
 
-                Menu.bRecenter = false;
-                fRecenterTimer = 0.0f;
-            }
-        }
+        //recenter
+        //not working in new steamvr/openvr
 
         //long press on grip button is back
+        //left menu button is occupied by steamvr
         bool bBackButton = false;
         if (SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any))
         {
@@ -614,15 +616,15 @@ public class GameManager : MonoBehaviour
         }
         else fLongpressTimer = 0.0f;
 
-        //pause if in oculus home universal menu
-        // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
+        //pause
         bool bPauseNow = bPause; //no change below
-        if (bValveDevicePresent)
+        if (!bNoVR)
         {
-            bPauseNow = (XRDevice.userPresence == UserPresenceState.NotPresent); //|| bSteamOverlayActive;
+            //bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
+            /**///bPauseNow = Valve.VR.OpenVR.System.ShouldApplicationPause(); //!userPresent;
         }
 
-        /**/bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
+        /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
         /**///AudioStateMachine.instance.masterVolume = 0.0f; //while recording video without music
 
         //pause state change
@@ -778,9 +780,6 @@ public class GameManager : MonoBehaviour
             case -3:
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 // and should be active here ("Scenes/GameStart")
-                Cursor.visible = false;
-                //Screen.SetResolution(1280, 720, true);
-                //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
 
                 //to avoid stalls of 5+ sec the first time a level is started after app start
@@ -954,11 +953,10 @@ public class GameManager : MonoBehaviour
                 {
                     iState = 1; //goto menu part 1 since we have selected another level
                 }
-
-                bool bBackController = false;
-                try { bBackController = SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
-                if ( bBackController || bBackButton
-                    || Input.GetKey(KeyCode.Escape) || Menu.bLevelUnSelected)
+                if (gamepad != null) bBackButton = bBackButton || gamepad.selectButton.isPressed;
+                if (keyboard != null) bBackButton = bBackButton || keyboard.escapeKey.isPressed;
+                try { bBackButton = bBackButton || SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
+                if (Menu.bLevelUnSelected || bBackButton)
                 {
                     Menu.bLevelUnSelected = false;
                     iState = 1; //goto menu part 1 (back)
@@ -1057,10 +1055,10 @@ public class GameManager : MonoBehaviour
                 {
                     bool bBackToMenu = !GameLevel.bMapLoaded;
 
-                    bool bBackController2 = false;
-                    try { bBackController2 = SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
-                    if ( bBackController2 || bBackButton
-                        || Input.GetKey(KeyCode.Escape)) //back to menu
+                    if (gamepad != null) bBackButton = bBackButton || gamepad.selectButton.isPressed;
+                    if (keyboard != null) bBackButton = bBackButton || keyboard.escapeKey.isPressed;
+                    try { bBackButton = bBackButton || SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
+                    if (bBackButton) //back to menu
                     {
                         bBackToMenu = true;
                         bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level

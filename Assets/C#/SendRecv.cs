@@ -98,7 +98,7 @@ public class SendRecv
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
+        if ((www.result == UnityWebRequest.Result.ConnectionError) || (www.result == UnityWebRequest.Result.ProtocolError))
         {
             Debug.Log(www.error);
         }
@@ -207,7 +207,7 @@ public class SendRecv
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
+        if ((www.result == UnityWebRequest.Result.ConnectionError) || (www.result == UnityWebRequest.Result.ProtocolError))
         {
             Debug.Log(www.error);
         }
@@ -410,7 +410,7 @@ public class SendRecv
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message);
+            Debug.Log("DoJoin: " + e.Message);
             try
             {
                 //TODO async connect (non blocking), this freezes the game for 2 sec
@@ -419,7 +419,7 @@ public class SendRecv
             }
             catch (Exception e2)
             {
-                Debug.Log(e2.Message);
+                Debug.Log("DoJoin: " + e2.Message);
             }
         }
         ci_toserver.stream_recv = new byte[256];
@@ -440,6 +440,7 @@ public class SendRecv
         }
         catch (Exception e)
         {
+            Debug.Log("DoJoin: " + e.Message);
         }
     }
 
@@ -461,6 +462,7 @@ public class SendRecv
             }
             catch (Exception e)
             {
+                Debug.Log("DoStartGame: " + e.Message);
             }
         }
     }
@@ -485,6 +487,7 @@ public class SendRecv
             }
             catch (Exception e)
             {
+                Debug.Log("ClientCheck: " + e.Message);
             }
         }
 
@@ -546,6 +549,7 @@ public class SendRecv
                                 }
                                 catch (Exception e)
                                 {
+                                    Debug.Log("ClientCheck: " + e.Message);
                                 }
                             }
                             else
@@ -601,6 +605,7 @@ public class SendRecv
                 }
                 catch(Exception e)
                 {
+                    Debug.Log("ServerCheck: " + e.Message);
                 }
             }
         }
@@ -670,6 +675,7 @@ public class SendRecv
                                         }
                                         catch(Exception e)
                                         {
+                                            Debug.Log("ServerCheck: " + e.Message);
                                         }
                                     }
                                 }
@@ -693,6 +699,7 @@ public class SendRecv
                                     }
                                     catch (Exception e)
                                     {
+                                        Debug.Log("ServerCheck: " + e.Message);
                                     }
                                 }
                                 else
