@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using FMODUnity;
 
 public class AudioStateMachine : MonoBehaviour
 {
@@ -31,8 +32,8 @@ public class AudioStateMachine : MonoBehaviour
     public string cargo = "Cargo";
 
     [Header("Global Events")]
-    [FMODUnity.EventRef]
-    public string mainEvent;
+    public EventReference EventMain;
+    
     FMOD.Studio.EventInstance main;
 
     [Header("Debug/Testing")]
@@ -65,7 +66,7 @@ public class AudioStateMachine : MonoBehaviour
         if (!main.isValid())
         {
             // Spatialize audio
-            main = FMODUnity.RuntimeManager.CreateInstance(mainEvent);
+            main = FMODUnity.RuntimeManager.CreateInstance(EventMain);
             main.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
 
             main.start();

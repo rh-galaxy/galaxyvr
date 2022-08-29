@@ -44,6 +44,7 @@ public class HttpHiscore
 
     public HttpHiscore()
     {
+
     }
 
     UnityWebRequest www;

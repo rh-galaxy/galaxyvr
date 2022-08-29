@@ -1,2 +1,47 @@
 Release
--Empty
+- Trailer: Seems only 30fps is shown not 60 (need fix by Oculus)
+
+-------
+Known issues/small things undone
+- Maybe have a "remove bullet"-msg in the replay data.
+- Maybe have a "door movement"-msg in the replay data.
+- Test different textures for the single colored cave edges.
+- Test different background textures for the back-plate and borders.
+- Windows on the house is not exactly the same height.
+- Make XBox-controller not be unresponsive after pause and unpause
+ (after accessing Virtual Desktop) (Might not be possible, and not a requirement)
+- Add a texture on the landingzones with a pattern, it must work on
+ different platform widths, or maybe do per width (2..12) different textures.
+
+Must do:
+- Enable code for Oculus entitlement check (done, and keep it done later in Release version)
+
+Possible future extensions
+- www.galaxy-forces-vr.com - Better/more contents
+- Add more official maps/new tilesets (digital world, ?)
+- Add achievements for the extra official maps
+
+-------
+Achievements: (implemented for steam and oculus)
+- Survivor - Finish a mission level without damage [normal unlock]                     Survivor
+- Hellbent - Finish the same level 8 times in a row [normal unlock]                    Hellbent
+- Speedster - Full throttle from start to finish in a race [normal unlock]             Speedster
+- Cargo beginner - Finish mission level 00 [normal unlock]                             Cargo1
+- Cargo apprentice - Finish mission level 03 [normal unlock]                           Cargo2
+- Cargo expert - Finish mission level 06 with no life lost [normal unlock]             Cargo3
+- Cargo master - Finish mission level 09 with no damage [normal unlock]                Cargo4
+- Race beginner - Finish race level 00 in under 3 minutes [normal unlock]              Race1
+- Race apprentice - Finish race level 03 in under 3 minutes [normal unlock]            Race2
+- Race expert - Finish race level 06 in under 60 seconds [normal unlock]               Race3
+- Race master - Finish race level 10 in under 104 seconds [normal unlock]              Race4
+- Fuel burner - Burn 20 minutes worth of fuel [counter unlock]                         Fuelburner
+- Ravager - Destroy 100 enemies [counter unlock]                                       Ravager
+- Kamikaze - Destroy your ship 100 times [counter unlock]                              Doom
+- Racer - Finish 12 race levels [counter unlock]                                       Racer
+- Transporter - Finish 12 mission levels [counter unlock]                              Loader
+- Trigger - Fire a thousand bullets [counter unlock]                                   Trigger
+- Ruler of the Galaxy - Finish each of the 55 levels [bitfield unlock]                 Galaxy55
+- The answer is 42 - Travel 42 kilometers [counter unlock]                             Hitchhiker42
+- Race overachiever - Finish all races with gold score [normal unlock]                 RaceGold25
+- Cargo overachiever - Finish all missions with gold score [normal unlock]             CargoGold30
+- User Levels - Finish a user made level 20 times [counter unlock]                     UserLevels

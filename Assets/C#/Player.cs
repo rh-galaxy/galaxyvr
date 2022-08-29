@@ -418,9 +418,6 @@ public class Player : MonoBehaviour
     Vector2 vLastVel;
     float fLastDirection;
 
-    Vector2 vLastPositionNotOverlapped;
-    float fLastDirectionNotOverlapped;
-
     void FixedUpdate()
     {
         if (!bInited)
@@ -532,12 +529,12 @@ public class Player : MonoBehaviour
 
             //keyboard
             Keyboard keyboard = Keyboard.current;
-            if(keyboard != null) {
+            if (keyboard != null) {
                 if (keyboard.enterKey.isPressed || keyboard.spaceKey.isPressed) bNewFireState = true;
                 if (keyboard.upArrowKey.isPressed || keyboard.wKey.isPressed) bThrottle = true;
                 if (keyboard.downArrowKey.isPressed || keyboard.sKey.isPressed) bAdjust = true;
-                if (keyboard.leftArrowKey.isPressed || keyboard.aKey.isPressed) bLeft = true;
-                if (keyboard.rightArrowKey.isPressed || keyboard.dKey.isPressed) bRight = true;
+                if (keyboard.leftArrowKey.isPressed || keyboard.aKey.isPressed) { bLeft = true; bAdjust = false; }
+                if (keyboard.rightArrowKey.isPressed || keyboard.dKey.isPressed) { bRight = true; bAdjust = false; }
             }
 
             if (!bFire)

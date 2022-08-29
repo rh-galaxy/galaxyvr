@@ -21,7 +21,7 @@ public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP };
 struct S_TilesetInfo
 {
     public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls,
-        string i_szMaterialBox, int i_iPlanet, int i_iTree)
+        string i_szMaterialBox, int i_iPlanet, int i_iTree, int i_iSkyBox)
     {
         szMaterial = i_szMaterial;
         bRedBricks = i_bRedBricks;
@@ -29,6 +29,7 @@ struct S_TilesetInfo
         szMateralBox = i_szMaterialBox;
         iPlanet = i_iPlanet;
         iTree = i_iTree;
+        iSkyBox = i_iSkyBox;
     }
     public string szMaterial;
     public bool bRedBricks;
@@ -36,6 +37,7 @@ struct S_TilesetInfo
     public string szMateralBox;
     public int iPlanet;
     public int iTree;
+    public int iSkyBox;
 }
 
 public class S_EnemyInfo
@@ -108,13 +110,13 @@ public class GameLevel : MonoBehaviour
 
     int iTilesetInfoIndex = 0;
     S_TilesetInfo[] m_stTilesetInfos = {
-        new S_TilesetInfo("Cave_Alien", true, "Walls_Alien", "Walls_Alien", 5, 1),
-        new S_TilesetInfo("Cave_Evil", true, "Walls_Grey", "Walls_Grey", 3, 1),
-        new S_TilesetInfo("Cave_Cave", true, "Walls_Grey", "Walls_Grey", 5, 1),
-        new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite", "Walls_Cryptonite", 2, 3),
-        new S_TilesetInfo("Cave_Frost", true, "Walls_Frost", "Walls_Frost", 4, 3),
-        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava", "Walls_Lava", 1, 2),
-        new S_TilesetInfo("Cave_Desert", false, "Walls_Desert", "Walls_Desert", 5, 11) };
+        new S_TilesetInfo("Cave_Alien", true, "Walls_Alien", "Walls_Alien", 5, 1, 6),
+        new S_TilesetInfo("Cave_Evil", true, "Walls_Grey", "Walls_Grey", 3, 1, 1),
+        new S_TilesetInfo("Cave_Cave", true, "Walls_Grey", "Walls_Grey", 2, 1, 4),
+        new S_TilesetInfo("Cave_Cryptonite", true, "Walls_Cryptonite", "Walls_Cryptonite", 6, 3, 2),
+        new S_TilesetInfo("Cave_Frost", true, "Walls_Frost", "Walls_Frost", 4, 3, 5),
+        new S_TilesetInfo("Cave_Lava", false, "Walls_Lava", "Walls_Lava", 1, 2, 3),
+        new S_TilesetInfo("Cave_Desert", false, "Walls_Desert", "Walls_Desert", 3, 11, 7) };
 
     internal Vector2 vGravity;
     internal float fDrag;
@@ -196,6 +198,8 @@ public class GameLevel : MonoBehaviour
     public Material oSkyBoxMat3;
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
+    public Material oSkyBoxMat6;
+    public Material oSkyBoxMat7;
 
     public AudioClip oClipLevelStart;
     public AudioClip oClipLevelGameOver;
@@ -219,8 +223,6 @@ public class GameLevel : MonoBehaviour
 
         Material oMaterialBox = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMateralBox, typeof(Material)) as Material;
         //make back plane and border
-        //if (bSimpleBg) oMeshGen.map0_bg.GetComponent<MeshRenderer>().material = Resources.Load(m_stTilesetInfos[iTilesetInfoIndex].szMaterial, typeof(Material)) as Material;
-        //else oMeshGen.map0_bg.GetComponent<MeshRenderer>().material = oMaterialBox;
         oMeshGen.map0_bg.GetComponent<MeshRenderer>().material = oMaterialBox;
         Vector3 vSize = GetMapSize();
         GameObject oObj;
@@ -256,13 +258,8 @@ public class GameLevel : MonoBehaviour
         //play area for motion movement, not visible
         oBackPlane.transform.localScale = new Vector3(vSize.x / 100, 1.0f, vSize.y / 100);
 
-        //change fov if non VR since the default setting shows to wide fov
-        // and is not behaving reliably
-        if (GameManager.bNoVR)
-            Camera.main.fieldOfView = 55.0f;
-
-        //set random skybox
-        int iSkyBox = UnityEngine.Random.Range(1, 5);
+        //set new skybox
+        int iSkyBox = m_stTilesetInfos[iTilesetInfoIndex].iSkyBox; //UnityEngine.Random.Range(1, 7);
         switch (iSkyBox)
         {
             case 1: RenderSettings.skybox = oSkyBoxMat1; break;
@@ -270,9 +267,11 @@ public class GameLevel : MonoBehaviour
             case 3: RenderSettings.skybox = oSkyBoxMat3; break;
             case 4: RenderSettings.skybox = oSkyBoxMat4; break;
             case 5: RenderSettings.skybox = oSkyBoxMat5; break;
+            case 6: RenderSettings.skybox = oSkyBoxMat6; break;
+            case 7: RenderSettings.skybox = oSkyBoxMat7; break;
         }
 
-        Debug.Log("Start done");
+        Debug.Log("Start done - continue load in Update");
     }
 
     int iLoadBeginState = 0;
@@ -289,7 +288,7 @@ public class GameLevel : MonoBehaviour
             Enemy.iOwnerIdBase = 10;
 
             //load des pass 1 (unity: must be done from main thread)
-            Debug.Log("Loading Level: " + szLevel);
+            Debug.Log("Loading level: " + szLevel);
             LoadDesPass1(szLevel, bIsCustom, bIsCustom2);
             oMeshGen = GetComponent<MeshGenerator>();
 
@@ -374,8 +373,9 @@ public class GameLevel : MonoBehaviour
             // (before needing work in main thread, handled in LoadDone() and thread)
 //            ThreadStart ts = new ThreadStart(LoadThread);
 //            thread = new Thread(ts);
-//            thread.Priority = System.Threading.ThreadPriority.Highest;
+//            thread.Priority = System.Threading.ThreadPriority.Lowest;
 //            thread.Start();
+
             iLoadBeginState = 0;
             return true;
         }
@@ -472,7 +472,7 @@ public class GameLevel : MonoBehaviour
 
             //this must be done after init player (@ iFinalizeCounter == 1)
             //so best do it the same time as the level has finished popping up
-            GameManager.theGM.theCameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
+            GameManager.theGM.cameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
             iFinalizeCounter++;
 
@@ -490,6 +490,7 @@ public class GameLevel : MonoBehaviour
             Time.timeScale = 1.0f;
 
             iFinalizeCounter++;
+            Debug.Log("Load complete");
         }
         //end of init code
 

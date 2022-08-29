@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
-    public static CameraController instance;
+    public static CameraController instance = null;
 
     bool bMapMode;
     GameObject oPlayer;
@@ -85,17 +85,23 @@ public class CameraController : MonoBehaviour
     // now: 2 2 1 2 2 1 
     float fCurX = 0, fCurY = 0;
     float fStepX = 0, fStepY = 0;
-    public void GetMouseMovementSmooth(out float o_fX, out float o_fY)
+    public void GetMouseMovementSmooth(out float o_fX, out float o_fY, out float o_fXScreen, out float o_fYScreen)
     {
         o_fX = 0;
         o_fY = 0;
+        o_fXScreen = 0;
+        o_fYScreen = 0;
 
         Mouse mouse = Mouse.current;
-        if (mouse != null && mouse.leftButton.isPressed)
+        if (mouse != null)
         {
-            Vector2 v = mouse.delta.ReadValue();
-            fCurX += v.x * 0.15f;
-            fCurY += v.y * 0.15f;
+            //InputSystem
+            Vector2 v = mouse.position.ReadValue();
+            o_fXScreen = v.x;
+            o_fYScreen = v.y;
+            v = mouse.delta.ReadValue() * Time.deltaTime * 7.0f;
+            fCurX += v.x;
+            fCurY += v.y;
 
             float fStep = Time.deltaTime / 0.050f; //% of movement to distribute each time called
             if (fStep > 1.0f) fStep = 1.0f;  //if frametime too long we must not move faster
@@ -135,23 +141,37 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    float fX = 0.0f, fY = 0, fZ = 0;
+    float fX_cam = 0.0f, fY_cam = 0, fZ_cam = 0;
+    Vector3 mousePoint;
     float fSnapTimer = 0;
     bool bFirst = true;
     void LateUpdate()
     {
+        /**/
+        if (GameManager.bNoVR)
+        {
+            Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
+            Camera.main.fieldOfView = 45.0f;
+        }
+
         //emulate headset movement
         Keyboard keyboard = Keyboard.current;
         if (GameManager.bNoVR)
         {
             //using mouse smoothing to avoid jerkyness
-            GetMouseMovementSmooth(out float fMouseX, out float fMouseY);
-            fY += fMouseX;
-            fX -= fMouseY;
+            float fMouseX, fMouseY, fMouseXScreen, fMouseYScreen;
+            GetMouseMovementSmooth(out fMouseX, out fMouseY, out fMouseXScreen, out fMouseYScreen);
+            Mouse mouse = Mouse.current;
+            if (mouse != null && (mouse.middleButton.isPressed || mouse.leftButton.isPressed))
+            {
+                if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 3.0f;
+                else fY_cam += fMouseX * 3.0f;
+                fX_cam -= fMouseY * 3.0f;
+            }
 
-            if (keyboard != null && keyboard.rKey.isPressed) { fX = 0.0f; fY = 0; fZ = 0; }
+            if (keyboard != null && keyboard.rKey.isPressed) { fX_cam = 0.0f; fY_cam = 0; fZ_cam = 0; }
 
-            transform.eulerAngles = new Vector3(fX, fY, fZ);
+            transform.eulerAngles = new Vector3(fX_cam, fY_cam, fZ_cam);
         }
 
         if (bMapMode)
