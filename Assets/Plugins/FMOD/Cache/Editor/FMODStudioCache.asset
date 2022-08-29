@@ -1,6 +1,81 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4767377061785521324
+--- !u!114 &-8382167305397518162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Main/Enemy
+  m_EditorClassIdentifier: 
+  Name: Enemy
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 669269124
+    data2: 1843834776
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-7047773139037301606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Main/Flow
+  m_EditorClassIdentifier: 
+  Name: Flow
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0.5
+  ID:
+    data1: 3260714610
+    data2: 3323716982
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-6297751743913448673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: snapshot:/New Snapshot
+  m_EditorClassIdentifier: 
+  Path: snapshot:/New Snapshot
+  Guid:
+    Data1: 202255620
+    Data2: 1264604031
+    Data3: 1551665577
+    Data4: 709423440
+  Banks:
+  - {fileID: -2855092890344024787}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
+--- !u!114 &-6071989172895778827
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13,14 +88,18 @@ MonoBehaviour:
   m_Name: parameter:/Gameplay/Flow
   m_EditorClassIdentifier: 
   Name: Flow
+  StudioPath: 
   Min: 0
   Max: 1
   Default: 0.5
   ID:
-    data1: 0
-    data2: 0
+    data1: 3260714610
+    data2: 3323716982
+  Type: 0
+  IsGlobal: 0
+  Labels: []
   Exists: 1
---- !u!114 &-4725735940388448317
+--- !u!114 &-3448767625828921843
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -30,63 +109,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Main/Cargo
+  m_Name: parameter:/Main/Mission
   m_EditorClassIdentifier: 
-  Name: Cargo
+  Name: Mission
+  StudioPath: 
   Min: 0
   Max: 1
   Default: 0
   ID:
-    data1: 0
-    data2: 0
+    data1: 2471214182
+    data2: 2107247296
+  Type: 0
+  IsGlobal: 0
+  Labels: []
   Exists: 1
---- !u!114 &-3664811425184267519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Gameplay/Death
-  m_EditorClassIdentifier: 
-  Name: Death
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 0
-    data2: 0
-  Exists: 1
---- !u!114 &-2277806118944440550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Gameplay
-  m_EditorClassIdentifier: 
-  Path: event:/Gameplay
-  guid: 5712faf322bfc5478afa3810309fa897
-  Banks:
-  - {fileID: -982530311904551130}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 2503070750493505542}
-  - {fileID: -3664811425184267519}
-  - {fileID: -4767377061785521324}
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 321056
---- !u!114 &-982530311904551130
+--- !u!114 &-2855092890344024787
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,10 +139,11 @@ MonoBehaviour:
   Name: Master Bank
   StudioPath: bank:/Master Bank
   lastModified: 637010664990520792
-  LoadResult: 0
-  FileSizes: []
+  FileSizes:
+  - Name: Desktop
+    Value: 4330816
   Exists: 1
---- !u!114 &-607969352432529552
+--- !u!114 &-2840746644725627215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,21 +153,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Menu
+  m_Name: event:/Main
   m_EditorClassIdentifier: 
-  Path: event:/Menu
-  guid: 782a52200fa6b443bc41106b58eff30c
+  Path: event:/Main
+  Guid:
+    Data1: 1832154469
+    Data2: 1266539904
+    Data3: 1135378331
+    Data4: -1646930823
   Banks:
-  - {fileID: -982530311904551130}
+  - {fileID: -2855092890344024787}
   IsStream: 1
-  Is3D: 0
+  Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 3133242399665922468}
+  - {fileID: 1213172614968007733}
+  - {fileID: 7310827729225671664}
+  - {fileID: 4184460754835662447}
+  - {fileID: 6153333870106151357}
+  - {fileID: -8382167305397518162}
+  - {fileID: -3448767625828921843}
+  - {fileID: -7047773139037301606}
   MinDistance: 0
   MaxDistance: 0
-  Length: 99956
---- !u!114 &-510274859108726227
+  Length: 6000
+--- !u!114 &-2396578278323093599
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,16 +187,50 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Main/Mission
+  m_Name: parameter:/Gameplay/Death
   m_EditorClassIdentifier: 
-  Name: Mission
+  Name: Death
+  StudioPath: 
   Min: 0
   Max: 1
   Default: 0
   ID:
-    data1: 0
-    data2: 0
+    data1: 2181247139
+    data2: 1562391562
+  Type: 0
+  IsGlobal: 0
+  Labels: []
   Exists: 1
+--- !u!114 &-2364711690087561382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Gameplay
+  m_EditorClassIdentifier: 
+  Path: event:/Gameplay
+  Guid:
+    Data1: -201715113
+    Data2: 1204141858
+    Data3: 272169610
+    Data4: -1750556880
+  Banks:
+  - {fileID: -2855092890344024787}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 4980182640229503901}
+  - {fileID: -2396578278323093599}
+  - {fileID: -6071989172895778827}
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 321056
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,21 +244,21 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 2045614868775292813}
-  - {fileID: -982530311904551130}
+  - {fileID: 2933233068933243973}
+  - {fileID: -2855092890344024787}
   EditorEvents:
-  - {fileID: 1500417955144227863}
-  - {fileID: -2277806118944440550}
-  - {fileID: 8073724438171516023}
-  - {fileID: -607969352432529552}
+  - {fileID: -6297751743913448673}
+  - {fileID: -2364711690087561382}
+  - {fileID: -2840746644725627215}
+  - {fileID: 5071556737728190077}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -982530311904551130}
+  - {fileID: -2855092890344024787}
   StringsBanks:
-  - {fileID: 2045614868775292813}
-  stringsBankWriteTime: 637010664990531075
-  cacheVersion: 6
---- !u!114 &1234418991844357470
+  - {fileID: 2933233068933243973}
+  cacheTime: 637010664990531075
+  cacheVersion: 131591
+--- !u!114 &1213172614968007733
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -186,40 +268,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Main/EnemyVol
+  m_Name: parameter:/Main/Death
   m_EditorClassIdentifier: 
-  Name: EnemyVol
+  Name: Death
+  StudioPath: 
   Min: 0
   Max: 1
   Default: 0
   ID:
-    data1: 0
-    data2: 0
+    data1: 2181247139
+    data2: 1562391562
+  Type: 0
+  IsGlobal: 0
+  Labels: []
   Exists: 1
---- !u!114 &1500417955144227863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: snapshot:/New Snapshot
-  m_EditorClassIdentifier: 
-  Path: snapshot:/New Snapshot
-  guid: 042d0e0c7f53604ba9897c5c50f1482a
-  Banks:
-  - {fileID: -982530311904551130}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 0
---- !u!114 &2045614868775292813
+--- !u!114 &2933233068933243973
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,142 +298,11 @@ MonoBehaviour:
   Name: Master Bank.strings
   StudioPath: bank:/Master Bank.strings
   lastModified: 637010664990531075
-  LoadResult: 0
   FileSizes:
   - Name: Desktop
     Value: 864
   Exists: 1
---- !u!114 &2138703316690973602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Main/Death
-  m_EditorClassIdentifier: 
-  Name: Death
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 0
-    data2: 0
-  Exists: 1
---- !u!114 &2503070750493505542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Gameplay/Cargo
-  m_EditorClassIdentifier: 
-  Name: Cargo
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 0
-    data2: 0
-  Exists: 1
---- !u!114 &2785712621391494025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Main/Flow
-  m_EditorClassIdentifier: 
-  Name: Flow
-  Min: 0
-  Max: 1
-  Default: 0.5
-  ID:
-    data1: 0
-    data2: 0
-  Exists: 1
---- !u!114 &3133242399665922468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Menu/Flow
-  m_EditorClassIdentifier: 
-  Name: Flow
-  Min: 0
-  Max: 1
-  Default: 0.5
-  ID:
-    data1: 0
-    data2: 0
-  Exists: 1
---- !u!114 &3193172953799476383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Main/Enemy
-  m_EditorClassIdentifier: 
-  Name: Enemy
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 0
-    data2: 0
-  Exists: 1
---- !u!114 &8073724438171516023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Main
-  m_EditorClassIdentifier: 
-  Path: event:/Main
-  guid: 6575346d80dd7d4b9b7fac4379d4d59d
-  Banks:
-  - {fileID: -982530311904551130}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 2138703316690973602}
-  - {fileID: 1234418991844357470}
-  - {fileID: 9104690237534995687}
-  - {fileID: -4725735940388448317}
-  - {fileID: 3193172953799476383}
-  - {fileID: -510274859108726227}
-  - {fileID: 2785712621391494025}
-  MinDistance: 0
-  MaxDistance: 0
-  Length: 6000
---- !u!114 &9104690237534995687
+--- !u!114 &4184460754835662447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -383,10 +315,138 @@ MonoBehaviour:
   m_Name: parameter:/Main/Transition
   m_EditorClassIdentifier: 
   Name: Transition
+  StudioPath: 
   Min: 0
   Max: 1
   Default: 0
   ID:
-    data1: 0
-    data2: 0
+    data1: 2976150662
+    data2: 2616658598
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &4980182640229503901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Gameplay/Cargo
+  m_EditorClassIdentifier: 
+  Name: Cargo
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3063175136
+    data2: 3697913784
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &5071556737728190077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Menu
+  m_EditorClassIdentifier: 
+  Path: event:/Menu
+  Guid:
+    Data1: 542255736
+    Data2: 1135912463
+    Data3: 1796227516
+    Data4: 217313112
+  Banks:
+  - {fileID: -2855092890344024787}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 8723576329246307243}
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 99956
+--- !u!114 &6153333870106151357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Main/Cargo
+  m_EditorClassIdentifier: 
+  Name: Cargo
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3063175136
+    data2: 3697913784
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &7310827729225671664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Main/EnemyVol
+  m_EditorClassIdentifier: 
+  Name: EnemyVol
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 4149763918
+    data2: 3137199376
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &8723576329246307243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Menu/Flow
+  m_EditorClassIdentifier: 
+  Name: Flow
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0.5
+  ID:
+    data1: 3260714610
+    data2: 3323716982
+  Type: 0
+  IsGlobal: 0
+  Labels: []
   Exists: 1
