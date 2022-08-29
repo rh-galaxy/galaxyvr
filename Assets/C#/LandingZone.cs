@@ -121,6 +121,7 @@ public class LandingZone : MonoBehaviour
 
             oMaterialHome = Resources.Load("LandingZoneHome", typeof(Material)) as Material;
             oMaterialCargo = Resources.Load("LandingZoneCargo", typeof(Material)) as Material;
+            UpdateAttentionMarker();
         }
 
         gameObject.SetActive(true);
@@ -175,19 +176,24 @@ public class LandingZone : MonoBehaviour
         //else should not happen
     }
 
+    void UpdateAttentionMarker()
+    {
+        //update material on attention marker
+        if (bHomeBase)
+            oZoneAttentionMarkerRenderer.material = oMaterialHome;
+        else if (GetTotalCargo() > 0)
+            oZoneAttentionMarkerRenderer.material = oMaterialCargo;
+        else
+            oZoneAttentionMarkerRenderer.material = oMaterialZone;
+    }
+
     int iCntr = 0;
     void Update()
     {
         iCntr++;
         if(iCntr%50==0 && oZoneAttentionMarker!=null)
         {
-            //update material on attention marker
-            if (bHomeBase)
-                oZoneAttentionMarkerRenderer.material = oMaterialHome;
-            else if (GetTotalCargo() > 0)
-                oZoneAttentionMarkerRenderer.material = oMaterialCargo;
-            else
-                oZoneAttentionMarkerRenderer.material = oMaterialZone;
+            UpdateAttentionMarker();
         }
     }
 }
