@@ -10,7 +10,7 @@ namespace FMODUnity
     [CanEditMultipleObjects]
     public class StudioEventEmitterEditor : Editor
     {
-        ParameterValueView parameterValueView;
+        private ParameterValueView parameterValueView;
 
         public void OnEnable()
         {
@@ -21,7 +21,7 @@ namespace FMODUnity
         {
             var emitter = target as StudioEventEmitter;
 
-            EditorEventRef editorEvent = EventManager.EventFromPath(emitter.Event);
+            EditorEventRef editorEvent = EventManager.EventFromGUID(emitter.EventReference.Guid);
             if (editorEvent != null && editorEvent.Is3D)
             {
                 EditorGUI.BeginChangeCheck();
@@ -43,7 +43,8 @@ namespace FMODUnity
             var begin = serializedObject.FindProperty("PlayEvent");
             var end = serializedObject.FindProperty("StopEvent");
             var tag = serializedObject.FindProperty("CollisionTag");
-            var ev = serializedObject.FindProperty("Event");
+            var eventReference = serializedObject.FindProperty("EventReference");
+            var eventPath = eventReference.FindPropertyRelative("Path");
             var fadeout = serializedObject.FindProperty("AllowFadeout");
             var once = serializedObject.FindProperty("TriggerOnce");
             var preload = serializedObject.FindProperty("Preload");
@@ -62,19 +63,17 @@ namespace FMODUnity
 
             EditorGUI.BeginChangeCheck();
 
-            EditorGUILayout.PropertyField(ev, new GUIContent("Event"));
+            const string EventReferenceLabel = "Event";
 
-            EditorEventRef editorEvent = EventManager.EventFromPath(ev.stringValue);
+            EditorUtils.DrawLegacyEvent(serializedObject.FindProperty("Event"), EventReferenceLabel);
+
+            EditorGUILayout.PropertyField(eventReference, new GUIContent(EventReferenceLabel));
+
+            EditorEventRef editorEvent = EventManager.EventFromPath(eventPath.stringValue);
 
             if (EditorGUI.EndChangeCheck())
             {
-                EditorUtils.UpdateParamsOnEmitter(serializedObject, ev.stringValue);
-                if (editorEvent != null)
-                {
-                    overrideAtt.boolValue = false;
-                    minDistance.floatValue = editorEvent.MinDistance;
-                    maxDistance.floatValue = editorEvent.MaxDistance;
-                }
+                EditorUtils.UpdateParamsOnEmitter(serializedObject, eventPath.stringValue);
             }
 
             // Attenuation
@@ -83,9 +82,8 @@ namespace FMODUnity
                 {
                     EditorGUI.BeginDisabledGroup(editorEvent == null || !editorEvent.Is3D);
                     EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.PrefixLabel("Override Attenuation");
                     EditorGUI.BeginChangeCheck();
-                    overrideAtt.boolValue = EditorGUILayout.Toggle(overrideAtt.boolValue, GUILayout.Width(20));
+                    EditorGUILayout.PropertyField(overrideAtt);
                     if (EditorGUI.EndChangeCheck() ||
                         (minDistance.floatValue == -1 && maxDistance.floatValue == -1) // never been initialiased
                         )
@@ -95,17 +93,25 @@ namespace FMODUnity
                     }
                     EditorGUI.BeginDisabledGroup(!overrideAtt.boolValue);
                     EditorGUIUtility.labelWidth = 30;
-                    minDistance.floatValue = EditorGUILayout.FloatField("Min", minDistance.floatValue);
-                    minDistance.floatValue = Mathf.Clamp(minDistance.floatValue, 0, maxDistance.floatValue);
-                    maxDistance.floatValue = EditorGUILayout.FloatField("Max", maxDistance.floatValue);
-                    maxDistance.floatValue = Mathf.Max(minDistance.floatValue, maxDistance.floatValue);
+                    EditorGUI.BeginChangeCheck();
+                    EditorGUILayout.PropertyField(minDistance, new GUIContent("Min"));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        minDistance.floatValue = Mathf.Clamp(minDistance.floatValue, 0, maxDistance.floatValue);
+                    }
+                    EditorGUI.BeginChangeCheck();
+                    EditorGUILayout.PropertyField(maxDistance, new GUIContent("Max"));
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        maxDistance.floatValue = Mathf.Max(minDistance.floatValue, maxDistance.floatValue);
+                    }
                     EditorGUIUtility.labelWidth = 0;
                     EditorGUI.EndDisabledGroup();
                     EditorGUILayout.EndHorizontal();
                     EditorGUI.EndDisabledGroup();
                 }
 
-                parameterValueView.OnGUI(editorEvent, !ev.hasMultipleDifferentValues);
+                parameterValueView.OnGUI(editorEvent, !eventReference.hasMultipleDifferentValues);
 
                 fadeout.isExpanded = EditorGUILayout.Foldout(fadeout.isExpanded, "Advanced Controls");
                 if (fadeout.isExpanded)
@@ -128,6 +134,14 @@ namespace FMODUnity
             // This holds one SerializedObject for each object in the current selection.
             private List<SerializedObject> serializedTargets = new List<SerializedObject>();
 
+            // Mappings from EditorParamRef to initial parameter value property for all properties
+            // found in the current selection.
+            private List<PropertyRecord> propertyRecords = new List<PropertyRecord>();
+
+            // Any parameters that are in the current event but are missing from some objects in
+            // the current selection, so we can put them in the "Add" menu.
+            private List<EditorParamRef> missingParameters = new List<EditorParamRef>();
+
             // A mapping from EditorParamRef to the initial parameter value properties in the
             // current selection that have the same name.
             // We need this because some objects may be missing some properties, and properties with
@@ -138,14 +152,6 @@ namespace FMODUnity
                 public EditorParamRef paramRef;
                 public List<SerializedProperty> valueProperties;
             }
-
-            // Mappings from EditorParamRef to initial parameter value property for all properties
-            // found in the current selection.
-            private List<PropertyRecord> propertyRecords = new List<PropertyRecord>();
-
-            // Any parameters that are in the current event but are missing from some objects in
-            // the current selection, so we can put them in the "Add" menu.
-            private List<EditorParamRef> missingParameters = new List<EditorParamRef>();
 
             public ParameterValueView(SerializedObject serializedObject)
             {
@@ -179,7 +185,7 @@ namespace FMODUnity
                         }
                         else
                         {
-                            EditorParamRef paramRef = eventRef.Parameters.Find(p => p.Name == name);
+                            EditorParamRef paramRef = eventRef.LocalParameters.Find(p => p.Name == name);
 
                             if (paramRef != null)
                             {
@@ -202,7 +208,7 @@ namespace FMODUnity
                 }
 
                 missingParameters.Clear();
-                missingParameters.AddRange(eventRef.Parameters.Where(
+                missingParameters.AddRange(eventRef.LocalParameters.Where(
                     p => {
                         PropertyRecord record = propertyRecords.Find(r => r.name == p.Name);
                         return record == null || record.valueProperties.Count < serializedTargets.Count;
@@ -379,19 +385,58 @@ namespace FMODUnity
 
                 EditorGUI.LabelField(nameLabelRect, nameLabel);
 
-                EditorGUI.BeginChangeCheck();
-
-                EditorGUI.showMixedValue = mixedValues;
-
-                float newValue = EditorGUI.Slider(sliderRect, value, record.paramRef.Min, record.paramRef.Max);
-
-                EditorGUI.showMixedValue = false;
-
-                if (EditorGUI.EndChangeCheck())
+                if (record.paramRef.Type == ParameterType.Labeled)
                 {
-                    foreach (SerializedProperty property in record.valueProperties)
+                    EditorGUI.BeginChangeCheck();
+
+                    EditorGUI.showMixedValue = mixedValues;
+
+                    int newValue = EditorGUI.Popup(sliderRect, (int)value, record.paramRef.Labels);
+
+                    EditorGUI.showMixedValue = false;
+
+                    if (EditorGUI.EndChangeCheck())
                     {
-                        property.floatValue = newValue;
+                        foreach (SerializedProperty property in record.valueProperties)
+                        {
+                            property.floatValue = newValue;
+                        }
+                    }
+                }
+                else if (record.paramRef.Type == ParameterType.Discrete)
+                {
+                    EditorGUI.BeginChangeCheck();
+
+                    EditorGUI.showMixedValue = mixedValues;
+
+                    int newValue = EditorGUI.IntSlider(sliderRect, (int)value, (int)record.paramRef.Min, (int)record.paramRef.Max);
+
+                    EditorGUI.showMixedValue = false;
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        foreach (SerializedProperty property in record.valueProperties)
+                        {
+                            property.floatValue = newValue;
+                        }
+                    }
+                }
+                else
+                {
+                    EditorGUI.BeginChangeCheck();
+
+                    EditorGUI.showMixedValue = mixedValues;
+
+                    float newValue = EditorGUI.Slider(sliderRect, value, record.paramRef.Min, record.paramRef.Max);
+
+                    EditorGUI.showMixedValue = false;
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        foreach (SerializedProperty property in record.valueProperties)
+                        {
+                            property.floatValue = newValue;
+                        }
                     }
                 }
 
