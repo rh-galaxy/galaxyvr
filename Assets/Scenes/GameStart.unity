@@ -6555,7 +6555,14 @@ MonoBehaviour:
   death: Death
   flow: Flow
   cargo: Cargo
-  mainEvent: event:/Main
+  mainEvent: 
+  EventMain:
+    Guid:
+      Data1: 1832154469
+      Data2: 1266539904
+      Data3: 1135378331
+      Data4: -1646930823
+    Path: event:/Main
   transitionVal: 0
   lifeVal: 0
   flowVal: 0
@@ -6609,7 +6616,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attenuationObject: {fileID: 0}
-  ListenerNumber: 0
 --- !u!1 &674197253
 GameObject:
   m_ObjectHideFlags: 0
