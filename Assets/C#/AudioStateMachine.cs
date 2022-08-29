@@ -33,7 +33,6 @@ public class AudioStateMachine : MonoBehaviour
 
     [Header("Global Events")]
     public EventReference EventMain;
-    
     FMOD.Studio.EventInstance main;
 
     [Header("Debug/Testing")]
