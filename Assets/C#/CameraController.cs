@@ -74,6 +74,20 @@ public class CameraController : MonoBehaviour
         oRayQuad.SetActive(false);
     }
 
+    private float fYAdjust = 0f;
+    private float fYAdjustStep = 0.16f;
+    public void CycleYAdjust()
+    {
+        fYAdjust += fYAdjustStep;
+        if (fYAdjust > 3 * fYAdjustStep) fYAdjust -= 9 * fYAdjustStep; //8 steps
+
+        vCamOffset = new Vector3(0, fYAdjust + 0.3f, -1.90f);
+        if (!bMapMode)
+        {
+            vCamPos = new Vector3(0, fYAdjust, -4.3f);
+            transform.position = vCamPos;
+        }
+    }
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
     {
         bMapMode = true;
@@ -81,13 +95,13 @@ public class CameraController : MonoBehaviour
         oMap = i_oMap;
         vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update
 
-        vCamOffset = new Vector3(0, 0.3f, -1.90f);
+        vCamOffset = new Vector3(0, fYAdjust + 0.3f, -1.90f);
         vMapSize = oMap.GetMapSize();
     }
     public void InitForMenu()
     {
         bMapMode = false;
-        vCamPos = new Vector3(0, 0, -4.3f);
+        vCamPos = new Vector3(0, fYAdjust, -4.3f);
         transform.position = vCamPos;
     }
 

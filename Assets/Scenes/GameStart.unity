@@ -1434,7 +1434,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 46, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 73, y: -45}
+  m_AnchoredPosition: {x: 73, y: -35}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &372070088
@@ -6682,7 +6682,6 @@ MonoBehaviour:
   death: Death
   flow: Flow
   cargo: Cargo
-  mainEvent: 
   EventMain:
     Guid:
       Data1: 1832154469
@@ -9334,6 +9333,11 @@ PrefabInstance:
     - target: {fileID: 114000013777684504, guid: 4d293c8e162f3874b982baadd71153d2,
         type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6430643628478953477, guid: 4d293c8e162f3874b982baadd71153d2,
+        type: 3}
+      propertyPath: m_RenderPostProcessing
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
