@@ -515,7 +515,6 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    //float fRecenterTimer = 0.0f;
     float fLongpressTimer = 0.0f;
     float fInitTimer = 0.0f;
     int iInitState = 0;
@@ -589,14 +588,21 @@ public class GameManager : MonoBehaviour
         }
 
         //recenter
-        //not working in new steamvr/openvr
+        //(the ability for the app to initiate recenter is removed in new steamvr/openvr)
+        //implement Y-adjust instead, recenter is working in steamvr system (left-menu, select recenter)
+        if(Menu.bYAdjust)
+        {
+            cameraHolder.CycleYAdjust();
+
+            Menu.bYAdjust = false; //we have acted on it
+        }
 
         //long press on grip button is back
         //left menu button is occupied by steamvr
         bool bBackButton = false;
         if (SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any))
         {
-            fLongpressTimer += Time.deltaTime;
+            fLongpressTimer += Time.unscaledDeltaTime;
 
             if (fLongpressTimer > 2.0f)
             {
@@ -946,7 +952,7 @@ public class GameManager : MonoBehaviour
                         {
                             if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
-                                //////start of valve specific code
+                                //////start of valve specific code (achievements)
                                 if (bUserValid /*&& bValveDevicePresent*/) //allow non VR mode to set steam achievements
                                 {
                                     HandleValveAchievements();
