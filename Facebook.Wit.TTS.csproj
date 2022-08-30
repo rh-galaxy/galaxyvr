@@ -54,22 +54,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Integrations\TTSDiskCache.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Interfaces\ITTSVoiceProvider.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Integrations\TTSWit.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Events\TTSDownloadEvents.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Utilities\VoiceUnityRequest.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Data\TTSClipData.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Events\TTSServiceEvents.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Utilities\TTSSpeaker.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Data\TTSDiskCacheSettings.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Data\TTSVoiceSettings.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Interfaces\ITTSVoiceProvider.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Interfaces\ITTSWebHandler.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Events\TTSStreamEvents.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Integrations\TTSWit.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Events\TTSDownloadEvents.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Integrations\TTSRuntimeCache.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\TTSService.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Utilities\VoiceUnityRequest.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Interfaces\ITTSDiskCacheHandler.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Utilities\WitUnityRequest.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Interfaces\ITTSRuntimeCacheHandler.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Data\TTSClipData.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Events\TTSServiceEvents.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Runtime\Facebook.Wit.TTS.asmdef" />
@@ -336,6 +336,9 @@
     <Reference Include="UnityEditor.LinuxStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.8f1\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst.Cecil.Pdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\AnalyticsStandardEvents\Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
@@ -345,12 +348,6 @@
     <Reference Include="Unity.Burst.Unsafe">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Burst.Cecil.Pdb">
-      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
     </Reference>
@@ -359,6 +356,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.Tracker">
+      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.8f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>

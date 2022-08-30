@@ -54,13 +54,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\TTSSpeakerInspector.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\Preload\TTSPreloadSettings.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\TTSServiceInspector.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\Preload\TTSPreloadUtility.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\Voices\TTSWitVoiceUtility.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\Preload\TTSPreloadSettingsInspector.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\Voices\TTSWitVoiceSettingsDrawer.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\Voices\TTSWitVoiceData.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\Preload\TTSPreloadSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Oculus\Voice\Lib\Wit.ai\Features\TTS\Scripts\Editor\Facebook.Wit.TTS.Editor.asmdef" />
@@ -330,6 +330,9 @@
     <Reference Include="UnityEditor.LinuxStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.8f1\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst.Cecil.Pdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\AnalyticsStandardEvents\Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
@@ -339,12 +342,6 @@
     <Reference Include="Unity.Burst.Unsafe">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Burst.Cecil.Pdb">
-      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
     </Reference>
@@ -353,6 +350,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.Tracker">
+      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>
@@ -750,11 +750,11 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.TestRunner">
-      <HintPath>Library\ScriptAssemblies\UnityEditor.TestRunner.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.TestRunner">
       <HintPath>Library\ScriptAssemblies\UnityEngine.TestRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TestRunner">
+      <HintPath>Library\ScriptAssemblies\UnityEditor.TestRunner.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -53,19 +53,19 @@
     <UnityVersion>2021.3.8f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKConfigBinding.cs" />
     <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Service\AppBuiltIns.cs" />
     <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Interfaces\IPlatformVoiceService.cs" />
     <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKBinding.cs" />
+    <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\IVCBindingEvents.cs" />
     <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKPlatformLoggerImpl.cs" />
     <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKListenerBinding.cs" />
     <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Service\AppVoiceExperience.cs" />
     <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKImpl.cs" />
-    <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKConsoleLoggerImpl.cs" />
-    <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKLoggerBinding.cs" />
-    <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKConfigBinding.cs" />
-    <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\IVCBindingEvents.cs" />
     <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Utilities\MicPermissionsManager.cs" />
     <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Interfaces\IVoiceSDKLogger.cs" />
+    <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKConsoleLoggerImpl.cs" />
+    <Compile Include="Assets\Oculus\Voice\Scripts\Runtime\Bindings\Android\VoiceSDKLoggerBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Oculus\Voice\Scripts\Runtime\VoiceSDK.Runtime.asmdef" />
@@ -332,6 +332,9 @@
     <Reference Include="UnityEditor.LinuxStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.8f1\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst.Cecil.Pdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\AnalyticsStandardEvents\Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
@@ -341,12 +344,6 @@
     <Reference Include="Unity.Burst.Unsafe">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Burst.Cecil.Pdb">
-      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
     </Reference>
@@ -355,6 +352,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.Tracker">
+      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.8f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>

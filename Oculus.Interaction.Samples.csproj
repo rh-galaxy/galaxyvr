@@ -56,25 +56,25 @@
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\ScaleModifier.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabRecord\TimerUIControl.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\SceneLoader.cs" />
+    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabRecord\HandGrabPoseLiveRecorder.cs" />
+    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabUse\Rendering\BasicPBRGlobals.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\CarouselView.cs" />
+    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\ColorChanger.cs" />
+    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\RotationAudioEvents.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\ScaleAudioEvents.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\PoseUseSample.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\LookAtTarget.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\ShouldHideHandOnGrab.cs" />
-    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabUse\Effects\MeshBlit.cs" />
-    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\CountdownTimer.cs" />
-    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\FadeTextAfterActive.cs" />
-    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabRecord\HandGrabPoseLiveRecorder.cs" />
-    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabUse\Rendering\BasicPBRGlobals.cs" />
-    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\ColorChanger.cs" />
-    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\RotationAudioEvents.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\RespawnOnDrop.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabUse\Effects\WaterSpray\WaterSpray.cs" />
+    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabUse\Effects\MeshBlit.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\AudioTrigger.cs" />
+    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\CountdownTimer.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\EnableTargetOnStart.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabUse\Effects\WaterSpray\WaterSprayNozzleTransformer.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\StayInView.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\AudioPhysics.cs" />
+    <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\FadeTextAfterActive.cs" />
     <Compile Include="Assets\Oculus\Interaction\Samples\Scripts\HideHandVisualOnGrab.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +83,8 @@
     <None Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabUse\Effects\WaterSpray\MeshBlitStamp.shader" />
     <None Include="Assets\Oculus\Interaction\Samples\Shaders\StencilSky.shader" />
     <None Include="Assets\Oculus\Interaction\Samples\Shaders\UIStyleShader.shader" />
+    <None Include="Assets\Oculus\Interaction\Samples\ThirdParty\GradientSkybox\LICENSE.txt" />
+    <None Include="Assets\Oculus\Interaction\Samples\ThirdParty\GradientSkybox\ThreeColorGradient.shader" />
     <None Include="Assets\Oculus\Interaction\Samples\Shaders\MRDeskShadow.shader" />
     <None Include="Assets\Oculus\Interaction\Samples\ThirdParty\Textures\ComprehensiveGrabMapTextureCredit.txt" />
     <None Include="Assets\Oculus\Interaction\Samples\Scripts\HandGrabUse\Shaders\BasicPBR.shader" />
@@ -354,6 +356,9 @@
     <Reference Include="UnityEditor.LinuxStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.8f1\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst.Cecil.Pdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\AnalyticsStandardEvents\Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
@@ -363,12 +368,6 @@
     <Reference Include="Unity.Burst.Unsafe">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Burst.Cecil.Pdb">
-      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
     </Reference>
@@ -377,6 +376,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.Tracker">
+      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.8f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>

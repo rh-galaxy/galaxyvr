@@ -53,16 +53,16 @@
     <UnityVersion>2021.3.8f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\JsonMockWrapper.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\JsonWriter.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\IJsonWrapper.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\JsonData.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\Lexer.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\JsonException.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\JsonReader.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\JsonMapper.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\Netstandard15Polyfill.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\JsonMockWrapper.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\JsonData.cs" />
-    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\JsonException.cs" />
     <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\ParserToken.cs" />
+    <Compile Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\Netstandard15Polyfill.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Oculus\Voice\Lib\Wit.ai\Lib\LitJson\Runtime\Facebook.Wit.LitJson.asmdef" />
@@ -329,6 +329,9 @@
     <Reference Include="UnityEditor.LinuxStandalone.Extensions">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.8f1\Editor\Data\PlaybackEngines\LinuxStandaloneSupport\UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst.Cecil.Pdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\AnalyticsStandardEvents\Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
@@ -338,12 +341,6 @@
     <Reference Include="Unity.Burst.Unsafe">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Burst.Cecil.Pdb">
-      <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Burst.Cecil.Mdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
     </Reference>
@@ -352,6 +349,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.7.3\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Analytics.Tracker">
+      <HintPath>Library\PackageCache\com.unity.analytics@3.6.12\Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.8f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>

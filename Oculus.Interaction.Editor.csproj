@@ -69,6 +69,7 @@
     <Compile Include="Assets\Oculus\Interaction\Editor\PoseDetection\FeatureStateThresholdsEditor.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\PoseDetection\JointRotationFeatureConfigEditor.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\Grab\HandGrab\HandGrabPoseEditor.cs" />
+    <Compile Include="Assets\Oculus\Interaction\Editor\Grab\HandGrab\HandGrabPointEditor.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\Utils\ConditionalHideDrawer.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\Grab\GrabbingRuleEditor.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\Grab\HandGrab\HandGhostProviderUtils.cs" />
@@ -81,7 +82,6 @@
     <Compile Include="Assets\Oculus\Interaction\Editor\Selection\Hands\HandWristOffsetEditor.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\Grab\SnapSurfaces\BoxEditor.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\Poke\CircleProximityFieldEditor.cs" />
-    <Compile Include="Assets\Oculus\Interaction\Editor\PackageUtils\PackageCleanup.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\UnityCanvas\CanvasRenderTextureEditor.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\PoseDetection\FingerFeatureListPropertyDrawer.cs" />
     <Compile Include="Assets\Oculus\Interaction\Editor\Grab\HandGrab\HandPoseEditor.cs" />

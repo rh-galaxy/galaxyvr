@@ -296,7 +296,7 @@ public class GameManager : MonoBehaviour
     }
 
     /**/
-    //this is insane and totally like nothing else, but to avoid a 6 second freeze when the file is not in cache
+    //to avoid a 6 second freeze when the file is not in cache
     // this is loaded here once hopefully while the user spend some seconds in the menu before this will be accessed by LoadSceneAsync.
     //so much for async.
     //note: with planet texture data now 100MB instead of 1000MB this is not needed as much
@@ -404,7 +404,6 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    float fRecenterTimer = 0.0f;
     bool bTrackingOriginSet = false;
     void Update()
     {
@@ -439,6 +438,8 @@ public class GameManager : MonoBehaviour
 #endif
         }
         //recenter
+        //do it from oculus right-Menu (select recenter)
+        //implement Y-adjust instead, recenter is working in steamvr system (left-menu, select recenter)
         if (!bTrackingOriginSet) //always do once
         {
             if (headDevice!=null && headDevice.isValid)
@@ -447,16 +448,11 @@ public class GameManager : MonoBehaviour
                 bTrackingOriginSet = true;
             }
         }
-        if (Menu.bRecenter && !bNoVR)
+        if (Menu.bYAdjust)
         {
-            fRecenterTimer += Time.unscaledDeltaTime;
-            if (fRecenterTimer > 3.0f)
-            {
-                headDevice.subsystem.TrySetTrackingOriginMode(TrackingOriginModeFlags.Device);
-                headDevice.subsystem.TryRecenter();
-                Menu.bRecenter = false;
-                fRecenterTimer = 0.0f;
-            }
+            cameraHolder.CycleYAdjust();
+
+            Menu.bYAdjust = false; //we have acted on it
         }
 
         bool bBackButton = false;
@@ -512,9 +508,6 @@ public class GameManager : MonoBehaviour
             case -3:
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 // and should be active here ("Scenes/GameStart")
-                Cursor.visible = false;
-                //Screen.SetResolution(1280, 720, true);
-                //^set 1280x720 when recording video, then let it run the 864x960 to get the default back to that (in Awake)
                 iState++;
 
                 //to avoid stalls of 5+ sec the first time a level is started after app start
