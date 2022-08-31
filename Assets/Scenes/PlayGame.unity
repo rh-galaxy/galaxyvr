@@ -13905,6 +13905,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1347681409}
     m_Modifications:
+    - target: {fileID: 1636448248926476, guid: 64891a0eb28db934898420d80ca07cb3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1756283545428916, guid: 64891a0eb28db934898420d80ca07cb3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3, type: 3}
       propertyPath: m_Name
       value: SmallExplosion
@@ -13974,6 +13982,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 199137469787870784, guid: 64891a0eb28db934898420d80ca07cb3,
+        type: 3}
+      propertyPath: m_UseCustomVertexStreams
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 199177305528973174, guid: 64891a0eb28db934898420d80ca07cb3,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -13987,6 +14000,11 @@ PrefabInstance:
     - target: {fileID: 199514137936353666, guid: 64891a0eb28db934898420d80ca07cb3,
         type: 3}
       propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058769425301880267, guid: 64891a0eb28db934898420d80ca07cb3,
+        type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -14163,6 +14181,11 @@ PrefabInstance:
     - target: {fileID: 199514137936353666, guid: 64891a0eb28db934898420d80ca07cb3,
         type: 3}
       propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058769425301880267, guid: 64891a0eb28db934898420d80ca07cb3,
+        type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
