@@ -48,6 +48,8 @@ public class CameraController : MonoBehaviour
 
         //the rest is done once only...
         DontDestroyOnLoad(gameObject);
+
+        fYAdjust = PlayerPrefs.GetFloat("MyYAdjust", 0);
     }
 
     // Start is called before the first frame update
@@ -78,6 +80,9 @@ public class CameraController : MonoBehaviour
             vCamPos = new Vector3(0, fYAdjust, -4.3f);
             transform.position = vCamPos;
         }
+
+        PlayerPrefs.SetFloat("MyYAdjust", fYAdjust);
+        PlayerPrefs.Save();
     }
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
     {
