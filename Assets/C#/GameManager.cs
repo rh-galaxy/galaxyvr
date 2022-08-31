@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
-using System.Text;
+
 
 using Oculus.Platform;
 
@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     public CameraController cameraHolder;
 
-    internal static bool bOculusApiPresent = false;
+    internal static bool bOculusDevicePresent = false;
     internal static string szUserID = "1";
     internal static string szUser = "DebugUser"; //use debug user if no VR user
     internal static bool bUserValid = false;
@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
                 }
                 catch (Exception e)
                 {
+                    Debug.Log(e.Message);
                 }
             }
             if (szFileText.Length > 0) szUser = szFileText;
@@ -149,9 +150,11 @@ public class GameManager : MonoBehaviour
         {
             bUserValid = true; //we will use default or name.txt that are set earlier
             Debug.LogException(e);
+            //UnityEngine.Application.Quit();
             return false;
         }
-        bOculusApiPresent = true;
+
+        bOculusDevicePresent = true;
 #endif
         return true;
     }
@@ -278,14 +281,14 @@ public class GameManager : MonoBehaviour
 
     void UnlockMissionGoldAchievement()
     {
-        if (bOculusApiPresent)
+        if (bOculusDevicePresent)
         {
             Achievements.Unlock("CargoGold30");
         }
     }
     void UnlockRaceGoldAchievement()
     {
-        if (bOculusApiPresent)
+        if (bOculusDevicePresent)
         {
             Achievements.Unlock("RaceGold25");
         }
@@ -393,7 +396,7 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    float fRecenterTimer = 0.0f;
+    bool bTrackingOriginSet = false;
     void Update()
     {
 #if LOGPROFILERDATA
@@ -427,16 +430,21 @@ public class GameManager : MonoBehaviour
 #endif
         }
         //recenter
-        if (Menu.bRecenter && !bNoVR)
+        //do it from oculus right-Menu (select recenter)
+        //implement Y-adjust instead, recenter is working in steamvr system (left-menu, select recenter)
+        if (!bTrackingOriginSet) //always do once
         {
-            fRecenterTimer += Time.unscaledDeltaTime;
-            if (fRecenterTimer > 3.0f)
+            if (headDevice!=null && headDevice.isValid)
             {
                 headDevice.subsystem.TrySetTrackingOriginMode(TrackingOriginModeFlags.Device);
-                headDevice.subsystem.TryRecenter();
-                Menu.bRecenter = false;
-                fRecenterTimer = 0.0f;
+                bTrackingOriginSet = true;
             }
+        }
+        if (Menu.bYAdjust)
+        {
+            cameraHolder.CycleYAdjust();
+
+            Menu.bYAdjust = false; //we have acted on it
         }
 
         bool bBackButton = false;
@@ -447,11 +455,11 @@ public class GameManager : MonoBehaviour
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
         bool bPauseNow = bPause; //no change below
-        if (bOculusApiPresent)
+        if (bOculusDevicePresent && !bNoVR)
         {
-            bPauseNow = (!OVRPlugin.hasInputFocus || !OVRPlugin.hasVrFocus);
+            bPauseNow = (!OVRPlugin.hasInputFocus || !OVRPlugin.hasVrFocus) /*|| !userPresent)*/;
         }
-        else
+        else if(!bNoVR)
         {
             bPauseNow = !userPresent;
         }
@@ -496,7 +504,6 @@ public class GameManager : MonoBehaviour
             case -3:
                 //by use of the EditorAutoLoad script the main scene should be loaded first
                 // and should be active here ("Scenes/GameStart")
-                Cursor.visible = false;
                 iState++;
 
                 StartCoroutine(LoadAsyncTileset());
@@ -788,7 +795,7 @@ public class GameManager : MonoBehaviour
                             if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
                                 //////start of oculus specific code (achievements)
-                                if (bOculusApiPresent && userPresent) //VR user must be present for achievements
+                                if (bOculusDevicePresent && userPresent) //VR user must be present for achievements
                                 {
                                     HandleOculusAchievements();
                                 }

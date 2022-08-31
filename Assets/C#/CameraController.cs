@@ -48,6 +48,8 @@ public class CameraController : MonoBehaviour
 
         //the rest is done once only...
         DontDestroyOnLoad(gameObject);
+
+        fYAdjust = PlayerPrefs.GetFloat("MyYAdjust", 0);
     }
 
     // Start is called before the first frame update
@@ -65,6 +67,23 @@ public class CameraController : MonoBehaviour
         oRayQuad.SetActive(false);
     }
 
+    private float fYAdjust = 0f;
+    private float fYAdjustStep = 0.16f;
+    public void CycleYAdjust()
+    {
+        fYAdjust += fYAdjustStep;
+        if (fYAdjust > 3 * fYAdjustStep) fYAdjust -= 9 * fYAdjustStep; //8 steps
+
+        vCamOffset = new Vector3(0, fYAdjust + 0.3f, -1.90f);
+        if (!bMapMode)
+        {
+            vCamPos = new Vector3(0, fYAdjust, -4.3f);
+            transform.position = vCamPos;
+        }
+
+        PlayerPrefs.SetFloat("MyYAdjust", fYAdjust);
+        PlayerPrefs.Save();
+    }
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
     {
         bMapMode = true;
@@ -72,13 +91,13 @@ public class CameraController : MonoBehaviour
         oMap = i_oMap;
         vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update
 
-        vCamOffset = new Vector3(0, 0.3f, -1.90f);
+        vCamOffset = new Vector3(0, fYAdjust + 0.3f, -1.90f);
         vMapSize = oMap.GetMapSize();
     }
     public void InitForMenu()
     {
         bMapMode = false;
-        vCamPos = new Vector3(0, 0, -4.3f);
+        vCamPos = new Vector3(0, fYAdjust, -4.3f);
         transform.position = vCamPos;
     }
 
@@ -89,15 +108,21 @@ public class CameraController : MonoBehaviour
     // now: 2 2 1 2 2 1 
     float fCurX = 0, fCurY = 0;
     float fStepX = 0, fStepY = 0;
-    public void GetMouseMovementSmooth(out float o_fX, out float o_fY)
+    public void GetMouseMovementSmooth(out float o_fX, out float o_fY, out float o_fXScreen, out float o_fYScreen)
     {
         o_fX = 0;
         o_fY = 0;
+        o_fXScreen = 0;
+        o_fYScreen = 0;
 
         Mouse mouse = Mouse.current;
-        if (mouse != null && mouse.leftButton.isPressed)
+        if (mouse != null)
         {
-            Vector2 v = mouse.delta.ReadValue() * Time.deltaTime * 7.0f;
+            //InputSystem
+            Vector2 v = mouse.position.ReadValue();
+            o_fXScreen = v.x;
+            o_fYScreen = v.y;
+            v = mouse.delta.ReadValue() * Time.deltaTime * 7.0f;
             fCurX += v.x;
             fCurY += v.y;
 
@@ -139,25 +164,42 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    float fX = 0.0f, fY = 0, fZ = 0;
+    float fX_cam = 0.0f, fY_cam = 0, fZ_cam = 0;
+    Vector3 mousePoint;
     float fSnapTimer = 0;
     bool bFirst = true;
     void LateUpdate()
     {
+        /**/
+        if (GameManager.bNoVR)
+        {
+            Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
+            Camera.main.fieldOfView = 45.0f;
+        }
+
         //emulate headset movement
         Keyboard keyboard = Keyboard.current;
         if ((keyboard!=null && keyboard.fKey.isPressed) || GameManager.bNoVR)
         {
             //using mouse smoothing to avoid jerkyness
-            float fMouseX, fMouseY;
-            GetMouseMovementSmooth(out fMouseX, out fMouseY);
-            if (keyboard.gKey.isPressed) fZ += fMouseX * 3.0f;
-            else fY += fMouseX * 3.0f;
-            fX -= fMouseY * 3.0f;
+            float fMouseX, fMouseY, fMouseXScreen, fMouseYScreen;
+            GetMouseMovementSmooth(out fMouseX, out fMouseY, out fMouseXScreen, out fMouseYScreen);
+            Mouse mouse = Mouse.current;
+            if (mouse != null && mouse.middleButton.isPressed)
+            {
+                if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 3.0f;
+                else fY_cam += fMouseX * 3.0f;
+                fX_cam -= fMouseY * 3.0f;
+            }
+            if (mouse!=null)
+            {
+                Vector3 scr = new Vector3(fMouseXScreen, fMouseYScreen, 5.0f);
+                mousePoint = Camera.main.ScreenToWorldPoint(scr, Camera.MonoOrStereoscopicEye.Mono);
+            }
 
-            if (keyboard != null && keyboard.rKey.isPressed) { fX = 0.0f; fY = 0; fZ = 0; }
+            if (keyboard != null && keyboard.rKey.isPressed) { fX_cam = 0.0f; fY_cam = 0; fZ_cam = 0; }
 
-            transform.eulerAngles = new Vector3(fX, fY, fZ);
+            transform.eulerAngles = new Vector3(fX_cam, fY_cam, fZ_cam);
         }
 
         if (bMapMode)
@@ -268,7 +310,7 @@ public class CameraController : MonoBehaviour
             {
                 if (mouse.rightButton.isPressed || mouse.leftButton.isPressed)
                 {
-                    bPointMovementInMenu = false;
+                    bPointMovementInMenu = true;
                     iRightHanded = 0;
                 }
             }
@@ -301,6 +343,13 @@ public class CameraController : MonoBehaviour
             vGazeDirection = rotL * Vector3.forward;
             vGazeDirection = transform.TransformDirection(vGazeDirection);
             qRotation = Quaternion.LookRotation(vGazeDirection);
+        }
+        if (iRightHanded == 0 && bPointMovementInMenu) //on mouse only (gamepad uses head to point in menu, and cannot point in game)
+        {
+            vHeadPosition = new Vector3(vHeadPosition.x, vHeadPosition.y-0.5f, vHeadPosition.z); //below head
+            Ray r = new Ray(vHeadPosition, (mousePoint - vHeadPosition).normalized);
+            qRotation = Quaternion.LookRotation(r.direction);
+            vGazeDirection = qRotation * Vector3.forward;
         }
     }
 }

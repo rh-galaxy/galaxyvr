@@ -733,11 +733,11 @@ public class Player : MonoBehaviour
             bool stickLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickL);
 
             //get input from joystick
-            if (stickR.x > 0.5f || stickL.x > 0.5f) bRight = true;
-            if (stickR.x < -0.5f || stickL.x < -0.5f) bLeft = true;
+            if (stickR.x > 0.35f || stickL.x > 0.35f) bRight = true;
+            if (stickR.x < -0.35f || stickL.x < -0.35f) bLeft = true;
             if(!bMotionMovementEnabled)
             {
-                if ((stickR.y < -0.7f || stickL.y < -0.7f) && bLeft == false && bRight == false) bAdjust = true;
+                if ((stickR.y < -0.75f || stickL.y < -0.75f) && bLeft == false && bRight == false) bAdjust = true;
                 if (stickR.y < -0.85f || stickL.y < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
 
                 if (button1R || button1L) bNewFireState = true; //button A (X)
@@ -761,6 +761,20 @@ public class Player : MonoBehaviour
                 if (trgG1 > 0.3f || trgG2 > 0.3f) bThrottle = true;
                 if (gamepad.buttonEast.isPressed || gamepad.buttonNorth.isPressed) bThrottle = true; //button B (Y)
                 if (gamepad.buttonSouth.isPressed || gamepad.buttonWest.isPressed) bNewFireState = true; //button A (X)
+            }
+
+            Keyboard keyboard = Keyboard.current;
+            Mouse mouse = Mouse.current;
+            if (mouse != null && bMotionMovementEnabled)
+            {
+                if (keyboard!=null && keyboard.hKey.isPressed)
+                {
+                    bThrottle = true;
+                }
+                if (mouse.rightButton.isPressed || mouse.leftButton.isPressed)
+                {
+                    bThrottle = true;
+                }
             }
 
             if (bMotionMovementEnabled)
@@ -868,8 +882,7 @@ public class Player : MonoBehaviour
             }
 
             //keyboard
-            Keyboard keyboard = Keyboard.current;
-            if(keyboard != null) {
+            if (keyboard != null) {
                 if (!bMotionMovementEnabled) if (keyboard.enterKey.isPressed || keyboard.spaceKey.isPressed) bNewFireState = true;
                 if (keyboard.upArrowKey.isPressed || keyboard.wKey.isPressed) bThrottle = true;
                 if (keyboard.downArrowKey.isPressed || keyboard.sKey.isPressed) bAdjust = true;

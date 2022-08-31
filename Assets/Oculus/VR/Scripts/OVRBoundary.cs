@@ -1,20 +1,24 @@
-/************************************************************************************
-Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * Licensed under the Oculus SDK License Agreement (the "License");
+ * you may not use the Oculus SDK except in compliance with the License,
+ * which is provided at the time of installation or download, or which
+ * otherwise accompanies this software in either electronic or hard copy form.
+ *
+ * You may obtain a copy of the License at
+ *
+ * https://developer.oculus.com/licenses/oculussdk/
+ *
+ * Unless required by applicable law or agreed to in writing, the Oculus SDK
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-Licensed under the Oculus Master SDK License Version 1.0 (the "License"); you may not use
-the Utilities SDK except in compliance with the License, which is provided at the time of installation
-or download, or which otherwise accompanies this software in either electronic or hard copy form.
-
-You may obtain a copy of the License at
-https://developer.oculus.com/licenses/oculusmastersdk-1.0/
-
-Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
-ANY KIND, either express or implied. See the License for the specific language governing
-permissions and limitations under the License.
-************************************************************************************/
-
-#if USING_XR_MANAGEMENT && USING_XR_SDK_OCULUS
+#if USING_XR_MANAGEMENT && (USING_XR_SDK_OCULUS || USING_XR_SDK_OPENXR)
 #define USING_XR_SDK
 #endif
 
@@ -50,6 +54,7 @@ public class OVRBoundary
 	/// </summary>
 	public enum BoundaryType
 	{
+		[System.Obsolete("Deprecated. This enum value will not be supported in OpenXR", false)]
 		OuterBoundary      = OVRPlugin.BoundaryType.OuterBoundary, ///< Outer boundary that closely matches the user's configured walls.
 		PlayArea           = OVRPlugin.BoundaryType.PlayArea,      ///< Smaller convex area inset within the outer boundary.
 	}
@@ -57,6 +62,7 @@ public class OVRBoundary
 	/// <summary>
 	/// Provides test results of boundary system queries.
 	/// </summary>
+	[System.Obsolete("Deprecated. This struct will not be supported in OpenXR", false)]
 	public struct BoundaryTestResult
 	{
 		public bool IsTriggering;                              ///< Returns true if the queried test would violate and/or trigger the tested boundary types.
@@ -86,6 +92,7 @@ public class OVRBoundary
 	/// Returns the results of testing a tracked node against the specified boundary type.
 	/// All points are returned in local tracking space shared by tracked nodes and accessible through OVRCameraRig's trackingSpace anchor.
 	/// </summary>
+	[System.Obsolete("Deprecated. This function will not be supported in OpenXR", false)]
 	public OVRBoundary.BoundaryTestResult TestNode(OVRBoundary.Node node, OVRBoundary.BoundaryType boundaryType)
 	{
 		OVRPlugin.BoundaryTestResult ovrpRes = OVRPlugin.TestBoundaryNode((OVRPlugin.Node)node, (OVRPlugin.BoundaryType)boundaryType);
@@ -106,6 +113,7 @@ public class OVRBoundary
 	/// The test point is expected in local tracking space.
 	/// All points are returned in local tracking space shared by tracked nodes and accessible through OVRCameraRig's trackingSpace anchor.
 	/// </summary>
+	[System.Obsolete("Deprecated. This function will not be supported in OpenXR", false)]
 	public OVRBoundary.BoundaryTestResult TestPoint(Vector3 point, OVRBoundary.BoundaryType boundaryType)
 	{
 		OVRPlugin.BoundaryTestResult ovrpRes = OVRPlugin.TestBoundaryPoint(point.ToFlippedZVector3f(), (OVRPlugin.BoundaryType)boundaryType);
@@ -203,6 +211,7 @@ public class OVRBoundary
 	/// <summary>
 	/// Returns true if the boundary system is currently visible.
 	/// </summary>
+	[System.Obsolete("Deprecated. This function will not be supported in OpenXR", false)]
 	public bool GetVisible()
 	{
 		if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)
@@ -221,6 +230,7 @@ public class OVRBoundary
 	/// Requests that the boundary system visibility be set to the specified value.
 	/// The actual visibility can be overridden by the system (i.e., proximity trigger) or by the user (boundary system disabled)
 	/// </summary>
+	[System.Obsolete("Deprecated. This function will not be supported in OpenXR", false)]
 	public void SetVisible(bool value)
 	{
 		if (OVRManager.loadedXRDevice == OVRManager.XRDevice.Oculus)

@@ -111,6 +111,7 @@ public class LandingZone : MonoBehaviour
         if(GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION)
         {
             oZoneAttentionMarker = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            oZoneAttentionMarker.name = "LandingZone" + iId.ToString() + "Marker";
             oZoneAttentionMarker.transform.parent = GameLevel.theMap.transform;
             MonoBehaviour.DestroyImmediate(oZoneAttentionMarker.GetComponent<BoxCollider>());
             oZoneAttentionMarker.transform.position = new Vector3(vPos.x, vPos.y, -((i_fDepth + 0.04f) / 2.0f));
@@ -120,6 +121,7 @@ public class LandingZone : MonoBehaviour
 
             oMaterialHome = Resources.Load("LandingZoneHome", typeof(Material)) as Material;
             oMaterialCargo = Resources.Load("LandingZoneCargo", typeof(Material)) as Material;
+            UpdateAttentionMarker();
         }
 
         gameObject.SetActive(true);
@@ -174,16 +176,24 @@ public class LandingZone : MonoBehaviour
         //else should not happen
     }
 
+    void UpdateAttentionMarker()
+    {
+        //update material on attention marker
+        if (bHomeBase)
+            oZoneAttentionMarkerRenderer.material = oMaterialHome;
+        else if (GetTotalCargo() > 0)
+            oZoneAttentionMarkerRenderer.material = oMaterialCargo;
+        else
+            oZoneAttentionMarkerRenderer.material = oMaterialZone;
+    }
+
     int iCntr = 0;
     void Update()
     {
         iCntr++;
         if(iCntr%50==0 && oZoneAttentionMarker!=null)
         {
-            //update material on attention marker
-            if (bHomeBase) oZoneAttentionMarkerRenderer.material = oMaterialHome;
-            else if (GetTotalCargo() > 0) oZoneAttentionMarkerRenderer.material = oMaterialCargo;
-            else oZoneAttentionMarkerRenderer.material = oMaterialZone;
+            UpdateAttentionMarker();
         }
     }
 }

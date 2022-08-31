@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\Bin\Debug\</OutputPath>
-    <DefineConstants>UNITY_2021_3_8;UNITY_2021_3;UNITY_2021;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_INCLUDE_TESTS;UNITY_ANALYTICS;USE_SEARCH_ENGINE_API;USE_SEARCH_TABLE;USE_SEARCH_MODULE;USE_PROPERTY_DATABASE;USE_SEARCH_EXTENSION_API;SCENE_TEMPLATE_MODULE;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;PLATFORM_ANDROID;TEXTCORE_1_0_OR_NEWER;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;UNITY_CAN_SHOW_SPLASH_SCREEN;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;ENABLE_ETC_COMPRESSION;PLATFORM_EXTENDS_VULKAN_DEVICE;PLATFORM_HAS_MULTIPLE_SWAPCHAINS;UNITY_ANDROID_SUPPORTS_SHADOWFILES;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_STANDARD_2_0;NET_STANDARD;NET_STANDARD_2_1;NETSTANDARD;NETSTANDARD2_1;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;UNITY_TIMELINE_EXIST;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>UNITY_2021_3_8;UNITY_2021_3;UNITY_2021;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;UNITY_2021_1_OR_NEWER;UNITY_2021_2_OR_NEWER;UNITY_2021_3_OR_NEWER;UNITY_INCLUDE_TESTS;UNITY_ANALYTICS;USE_SEARCH_ENGINE_API;USE_SEARCH_TABLE;USE_SEARCH_MODULE;USE_PROPERTY_DATABASE;USE_SEARCH_EXTENSION_API;SCENE_TEMPLATE_MODULE;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;ENABLE_ONSCREEN_KEYBOARD;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;ENABLE_VIDEO;ENABLE_ACCELERATOR_CLIENT_DEBUGGING;PLATFORM_ANDROID;TEXTCORE_1_0_OR_NEWER;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;UNITY_CAN_SHOW_SPLASH_SCREEN;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;ENABLE_ETC_COMPRESSION;PLATFORM_EXTENDS_VULKAN_DEVICE;PLATFORM_HAS_MULTIPLE_SWAPCHAINS;UNITY_ANDROID_SUPPORTS_SHADOWFILES;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_STANDARD_2_0;NET_STANDARD;NET_STANDARD_2_1;NETSTANDARD;NETSTANDARD2_1;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;APPLAB;UNITY_TIMELINE_EXIST;UNITY_PHYSICS_EXIST;UNITY_PHYSICS2D_EXIST;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -53,63 +53,65 @@
     <UnityVersion>2021.3.8f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\wrapper\fmod_studio.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\StudioGlobalParameterTrigger.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\wrapper\fmod_dsp.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\PlatformMobileLow.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\PlatformGroup.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\fmod_studio.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\StudioGlobalParameterTrigger.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\fmod_dsp.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\EventReference.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\PlatformMobileLow.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\PlatformGroup.cs" />
     <Compile Include="Assets\Plugins\FMOD\platforms\ios\src\PlatformIOS.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\Settings.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\StudioBankLoader.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\StudioListener.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\wrapper\fmod_errors.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\ParamRef.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Settings.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\StudioBankLoader.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\StudioListener.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\fmod_errors.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\ParamRef.cs" />
     <Compile Include="Assets\Plugins\FMOD\platforms\html5\src\PlatformWebGL.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\RuntimeUtils.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\BankRefAttribute.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\RuntimeUtils.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\BankRefAttribute.cs" />
     <Compile Include="Assets\Plugins\FMOD\platforms\tvos\src\PlatformAppleTV.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\Platform.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\FMODRuntimeManagerOnGUIHelper.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\RuntimeManager.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\EventHandler.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\EventRefAttribute.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\ParamRefAttribute.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\Platform.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\FMODRuntimeManagerOnGUIHelper.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\RuntimeManager.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\EventHandler.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\EventRefAttribute.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\ParamRefAttribute.cs" />
     <Compile Include="Assets\Plugins\FMOD\platforms\android\src\PlatformAndroid.cs" />
     <Compile Include="Assets\Plugins\FMOD\platforms\win\src\PlatformWindows.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\Timeline\FMODEventTrack.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\wrapper\fmod.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\AutomatableSlots.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\StudioParameterTrigger.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\Timeline\FMODEventPlayable.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\FMODEventTrack.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\fmod.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\AutomatableSlots.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\StudioParameterTrigger.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\FMODEventPlayable.cs" />
     <Compile Include="Assets\Plugins\FMOD\platforms\mac\src\PlatformMac.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\StudioEventEmitter.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\PlatformPlayInEditor.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\PlatformDefault.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\StudioEventEmitter.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\PlatformPlayInEditor.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\PlatformDefault.cs" />
     <Compile Include="Assets\Plugins\FMOD\platforms\linux\src\PlatformLinux.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\PlatformMobileHigh.cs" />
-    <Compile Include="Assets\Plugins\FMOD\src\Runtime\CodeGeneration.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\PlatformMobileHigh.cs" />
+    <Compile Include="Assets\Plugins\FMOD\src\CodeGeneration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Plugins\FMOD\lib\uwp\arm\fmod.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\win\x86\fmodstudioL.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\x64\fmodstudioL.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\x64\fmodL.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\arm\fmodL.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\win\x86\resonanceaudio.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\x86\fmodstudioL.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\x86\fmodL.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\arm\fmodstudioL.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\win\x86\fmodstudio.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\arm\fmodstudio.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\arm\fmod.dll" />
+    <None Include="Assets\Plugins\FMOD\LICENSE.TXT" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\x64\fmodstudioL.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\x64\fmodL.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\arm\fmodL.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\win\lib\x86\resonanceaudio.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\x86\fmodstudioL.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\x86\fmodL.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\arm\fmodstudioL.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\win\lib\x86\fmodstudio.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\win\lib\x86_64\fmodstudioL.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\arm\fmodstudio.dll" />
     <None Include="Assets\Plugins\FMOD\README.txt" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\x64\fmod.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\win\x86_64\fmodstudio.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\x64\fmodstudio.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\x86\fmod.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\win\lib\x86\fmodstudioL.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\x64\fmod.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\win\lib\x86_64\fmodstudio.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\x64\fmodstudio.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\x86\fmod.dll" />
     <None Include="Assets\Plugins\FMOD\FMODUnity.asmdef" />
-    <None Include="Assets\Plugins\FMOD\lib\win\x86_64\resonanceaudio.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\uwp\x86\fmodstudio.dll" />
-    <None Include="Assets\Plugins\FMOD\lib\win\x86_64\fmodstudioL.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\win\lib\x86_64\resonanceaudio.dll" />
+    <None Include="Assets\Plugins\FMOD\platforms\uwp\lib\x86\fmodstudio.dll" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

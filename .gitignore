@@ -1,3 +1,4 @@
+UserSettings
 Temp
 obj
 Library
@@ -10,3 +11,4 @@ Oculus.VR.csproj
 Oculus.VR.Editor.csproj
 Oculus.VR.Scripts.Editor.csproj
 fmod_editor.log
+/[Aa]ssets/Plugins/FMOD/Cache/*

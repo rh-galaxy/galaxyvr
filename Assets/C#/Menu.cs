@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using TMPro;
 using UnityEngine.XR;
 using UnityEngine.InputSystem;
-using TMPro;
 
 public class Menu : MonoBehaviour
 {
@@ -16,7 +16,7 @@ public class Menu : MonoBehaviour
     public static bool bWorldBestReplay1 = false;
     public static bool bWorldBestReplay2 = false;
     public static bool bWorldBestReplay3 = false;
-    public static bool bRecenter = false;
+    public static bool bYAdjust = false;
     public static bool bQuit = false;
     public static bool bPauseInput = false;
     bool bAllowSelection = false;
@@ -274,11 +274,14 @@ public class Menu : MonoBehaviour
     public Material oSkyBoxMat3;
     public Material oSkyBoxMat4;
     public Material oSkyBoxMat5;
+    public Material oSkyBoxMat6;
+    public Material oSkyBoxMat7;
 
     CameraController cameraHolder;
 
     C_Item2InMenu oMenuLayDown;
     C_Item2InMenu oMenuEasyMode;
+    C_Item2InMenu oMenuYAdjust;
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
     C_Item2InMenu oMenuSnapMovement;
@@ -393,8 +396,6 @@ public class Menu : MonoBehaviour
         //we rely on GameLevel.szLevel for that
         oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel, GameLevel.iLevelIndex >= 200 && GameLevel.iLevelIndex<400, GameLevel.iLevelIndex>=400, out i_stLevelInfo.bIsTime, out szLevelInfoDescription);
         oMiniMapMaterial.mainTexture = oMiniMapTex;
-
-        //Debug.Log("SetLevelInfoPass1: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
     }
 
     Vector3 vHeadPosition;
@@ -489,32 +490,27 @@ public class Menu : MonoBehaviour
             oLevelInfoContainer.SetActive(true);
 
             Vector3 vPos = new Vector3(-8.9f, 1.5f, -0.1f);
-            if (oMenuReplayWR1 != null) oMenuReplayWR1.Reinit(vPos, "1", "ReplayWR1", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuReplayWR1 = new C_ItemInMenu(vPos, "1", "ReplayWR1", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayWR1.oLevelQuad.SetActive(i_stLevelInfo.iWRScore1 != -1);
             oMenuReplayWR1.oLevelText.SetActive(i_stLevelInfo.iWRScore1 != -1);
 
             vPos = new Vector3(-8.9f, -1.0f, -0.1f);
-            if (oMenuReplayWR2 != null) oMenuReplayWR2.Reinit(vPos, "2", "ReplayWR2", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuReplayWR2 = new C_ItemInMenu(vPos, "2", "ReplayWR2", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuReplayWR2 = new C_ItemInMenu(vPos, "2", "ReplayWR2", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayWR2.oLevelQuad.SetActive(i_stLevelInfo.iWRScore2 != -1);
             oMenuReplayWR2.oLevelText.SetActive(i_stLevelInfo.iWRScore2 != -1);
 
             vPos = new Vector3(-8.9f, -3.5f, -0.1f);
-            if (oMenuReplayWR3 != null) oMenuReplayWR3.Reinit(vPos, "3", "ReplayWR3", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuReplayWR3 = new C_ItemInMenu(vPos, "3", "ReplayWR3", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuReplayWR3 = new C_ItemInMenu(vPos, "3", "ReplayWR3", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayWR3.oLevelQuad.SetActive(i_stLevelInfo.iWRScore3 != -1);
             oMenuReplayWR3.oLevelText.SetActive(i_stLevelInfo.iWRScore3 != -1);
 
             vPos = new Vector3(0.5f, 1.5f, -0.1f);
-            if (oMenuReplayYR != null) oMenuReplayYR.Reinit(vPos, "", "ReplayYR", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuReplayYR = new C_ItemInMenu(vPos, "", "ReplayYR", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
             oMenuReplayYR.oLevelQuad.SetActive(i_stLevelInfo.iBestScoreMs != -1);
             oMenuReplayYR.oLevelText.SetActive(i_stLevelInfo.iBestScoreMs != -1);
 
             vPos = new Vector3(0.5f, -2.5f, -0.1f);
-            if (oMenuPlay != null) oMenuPlay.Reinit(vPos, "", "Play", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
-            else oMenuPlay = new C_ItemInMenu(vPos, "", "Play", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
+            oMenuPlay = new C_ItemInMenu(vPos, "", "Play", 4.0f, 4.0f, Menu.theMenu.oLevelInfoContainer);
 
             oWRNameText1.SetActive(true); oWRNameText2.SetActive(true); oWRNameText3.SetActive(true);
             oWRScoreText1.SetActive(true); oWRScoreText2.SetActive(true); oWRScoreText3.SetActive(true);
@@ -601,14 +597,16 @@ public class Menu : MonoBehaviour
             aMenuLevels = new C_LevelInMenu[NUM_LEVELS];
 
             //set random skybox
-            int iSkyBox = UnityEngine.Random.Range(1, 5);
+            int iSkyBox = UnityEngine.Random.Range(3, 7);
             switch (iSkyBox)
             {
-                case 1: RenderSettings.skybox = oSkyBoxMat1; break;
-                case 2: RenderSettings.skybox = oSkyBoxMat2; break;
-                case 3: RenderSettings.skybox = oSkyBoxMat3; break;
+                //case 2: RenderSettings.skybox = oSkyBoxMat2; break; //avoid blue sky
+                //case 3: RenderSettings.skybox = oSkyBoxMat3; break; //avoid red sky
+                case 3: RenderSettings.skybox = oSkyBoxMat1; break;
                 case 4: RenderSettings.skybox = oSkyBoxMat4; break;
                 case 5: RenderSettings.skybox = oSkyBoxMat5; break;
+                case 6: RenderSettings.skybox = oSkyBoxMat6; break;
+                case 7: RenderSettings.skybox = oSkyBoxMat7; break;
             }
         }
         else if (iIncrementalInit == 2)
@@ -689,22 +687,22 @@ public class Menu : MonoBehaviour
             Vector3 vAroundPoint = new Vector3(0, 0, -9.0f);
 
             //menu options
-            //oMenuRecenter = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -36, "Recenter", "Recenter", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuYAdjust = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -36, "Adjust height", "YAdjust", 30.0f, 12.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 9.0f);
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
             cameraHolder.SetMovementMode(CameraController.bPointMovement);
-            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
+            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
 
             GameManager.theGM.bEasyMode = PlayerPrefs.GetInt("MyUseEasyMode", 1) != 0;
-            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
+            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
 
-            oMenuLayDown = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -36, "Sky view", "LayDownView", 30.0f, 9.0f);
+            oMenuLayDown = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -36, "Sky view", "LayDownView", 30.0f, 9.0f);
         }
         else if (iIncrementalInit == 8)
         {
@@ -758,11 +756,6 @@ public class Menu : MonoBehaviour
         }
         else if (iIncrementalInit == 10)
         {
-            //change fov if non VR since that default setting shows to wide fov
-            // and is not behaving reliably
-            if (GameManager.bNoVR)
-                Camera.main.fieldOfView = 45.0f;
-
             //prevent selection if trigger was held when menu is started
             bAllowSelection = false;
             bLastTrigger = true;
@@ -786,6 +779,8 @@ public class Menu : MonoBehaviour
         //exit if input shall be ignored
         if (Menu.bPauseInput) return;
 
+        //get input
+        Keyboard keyboard = Keyboard.current;
         Mouse mouse = Mouse.current;
         Gamepad gamepad = Gamepad.current;
         UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
@@ -799,10 +794,7 @@ public class Menu : MonoBehaviour
         bool button2LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2L);
         bool stickLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickL);
 
-        //get input from joysticks
         float fAdjust = 0;
-        //if (stickR.x > 0.5f || stickL.x > 0.5f) fAdjust = 1000;
-        //if (stickR.x < -0.5f || stickL.x < -0.5f) fAdjust = -1000;
 
         bool bTrigger = (triggerR > 0.5f) || (triggerL > 0.5f) || button1R || button2R || button1L || button2L;
         if (gamepad != null)
@@ -810,6 +802,7 @@ public class Menu : MonoBehaviour
             bTrigger = bTrigger || gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed;
         }
         if (mouse != null) bTrigger = bTrigger || mouse.rightButton.isPressed || mouse.leftButton.isPressed;
+        if (keyboard != null) bTrigger = bTrigger || keyboard.hKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
         if (bTrigger && !bLastTrigger) bAllowSelection = true; //pressed
         else bAllowSelection = false;
         if (bLevelPlay) bAllowSelection = false; //fixes bug when after start, the user clicks again on another level in the menu (before the menu-scene has stopped)
@@ -836,6 +829,7 @@ public class Menu : MonoBehaviour
         if (oMenuNext2 != null) oMenuNext2.oLevelQuadMeshRenderer.material = oMaterialNext;
         if (oMenuPrev2 != null) oMenuPrev2.oLevelQuadMeshRenderer.material = oMaterialNext;
 
+        if (oMenuYAdjust != null) oMenuYAdjust.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuQuit != null) oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuControls != null) oMenuControls.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuCredits != null) oMenuCredits.oLevelQuadMeshRenderer.material = oMaterialBar;
@@ -941,6 +935,10 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
             {
                 oMenuReplayWR3.oLevelQuadMeshRenderer.material = oMaterialOctagonHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("YAdjust") == 0)
+            {
+                oMenuYAdjust.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
             {
@@ -1070,6 +1068,11 @@ public class Menu : MonoBehaviour
                 else if (oHitInfo.collider.name.CompareTo("ReplayWR3") == 0)
                 {
                     bWorldBestReplay3 = true;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("YAdjust") == 0)
+                {
+                    bYAdjust = true;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
@@ -1289,27 +1292,11 @@ public class Menu : MonoBehaviour
 
         Vector3 vPos;
 
-        public void Reinit(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText, GameObject i_oParent)
+        /*public void DestroyObj()
         {
-            vPos = i_vPos;
-
-            //create a quad with a text on, in the pos of each menu object
-            oLevelQuad.transform.parent = i_oParent.transform;
-            oLevelQuad.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z);
-            oLevelQuad.transform.localScale = new Vector3(i_fScale * 0.4f, i_fScale * 0.4f, 1.0f);
-            oLevelQuad.transform.rotation = i_oParent.transform.rotation; //why doesn't this come from the parent already
-            BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = i_szCollID;
-            oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
-            oLevelQuadMeshRenderer.material = Menu.theMenu.oMaterialPentagonUnlocked;
-
-            //create text
-            oLevelText.transform.localPosition = new Vector3(vPos.x, vPos.y, vPos.z - 0.1f);
-            oLevelText.transform.localScale = new Vector3(i_fScaleText * 0.08f, i_fScaleText * 0.08f, 1.0f);
-            oLevelText.transform.rotation = i_oParent.transform.rotation; //why doesn't this come from the parent already
-
-            TextMesh oLevelTextTextMesh = oLevelText.GetComponent<TextMesh>();
-            oLevelTextTextMesh.text = i_szText;
-        }
+            Destroy(oLevelQuad);
+            Destroy(oLevelText);
+        }*/
 
         public C_ItemInMenu(Vector3 i_vPos, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText, GameObject i_oParent)
         {
