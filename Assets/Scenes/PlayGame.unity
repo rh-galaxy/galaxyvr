@@ -2224,7 +2224,6 @@ MonoBehaviour:
   oSkyBoxMat5: {fileID: 2100000, guid: d8c6bd84ea82ccc4b9b3acb390183115, type: 2}
   oSkyBoxMat6: {fileID: 2100000, guid: d33624bf177b5e64fa901f999574a6af, type: 2}
   oSkyBoxMat7: {fileID: 2100000, guid: 5459882ea925eeb4cb05db6d2432177a, type: 2}
-  oPlanet: {fileID: 0}
   oClipLevelStart: {fileID: 8300000, guid: c6832139dbe4f3f43b1f5e0dd91c36d0, type: 3}
   oClipLevelGameOver: {fileID: 8300000, guid: 634e562701b260f4bb4efb8078ccee14, type: 3}
   oClipLevelWin: {fileID: 8300000, guid: 38d297eb160464d45adf58192041835f, type: 3}
@@ -13609,6 +13608,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 199137469787870784, guid: 64891a0eb28db934898420d80ca07cb3,
+        type: 3}
+      propertyPath: m_VertexStreams.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 199137469787870784, guid: 64891a0eb28db934898420d80ca07cb3,
+        type: 3}
+      propertyPath: m_VertexStreams.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 199137469787870784, guid: 64891a0eb28db934898420d80ca07cb3,
+        type: 3}
+      propertyPath: m_VertexStreams.Array.data[2]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 199137469787870784, guid: 64891a0eb28db934898420d80ca07cb3,
+        type: 3}
+      propertyPath: m_VertexStreams.Array.data[3]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 199137469787870784, guid: 64891a0eb28db934898420d80ca07cb3,
+        type: 3}
+      propertyPath: m_VertexStreams.Array.data[4]
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 199177305528973174, guid: 64891a0eb28db934898420d80ca07cb3,
         type: 3}

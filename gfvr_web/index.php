@@ -141,9 +141,18 @@ headline("Future and past");
 <?php
 square_start("'100%'");
 ?>
-<p>Point-movement (now done for both Steam and Oculus v1.40) where you point with your hand and the ship goes there.
+<p>Point-movement (all platforms v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
-<p>v1.86<br>
+<p>v1.90<br>
+- use Universal render pipeline (PC)<br>
+- add glow postprocessing(PC)<br>
+- replaced skyboxes<br>
+- replaced planet<br>
+- removed recentering<br>
+- add adjust height<br>
+- major update to build env<br>
+<br>
+v1.86<br>
 - controls-info update<br>
 - collision stuck fix<br>
 - door base collision fix<br>
