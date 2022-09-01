@@ -18,3 +18,8 @@ WebReplay    URP, Postprocessing, Normal glow settings, WebGL2
 
 * Glow settings - Hard to get it to the same as Oculus Rift and WebReplay,
  includes more objects than just the LZ materials, but might be ok now, keep under observation
+ 
+* Maybe reduce transparency on status bar.
+
+* Planets are rendered differently on Quest then the rest URP projects.
+ Update to the same tree later.
