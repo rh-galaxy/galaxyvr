@@ -21,14 +21,14 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Explosion
-  m_Shader: {fileID: 4800000, guid: 0406db5a14f94604a8c57ccfbc9f3b46, type: 3}
+  m_Shader: {fileID: 211, guid: 0000000000000000f000000000000000, type: 0}
   m_ValidKeywords:
-  - _ALPHAPREMULTIPLY_ON
+  - _ALPHABLEND_ON
   - _EMISSION
+  - _REQUIRE_UV2
+  m_InvalidKeywords:
   - _FLIPBOOKBLENDING_ON
   - _SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords:
-  - _REQUIRE_UV2
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -36,9 +36,9 @@ Material:
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses:
-  - GRABPASS
-  - DepthOnly
   - SHADOWCASTER
+  - DepthOnly
+  - GRABPASS
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -98,7 +98,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaScale: 1
-    - _Blend: 1
+    - _Blend: 0
     - _BlendOp: 0
     - _BumpScale: 1
     - _CameraFadingEnabled: 0
@@ -122,7 +122,7 @@ Material:
     - _GlossyReflections: 1
     - _LightingEnabled: 0
     - _Metallic: 0
-    - _Mode: 3
+    - _Mode: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueOffset: 0
@@ -131,19 +131,19 @@ Material:
     - _SoftParticlesFarFadeDistance: 2.03
     - _SoftParticlesNearFadeDistance: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _Surface: 1
     - _UVSec: 0
     - _ZWrite: 0
     - _flip: 0
     - _pow: 1
     m_Colors:
-    - _BaseColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 0.54509807}
-    - _BaseColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
+    - _BaseColor: {r: 0.8113207, g: 0, b: 0, a: 0.83137256}
+    - _BaseColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
-    - _Color: {r: 0.7830188, g: 0.7830188, b: 0.7830188, a: 0.54509807}
+    - _Color: {r: 0.8113207, g: 0, b: 0, a: 0.83137256}
     - _ColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
-    - _EmissionColor: {r: 0.7764706, g: 0.4862745, b: 0, a: 1}
+    - _EmissionColor: {r: 1.5529412, g: 0.97566986, b: 0, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
