@@ -11,15 +11,17 @@ Version differences
 
 Steam        URP, Postprocessing, Glow settings*, Use steamvr input with openvr, Single pass Instanced rendering, D3D11
 Multiplayer  URP, Postprocessing, Glow settings*, Use steamvr input with openvr, Single pass Instanced rendering, D3D11
-Oculus Rift  URP, Postprocessing, Normal glow settings, Use UnityEngine.XR.InputDevice, Single pass Instanced rendering, D3D11
-Oculus Quest SRP, No postprocessing, Explosion has no Shockwave, Use UnityEngine.XR.InputDevice, Multiview rendering, OpenGLES3
+Meta PC      URP, Postprocessing, Normal glow settings, Use UnityEngine.XR.InputDevice, Single pass Instanced rendering, D3D11
+Meta Quest   SRP, No postprocessing, Explosion has no Shockwave, Use UnityEngine.XR.InputDevice, Multiview rendering, OpenGLES3
 WebReplay    URP, Postprocessing, Normal glow settings, WebGL2
 
 
 * Glow settings - Hard to get it to the same as Oculus Rift and WebReplay,
  includes more objects than just the LZ materials, but might be ok now, keep under observation
- 
-* Maybe reduce transparency on status bar.
 
-* Planets are rendered differently on Quest then the rest URP projects.
- Update to the same tree later.
+* Quest: Instead of Glow with postprocessing, do it with a colored stretched transparent billboard
+
+* Maybe reduce transparency on status bar
+
+* Planets are rendered differently on Quest then the rest URP projects
+ Update to the same tree later
