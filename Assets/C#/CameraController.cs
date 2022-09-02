@@ -40,8 +40,8 @@ public class CameraController : MonoBehaviour
         else if (instance != this)
         {
             //enforce singleton pattern, meaning there can only ever be one instance of a CameraController.
-            for (int i=0; i< transform.childCount; i++) //this is ok, since destroy doesn't take it away immediatly
-                Destroy(transform.GetChild(i).gameObject);
+         //   for (int i=0; i< transform.childCount; i++) //this is ok, since destroy doesn't take it away immediatly
+         //       Destroy(transform.GetChild(i).gameObject);
             Destroy(gameObject);
             return;
         }
