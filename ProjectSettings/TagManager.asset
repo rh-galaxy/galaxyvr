@@ -41,6 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Text
+    uniqueID: 2219904381
+    locked: 0
   - name: OnTop
     uniqueID: 2166858321
     locked: 0
