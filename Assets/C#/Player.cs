@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     const float fGravityScale = 0.045f;
 
     //motion movement
-    internal bool bMotionMovementEnabled = false;
+    bool bMotionMovementEnabled = false;
     internal Vector2 vSteerToPoint;
 
     //ship properties
@@ -105,10 +105,9 @@ public class Player : MonoBehaviour
     float fFireTimer = 0.0f;
     float fFullThrottleTimer = 0.0f;
 
-    bool bInited;
+    bool bInited = false;
     private void Awake()
     {
-        bInited = false;
         oThrusterEmission = oThruster.emission;
         oThrusterEmission.enabled = false;
         oWallsCollEmission = oWallsColl.emission;
@@ -121,9 +120,10 @@ public class Player : MonoBehaviour
         fLastShipHealth = FULL_HEALTH;
     }
 
-    public void Init(string i_szName, int i_iPlayerID, Vector2 i_vStartPos, GameLevel i_oMap)
+    public void Init(string i_szName, int i_iPlayerID, Vector2 i_vStartPos, GameLevel i_oMap, bool i_bMotionMovement)
     {
         bInited = true;
+        bMotionMovementEnabled = i_bMotionMovement;
 
         oMap = i_oMap;
         vMapSize = oMap.GetMapSize();

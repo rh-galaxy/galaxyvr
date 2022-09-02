@@ -7738,7 +7738,7 @@ SortingGroup:
   m_GameObject: {fileID: 1110497465}
   m_Enabled: 1
   m_SortingLayerID: -2128108975
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
 --- !u!1 &1120500042
 GameObject:
@@ -8858,6 +8858,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8094110256a346f45bcd06874e50aa0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mediumQuality: {fileID: 0}
+  highQuality: {fileID: 0}
+  ultraQuality: {fileID: 0}
   oSkyBoxMat1: {fileID: 2100000, guid: 723506e5781a88f4b8a53587f5e36330, type: 2}
   oSkyBoxMat2: {fileID: 2100000, guid: b7b4f7531bc4e03418206b198cd4524b, type: 2}
   oSkyBoxMat3: {fileID: 2100000, guid: 2f4eeee454357514cb4eb96c127b9af5, type: 2}
