@@ -97,10 +97,9 @@ public class Player : MonoBehaviour
     float fDamageTimer = 1.0f;
     float fExplosionTimer = 0.0f;
 
-    bool bInited;
+    bool bInited = false;
     private void Awake()
     {
-        bInited = false;
         oThrusterEmission = oThruster.emission;
         oThrusterEmission.enabled = false;
         oWallsCollEmission = oWallsColl.emission;

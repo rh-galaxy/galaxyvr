@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using TMPro;
 
 public class GameStatus : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class GameStatus : MonoBehaviour
         oFuelBar.SetActive(!i_bIsRace);
         oCargoBar.SetActive(!i_bIsRace);
 
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
 
         if (!GameManager.bNoVR) transform.eulerAngles = new Vector3(45, 0, 0);
         transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
@@ -62,8 +63,8 @@ public class GameStatus : MonoBehaviour
         oHealthBar.transform.localPosition = new Vector3(-3 + ((i_fHealth * BAR_LENGTH) / 2), -1.5f, 0) / 10.0f;
         oHealthBar.transform.localScale = new Vector3((i_fHealth * BAR_LENGTH), 1, 1) / 10.0f;
 
-        oTextTime.GetComponent<TextMesh>().text = i_fTime.ToString("N2");
-        oTextLapProgress.GetComponent<TextMesh>().text = i_szLapProgress;
+        oTextTime.GetComponent<TextMeshPro>().text = i_fTime.ToString("N2");
+        oTextLapProgress.GetComponent<TextMeshPro>().text = i_szLapProgress;
     }
 
     public void SetForMission(float i_fHealth, int i_iNumLives, float i_fCargo, bool i_bCargoFull, float i_fFuel, float i_fScore)
@@ -72,8 +73,8 @@ public class GameStatus : MonoBehaviour
         oHealthBar.transform.localPosition = new Vector3(-3 + ((i_fHealth * BAR_LENGTH) / 2), -1.5f, 0) / 10.0f;
         oHealthBar.transform.localScale = new Vector3((i_fHealth * BAR_LENGTH), 1, 1) / 10.0f;
 
-        oTextScore.GetComponent<TextMesh>().text = i_fScore.ToString();
-        oTextLives.GetComponent<TextMesh>().text = "x "+i_iNumLives.ToString();
+        oTextScore.GetComponent<TextMeshPro>().text = i_fScore.ToString();
+        oTextLives.GetComponent<TextMeshPro>().text = "x "+i_iNumLives.ToString();
 
         if (i_fFuel < 0.01f) i_fFuel = 0.01f; //done because 0 makes a black quad
         oFuelBar.transform.localPosition = new Vector3(-3 + ((i_fFuel * BAR_LENGTH) / 2), -2.75f, 0) / 10.0f;

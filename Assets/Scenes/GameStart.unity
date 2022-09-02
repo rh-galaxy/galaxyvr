@@ -5134,7 +5134,6 @@ MonoBehaviour:
   death: Death
   flow: Flow
   cargo: Cargo
-  mainEvent: 
   EventMain:
     Guid:
       Data1: 1832154469
@@ -5403,7 +5402,7 @@ SortingGroup:
   m_GameObject: {fileID: 1110497465}
   m_Enabled: 1
   m_SortingLayerID: -2128108975
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
 --- !u!1 &1961449721
 GameObject:
@@ -5416,7 +5415,6 @@ GameObject:
   - component: {fileID: 1961449722}
   - component: {fileID: 1961449724}
   - component: {fileID: 1961449723}
-  - component: {fileID: 1961449725}
   - component: {fileID: 1961449726}
   m_Layer: 0
   m_Name: MainCamera
@@ -5492,24 +5490,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1961449725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1961449721}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a2a9c34df4095f47b9ca8f975175f5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Device: 0
-  m_PoseSource: 2
-  m_PoseProviderComponent: {fileID: 0}
-  m_TrackingType: 0
-  m_UpdateType: 0
-  m_UseRelativeTransform: 0
 --- !u!114 &1961449726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5534,7 +5514,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0

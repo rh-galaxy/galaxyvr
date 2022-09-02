@@ -49,12 +49,13 @@ public class HttpHiscore
 
     UnityWebRequest www;
 
-    public IEnumerator GetReplay(string i_szLevel, string i_szId, bool isQuest, Replay i_oResult)
+    public IEnumerator GetReplay(string i_szLevel, string i_szId, int i_iDevice, Replay i_oResult)
     {
         bIsDone = false;
         
         string url = WEB_HOST + "/hiscore_getreplay2.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
-        if (isQuest) url = WEB_HOST + "/hiscore_getreplay2_quest.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
+        if (i_iDevice == 1) url = WEB_HOST + "/hiscore_getreplay2_quest.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
+        if (i_iDevice == 2) url = WEB_HOST + "/hiscore_getreplay2_jio.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
 
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();

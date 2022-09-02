@@ -435,10 +435,6 @@ public class GameLevel : MonoBehaviour
 
             if (bFinished)
             {
-                //(user name not currently used in Player)
-                string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
-                player.Init(szUser, 0, stPlayerStartPos[0], this);
-
                 iFinalizeCounter++;
             }
         }
@@ -470,21 +466,31 @@ public class GameLevel : MonoBehaviour
         {
             GetComponent<AudioSource>().PlayOneShot(oClipLevelStart, 0.8f);
 
-            //this must be done after init player (@ iFinalizeCounter == 1)
+            //(user name not currently used in Player)
+            string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
+            player.Init(szUser, 0, stPlayerStartPos[0], this);
+
+            //this must be done after init player
             //so best do it the same time as the level has finished popping up
             GameManager.theGM.cameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
-            iFinalizeCounter++;
-
             GameManager.theGM.StartFade(0.5f, 0.5f, false);
-        }
-        else if (iFinalizeCounter >= 11 && iFinalizeCounter <= 31)
-        {
-            //let the fade in take 0.25 sec (~21 frames)
-            //note: don't know how this happened, but it's not good
+
             iFinalizeCounter++;
         }
-        else if (iFinalizeCounter == 32)
+        else if (iFinalizeCounter == 11)
+        {
+            //let the fade in finish
+            if (!GameManager.theGM.oFadeBox.activeSelf)
+            {
+                //do not display on top objects while fade in
+                player.gameObject.SetActive(true); //the windscreen (glass material)
+                player.status.gameObject.SetActive(true); //status bar objects
+
+                iFinalizeCounter++;
+            }
+        }
+        else if (iFinalizeCounter == 12)
         {
             //time back to normal
             Time.timeScale = 1.0f;
@@ -494,7 +500,7 @@ public class GameLevel : MonoBehaviour
         }
         //end of init code
 
-        if (!bMapLoaded || iFinalizeCounter <= 32) return;
+        if (!bMapLoaded || iFinalizeCounter <= 12) return;
 
         //game end conditions
         if (!bRunGameOverTimer)

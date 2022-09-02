@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour
     float fDelayTime = 0;
 
     internal string szReplayId;
-    internal bool bReplayQuest;
+    internal int iDevice; //0= PC, 1= Quest, 2= Jio
 
     void Update()
     {
@@ -221,7 +221,7 @@ public class GameManager : MonoBehaviour
         fReinitAudioTimer += Time.deltaTime;
         if(fReinitAudioTimer>8.0f)
         {
-            if(AudioStateMachine.instance.Init())
+            if(AudioStateMachine.instance != null && AudioStateMachine.instance.Init())
             {
                 AudioStateMachine.instance.LevelTransition(bIsMapScene ? 1.0f : 0.0f);
                 AudioStateMachine.instance.player = bIsMapScene ? GameLevel.theMap.player : null;
@@ -234,21 +234,27 @@ public class GameManager : MonoBehaviour
         switch (iState)
         {
             case -3:
-            //get parameters
+                //get parameters
 #if UNITY_EDITOR
                 //to make it run in editor where we have no web page url
-                //GameLevel.szLevel = "2race01";
-                //GameLevel.szLevel = "EntryLevel";
+                //GameLevel.szLevel = "2race01"; //device 0
                 //szReplayId = "2075437975870745";
-                GameLevel.szLevel = "SpiralSnail";
-                szReplayId = "3660795390684463";
-                bReplayQuest = true;
-                //bReplayQuest = false;
+                //GameLevel.iLevelIndex = 0; //make it handle as an original level
+                //iDevice = 0;
+
+                GameLevel.szLevel = "EntryLevel"; //device 0
+                szReplayId = "2075437975870745";
                 GameLevel.iLevelIndex = 400; //make it handle as a userlevel (above original 55)
+                iDevice = 0;
+
+                //GameLevel.szLevel = "SpiralSnail"; //device 1
+                //szReplayId = "3660795390684463";
+                //GameLevel.iLevelIndex = 400; //make it handle as a userlevel (above original 55)
+                //iDevice = 1;
 #else
                 GameLevel.szLevel = ParseURLParams(Application.absoluteURL, "Level");
                 szReplayId = ParseURLParams(Application.absoluteURL, "Id");
-                bReplayQuest = ParseURLParams(Application.absoluteURL, "IsQuest").CompareTo("1") == 0;
+                iDevice = int.Parse(ParseURLParams(Application.absoluteURL, "IsQuest"));
                 if (!GameLevel.szLevel.StartsWith("1") && !GameLevel.szLevel.StartsWith("2")) GameLevel.iLevelIndex = 400;
 #endif
 
@@ -292,7 +298,7 @@ public class GameManager : MonoBehaviour
                 if (GameLevel.iLevelIndex >= 200) szLevelToLoad = GameLevel.szLevel;
 
                 //get replay
-                StartCoroutine(oHigh.GetReplay(szLevelToLoad, szReplayId, bReplayQuest, oReplay));
+                StartCoroutine(oHigh.GetReplay(szLevelToLoad, szReplayId, iDevice, oReplay));
                 iState++;
 
                 //set in the above, but since StartCoroutine returns before it has a chance
