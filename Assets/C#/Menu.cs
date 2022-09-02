@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 //using UnityEngine.XR;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 using Valve.VR;
 
@@ -657,6 +658,16 @@ public class Menu : MonoBehaviour
         //////////////////////////////////
     }
 
+    void ApplyQuality(int iQuality)
+    {
+        QualitySettings.SetQualityLevel(iQuality, true);
+
+        /*if (iQuality <= 1) QualitySettings.renderPipeline = mediumQuality;
+        else if (iQuality <= 2) QualitySettings.renderPipeline = highQuality;
+        else QualitySettings.renderPipeline = ultraQuality;*/
+        //Camera.main.cameraType = CameraType.;
+    }
+
     int iIncrementalInit = 0;
     void Update()
     {
@@ -772,7 +783,7 @@ public class Menu : MonoBehaviour
             oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
-            QualitySettings.SetQualityLevel(iQuality, true);
+            ApplyQuality(iQuality);
             oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 9.0f);
             oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 45, "High", "Qual2", 30.0f, 9.0f);
             oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 9.0f);
@@ -1244,7 +1255,7 @@ public class Menu : MonoBehaviour
                     iQuality = 1;
                     PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                     PlayerPrefs.Save();
-                    QualitySettings.SetQualityLevel(iQuality, true);
+                    ApplyQuality(iQuality);
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Qual2") == 0)
@@ -1252,7 +1263,7 @@ public class Menu : MonoBehaviour
                     iQuality = 2;
                     PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                     PlayerPrefs.Save();
-                    QualitySettings.SetQualityLevel(iQuality, true);
+                    ApplyQuality(iQuality);
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Qual3") == 0)
@@ -1260,7 +1271,7 @@ public class Menu : MonoBehaviour
                     iQuality = 4;
                     PlayerPrefs.SetInt("MyUnityGraphicsQuality", iQuality);
                     PlayerPrefs.Save();
-                    QualitySettings.SetQualityLevel(iQuality, true);
+                    ApplyQuality(iQuality);
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Snap") == 0)

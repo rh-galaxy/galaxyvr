@@ -382,11 +382,11 @@ public class GameLevel : MonoBehaviour
             }
             else if (bIsCustom)
             {
-                bytes = File.ReadAllBytes(Application.persistentDataPath + "/" + szMiniMapfile);
+                bytes = File.ReadAllBytes(Application.persistentDataPath + "/" + szMapfile);
             }
             else
             {
-                string szFilenameNoExt = szMiniMapfile.Remove(szMapfile.LastIndexOf('.'));
+                string szFilenameNoExt = szMapfile.Remove(szMapfile.LastIndexOf('.'));
                 TextAsset f = (TextAsset)Resources.Load(szLevelPath0 + szFilenameNoExt);
                 if (f == null) f = (TextAsset)Resources.Load(szLevelPath1 + szFilenameNoExt);
                 //if (f == null) return false;
@@ -452,10 +452,6 @@ public class GameLevel : MonoBehaviour
 
             if (bFinished)
             {
-                //(user name not currently used in Player)
-                string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
-                player.Init(szUser, 0, stPlayerStartPos[0], this);
-
                 iFinalizeCounter++;
             }
         }
@@ -488,22 +484,31 @@ public class GameLevel : MonoBehaviour
             oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
             GetComponent<AudioSource>().PlayOneShot(oClipLevelStart);
 
-            //this must be done after init player (@ iFinalizeCounter == 1)
+            //(user name not currently used in Player)
+            string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
+            player.Init(szUser, 0, stPlayerStartPos[0], this, CameraController.bPointMovement);
+
+            //this must be done after init player
             //so best do it the same time as the level has finished popping up
             GameManager.theGM.cameraHolder.InitForGame(GameLevel.theMap, GameLevel.theMap.player.gameObject);
 
-            player.bMotionMovementEnabled = CameraController.bPointMovement;
-
-            iFinalizeCounter++;
-
             GameManager.theGM.StartFade(0.5f, 0.5f, false);
-        }
-        else if (iFinalizeCounter >= 11 && iFinalizeCounter <= 31)
-        {
-            //let the fade in take 0.25 sec (~21 frames)
+
             iFinalizeCounter++;
         }
-        else if (iFinalizeCounter == 32)
+        else if (iFinalizeCounter == 11)
+        {
+            //let the fade in finish
+            if (!GameManager.theGM.oFadeBox.activeSelf)
+            {
+                //do not display on top objects while fade in
+                player.gameObject.SetActive(true); //the windscreen (glass material)
+                player.status.gameObject.SetActive(true); //status bar objects
+
+                iFinalizeCounter++;
+            }
+        }
+        else if (iFinalizeCounter == 12)
         {
             //time back to normal
             Time.timeScale = 1.0f;
@@ -513,7 +518,7 @@ public class GameLevel : MonoBehaviour
         }
         //end of init code
 
-        if (!bMapLoaded || iFinalizeCounter <= 32) return;
+        if (!bMapLoaded || iFinalizeCounter <= 12) return;
 
         //motion controller movement
         if (CameraController.bPointMovement)
