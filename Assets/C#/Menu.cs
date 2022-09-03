@@ -1409,6 +1409,7 @@ public class Menu : MonoBehaviour
             oLevelText.transform.localScale = new Vector3(1.8f, 1.8f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;
+            //oLevelText.GetComponent<TextMeshPro>().fontSize = i_fFontSize;
             oLevelText.SetActive(true);
         }
     }
