@@ -146,6 +146,10 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Not entitled to play this game");
 
             UnityEngine.Application.Quit(); //it is possible to remove quit while developing
+
+            //this only happens when running in Unity Editor
+            bNoVR = true; //will make the game not pause
+            bNoHiscore = true; //will make the game continue in the state machine
         }
         else
         {
@@ -437,6 +441,7 @@ public class GameManager : MonoBehaviour
             UnityEngine.Application.Quit();
 #endif
         }
+
         //recenter
         //do it from oculus right-Menu (select recenter)
         //implement Y-adjust instead, recenter is working in steamvr system (left-menu, select recenter)
@@ -467,8 +472,8 @@ public class GameManager : MonoBehaviour
         {
             bPauseNow = (!OVRPlugin.hasInputFocus || !OVRPlugin.hasVrFocus) /*|| !userPresent)*/;
         }
+        if (bNoVR) bPauseNow = false;
 
-        /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
         /**///AudioStateMachine.instance.masterVolume = 0.0f; //while recording video without music
 
         //pause state change

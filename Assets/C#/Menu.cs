@@ -5,7 +5,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.XR;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 public class Menu : MonoBehaviour
 {
@@ -270,10 +269,6 @@ public class Menu : MonoBehaviour
         cameraHolder = CameraController.instance;
     }
 
-    public RenderPipelineAsset mediumQuality;
-    public RenderPipelineAsset highQuality;
-    public RenderPipelineAsset ultraQuality;
-
     public Material oSkyBoxMat1;
     public Material oSkyBoxMat2;
     public Material oSkyBoxMat3;
@@ -395,14 +390,10 @@ public class Menu : MonoBehaviour
     string szLevelInfoDescription;
     public void SetLevelInfoPass1(LevelInfo i_stLevelInfo)
     {
-        //float t1 = Time.realtimeSinceStartup;
-
         //i_stLevelInfo.szName is in the form "race00", but we need the filename "2race00"
         //we rely on GameLevel.szLevel for that
         oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel, GameLevel.iLevelIndex >= 200 && GameLevel.iLevelIndex<400, GameLevel.iLevelIndex>=400, out i_stLevelInfo.bIsTime, out szLevelInfoDescription);
         oMiniMapMaterial.mainTexture = oMiniMapTex;
-
-        //Debug.Log("SetLevelInfoPass1: " + (Time.realtimeSinceStartup - t1) * 1000.0f);
     }
 
     Vector3 vHeadPosition;
@@ -594,10 +585,6 @@ public class Menu : MonoBehaviour
     void ApplyQuality(int iQuality)
     {
         QualitySettings.SetQualityLevel(iQuality, true);
-
-        if (iQuality <= 1) GraphicsSettings.renderPipelineAsset = mediumQuality;
-        else if (iQuality <= 2) GraphicsSettings.renderPipelineAsset = highQuality;
-        else GraphicsSettings.renderPipelineAsset = ultraQuality;
     }
 
     int iIncrementalInit = 0;
@@ -1424,6 +1411,7 @@ public class Menu : MonoBehaviour
             oLevelText.transform.localScale = new Vector3(1.8f, 1.8f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;
+            //oLevelText.GetComponent<TextMeshPro>().fontSize = i_fFontSize;
             oLevelText.SetActive(true);
         }
     }
