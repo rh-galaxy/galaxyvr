@@ -619,8 +619,8 @@ public class GameManager : MonoBehaviour
             //bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
             /**///bPauseNow = Valve.VR.OpenVR.System.ShouldApplicationPause(); //!userPresent;
         }
+        if (bNoVR) bPauseNow = false;
 
-        /**///bPauseNow = false; //set to be able to play from editor without wearing the VR headset when connected
         /**///AudioStateMachine.instance.masterVolume = 0.0f; //while recording video without music
 
         //pause state change
