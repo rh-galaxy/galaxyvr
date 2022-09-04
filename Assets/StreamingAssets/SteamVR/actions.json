@@ -94,6 +94,14 @@
     {
       "controller_type": "gamepad",
       "binding_url": "binding_gamepad.json"
+    },
+    {
+      "controller_type": "vive_cosmos",
+      "binding_url": "binding_vive_cosmos.json"
+    },
+    {
+      "controller_type": "vive_cosmos_controller",
+      "binding_url": "bindings_vive_cosmos_controller.json"
     }
   ],
   "localization": [

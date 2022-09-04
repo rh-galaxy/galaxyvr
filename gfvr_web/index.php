@@ -278,7 +278,7 @@ headline("Public Domain");
 <?php
 square_start("'100%'");
 ?>
-<p>Since November 2020 the Unity projects source for both the Oculus Rift, Quest and Steam versions are available on <a href="https://sourceforge.net/projects/galaxy-forces-vr/">SourceForge</a>.</p>
+<p>Since November 2020 the Unity projects source for all versions are available on <a href="https://sourceforge.net/projects/galaxy-forces-vr/">SourceForge</a>. And on <a href="https://github.com/rh-galaxy/galaxyvr">GitHub</a>.</p>
 <p>If you find the source useful I'd like to hear from you.</p>
 <?php
 square_end();
