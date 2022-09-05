@@ -1,5 +1,7 @@
 {
-   "app_key": "application.generated.unity.galaxyforcesvr.exe",
+   "action_manifest_version" : 0,
+   "alias_info" : {},
+   "app_key" : "application.generated.unity.galaxyforcesvr.exe",
    "bindings" : {
       "/actions/default" : {
          "chords" : [],

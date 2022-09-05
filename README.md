@@ -27,6 +27,10 @@ TODO
 * Planets are rendered differently on Quest then the rest URP projects.
  Update to the same tree later.
 
+* Add a new mode to existing mission maps, no hiscore - just for fun and something different:
+ Have the cargo dangle on a chain (as one box, even when loading more cargo) below the ship and affect the ships physics accordingly.
+ Perhaps a breakable chain where cargo will be lost if broken, and cargo may be damaged for less score.
+
 Dev screenshot
 
 ![Current dev screenshot](/gfx_dev/bloom_editor.jpg)

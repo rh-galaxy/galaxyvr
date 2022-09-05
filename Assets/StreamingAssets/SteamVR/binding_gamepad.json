@@ -194,7 +194,7 @@
    "category" : "steamvr_input",
    "controller_type" : "gamepad",
    "description" : "",
-   "name" : "Galaxy Forces VR [Testing]-configuration for Gamepad",
+   "name" : "Galaxy Forces VR configuration for Gamepad",
    "options" : {},
    "simulated_actions" : []
 }
