@@ -1,9 +1,11 @@
 {
-  "app_key": "application.generated.unity.galaxyforcesvr.exe",
-  "bindings": {
-    "/actions/default": {
-      "chords": [],
-      "poses": [
+   "action_manifest_version" : 0,
+   "alias_info" : {},
+   "app_key" : "application.generated.unity.galaxyforcesvr.exe",
+   "bindings": {
+      "/actions/default": {
+         "chords": [],
+         "poses": [
         {
           "output": "/actions/default/in/pose_left",
           "path": "/user/hand/left/pose/handgrip"
@@ -43,7 +45,7 @@
             }
           }
         },
-		{
+        {
           "path": "/user/hand/left/input/joystick",
           "mode": "joystick",
           "parameters": {},
@@ -53,7 +55,7 @@
             }
           }
         },
-		{
+        {
           "path": "/user/hand/right/input/joystick",
           "mode": "joystick",
           "parameters": {},
@@ -63,7 +65,7 @@
             }
           }
         },
-		{
+        {
           "path": "/user/hand/left/input/grabgrip",
           "mode": "button",
           "parameters": {},
@@ -83,10 +85,10 @@
             }
           }
         },
-		{
-		  "path": "/user/hand/left/input/joystick",
-		  "mode": "dpad",
-		  "parameters": {
+        {
+          "path": "/user/hand/left/input/joystick",
+          "mode": "dpad",
+          "parameters": {
             "deadzone_pct": "85",
             "overlap_pct": "0",
             "sub_mode": "touch"
@@ -97,10 +99,10 @@
             }
           }
         },
-		{
-		  "path": "/user/hand/right/input/joystick",
-		  "mode": "dpad",
-		  "parameters": {
+        {
+          "path": "/user/hand/right/input/joystick",
+          "mode": "dpad",
+          "parameters": {
             "deadzone_pct": "85",
             "overlap_pct": "0",
             "sub_mode": "touch"
@@ -114,8 +116,8 @@
       ],
       "skeleton": []
     }
-  },
-  "controller_type": "holographic_controller",
-  "description": "",
-  "name": "Default bindings for Windows Mixed Reality Controllers"
+   },
+   "controller_type": "holographic_controller",
+   "description": "",
+   "name": "Galaxy Forces VR configuration for Windows Mixed Reality Controllers"
 }
