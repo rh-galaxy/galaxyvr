@@ -17119,6 +17119,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300000, guid: d0555942fe2b8be459e2f86d414e8dd5, type: 3}
+    - target: {fileID: 4262071876984108732, guid: 2d6669fd4a32eb648afebdd14969a000,
+        type: 3}
+      propertyPath: m_Parameters.m_GravityCurve.scalar
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 4262071877179303514, guid: 2d6669fd4a32eb648afebdd14969a000,
         type: 3}
       propertyPath: m_RootOrder
