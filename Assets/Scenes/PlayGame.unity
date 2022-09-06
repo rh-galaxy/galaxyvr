@@ -16259,7 +16259,7 @@ PrefabInstance:
     - target: {fileID: 1078925646328197710, guid: 2d6669fd4a32eb648afebdd14969a000,
         type: 3}
       propertyPath: m_Parameters.m_GravityCurve.scalar
-      value: 2.2
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1078925647317024792, guid: 2d6669fd4a32eb648afebdd14969a000,
         type: 3}
@@ -16286,6 +16286,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 1078925647566370041, guid: 2d6669fd4a32eb648afebdd14969a000,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5576293812467127480, guid: 2d6669fd4a32eb648afebdd14969a000,
         type: 3}
       propertyPath: m_Name
@@ -16508,7 +16513,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: ccfd49c00aa75a8409f9344063228f14, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
