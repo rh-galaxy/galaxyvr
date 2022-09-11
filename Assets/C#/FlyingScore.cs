@@ -8,7 +8,7 @@ using UnityEngine;
 
 public struct S_FlyingScoreInfo
 {
-    public int iScore;
+    public string szScore;
     public Vector3 vPos;
     public Vector3 vVel;
 }
@@ -29,7 +29,7 @@ public class FlyingScore : MonoBehaviour
 
         gameObject.SetActive(true);
         TextMesh t = gameObject.GetComponent<TextMesh>();
-        t.text = stFlyingScore.iScore.ToString();
+        t.text = stFlyingScore.szScore;
 
         rb = gameObject.GetComponent<Rigidbody>();
         rb.transform.position = stFlyingScore.vPos;
