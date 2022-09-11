@@ -11,7 +11,7 @@ public class GameStatus : MonoBehaviour
     private Vector3 vMapSize;
 
     public GameObject oTextTime, oTextLapProgress, oTextScore, oTextLives;
-    public GameObject oHealthBar, oFuelBar, oCargoBar;
+    public GameObject oHealthBar, oFuelBar, oCargoBar, oCargoHealthBar;
 
     public GameObject oLeft, oRight, oBottom;
     public GameObject oBack;
@@ -65,9 +65,12 @@ public class GameStatus : MonoBehaviour
 
         oTextTime.GetComponent<TextMeshPro>().text = i_fTime.ToString("N2");
         oTextLapProgress.GetComponent<TextMeshPro>().text = i_szLapProgress;
+
+        if (i_fHealth > 0.15) oCargoHealthBar.GetComponent<Renderer>().material = oMatOriginal;
+        else oCargoHealthBar.GetComponent<Renderer>().material = oMatRed;
     }
 
-    public void SetForMission(float i_fHealth, int i_iNumLives, float i_fCargo, bool i_bCargoFull, float i_fFuel, float i_fScore)
+    public void SetForMission(float i_fHealth, int i_iNumLives, float i_fCargo, bool i_bCargoFull, float i_fFuel, float i_fScore, float i_fCargoHealth)
     {
         if (i_fHealth < 0.01f) i_fHealth = 0.01f; //done because 0 makes a black quad
         oHealthBar.transform.localPosition = new Vector3(-3 + ((i_fHealth * BAR_LENGTH) / 2), -1.5f, 0) / 10.0f;
@@ -80,11 +83,28 @@ public class GameStatus : MonoBehaviour
         oFuelBar.transform.localPosition = new Vector3(-3 + ((i_fFuel * BAR_LENGTH) / 2), -2.75f, 0) / 10.0f;
         oFuelBar.transform.localScale = new Vector3((i_fFuel * BAR_LENGTH), 1, 1) / 10.0f;
         if (i_fCargo < 0.01f) i_fCargo = 0.01f; //done because 0 makes a black quad
-        oCargoBar.transform.localPosition = new Vector3(-3 + ((i_fCargo * BAR_LENGTH) / 2), -4.0f, 0) / 10.0f;
-        oCargoBar.transform.localScale = new Vector3((i_fCargo * BAR_LENGTH), 1, 1) / 10.0f;
+        if (i_fCargoHealth < 0f)
+        {
+            oCargoBar.transform.localPosition = new Vector3(-3 + ((i_fCargo * BAR_LENGTH) / 2), -4.0f, 0) / 10.0f;
+            oCargoBar.transform.localScale = new Vector3((i_fCargo * BAR_LENGTH), 1, 1) / 10.0f;
+            oCargoHealthBar.SetActive(false);
+        }
+        else
+        {
+            oCargoBar.transform.localPosition = new Vector3(-3 + ((i_fCargo * BAR_LENGTH) / 2), -3.8f, 0) / 10.0f;
+            oCargoBar.transform.localScale = new Vector3((i_fCargo * BAR_LENGTH), 0.4f, 1) / 10.0f;
+            if (i_fCargoHealth < 0.01f) i_fCargoHealth = 0.01f; //done because 0 makes a black quad
+            oCargoHealthBar.transform.localPosition = new Vector3(-3 + ((i_fCargoHealth * BAR_LENGTH) / 2), -4.2f, 0) / 10.0f;
+            oCargoHealthBar.transform.localScale = new Vector3((i_fCargoHealth * BAR_LENGTH), 0.4f, 1) / 10.0f;
+            oCargoHealthBar.SetActive(true);
+        }
 
         if (!i_bCargoFull) oCargoBar.GetComponent<Renderer>().material = oMatOriginal;
         else oCargoBar.GetComponent<Renderer>().material = oMatRed;
+        if (i_fHealth > 0.15) oCargoHealthBar.GetComponent<Renderer>().material = oMatOriginal;
+        else oCargoHealthBar.GetComponent<Renderer>().material = oMatRed;
+        if (i_fFuel > 0.15) oFuelBar.GetComponent<Renderer>().material = oMatOriginal;
+        else oFuelBar.GetComponent<Renderer>().material = oMatRed;
     }
 
     void LateUpdate()
