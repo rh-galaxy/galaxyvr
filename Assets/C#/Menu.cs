@@ -1270,7 +1270,7 @@ public class Menu : MonoBehaviour
             BoxCollider oCollider = oLevelQuad.GetComponent<BoxCollider>(); oCollider.name = "Coll"+i_iLevelId.ToString();
             oLevelQuad.transform.position = new Vector3(vPos.x, vPos.y, vPos.z);
             oLevelQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
-            oLevelQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value*100.0f); //vary 100 deg around z
+            oLevelQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, UnityEngine.Random.value*100.0f); //vary 100 deg around z
             oLevelQuad.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelQuadMeshRenderer = oLevelQuad.GetComponent<MeshRenderer>();
             oLevelQuadMeshRenderer.material = (i_oLevel.iLevelType == (int)LevelType.MAP_RACE) ?
@@ -1333,7 +1333,7 @@ public class Menu : MonoBehaviour
                     oRankQuad.transform.parent = Menu.theMenu.transform;
                     oRankQuad.transform.position = new Vector3(vPos.x + .35f, vPos.y - .35f, vPos.z - .17f);
                     oRankQuad.transform.localScale = new Vector3(4.0f, 4.0f, 1.0f);
-                    oRankQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value * 100.0f); //vary 100 deg around z
+                    oRankQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, UnityEngine.Random.value * 100.0f); //vary 100 deg around z
                     oRankQuad.transform.RotateAround(vAroundPoint, Vector3.up, fRotateAngle);
                     oRankQuad.GetComponent<MeshRenderer>().material = oMaterial;
                 }
@@ -1363,7 +1363,7 @@ public class Menu : MonoBehaviour
                         oRankQuad.transform.parent = Menu.theMenu.transform;
                         oRankQuad.transform.position = new Vector3(vPos.x + .70f, vPos.y - .35f, vPos.z - .17f);
                         oRankQuad.transform.localScale = new Vector3(4.0f, 4.0f, 1.0f);
-                        oRankQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, Random.value * 100.0f); //vary 100 deg around z
+                        oRankQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, UnityEngine.Random.value * 100.0f); //vary 100 deg around z
                         oRankQuad.transform.RotateAround(vAroundPoint, Vector3.up, fRotateAngle);
                         oRankQuad.GetComponent<MeshRenderer>().material = oMaterial;
                     }
@@ -1434,7 +1434,7 @@ public class Menu : MonoBehaviour
             Destroy(oLevelText);
         }
 
-        public C_Item2InMenu(Vector3 i_vPos, Vector3 i_vAroundPoint, float i_fRotateAngle, string i_szText, string i_szCollID, float i_fScale, float i_fScaleText)
+        public C_Item2InMenu(Vector3 i_vPos, Vector3 i_vAroundPoint, float i_fRotateAngle, string i_szText, string i_szCollID, float i_fScale, float i_fFontSize)
         {
             vPos = i_vPos;
 

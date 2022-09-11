@@ -593,7 +593,7 @@ public class GameManager : MonoBehaviour
         //recenter
         //(the ability for the app to initiate recenter is removed in new steamvr/openvr)
         //implement Y-adjust instead, recenter is working in steamvr system (left-menu, select recenter)
-        if(Menu.bYAdjust)
+        if (Menu.bYAdjust)
         {
             cameraHolder.CycleYAdjust();
 
