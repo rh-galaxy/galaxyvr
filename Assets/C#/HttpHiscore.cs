@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public struct LevelInfo
+public struct LiPart
 {
-    public string szName;
-    public bool bIsTime;
     public int iLimit1, iLimit2, iLimit3;
     public int iLastScoreMs; //your last
     public int iBestScoreMs; //your best
@@ -24,6 +22,15 @@ public struct LevelInfo
 
     public int iTotalPlaces;
     public int iYourPlace;
+}
+
+public struct LevelInfo
+{
+    public string szName;
+    public bool bIsTime;
+
+    public LiPart info;
+    public LiPart info2;
 
     public string szCreateor; //on user levels
 }
@@ -56,6 +63,30 @@ public class HttpHiscore
         string url = WEB_HOST + "/hiscore_getreplay2.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
         if (i_iDevice == 1) url = WEB_HOST + "/hiscore_getreplay2_quest.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
         if (i_iDevice == 2) url = WEB_HOST + "/hiscore_getreplay2_jio.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
+
+        www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        if ((www.result == UnityWebRequest.Result.ConnectionError) || (www.result == UnityWebRequest.Result.ProtocolError))
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            //retrieve results as text and convert it to binary
+            byte[] bytes = System.Convert.FromBase64String(www.downloadHandler.text);
+
+            i_oResult.LoadFromMem(bytes);
+        }
+        bIsDone = true;
+    }
+    public IEnumerator GetReplay2(string i_szLevel, string i_szId, int i_iDevice, Replay i_oResult)
+    {
+        bIsDone = false;
+        
+        string url = WEB_HOST + "/hiscore_getreplay3.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
+        if (i_iDevice == 1) url = WEB_HOST + "/hiscore_getreplay3_quest.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
+        if (i_iDevice == 2) url = WEB_HOST + "/hiscore_getreplay3_jio.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
 
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();

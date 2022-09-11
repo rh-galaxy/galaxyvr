@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
     const int NUM_LIFES_MISSION = 5;
 
     //cargo
+    bool bCargoSwingingMode = false;
     internal int iCargoNumUsed = 0;
     int iCargoSpaceUsed = 0;
     int[] aHold = new int[MAXSPACEINHOLDUNITS];
@@ -107,6 +108,7 @@ public class Player : MonoBehaviour
         asm = GameObject.Find("AudioStateMachineDND").GetComponent<AudioStateMachine>();
 
         FULL_HEALTH = GameLevel.theReplay.bEasyMode ? 7.5f : 1.5f;
+        bCargoSwingingMode = GameLevel.theReplay.bCargoSwingingMode;
 
         fShipHealth = FULL_HEALTH;
         fLastShipHealth = FULL_HEALTH;
