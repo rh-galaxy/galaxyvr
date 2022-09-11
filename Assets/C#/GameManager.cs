@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     internal static bool bNoVR = false;
 
     internal bool bEasyMode;
+    internal bool bCargoSwingingMode;
 
     string szLastLevel = "";
     int iAchievementHellbentCounter = 0;
@@ -65,6 +66,7 @@ public class GameManager : MonoBehaviour
 
         //this list keeps the last scores for each level for the entire game session, beginning with no score
         for (int i = 0; i < aLastScore.Length; i++) aLastScore[i] = -1;
+        for (int i = 0; i < aLastScore2.Length; i++) aLastScore2[i] = -1;
 
         //set thread prio
         UnityEngine.Application.backgroundLoadingPriority = UnityEngine.ThreadPriority.BelowNormal;
@@ -391,6 +393,7 @@ public class GameManager : MonoBehaviour
     LevelInfo stLevel;
     internal HttpHiscore oHigh = new HttpHiscore();
     int[] aLastScore = new int[800]; //a bit of a hack
+    int[] aLastScore2 = new int[800]; //a bit of a hack
     int iLastLevelIndex;
     bool bAutoSetLevelInfo = false;
 
@@ -564,7 +567,7 @@ public class GameManager : MonoBehaviour
                         Debug.Log("VR inited");
                         iInitState++;
                     }
-                    if (fInitTimer > 8f)
+                    if (fInitTimer > 7f)
                     {
                         //no VR
                         bNoHiscore = true;
@@ -610,7 +613,9 @@ public class GameManager : MonoBehaviour
         //long press on grip button is back
         //left menu button is occupied by steamvr
         bool bBackButton = false;
-        if (SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any))
+        bool bBackLong = false;
+        try { bBackLong = SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any); } catch { }
+        if (bBackLong)
         {
             fLongpressTimer += Time.unscaledDeltaTime;
 
@@ -836,18 +841,18 @@ public class GameManager : MonoBehaviour
                         stLevel = oHigh.oLevelList[i];
                         if (!stLevel.bIsTime)
                         {
-                            if (stLevel.iBestScoreMs != -1)
+                            if (stLevel.info.iBestScoreMs != -1)
                             {
                                 iMissionFinished++;
-                                if (stLevel.iBestScoreMs >= stLevel.iLimit1) iMissionFinishedGold++;
+                                if (stLevel.info.iBestScoreMs >= stLevel.info.iLimit1) iMissionFinishedGold++;
                             }
                         }
                         else
                         {
-                            if (stLevel.iBestScoreMs != -1)
+                            if (stLevel.info.iBestScoreMs != -1)
                             {
                                 iRaceFinished++;
-                                if (stLevel.iBestScoreMs < stLevel.iLimit1) iRaceFinishedGold++;
+                                if (stLevel.info.iBestScoreMs < stLevel.info.iLimit1) iRaceFinishedGold++;
                             }
                         }
                     }
@@ -910,15 +915,23 @@ public class GameManager : MonoBehaviour
                     else stLevel.szName = GameLevel.szLevel.Substring(1);
                     //stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
                     //^this is now set in SetLevelInfo, read from file
-                    stLevel.iBestScoreMs = stLevel.iLastScoreMs = -1;
-                    stLevel.iWRScore1 = stLevel.iWRScore2 = stLevel.iWRScore3 = -1;
-                    stLevel.iLimit1 = stLevel.iLimit2 = stLevel.iLimit3 = -1;
-                    stLevel.szWRName1 = "_None"; stLevel.szWRName2 = "_None"; stLevel.szWRName3 = "_None";
+
+                    LiPart li = stLevel.info;
+                    li.iBestScoreMs = li.iLastScoreMs = -1;
+                    li.iWRScore1 = li.iWRScore2 = li.iWRScore3 = -1;
+                    li.iLimit1 = li.iLimit2 = li.iLimit3 = -1;
+                    li.szWRName1 = "_None"; li.szWRName2 = "_None"; li.szWRName3 = "_None";
+                    li = stLevel.info2;
+                    li.iBestScoreMs = li.iLastScoreMs = -1;
+                    li.iWRScore1 = li.iWRScore2 = li.iWRScore3 = -1;
+                    li.iLimit1 = li.iLimit2 = li.iLimit3 = -1;
+                    li.szWRName1 = "_None"; li.szWRName2 = "_None"; li.szWRName3 = "_None";
 
                     string szLevelToLoad = stLevel.szName;
                     if (GameLevel.iLevelIndex >= 200 && GameLevel.iLevelIndex<400)
                     {
-                        stLevel.iLastScoreMs = aLastScore[GameLevel.iLevelIndex];
+                        stLevel.info.iLastScoreMs = aLastScore[GameLevel.iLevelIndex];
+                        stLevel.info2.iLastScoreMs = aLastScore2[GameLevel.iLevelIndex];
                         iLastLevelIndex = GameLevel.iLevelIndex;
                     }
                     else
@@ -928,7 +941,8 @@ public class GameManager : MonoBehaviour
                             if (szLevelToLoad.CompareTo(oHigh.oLevelList[i].szName) == 0)
                             {
                                 stLevel = oHigh.oLevelList[i];
-                                stLevel.iLastScoreMs = aLastScore[i];
+                                stLevel.info.iLastScoreMs = aLastScore[i];
+                                stLevel.info2.iLastScoreMs = aLastScore2[i];
                                 iLastLevelIndex = i;
                                 break;
                             }
@@ -970,26 +984,54 @@ public class GameManager : MonoBehaviour
                 }
 
                 //if bNoInternet is true this will not be possible be design
-                if ((Menu.bWorldBestReplay1 && stLevel.iWRScore1 != -1)
-                    || (Menu.bWorldBestReplay2 && stLevel.iWRScore2 != -1)
-                    || (Menu.bWorldBestReplay3 && stLevel.iWRScore3 != -1)
-                    || (Menu.bYourBestReplay && stLevel.iBestScoreMs != -1))
                 {
-                    string szReplayId = null;
-                    if (Menu.bYourBestReplay) szReplayId = GameManager.szUserID;
-                    if (Menu.bWorldBestReplay1) szReplayId = stLevel.szWRId1;
-                    if (Menu.bWorldBestReplay2) szReplayId = stLevel.szWRId2;
-                    if (Menu.bWorldBestReplay3) szReplayId = stLevel.szWRId3;
+                    bool isLi2 = (!stLevel.bIsTime && bCargoSwingingMode);
+                    if (isLi2)
+                    {
+                        if ((Menu.bWorldBestReplay1 && stLevel.info2.iWRScore1 != -1)
+                            || (Menu.bWorldBestReplay2 && stLevel.info2.iWRScore2 != -1)
+                            || (Menu.bWorldBestReplay3 && stLevel.info2.iWRScore3 != -1)
+                            || (Menu.bYourBestReplay && stLevel.info2.iBestScoreMs != -1))
+                        {
+                            string szReplayId = null;
+                            if (Menu.bYourBestReplay) szReplayId = GameManager.szUserID;
+                            if (Menu.bWorldBestReplay1) szReplayId = stLevel.info2.szWRId1;
+                            if (Menu.bWorldBestReplay2) szReplayId = stLevel.info2.szWRId2;
+                            if (Menu.bWorldBestReplay3) szReplayId = stLevel.info2.szWRId3;
 
-                    StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayId, oReplay));
-                    iState++; //load replay
-                    StartFade(0.3f, 0.0f, true);
+                            StartCoroutine(oHigh.GetReplay2(stLevel.szName, szReplayId, oReplay));
+                            iState++; //load replay
+                            StartFade(0.3f, 0.0f, true);
 
-                    //set in the above, but since StartCoroutine returns before it has a chance
-                    // to run we need to set it
-                    oHigh.bIsDone = false;
+                            //set in the above, but since StartCoroutine returns before it has a chance
+                            // to run we need to set it
+                            oHigh.bIsDone = false;
+                        }
+                    }
+                    else
+                    {
+                        if ((Menu.bWorldBestReplay1 && stLevel.info.iWRScore1 != -1)
+                            || (Menu.bWorldBestReplay2 && stLevel.info.iWRScore2 != -1)
+                            || (Menu.bWorldBestReplay3 && stLevel.info.iWRScore3 != -1)
+                            || (Menu.bYourBestReplay && stLevel.info.iBestScoreMs != -1))
+                        {
+                            string szReplayId = null;
+                            if (Menu.bYourBestReplay) szReplayId = GameManager.szUserID;
+                            if (Menu.bWorldBestReplay1) szReplayId = stLevel.info.szWRId1;
+                            if (Menu.bWorldBestReplay2) szReplayId = stLevel.info.szWRId2;
+                            if (Menu.bWorldBestReplay3) szReplayId = stLevel.info.szWRId3;
+
+                            StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayId, oReplay));
+                            iState++; //load replay
+                            StartFade(0.3f, 0.0f, true);
+
+                            //set in the above, but since StartCoroutine returns before it has a chance
+                            // to run we need to set it
+                            oHigh.bIsDone = false;
+                        }
+                    }
                 }
-                else if(Menu.bLevelPlay)
+                if (Menu.bLevelPlay)
                 {
                     iState += 2; //go directly to load level
                     StartFade(0.3f, 0.0f, true);
@@ -1028,7 +1070,8 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    oReplay.Reset(2); //reset before recording a new one during play
+                    bool isLi2 = (!stLevel.bIsTime && bCargoSwingingMode);
+                    oReplay.Reset(3, bEasyMode, isLi2); //reset before recording a new one during play
                     GameLevel.bRunReplay = false;
                 }
                 bStartReplay = false; //we have seen it
@@ -1088,6 +1131,7 @@ public class GameManager : MonoBehaviour
                         }
 
                         //get score from GameLevel
+                        bool isLi2 = (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION && GameManager.theGM.bCargoSwingingMode);
                         int iScoreMs;
                         if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
                         else
@@ -1095,7 +1139,11 @@ public class GameManager : MonoBehaviour
                             iScoreMs = (int)(GameLevel.theMap.player.fTotalTime * 1000);
                             if (GameLevel.theReplay.bEasyMode) iScoreMs *= 2;
                         }
-                        if (!GameLevel.bRunReplay) aLastScore[iLastLevelIndex] = iScoreMs;
+                        if (!GameLevel.bRunReplay)
+                        {
+                            if (isLi2) aLastScore2[iLastLevelIndex] = iScoreMs;
+                            else aLastScore[iLastLevelIndex] = iScoreMs;
+                        }
 
                         if (!bNoHiscore && !bNoInternet && iLastLevelIndex<200)
                         {
@@ -1109,15 +1157,32 @@ public class GameManager : MonoBehaviour
                                 if (oReplay.GetSize() < 3 * 1024 * 1024) //at 200 bytes per sec this is ~4.5 hours, and normal rate is ~100 Bps.
                                 {
                                     //finished ok, and with a new score or better than before, then send
-                                    if (stLevel.iBestScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.iBestScoreMs) ||
-                                        (stLevel.bIsTime && iScoreMs < stLevel.iBestScoreMs))
-                                    {
-                                        string szFile = iLastLevelIndex < 55 ? szLastLevel.Substring(1) : szLastLevel;
-                                        StartCoroutine(oHigh.SendHiscore(szFile, iScoreMs, oReplay));
 
-                                        //set in the above, but since StartCoroutine returns before it has a chance
-                                        // to run we need to set it
-                                        oHigh.bIsDone = false;
+                                    if(!isLi2)
+                                    {
+                                        if (stLevel.info.iBestScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.info.iBestScoreMs) ||
+                                            (stLevel.bIsTime && iScoreMs < stLevel.info.iBestScoreMs))
+                                        {
+                                            string szFile = iLastLevelIndex < 55 ? szLastLevel.Substring(1) : szLastLevel;
+                                            StartCoroutine(oHigh.SendHiscore(szFile, iScoreMs, oReplay));
+
+                                            //set in the above, but since StartCoroutine returns before it has a chance
+                                            // to run we need to set it
+                                            oHigh.bIsDone = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (stLevel.info2.iBestScoreMs == -1 || (!stLevel.bIsTime && iScoreMs > stLevel.info2.iBestScoreMs) ||
+                                            (stLevel.bIsTime && iScoreMs < stLevel.info2.iBestScoreMs))
+                                        {
+                                            string szFile = iLastLevelIndex < 55 ? szLastLevel.Substring(1) : szLastLevel;
+                                            StartCoroutine(oHigh.SendHiscore2(szFile, iScoreMs, oReplay));
+
+                                            //set in the above, but since StartCoroutine returns before it has a chance
+                                            // to run we need to set it
+                                            oHigh.bIsDone = false;
+                                        }
                                     }
                                 }
                             }
