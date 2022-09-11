@@ -198,8 +198,8 @@ public class HttpHiscore
         int iCount = (int)(DateTime.Now - dtLastAccess).TotalSeconds ^ 1467;
 
         string url = WEB_HOST + "/achievements_post.php";
-        string data= "LEVEL="+ i_szLevel + "&NAME="+ UnityWebRequest.EscapeURL(GameManager.szUser) + "&USERID="+ UnityWebRequest.EscapeURL(GameManager.szUserID) + "&COUNTER="+
-            iCount + "&SCORE="+ i_iScoreMs + "&STEAM=" + iIsSteam + "&REPLAY="+ base64;
+        string data = "LEVEL=" + i_szLevel + "&NAME=" + UnityWebRequest.EscapeURL(GameManager.szUser) + "&USERID=" + UnityWebRequest.EscapeURL(GameManager.szUserID) + "&COUNTER=" +
+            iCount + "&SCORE=" + i_iScoreMs + "&STEAM=" + iIsSteam + "&REPLAY=" + base64;
 
         www = CreateUnityWebRequest(url, data); //UnityWebRequest.Post(url, data); <- didn't work
         yield return www.SendWebRequest();
