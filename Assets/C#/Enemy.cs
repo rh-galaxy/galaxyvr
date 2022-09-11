@@ -208,7 +208,7 @@ public class Enemy : MonoBehaviour
                 if (oMap.iLevelType == (int)LevelType.MAP_MISSION)
                 {
                     S_FlyingScoreInfo stFlyingScoreInfo;
-                    stFlyingScoreInfo.iScore = SENEMY_SCOREPOINTS[stInfo.iEnemyType];
+                    stFlyingScoreInfo.szScore = SENEMY_SCOREPOINTS[stInfo.iEnemyType].ToString();
                     stFlyingScoreInfo.vPos = new Vector3(transform.position.x, transform.position.y, -0.2f);
                     stFlyingScoreInfo.vVel = new Vector3(UnityEngine.Random.Range(-0.15f, 0.15f), UnityEngine.Random.Range(-0.15f, 0.15f), -0.35f);
                     FlyingScore o = Instantiate(oMap.oFlyingScoreObjBase, oMap.transform);

@@ -65,6 +65,7 @@ public class Player : MonoBehaviour
     int iCargoSpaceUsed = 0;
     int[] aHold = new int[MAXSPACEINHOLDUNITS];
     int[] aHoldZoneId = new int[MAXSPACEINHOLDUNITS];
+    float[] aHoldHealth = new float[MAXSPACEINHOLDUNITS]; //begins at 1.0 (100%) when cargo loaded, goes down equally on all positions on damage
 
     //score / time
     int iCurCP = 0;
@@ -209,10 +210,27 @@ public class Player : MonoBehaviour
 
         //update status gui
         if (oMap.iLevelType == (int)LevelType.MAP_RACE)
+        {
             status.SetForRace(fShipHealth / FULL_HEALTH, fTotalTime, "[" + iCurLap.ToString() + "/" + iTotalLaps.ToString() + "] " + iCurCP.ToString());
+        }
         else
+        {
+            float fCargoHealthValue = -1f;
+            if (bCargoSwingingMode)
+            {
+                fCargoHealthValue = 0f;
+                if (iCargoSpaceUsed > 0)
+                {
+                    for (int i = 0; i < iCargoNumUsed; i++)
+                    {
+                        fCargoHealthValue += aHold[i] * aHoldHealth[i];
+                    }
+                    fCargoHealthValue = fCargoHealthValue / iCargoSpaceUsed;
+                }
+            }
             status.SetForMission(fShipHealth / FULL_HEALTH, iNumLifes, iCargoSpaceUsed / MAXSPACEINHOLDWEIGHT,
-                iCargoNumUsed==3 || iCargoSpaceUsed==MAXSPACEINHOLDWEIGHT, fFuel / MAXFUELINTANK, GetScore()/1000);
+                iCargoNumUsed == 3 || iCargoSpaceUsed == MAXSPACEINHOLDWEIGHT, fFuel / MAXFUELINTANK, GetScore() / 1000, fCargoHealthValue);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -1319,6 +1337,7 @@ public class Player : MonoBehaviour
             iCargoSpaceUsed += iCargo;
             aHoldZoneId[iCargoNumUsed] = iFromZone;
             aHold[iCargoNumUsed] = iCargo;
+            aHoldHealth[iCargoNumUsed] = 1.0f; //100%
             iCargoNumUsed++;
             bCargoLoaded = true;
 
@@ -1345,11 +1364,12 @@ public class Player : MonoBehaviour
             oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //add score for the cargo moved
-            iScore += aHold[iCargoNumUsed];
+            iScore += Mathf.RoundToInt(aHold[iCargoNumUsed] * aHoldHealth[iCargoNumUsed]);
 
             //add flying score text
             S_FlyingScoreInfo stFlyingScoreInfo;
-            stFlyingScoreInfo.iScore = aHold[iCargoNumUsed];
+            if(bCargoSwingingMode) stFlyingScoreInfo.szScore = aHold[iCargoNumUsed].ToString() + " @" + Mathf.RoundToInt(aHoldHealth[iCargoNumUsed]*100.0f) + "%";
+            else stFlyingScoreInfo.szScore = aHold[iCargoNumUsed].ToString();
             stFlyingScoreInfo.vPos = new Vector3(oRb.position.x, oRb.position.y, -0.2f);
             stFlyingScoreInfo.vVel = new Vector3(UnityEngine.Random.Range(-0.15f, 0.15f), UnityEngine.Random.Range(-0.15f, 0.15f), -0.35f);
             FlyingScore o = Instantiate(oMap.oFlyingScoreObjBase, oMap.transform);
