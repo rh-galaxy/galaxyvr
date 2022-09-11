@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MsgType { MOVEMENT, KEY_CHANGE, BULLETE_NEW, BULLETP_NEW, BULLET_REMOVE, PLAYER_KILL, REPLAY_VERSION, ENEMY_KILL, REPLAY_EASYMODE }; //(DOOR_ACTION, ...)
+public enum MsgType { MOVEMENT, KEY_CHANGE, BULLETE_NEW, BULLETP_NEW, BULLET_REMOVE, PLAYER_KILL, REPLAY_VERSION, ENEMY_KILL, REPLAY_EASY, REPLAY_CARGOSWINGING }; //(DOOR_ACTION, ...)
 
 public struct ReplayMessage
 {
@@ -28,6 +28,7 @@ public class Replay
 {
     internal int iVersion;
     internal bool bEasyMode = false;
+    internal bool bCargoSwingingMode = false;
     int iCurTimeSlot;
 
     List<ReplayMessage> oReplayMessages;
@@ -36,27 +37,35 @@ public class Replay
     public Replay()
     {
         oReplayMessages = new List<ReplayMessage>();
-        Reset(2);
+        iVersion = 0;
+        //Reset() or LoadFromMem()+ResetBeforePlay() needed before use
     }
 
-    public void Reset(int iReplayVersion)
+    public void Reset(int i_iReplayVersion, bool i_bEasyMode, bool i_bCargoSwingingMode)
     {
         oReplayMessages.Clear();
         ResetBeforePlay();
 
         //add replay version as first element
-        iVersion = iReplayVersion;
+        iVersion = i_iReplayVersion;
         ReplayMessage rm = new ReplayMessage();
         rm.iType = (byte)MsgType.REPLAY_VERSION;
         rm.iID = 0;
-        rm.iGeneralByte1 = (byte)iReplayVersion;
+        rm.iGeneralByte1 = (byte)i_iReplayVersion;
         Add(rm);
         rm = new ReplayMessage();
-        rm.iType = (byte)MsgType.REPLAY_EASYMODE;
+        rm.iType = (byte)MsgType.REPLAY_EASY;
         rm.iID = 0;
-        if(GameManager.theGM!=null) rm.iGeneralByte1 = GameManager.theGM.bEasyMode ? (byte)1 : (byte)0;
+        if(GameManager.theGM!=null) rm.iGeneralByte1 = i_bEasyMode ? (byte)1 : (byte)0;
         else rm.iGeneralByte1 = (byte)0;
         bEasyMode = rm.iGeneralByte1 == (byte)1;
+        Add(rm);
+        rm = new ReplayMessage();
+        rm.iType = (byte)MsgType.REPLAY_CARGOSWINGING;
+        rm.iID = 0;
+        if (GameManager.theGM != null) rm.iGeneralByte1 = i_bCargoSwingingMode ? (byte)1 : (byte)0;
+        else rm.iGeneralByte1 = (byte)0;
+        bCargoSwingingMode = rm.iGeneralByte1 == (byte)1;
         Add(rm);
     }
     public void ResetBeforePlay()
@@ -139,10 +148,13 @@ public class Replay
             iVersion = oReplayMessages[0].iGeneralByte1;
         else iVersion = 0;
 
-        if (oReplayMessages.Count > 1 && oReplayMessages[1].iType == (byte)MsgType.REPLAY_EASYMODE)
+        if (oReplayMessages.Count > 1 && oReplayMessages[1].iType == (byte)MsgType.REPLAY_EASY)
             bEasyMode = oReplayMessages[1].iGeneralByte1 == 1;
         else bEasyMode = false;
 
+        if (oReplayMessages.Count > 2 && oReplayMessages[2].iType == (byte)MsgType.REPLAY_CARGOSWINGING)
+            bCargoSwingingMode = oReplayMessages[1].iGeneralByte1 == 1;
+        else bCargoSwingingMode = false;
 
         return true;
     }

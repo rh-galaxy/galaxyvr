@@ -32,7 +32,7 @@ public class GameStatus : MonoBehaviour
         oFuelBar.SetActive(!i_bIsRace);
         oCargoBar.SetActive(!i_bIsRace);
 
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
 
         if (!GameManager.bNoVR) transform.eulerAngles = new Vector3(45, 0, 0);
         transform.localScale = new Vector3(0.68f, 0.68f, 0.68f);
