@@ -499,9 +499,9 @@ public class GameLevel : MonoBehaviour
         else if (iFinalizeCounter == 11)
         {
             //let the fade in finish
+            //do not display on top objects while fade in
             if (!GameManager.theGM.oFadeBox.activeSelf)
             {
-                //do not display on top objects while fade in
                 player.gameObject.SetActive(true); //the windscreen (glass material)
                 player.status.gameObject.SetActive(true); //status bar objects
 
@@ -579,7 +579,17 @@ public class GameLevel : MonoBehaviour
                 bPlayClipGameOver = false;
             }
 
-            if (fGameOverTimer > 6.0f) bGameOver = true;
+            if (fGameOverTimer > 6.0f)
+            {
+                bGameOver = true;
+
+                //do not display on top objects while fade out
+                if (GameManager.theGM.oFadeBox.activeSelf)
+                {
+                    player.gameObject.SetActive(false); //the windscreen (glass material)
+                    player.status.gameObject.SetActive(false); //status bar objects
+                }
+            }
         }
     }
 
