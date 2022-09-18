@@ -122,9 +122,8 @@ public class HttpHiscore
                 }
 
                 ///////////////////////////////////////////////////////////////////////////
-                if(!stLevel.bIsTime)
                 {
-                    i++; //mission levels have 2 lines
+                    i++; //mission and now race levels have 2 lines
 
                     szTokens = szLines[i].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
                     if (szTokens.Length < 12) continue;

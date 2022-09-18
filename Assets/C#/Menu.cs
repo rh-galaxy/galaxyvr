@@ -19,6 +19,7 @@ public class Menu : MonoBehaviour
     public static bool bWorldBestReplay2 = false;
     public static bool bWorldBestReplay3 = false;
     public static bool bYAdjust = false;
+    public static bool bZAdjust = false;
     public static bool bQuit = false;
     public static bool bPauseInput = false;
     bool bAllowSelection = false;
@@ -283,7 +284,7 @@ public class Menu : MonoBehaviour
 
     C_Item2InMenu oMenuEasyMode;
     C_Item2InMenu oMenuCargoSwingingMode;
-    C_Item2InMenu oMenuYAdjust;
+    C_Item2InMenu oMenuYAdjust, oMenuZAdjust;
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
     C_Item2InMenu oMenuQuality1, oMenuQuality2, oMenuQuality3;
@@ -405,7 +406,7 @@ public class Menu : MonoBehaviour
     public bool SetLevelInfoPass2(LevelInfo i_stLevelInfo, int n)
     {
         LiPart li = i_stLevelInfo.info;
-        if (!i_stLevelInfo.bIsTime && GameManager.theGM.bCargoSwingingMode) li = i_stLevelInfo.info2;
+        if (GameManager.theGM.bCargoSwingingMode) li = i_stLevelInfo.info2;
 
         if (n == 0)
         {
@@ -552,10 +553,13 @@ public class Menu : MonoBehaviour
         return false;
     }
 
-    public void InitLevelRanking()
+    public void InitLevelRanking(bool bNoHiscore)
     {
-        for (int i = 0; i < aMenuLevels.Length; i++)
-            aMenuLevels[i].InitLevelRanking(i);
+        if(!bNoHiscore)
+        {
+            for (int i = 0; i < aMenuLevels.Length; i++)
+                aMenuLevels[i].InitLevelRanking(i);
+        }
 
         //also init custom user levels since we have them now
         float fStartAngle = -45;
@@ -699,6 +703,7 @@ public class Menu : MonoBehaviour
 
             //menu options
             oMenuYAdjust = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -36, "Adjust height", "YAdjust", 30.0f, 12.0f);
+            oMenuZAdjust = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -36, "Adjust front", "ZAdjust", 30.0f, 12.0f);
             oMenuQuit = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
             oMenuControls = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
             oMenuCredits = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
@@ -844,6 +849,7 @@ public class Menu : MonoBehaviour
         if (oMenuPrev2 != null) oMenuPrev2.oLevelQuadMeshRenderer.material = oMaterialNext;
 
         if (oMenuYAdjust != null) oMenuYAdjust.oLevelQuadMeshRenderer.material = oMaterialBar;
+        if (oMenuZAdjust != null) oMenuZAdjust.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuQuit != null) oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuControls != null) oMenuControls.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuCredits != null) oMenuCredits.oLevelQuadMeshRenderer.material = oMaterialBar;
@@ -955,6 +961,10 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("YAdjust") == 0)
             {
                 oMenuYAdjust.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("ZAdjust") == 0)
+            {
+                oMenuZAdjust.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
             {
@@ -1101,6 +1111,11 @@ public class Menu : MonoBehaviour
                 else if (oHitInfo.collider.name.CompareTo("YAdjust") == 0)
                 {
                     bYAdjust = true;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("ZAdjust") == 0)
+                {
+                    bZAdjust = true;
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
