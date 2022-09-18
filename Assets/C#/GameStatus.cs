@@ -66,8 +66,8 @@ public class GameStatus : MonoBehaviour
         oTextTime.GetComponent<TextMeshPro>().text = i_fTime.ToString("N2");
         oTextLapProgress.GetComponent<TextMeshPro>().text = i_szLapProgress;
 
-        if (i_fHealth > 0.15) oCargoHealthBar.GetComponent<Renderer>().material = oMatOriginal;
-        else oCargoHealthBar.GetComponent<Renderer>().material = oMatRed;
+        if (i_fHealth > 0.15) oHealthBar.GetComponent<Renderer>().material = oMatOriginal;
+        else oHealthBar.GetComponent<Renderer>().material = oMatRed;
     }
 
     public void SetForMission(float i_fHealth, int i_iNumLives, float i_fCargo, bool i_bCargoFull, float i_fFuel, float i_fScore, float i_fCargoHealth)
@@ -101,8 +101,8 @@ public class GameStatus : MonoBehaviour
 
         if (!i_bCargoFull) oCargoBar.GetComponent<Renderer>().material = oMatOriginal;
         else oCargoBar.GetComponent<Renderer>().material = oMatRed;
-        if (i_fHealth > 0.15) oCargoHealthBar.GetComponent<Renderer>().material = oMatOriginal;
-        else oCargoHealthBar.GetComponent<Renderer>().material = oMatRed;
+        if (i_fHealth > 0.15) oHealthBar.GetComponent<Renderer>().material = oMatOriginal;
+        else oHealthBar.GetComponent<Renderer>().material = oMatRed;
         if (i_fFuel > 0.15) oFuelBar.GetComponent<Renderer>().material = oMatOriginal;
         else oFuelBar.GetComponent<Renderer>().material = oMatRed;
     }
