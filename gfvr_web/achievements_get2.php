@@ -138,7 +138,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 //mission levels result row 2 (achievements2_t)
-						if($row['IsTime'] == 0) {
+//and race levels result row 2 (achievements2_t)
+						{
 ////////////////////////////////////////////////////////////////////////////////////////////
 //part 1 (per level) limits and player score
 						$score = -1;
@@ -154,7 +155,8 @@
 								$score = $row2['Score'];
 							}
 						}
-						echo "\"".$row['Level']."\" ".$row['IsTime']." ".($row['limit1']-30000)." ".($row['limit2']-30000)." ".($row['limit3']-30000)." ".$score." ";
+						if($row['IsTime'] == 0) echo "\"".$row['Level']."\" ".$row['IsTime']." ".($row['limit1']-30000)." ".($row['limit2']-30000)." ".($row['limit3']-30000)." ".$score." ";
+						else                    echo "\"".$row['Level']."\" ".$row['IsTime']." ".($row['limit1']+30000)." ".($row['limit2']+30000)." ".($row['limit3']+30000)." ".$score." ";
 						
 ////////////////////////////////////////////////////////////////////////////////////////////
 //part 2 (per level) record scores 1st-3rd place

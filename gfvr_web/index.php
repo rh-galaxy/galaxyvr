@@ -143,7 +143,7 @@ square_start("'100%'");
 ?>
 <p>Point-movement (all platforms v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
-<p>v1.90<br>
+<p>v1.90 Sep 6, 2022<br>
 - use Universal render pipeline (PC)<br>
 - add glow postprocessing (PC)<br>
 - replaced skyboxes<br>
@@ -152,7 +152,7 @@ The plan is to also add multiplayer for 4 players with 4 new dogfight maps as we
 - add adjust height<br>
 - major update to build env<br>
 <br>
-v1.86<br>
+v1.86 Jul 29, 2022<br>
 - controls-info update<br>
 - collision stuck fix<br>
 - door base collision fix<br>
@@ -160,13 +160,13 @@ v1.86<br>
 - auto fire with point motion<br>
 - not instant kill on stationary enemies<br>
 <br>
-v1.80<br>
+v1.80 Jun 7, 2021<br>
 - new user levels<br>
 - recenter bugfix<br>
 - update FMOD and SteamWorks.NET<br>
 - level editor, max 10wp<br>
 <br>
-v1.75<br>
+v1.75 May 12, 2021<br>
 - fix EyeOfTheStorm<br>
 - fade in is 1sec shorter<br>
 - optimize radiotower<br>
@@ -176,16 +176,16 @@ v1.75<br>
 - support 4*10 user levels<br>
 - ship status, mipmap fix<br>
 <br>
-v1.70<br>
+v1.70 Apr 23, 2021<br>
 - race08, race22 optimized<br>
 - choppyness fixed<br>
 - add skyview<br>
 <br>
-v1.65<br>
+v1.65 Apr 10, 2021<br>
 - gui selection bugfix<br>
 - add linux editor<br>
 <br>
-v1.57<br>
+v1.57 Mar 24, 2021<br>
 - add gui marker for Easy mode<br>
 - optimized LandingZone.mat<br>
 - fix errors when no steamvrinput connected<br>
@@ -193,13 +193,13 @@ v1.57<br>
 - add best score<br>
 - add achievement 22<br>
 <br>
-v1.53<br>
+v1.53 Jan 19, 2021<br>
 - add less than bronze indication (green)<br>
 - Easy mode implemented<br>
 - custom levels page<br>
 - crashfix<br>
 <br>
-v1.48<br>
+v1.48 Nov 7, 2020<br>
 - first quest version<br>
 - explosion fix<br>
 - radiotower perf fix<br>
@@ -209,7 +209,7 @@ v1.48<br>
 - lower engine vol<br>
 - bigger status box<br>
 <br>
-v1.44<br>
+v1.44 May 9, 2020<br>
 - fix flying particle fx<br>
 - bugfix in first menu level selection<br>
 - add enemy-kill msg to replay<br>
@@ -219,20 +219,20 @@ v1.44<br>
 - frame rate fix in CollisionStay2D<br>
 - point motion implemented<br>
 <br>
-v1.26<br>
+v1.26 Dec 1, 2019<br>
 - add flying score text<br>
 - hiscore security increased<br>
 - move game status up<br>
 - major fix: replays working<br>
 <br>
-v1.20<br>
+v1.20 Aug 10, 2019<br>
 - move view up 20cm<br>
 - fix menu options positions<br>
 - fix for distance achievement<br>
 - changed controller bindings for recenter and back<br>
 - add recenter action, only in menu (for now)<br>
 <br>
-v1.11<br>
+v1.11 Jul 28, 2019<br>
 - add gold, silver and bronze limits to menu<br>
 - tracking reset button in menu<br>
 - game status position fix. snap movement fix<br>
@@ -240,7 +240,7 @@ v1.11<br>
 - bugfixes to camera position and damage taken<br>
 - 6DoF dollhouse impl finished<br>
 <br>
-v1.00<br>
+v1.00 Jul 14, 2019<br>
 - add two new achievements<br>
 - fix cargo sound<br>
 - music: always exit flow on death<br>
