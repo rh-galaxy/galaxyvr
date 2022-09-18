@@ -50,6 +50,7 @@ public class CameraController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         iYAdjust = PlayerPrefs.GetInt("MyYAdjustInt", 0);
+        iZAdjust = PlayerPrefs.GetInt("MyZAdjustInt", 0);
     }
 
     // Start is called before the first frame update
@@ -67,21 +68,37 @@ public class CameraController : MonoBehaviour
         oRayQuad.SetActive(false);
     }
 
-    private int iYAdjust = 0;
+    private int iYAdjust = 0, iZAdjust = 0;
     private float fYAdjustStep = 0.24f;
+    private float fZAdjustStep = 0.20f;
     public void CycleYAdjust()
     {
         iYAdjust++;
-        if (iYAdjust > 10) iYAdjust = -10; //20 steps
+        if (iYAdjust > 10) iYAdjust = -10; //21 steps
 
-        vCamOffset = new Vector3(0, iYAdjust * fYAdjustStep + 0.3f, -1.90f);
+        vCamOffset = new Vector3(0, iYAdjust * fYAdjustStep + 0.3f, iZAdjust * fZAdjustStep - 1.90f);
         if (!bMapMode)
         {
-            vCamPos = new Vector3(0, iYAdjust * fYAdjustStep, -4.3f);
+            vCamPos = new Vector3(0, iYAdjust * fYAdjustStep, iZAdjust * fZAdjustStep - 4.3f);
             transform.position = vCamPos;
         }
 
         PlayerPrefs.SetInt("MyYAdjustInt", iYAdjust);
+        PlayerPrefs.Save();
+    }
+    public void CycleZAdjust()
+    {
+        iZAdjust++;
+        if (iZAdjust > 2) iZAdjust = -4; //7 steps
+
+        vCamOffset = new Vector3(0, iYAdjust * fYAdjustStep + 0.3f, iZAdjust * fZAdjustStep - 1.90f);
+        if (!bMapMode)
+        {
+            vCamPos = new Vector3(0, iYAdjust * fYAdjustStep, iZAdjust * fZAdjustStep - 4.3f);
+            transform.position = vCamPos;
+        }
+
+        PlayerPrefs.SetInt("MyZAdjustInt", iZAdjust);
         PlayerPrefs.Save();
     }
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
@@ -91,13 +108,13 @@ public class CameraController : MonoBehaviour
         oMap = i_oMap;
         vCamPos = new Vector3(0, 0, -10.0f); //set it away from the player, transform.position will then be set first Update
 
-        vCamOffset = new Vector3(0, iYAdjust * fYAdjustStep + 0.3f, -1.90f);
+        vCamOffset = new Vector3(0, iYAdjust * fYAdjustStep + 0.3f, iZAdjust * fZAdjustStep - 1.90f);
         vMapSize = oMap.GetMapSize();
     }
     public void InitForMenu()
     {
         bMapMode = false;
-        vCamPos = new Vector3(0, iYAdjust * fYAdjustStep, -4.3f);
+        vCamPos = new Vector3(0, iYAdjust * fYAdjustStep, iZAdjust * fZAdjustStep - 4.3f);
         transform.position = vCamPos;
     }
 

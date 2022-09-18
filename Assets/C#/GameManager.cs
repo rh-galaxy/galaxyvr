@@ -447,7 +447,7 @@ public class GameManager : MonoBehaviour
 
         //recenter
         //do it from oculus right-Menu (select recenter)
-        //implement Y-adjust instead, recenter is working in steamvr system (left-menu, select recenter)
+        //implement Y/Z-adjust instead
         if (!bTrackingOriginSet) //always do once
         {
             if (headDevice!=null && headDevice.isValid)
@@ -459,8 +459,12 @@ public class GameManager : MonoBehaviour
         if (Menu.bYAdjust)
         {
             cameraHolder.CycleYAdjust();
-
             Menu.bYAdjust = false; //we have acted on it
+        }
+        if (Menu.bZAdjust)
+        {
+            cameraHolder.CycleZAdjust();
+            Menu.bZAdjust = false; //we have acted on it
         }
 
         bool bBackButton = false;
@@ -476,8 +480,6 @@ public class GameManager : MonoBehaviour
             bPauseNow = (!OVRPlugin.hasInputFocus || !OVRPlugin.hasVrFocus) /*|| !userPresent)*/;
         }
         if (bNoVR) bPauseNow = false;
-
-        /**///AudioStateMachine.instance.masterVolume = 0.0f; //while recording video without music
 
         //pause state change
         if (bPause != bPauseNow)
@@ -604,7 +606,7 @@ public class GameManager : MonoBehaviour
                     Debug.Log("http loadinfo: mission finished " + iMissionFinished + " unlocked " + iMissionToUnlock);
                     Debug.Log("http loadinfo: race finished " + iRaceFinished + " unlocked " + iRaceToUnlock);
                     Menu.theMenu.SetLevelUnlock(iMissionToUnlock, iRaceToUnlock);
-                    if (!bNoHiscore) Menu.theMenu.InitLevelRanking();
+                    Menu.theMenu.InitLevelRanking(bNoHiscore);
                     iState++;
                 }
                 break;
@@ -709,7 +711,7 @@ public class GameManager : MonoBehaviour
 
                 //if bNoInternet is true this will not be possible be design
                 {
-                    bool isLi2 = (!stLevel.bIsTime && bCargoSwingingMode);
+                    bool isLi2 = bCargoSwingingMode;
                     if (isLi2)
                     {
                         if ((Menu.bWorldBestReplay1 && stLevel.info2.iWRScore1 != -1)
@@ -794,7 +796,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    bool isLi2 = (!stLevel.bIsTime && bCargoSwingingMode);
+                    bool isLi2 = bCargoSwingingMode;
                     oReplay.Reset(3, bEasyMode, isLi2); //reset before recording a new one during play
                     GameLevel.bRunReplay = false;
                 }
@@ -854,7 +856,7 @@ public class GameManager : MonoBehaviour
                         }
 
                         //get score from GameLevel
-                        bool isLi2 = (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION && GameManager.theGM.bCargoSwingingMode);
+                        bool isLi2 = GameManager.theGM.bCargoSwingingMode;
                         int iScoreMs;
                         if (GameLevel.theMap.iLevelType == (int)LevelType.MAP_MISSION) iScoreMs = GameLevel.theMap.player.GetScore();
                         else
