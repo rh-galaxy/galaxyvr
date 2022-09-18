@@ -1364,12 +1364,12 @@ public class Player : MonoBehaviour
             oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //add score for the cargo moved
-            iScore += Mathf.RoundToInt(aHold[iCargoNumUsed] * aHoldHealth[iCargoNumUsed]);
+            int s = Mathf.RoundToInt(aHold[iCargoNumUsed] * aHoldHealth[iCargoNumUsed]);
+            iScore += s;
 
             //add flying score text
             S_FlyingScoreInfo stFlyingScoreInfo;
-            if(bCargoSwingingMode) stFlyingScoreInfo.szScore = aHold[iCargoNumUsed].ToString() + " @" + Mathf.RoundToInt(aHoldHealth[iCargoNumUsed]*100.0f) + "%";
-            else stFlyingScoreInfo.szScore = aHold[iCargoNumUsed].ToString();
+            stFlyingScoreInfo.szScore = s.ToString();
             stFlyingScoreInfo.vPos = new Vector3(oRb.position.x, oRb.position.y, -0.2f);
             stFlyingScoreInfo.vVel = new Vector3(UnityEngine.Random.Range(-0.15f, 0.15f), UnityEngine.Random.Range(-0.15f, 0.15f), -0.35f);
             FlyingScore o = Instantiate(oMap.oFlyingScoreObjBase, oMap.transform);
