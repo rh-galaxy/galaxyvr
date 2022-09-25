@@ -42,7 +42,6 @@
 		
 		if($result) {
 			//user id and name now exist in mebers_t, with last_access=NOW()
-			
 			$select_string = "SELECT levels_t.level AS Level, levels_t.is_time AS IsTime, levels_t.creator AS Creator, levels_t.qst1_quality AS quality1, levels_t.qst2_quality AS quality2, levels_t.qst2_freq AS freq2, levels_t.limit1,levels_t.limit2,levels_t.limit3 FROM levels_t ORDER BY levels_t.ordering ASC";
 			// make query
 			$result = @mysqli_query($db, $select_string);
@@ -137,7 +136,7 @@
 							}
 						}
 						echo $place." ";
-						
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 						echo $row['quality1']." ";
 						echo $row['quality2']." ";
@@ -146,8 +145,6 @@
 						echo "\n";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 //mission levels result row 2 (achievements2_t)
 //and race levels result row 2 (achievements2_t)
@@ -167,8 +164,9 @@
 								$score = $row2['Score'];
 							}
 						}
-						if($row['IsTime'] == 0) echo "\"".$row['Level']."\" ".$row['IsTime']." ".($row['limit1']-30000)." ".($row['limit2']-30000)." ".($row['limit3']-30000).." ".$score." ";
-						else                    echo "\"".$row['Level']."\" ".$row['IsTime']." ".($row['limit1']+30000)." ".($row['limit2']+30000)." ".($row['limit3']+30000).." ".$score." ";
+						//decrease limits with 30000 for this mode
+						if($row['IsTime'] == 0) echo "\"".$row['Level']."\" ".$row['IsTime']." ".($row['limit1']-30000)." ".($row['limit2']-30000)." ".($row['limit3']-30000)." ".$score." ";
+						else                    echo "\"".$row['Level']."\" ".$row['IsTime']." ".($row['limit1']+30000)." ".($row['limit2']+30000)." ".($row['limit3']+30000)." ".$score." ";
 						
 ////////////////////////////////////////////////////////////////////////////////////////////
 //part 2 (per level) record scores 1st-3rd place
@@ -236,7 +234,7 @@
 							}
 						}
 						echo $place." ";
-						
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 						echo $row['quality1']." ";
 						echo $row['quality2']." ";

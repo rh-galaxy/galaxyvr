@@ -1882,6 +1882,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 563688410}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &564988484 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 111902, guid: 3d78fd82c56b8404b89031e02618a570,
+    type: 3}
+  m_PrefabInstance: {fileID: 1558102256}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &564988489 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570,
+    type: 3}
+  m_PrefabInstance: {fileID: 1558102256}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &606333639
 GameObject:
   m_ObjectHideFlags: 0
@@ -14065,7 +14077,7 @@ MonoBehaviour:
   oWallsColl: {fileID: 1452709487}
   oShipBody: {fileID: 893073646946022558}
   oShipMaterial: {fileID: 2100000, guid: 857d069bbf730ae4aacd49d4103e64ac, type: 2}
-  status: {fileID: 0}
+  status: {fileID: 2060256274}
   oClipExplosion: {fileID: 8300000, guid: 71a2fb37109b95c43a1e00bdba3d4002, type: 3}
   oClipHit: {fileID: 8300000, guid: 19a7e309b01480c49b888142e23f2838, type: 3}
   oClipFire: {fileID: 8300000, guid: 2d49096c73f6e3247bbf42b3ebb44ddd, type: 3}
@@ -14984,7 +14996,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 490184, guid: fbf5239440024b54aa2971834b80b507, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 490184, guid: fbf5239440024b54aa2971834b80b507, type: 3}
       propertyPath: m_LocalScale.x
@@ -15072,6 +15084,79 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbf5239440024b54aa2971834b80b507, type: 3}
+--- !u!1001 &1558102256
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1931341285}
+    m_Modifications:
+    - target: {fileID: 111902, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_Name
+      value: AlienPlanet2
+      objectReference: {fileID: 0}
+    - target: {fileID: 111902, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -60
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431826, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3d78fd82c56b8404b89031e02618a570, type: 3}
 --- !u!1001 &1587064160
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16253,10 +16338,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1327464291}
-  - {fileID: 1395256661}
+  - {fileID: 564988489}
   - {fileID: 403076789}
   - {fileID: 235149032}
   - {fileID: 144993628}
+  - {fileID: 1395256661}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16273,11 +16359,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   oPlanet1: {fileID: 1327464290}
-  oPlanet2: {fileID: 1395256660}
+  oPlanet2: {fileID: 564988484}
   oPlanet3: {fileID: 403076788}
   oPlanet4: {fileID: 235149031}
   oPlanet5: {fileID: 144993627}
-  oPlanet6: {fileID: 0}
+  oPlanet6: {fileID: 1395256660}
 --- !u!1001 &1960791220
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16573,6 +16659,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2060256272}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2060256274 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1514379075665750893, guid: 3e569f6f2bda21d4bb52bb1ab2ccfa20,
+    type: 3}
+  m_PrefabInstance: {fileID: 2060256272}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c078a51f521bdc42869b278083d22d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2094891785
 GameObject:
   m_ObjectHideFlags: 0
