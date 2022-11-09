@@ -1483,7 +1483,6 @@ public class Player : MonoBehaviour
             oASGeneral.PlayOneShot(oClipLoadCargo);
         }
 
-        Debug.Log(bCargoLoaded);
         return bCargoLoaded;
     }
 
