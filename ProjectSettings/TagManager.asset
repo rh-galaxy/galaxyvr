@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Pad
+  - projectile
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -20,8 +23,8 @@ TagManager:
   - MapPlane
   - Walls
   - Glow
-  - 
-  - 
+  - chain
+  - Player
   - 
   - 
   - 

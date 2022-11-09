@@ -18,6 +18,7 @@ using UnityEngine.XR;
 
 public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP }; //MAP_DOGFIGHT, MAP_MISSION_COOP not supported
 
+public 
 struct S_TilesetInfo
 {
     public S_TilesetInfo(string i_szMaterial, bool i_bRedBricks, string i_szMaterialWalls,

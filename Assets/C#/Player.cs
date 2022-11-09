@@ -10,6 +10,26 @@ public class Player : MonoBehaviour
     public GameLevel oMap;
     Vector3 vMapSize;
 
+    ///////////////////////////
+    public Rigidbody2D link0rb; //drag the nr1 link here in the inspector
+    public Rigidbody2D link1rb;
+    public Rigidbody2D link2rb;
+    public Rigidbody2D cargo0rb;
+
+    public ConstantForce2D link0cf; //drag the nr1 link here in the inspector (you must add a ConstandForce2D component first)
+    public ConstantForce2D link1cf;
+    public ConstantForce2D link2cf;
+    public ConstantForce2D cargo0cf;
+
+    Vector3 link0tr_pos = new Vector3(-0.02f, 0.00f, -1.75f);
+    Vector3 link1tr_pos = new Vector3(-0.06f, 0.00f, -1.75f);
+    Vector3 link2tr_pos = new Vector3(-0.10f, 0.00f, -1.75f);
+    Vector3 cargo0tr_pos = new Vector3(-0.14f, 0.00f, -1.75f);
+
+    public GameObject oChain;
+    ///////////////////////////
+
+
     public GameObject oShip;
     public ParticleSystem oThruster;
     ParticleSystem.EmissionModule oThrusterEmission;
@@ -44,7 +64,7 @@ public class Player : MonoBehaviour
     Vector2 vStartPos;
     float fAcceleration = 0.0f;
     float fDirection = 90.0f;
-    const float fGravityScale = 0.045f;
+    internal const float fGravityScale = 0.045f;
 
     //motion movement
     bool bMotionMovementEnabled = false;
@@ -63,10 +83,10 @@ public class Player : MonoBehaviour
     //cargo
     bool bCargoSwingingMode = false;
     internal int iCargoNumUsed = 0;
-    int iCargoSpaceUsed = 0;
-    int[] aHold = new int[MAXSPACEINHOLDUNITS];
-    int[] aHoldZoneId = new int[MAXSPACEINHOLDUNITS];
-    float[] aHoldHealth = new float[MAXSPACEINHOLDUNITS]; //begins at 1.0 (100%) when cargo loaded, goes down equally on all positions on damage
+    internal int iCargoSpaceUsed = 0;
+    internal int[] aHold = new int[MAXSPACEINHOLDUNITS];
+    internal int[] aHoldZoneId = new int[MAXSPACEINHOLDUNITS];
+    internal float[] aHoldHealth = new float[MAXSPACEINHOLDUNITS]; //begins at 1.0 (100%) when cargo loaded, goes down equally on all positions on damage
 
     //score / time
     int iCurCP = 0;
@@ -109,6 +129,61 @@ public class Player : MonoBehaviour
     float fFullThrottleTimer = 0.0f;
 
     bool bInited = false;
+
+    private void chain_load()
+    {
+        link0rb.transform.localPosition = link0tr_pos;
+        link0rb.transform.localRotation = Quaternion.identity;
+        link1rb.transform.localPosition = link1tr_pos;
+        link1rb.transform.localRotation = Quaternion.identity;
+        link2rb.transform.localPosition = link2tr_pos;
+        link2rb.transform.localRotation = Quaternion.identity;
+        cargo0rb.transform.localPosition = cargo0tr_pos;
+        cargo0rb.transform.localRotation = Quaternion.identity;
+    }
+    //private void chain_save()
+    //{
+    //    link0tr_pos = link0rb.transform.localPosition;
+    //    link0tr_rot = link0rb.transform.localRotation;
+    //    link1tr_pos = link0rb.transform.localPosition;
+    //    link1tr_rot = link0rb.transform.localRotation;
+    //    link2tr_pos = link0rb.transform.localPosition;
+    //    link2tr_rot = link0rb.transform.localRotation;
+    //    cargo0tr_pos = cargo0rb.transform.localPosition;
+    //    cargo0tr_rot = cargo0rb.transform.localRotation;
+    //}
+    //private void chain_load()
+    //{
+    //    link0rb.position = link0tr_pos2 + oRb.position;
+    //    link0rb.rotation = link0tr_rot2;
+    //    link1rb.position = link1tr_pos2 + oRb.position;
+    //    link1rb.rotation = link1tr_rot2;
+    //    link2rb.position = link2tr_pos2 + oRb.position;
+    //    link2rb.rotation = link2tr_rot2;
+    //    cargo0rb.position = cargo0tr_pos2 + oRb.position;
+    //    cargo0rb.rotation = cargo0tr_rot2;
+    //    Debug.Log("chain Pos/Rot loaded");
+    //}
+    //private void chain_save()
+    //{
+    //    link0tr_pos2 = link0rb.transform.localPosition;
+    //    link0tr_rot2 = link0rb.rotation;
+    //    link1tr_pos2 = link0rb.transform.localPosition;
+    //    link1tr_rot2 = link0rb.rotation;
+    //    link2tr_pos2 = link0rb.transform.localPosition;
+    //    link2tr_rot2 = link0rb.rotation;
+    //    cargo0tr_pos2 = cargo0rb.transform.localPosition;
+    //    cargo0tr_rot2 = cargo0rb.rotation;
+    //    Debug.Log("chain Pos/Rot saved");
+    //}
+    private void Start()
+    {
+        if (bCargoSwingingMode)
+        {
+            oChain.SetActive(false);
+        }
+    }
+
     private void Awake()
     {
         oThrusterEmission = oThruster.emission;
@@ -141,7 +216,7 @@ public class Player : MonoBehaviour
 
         foreach (AudioSource aSource in GetComponents<AudioSource>())
         { //we have 3 audiosources
-            if (aSource.clip!=null && aSource.clip.name.Equals("engine"))
+            if (aSource.clip != null && aSource.clip.name.Equals("engine"))
                 oASEngine = aSource;
             else if (aSource.clip != null && aSource.clip.name.Equals("scratch"))
                 oASScrape = aSource;
@@ -188,6 +263,20 @@ public class Player : MonoBehaviour
         {
             fMeanSpeeds[i] = 0.0f;
         }
+
+        if (bCargoSwingingMode)
+        {
+            link0cf.force = oMap.vGravity * 0.1f * 0.045f;
+            link1cf.force = oMap.vGravity * 0.1f * 0.045f;
+            link2cf.force = oMap.vGravity * 0.1f * 0.045f;
+            link0rb.mass = 0.1f;
+            link1rb.mass = 0.1f;
+            link2rb.mass = 0.1f;
+            cargo0cf.force = oMap.vGravity * 0.1f * 0.045f;
+            cargo0rb.mass = 0.1f;
+
+            oChain.SetActive(false);
+        }
     }
 
     bool bFireTriggered = false, bFire = false;
@@ -197,6 +286,9 @@ public class Player : MonoBehaviour
     Color oShipColorNormal = new Color(138 / 255.0f, 0, 0, 1.0f);
     Color oShipColorBlink = new Color(180 / 255.0f, 0, 0, 0.55f);
     MeshRenderer oShipBodyMR;
+
+    internal bool bNoUnloading = false;
+
     void Update()
     {
         if (!bInited)
@@ -205,7 +297,7 @@ public class Player : MonoBehaviour
         //update ship color when blinking
         if (bFreeFromBullets && (((int)(fFreeFromBulletsTimer * 1000)) % 300 > 200))
             oShipMaterial.color = oShipColorBlink;
-        else if(fDamageTimer<0.21f) oShipMaterial.color = oShipColorDamage;
+        else if (fDamageTimer < 0.21f) oShipMaterial.color = oShipColorDamage;
         else oShipMaterial.color = oShipColorNormal;
         oShipBodyMR.material = oShipMaterial;
 
@@ -244,8 +336,8 @@ public class Player : MonoBehaviour
         ContactPoint2D c = collision.GetContact(0);
         float fImpulse = c.normalImpulse * 100.0f;
         float fTangentImpulse = c.tangentImpulse * 100.0f; //sliding impact?
-        float fSpeedX = c.relativeVelocity.x *10;
-        float fSpeedY = c.relativeVelocity.y *10;
+        float fSpeedX = c.relativeVelocity.x * 10;
+        float fSpeedY = c.relativeVelocity.y * 10;
         //then it might be a second impact point (that's all we take into concideration
         // any more and the ship is in deep trouble)
         if (iNum > 1)
@@ -253,8 +345,8 @@ public class Player : MonoBehaviour
             c = collision.GetContact(1);
             fImpulse += c.normalImpulse * 100.0f;
             fTangentImpulse += c.tangentImpulse * 100.0f; //sliding impact?
-            fSpeedX += c.relativeVelocity.x *10;
-            fSpeedY += c.relativeVelocity.y *10;
+            fSpeedX += c.relativeVelocity.x * 10;
+            fSpeedY += c.relativeVelocity.y * 10;
             fSpeedX /= 2;
             fSpeedY /= 2;
         }
@@ -495,7 +587,7 @@ public class Player : MonoBehaviour
             if (stNew.fPointing > 360) stNew.fPointing -= 360;
 
             float fThrust = ALLMOVES[i].bThrottle ? SHIP_THRUST : 0;
-            
+
             Vector2 a = new Vector2(Mathf.Cos(stNew.fPointing * (Mathf.PI / 180)) * fThrust, Mathf.Sin(stNew.fPointing * (Mathf.PI / 180)) * fThrust);
             a += oCustomGravity.force;
             a -= stNew.vVel * oRb.drag;
@@ -508,7 +600,7 @@ public class Player : MonoBehaviour
             o_stMoves[i].b = Strategy1(stNew);
             o_stMoves[i].c = Strategy2(stNew);
             o_stMoves[i].d = Strategy4(stNew);
-            o_stMoves[i].e = MOVE_TO_MOVE_SCORE[stNew.iLastMove, i] * (1.0f/ Strategy5(stNew));
+            o_stMoves[i].e = MOVE_TO_MOVE_SCORE[stNew.iLastMove, i] * (1.0f / Strategy5(stNew));
         }
     }
 
@@ -622,7 +714,7 @@ public class Player : MonoBehaviour
         float fDistNow = (stValues.vPos - stValues.l1).magnitude;
         if (fDistNow > 1.0f) fDistNow = 1.0f;
 
-        float fScore = -fVel / (1.0f/fDistNow);
+        float fScore = -fVel / (1.0f / fDistNow);
         return fScore;
     }
     //score for dist to goal
@@ -652,10 +744,26 @@ public class Player : MonoBehaviour
     Vector2 vLastVel;
     float fLastDirection;
 
-    void FixedUpdate()
+    bool bInitCargo = true;
+    public void FixedUpdate()
     {
         if (!bInited)
             return;
+
+        if(bCargoSwingingMode && oMap.iLevelType == (int)LevelType.MAP_RACE)
+        {
+            if (bAlive && bInitCargo)
+            {
+                bNoUnloading = true;
+                LoadCargo(35, -1);
+                bInitCargo = false;
+            }
+            /**/
+            float d = Vector2.Distance(oRb.position, cargo0rb.position);
+            if (d > /**/40.5f)
+                Physics2D.IgnoreLayerCollision(15, 16, false); //on
+        }
+
 
         float fDist = (oRb.position - vLastPosition).magnitude;
         if (fDist > 0.80f) fDist = 0.0f; //detect when player has jumped to a new position (after death)
@@ -675,15 +783,15 @@ public class Player : MonoBehaviour
         fCurrentSpeedSeg += Time.fixedDeltaTime;
         if (fCurrentSpeedSeg >= 16.0f) fCurrentSpeedSeg -= 16.0f;
         int iCurSec = (int)fCurrentSpeedSeg;
-        if(iCurSec!= iLastSec)
+        if (iCurSec != iLastSec)
             fMeanSpeeds[iCurSec] = 0.0f;
         fMeanSpeeds[iCurSec] += fDist;
         fMeanSpeed = 0.0f;
-        for(int i=0; i< fMeanSpeeds.Length; i++)
+        for (int i = 0; i < fMeanSpeeds.Length; i++)
         {
-            if(i != iCurSec) fMeanSpeed += fMeanSpeeds[i];
+            if (i != iCurSec) fMeanSpeed += fMeanSpeeds[i];
         }
-        fMeanSpeed = fMeanSpeed/(fMeanSpeeds.Length-1) * 10;
+        fMeanSpeed = fMeanSpeed / (fMeanSpeeds.Length - 1) * 10;
 
         //enemies near (used in mission music)
         iNumEnemiesNear = oMap.GetNumEnemiesNearPlayer();
@@ -759,7 +867,7 @@ public class Player : MonoBehaviour
 
             if (fX > 0.35f) bRight = true;
             if (fX < -0.35f) bLeft = true;
-            if(!bMotionMovementEnabled)
+            if (!bMotionMovementEnabled)
             {
                 if ((fY < -0.75f) && bLeft == false && bRight == false) bAdjust = true;
                 if (fY < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
@@ -789,7 +897,7 @@ public class Player : MonoBehaviour
             Mouse mouse = Mouse.current;
             if (mouse != null && bMotionMovementEnabled)
             {
-                if (keyboard!=null && keyboard.hKey.isPressed)
+                if (keyboard != null && keyboard.hKey.isPressed)
                 {
                     bThrottle = true;
                 }
@@ -803,11 +911,11 @@ public class Player : MonoBehaviour
             {
                 fFireTimer += Time.fixedDeltaTime;
                 fMovementTimer += Time.fixedDeltaTime;
-                if(!bLanded) fFullThrottleTimer -= Time.fixedDeltaTime;
+                if (!bLanded) fFullThrottleTimer -= Time.fixedDeltaTime;
                 else fFullThrottleTimer = 0.28f;
-                
+
                 //auto landing
-                if (!bThrottle && fDirection!=90.0f)
+                if (!bThrottle && fDirection != 90.0f)
                 {
                     for (int i = 0; i < oMap.aLandingZoneList.Count; i++)
                     {
@@ -904,7 +1012,8 @@ public class Player : MonoBehaviour
             }
 
             //keyboard
-            if (keyboard != null) {
+            if (keyboard != null)
+            {
                 if (!bMotionMovementEnabled) if (keyboard.enterKey.isPressed || keyboard.spaceKey.isPressed) bNewFireState = true;
                 if (keyboard.upArrowKey.isPressed || keyboard.wKey.isPressed) bThrottle = true;
                 if (keyboard.downArrowKey.isPressed || keyboard.sKey.isPressed) bAdjust = true;
@@ -920,7 +1029,7 @@ public class Player : MonoBehaviour
             int iInput = (bThrottle ? 8 : 0) + (bLeft ? 4 : 0) + (bRight ? 2 : 0) + (bAdjust ? 1 : 0); //bFire not included since bullets are added separately below
 
             fReplayMessageTimer += Time.fixedDeltaTime;
-            if (iInput != iLastInput || fReplayMessageTimer>0.5)
+            if (iInput != iLastInput || fReplayMessageTimer > 0.5)
             {
                 //add input message to replay if input has changed
                 ReplayMessage rm = new ReplayMessage();
@@ -1187,9 +1296,9 @@ public class Player : MonoBehaviour
         int iResultScore = (iScore + iLifes * 50) * 1000;
         if (oMap.iLevelType == (int)LevelType.MAP_MISSION)
         {
-            iResultScore -= (int)((fTotalTimeMission*1000) / 2); //long time is bad in mission
+            iResultScore -= (int)((fTotalTimeMission * 1000) / 2); //long time is bad in mission
         }
-        if (GameLevel.theReplay.bEasyMode && iResultScore>0) iResultScore /= 2;
+        if (GameLevel.theReplay.bEasyMode && iResultScore > 0) iResultScore /= 2;
         return iResultScore;
     }
 
@@ -1278,6 +1387,7 @@ public class Player : MonoBehaviour
 
         if (!bAlive) return;
         bAlive = false;
+        bInitCargo = true;
 
         //prevent instant change in the music
         asm.ResetLife();
@@ -1292,7 +1402,9 @@ public class Player : MonoBehaviour
         iAchieveShipsDestroyed++;
 
         //inactivate ship
+        oChain.SetActive(false);
         oShip.SetActive(false);
+
         oPolygonCollider2D.enabled = false; //make the explosion not moving because of an enemy moving and pushing it
         //start explosion
         oExplosionParticle.Play();
@@ -1304,15 +1416,20 @@ public class Player : MonoBehaviour
         Stop();
 
         //respawn cargo on landingzone taken from
-        for (i = iCargoNumUsed - 1; i >= 0; i--)
+        if (!bNoUnloading)
         {
-            LandingZone oZone = oMap.GetLandingZone(aHoldZoneId[i]);
-            oZone.PushCargo(aHold[i]);
+            for (i = iCargoNumUsed - 1; i >= 0; i--)
+            {
+                LandingZone oZone = oMap.GetLandingZone(aHoldZoneId[i]);
+                oZone.PushCargo(aHold[i]);
+            }
         }
         //reset cargo
+        cargo0rb.mass = 0.1f;
+        cargo0cf.force = oMap.vGravity * cargo0rb.mass * fGravityScale;
         iCargoNumUsed = iCargoSpaceUsed = 0;
 
-        if(bSetToReplay)
+        if (bSetToReplay)
         {
             ReplayMessage rm = new ReplayMessage();
             rm.vPos = oRb.position;
@@ -1344,26 +1461,58 @@ public class Player : MonoBehaviour
             bCargoLoaded = true;
 
             //new weight
-            oRb.mass += iCargo / 11.0f;
-            oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
+            if (bCargoSwingingMode)
+            {
+                cargo0rb.mass += iCargo / 11.0f;
+                cargo0cf.force = oMap.vGravity * cargo0rb.mass * fGravityScale;
+
+                if (!oChain.activeSelf)
+                {
+                    Physics2D.IgnoreLayerCollision(15, 16, true); //off
+                    oChain.SetActive(true);
+                    chain_load();
+                }
+            }
+            else
+            {
+                oRb.mass += iCargo / 11.0f;
+                oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
+            }
 
             //play load cargo sound
             oASGeneral.PlayOneShot(oClipLoadCargo);
         }
 
+        Debug.Log(bCargoLoaded);
         return bCargoLoaded;
     }
 
-    void UnloadCargo()
+    public void UnloadCargo()
     {
+        if (bNoUnloading) return;
+
         if (iCargoNumUsed > 0)
         {
             iCargoNumUsed--;
             iCargoSpaceUsed -= aHold[iCargoNumUsed];
 
             //new weight
-            oRb.mass -= aHold[iCargoNumUsed] / 11.0f;
-            oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
+            if (bCargoSwingingMode)
+            {
+                cargo0rb.mass -= aHold[iCargoNumUsed] / 11.0f;
+                cargo0cf.force = oMap.vGravity * cargo0rb.mass * fGravityScale;
+
+                if(iCargoNumUsed==0)
+                {
+                    //we have unloaded last
+                    oChain.SetActive(false);
+                }
+            }
+            else
+            {
+                oRb.mass -= aHold[iCargoNumUsed] / 11.0f;
+                oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
+            }
 
             //add score for the cargo moved
             int s = Mathf.RoundToInt(aHold[iCargoNumUsed] * aHoldHealth[iCargoNumUsed]);
