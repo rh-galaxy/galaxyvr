@@ -1356,7 +1356,6 @@ public class Menu : MonoBehaviour
                 }
 
                 /////////////////////////////////////////////////////////////////////////////////
-                if (!stLevelInfo.bIsTime)
                 {
                     iRank = 5; //no score at all
                     if (stLevelInfo.info2.iBestScoreMs != -1)

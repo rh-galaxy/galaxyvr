@@ -31,6 +31,7 @@ public class GameStatus : MonoBehaviour
         oHealthBar.SetActive(true);
         oFuelBar.SetActive(!i_bIsRace);
         oCargoBar.SetActive(!i_bIsRace);
+        oCargoHealthBar.SetActive(!i_bIsRace);
 
         //gameObject.SetActive(true);
 
