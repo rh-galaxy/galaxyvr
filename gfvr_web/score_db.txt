@@ -206,7 +206,7 @@ ALTER TABLE `achievements_t`
 --
 ALTER TABLE `levels_t`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `level_index` (`level`);
+  ADD UNIQUE KEY `level_index` (`level`) USING BTREE;
 
 --
 -- Index för tabell `members_t`
@@ -214,6 +214,12 @@ ALTER TABLE `levels_t`
 ALTER TABLE `members_t`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `user_id_index` (`oculus_id`);
+
+--
+-- Index för tabell `mpgames_t`
+--
+ALTER TABLE `mpgames_t`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Index för tabell `statistics_t`
