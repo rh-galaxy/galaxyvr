@@ -148,6 +148,9 @@ INSERT INTO `levels_t` (`id`, `level`, `is_time`, `ordering`, `limit1`, `limit2`
 (128, 'Pacman', 0, 1028, 540000, 320000, 100000, 1, 'mra'),
 (129, 'RuleBreaker', 0, 1029, 400000, 240000, 100000, 1, 'mra'),
 (130, 'EyeOfTheStorm', 0, 1030, 509000, 340000, 100000, 1, 'mra');
+(131, 'OpenAndShut', 0, 1031, 425000, 340000, 130000, 1, 'zog'),
+(132, 'Enterprise', 0, 1032, 410000, 300000, 100000, 1, 'mra'),
+(133, 'Octopus', 0, 1033, 390000, 300000, 100000, 1, 'mra');
 
 -- --------------------------------------------------------
 
@@ -254,7 +257,7 @@ ALTER TABLE `achievements_t`
 -- AUTO_INCREMENT för tabell `levels_t`
 --
 ALTER TABLE `levels_t`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
 
 --
 -- AUTO_INCREMENT för tabell `members_t`
