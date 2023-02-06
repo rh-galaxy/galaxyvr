@@ -143,10 +143,13 @@ square_start("'100%'");
 ?>
 <p>Point-movement (all platforms v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
-<p>v1.95 Nov 9, 2022<br>
+<p>v1.96 Feb 6, 2023<br>
+- fix sorting order (cursor and status bar)<br>
+<br>
+v1.95 Nov 9, 2022<br>
 - add swinging cargo mode<br>
 <br>
-<p>v1.90 Sep 6, 2022<br>
+v1.90 Sep 6, 2022<br>
 - use Universal render pipeline (PC)<br>
 - add glow postprocessing (PC)<br>
 - replaced skyboxes<br>
