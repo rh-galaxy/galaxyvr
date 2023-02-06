@@ -1359,6 +1359,13 @@ public class Menu : MonoBehaviour
                     if (stLevelInfo.info2.iBestScoreMs != -1)
                     {
                         iRank = 4; //a score less than bronze
+                        if (stLevelInfo.bIsTime)
+                        {
+                            if (stLevelInfo.info2.iBestScoreMs < stLevelInfo.info2.iLimit1) iRank = 1; //gold
+                            else if (stLevelInfo.info2.iBestScoreMs < stLevelInfo.info2.iLimit2) iRank = 2; //silver
+                            else if (stLevelInfo.info2.iBestScoreMs < stLevelInfo.info2.iLimit3) iRank = 3; //bronze
+                        }
+                        else
                         {
                             if (stLevelInfo.info2.iBestScoreMs >= stLevelInfo.info2.iLimit1) iRank = 1; //gold
                             else if (stLevelInfo.info2.iBestScoreMs >= stLevelInfo.info2.iLimit2) iRank = 2; //silver
