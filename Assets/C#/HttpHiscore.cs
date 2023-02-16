@@ -75,102 +75,106 @@ public class HttpHiscore
             string[] szLines = szResult.Split((char)10);
             oLevelList.Clear(); //rebuild list
 
-            //parse result
-            for (int i = 0; i < szLines.Length; i++)
+            if (szLines.Length >= 2)
             {
-                char[] szSeparator = { (char)32 };
-                string[] szTokens = szLines[i].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                if (szTokens.Length < 12) continue;
-
-                stLevel.szName = szTokens[0].Trim('\"');
-                stLevel.bIsTime = szTokens[1].CompareTo("1") == 0;
-                stLevel.info.iLimit1 = int.Parse(szTokens[2]);
-                stLevel.info.iLimit2 = int.Parse(szTokens[3]);
-                stLevel.info.iLimit3 = int.Parse(szTokens[4]);
-                stLevel.info.iBestScoreMs = int.Parse(szTokens[5]);
-                stLevel.info.iLastScoreMs = -1;
-                stLevel.info.iTotalPlaces = -1;
-                stLevel.info.iYourPlace = -1;
-
-                //handle spaces in names
-                char[] szSeparator2 = { (char)'\"' };
-                string[] szWithin = szLines[i].Trim('\r', '\n').Split(szSeparator2, StringSplitOptions.RemoveEmptyEntries);
-                stLevel.info.szWRName1 = szWithin[2].Trim(' ');
-                stLevel.info.iWRScore1 = int.Parse(szWithin[3]);
-                stLevel.info.szWRName2 = szWithin[4].Trim(' ');
-                stLevel.info.iWRScore2 = int.Parse(szWithin[5]);
-                stLevel.info.szWRName3 = szWithin[6].Trim(' ');
-
-                szTokens = szWithin[7].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                stLevel.info.iWRScore3 = int.Parse(szTokens[0]);
-                if (szWithin.Length >= 9) stLevel.szCreateor = szWithin[8].Trim(' ');
-                else stLevel.szCreateor = "none";
-
-                if (szTokens.Length < 4) continue;
-                stLevel.info.szWRId1 = szTokens[1].Trim(' ');
-                stLevel.info.szWRId2 = szTokens[2].Trim(' ');
-                stLevel.info.szWRId3 = szTokens[3].Trim(' ');
-
-                if (szWithin.Length >= 10)
+                //parse result
+                for (int i = 0; i < szLines.Length; i++)
                 {
-                    szTokens = szWithin[9].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                    if (szTokens.Length >= 2)
-                    {
-                        stLevel.info.iTotalPlaces = int.Parse(szTokens[0].Trim(' '));
-                        stLevel.info.iYourPlace = int.Parse(szTokens[1].Trim(' '));
-                    }
-                }
-
-                ///////////////////////////////////////////////////////////////////////////
-                {
-                    i++; //mission and now race levels have 2 lines
-
-                    szTokens = szLines[i].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    char[] szSeparator = { (char)32 };
+                    string[] szTokens = szLines[i].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
                     if (szTokens.Length < 12) continue;
 
                     stLevel.szName = szTokens[0].Trim('\"');
                     stLevel.bIsTime = szTokens[1].CompareTo("1") == 0;
-                    stLevel.info2.iLimit1 = int.Parse(szTokens[2]);
-                    stLevel.info2.iLimit2 = int.Parse(szTokens[3]);
-                    stLevel.info2.iLimit3 = int.Parse(szTokens[4]);
-                    stLevel.info2.iBestScoreMs = int.Parse(szTokens[5]);
-                    stLevel.info2.iLastScoreMs = -1;
-                    stLevel.info2.iTotalPlaces = -1;
-                    stLevel.info2.iYourPlace = -1;
+                    stLevel.info.iLimit1 = int.Parse(szTokens[2]);
+                    stLevel.info.iLimit2 = int.Parse(szTokens[3]);
+                    stLevel.info.iLimit3 = int.Parse(szTokens[4]);
+                    stLevel.info.iBestScoreMs = int.Parse(szTokens[5]);
+                    stLevel.info.iLastScoreMs = -1;
+                    stLevel.info.iTotalPlaces = -1;
+                    stLevel.info.iYourPlace = -1;
 
                     //handle spaces in names
-                    szWithin = szLines[i].Trim('\r', '\n').Split(szSeparator2, StringSplitOptions.RemoveEmptyEntries);
-                    stLevel.info2.szWRName1 = szWithin[2].Trim(' ');
-                    stLevel.info2.iWRScore1 = int.Parse(szWithin[3]);
-                    stLevel.info2.szWRName2 = szWithin[4].Trim(' ');
-                    stLevel.info2.iWRScore2 = int.Parse(szWithin[5]);
-                    stLevel.info2.szWRName3 = szWithin[6].Trim(' ');
+                    char[] szSeparator2 = { (char)'\"' };
+                    string[] szWithin = szLines[i].Trim('\r', '\n').Split(szSeparator2, StringSplitOptions.RemoveEmptyEntries);
+                    stLevel.info.szWRName1 = szWithin[2].Trim(' ');
+                    stLevel.info.iWRScore1 = int.Parse(szWithin[3]);
+                    stLevel.info.szWRName2 = szWithin[4].Trim(' ');
+                    stLevel.info.iWRScore2 = int.Parse(szWithin[5]);
+                    stLevel.info.szWRName3 = szWithin[6].Trim(' ');
 
                     szTokens = szWithin[7].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
-                    stLevel.info2.iWRScore3 = int.Parse(szTokens[0]);
+                    stLevel.info.iWRScore3 = int.Parse(szTokens[0]);
                     if (szWithin.Length >= 9) stLevel.szCreateor = szWithin[8].Trim(' ');
                     else stLevel.szCreateor = "none";
 
                     if (szTokens.Length < 4) continue;
-                    stLevel.info2.szWRId1 = szTokens[1].Trim(' ');
-                    stLevel.info2.szWRId2 = szTokens[2].Trim(' ');
-                    stLevel.info2.szWRId3 = szTokens[3].Trim(' ');
+                    stLevel.info.szWRId1 = szTokens[1].Trim(' ');
+                    stLevel.info.szWRId2 = szTokens[2].Trim(' ');
+                    stLevel.info.szWRId3 = szTokens[3].Trim(' ');
 
                     if (szWithin.Length >= 10)
                     {
                         szTokens = szWithin[9].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
                         if (szTokens.Length >= 2)
                         {
-                            stLevel.info2.iTotalPlaces = int.Parse(szTokens[0].Trim(' '));
-                            stLevel.info2.iYourPlace = int.Parse(szTokens[1].Trim(' '));
+                            stLevel.info.iTotalPlaces = int.Parse(szTokens[0].Trim(' '));
+                            stLevel.info.iYourPlace = int.Parse(szTokens[1].Trim(' '));
                         }
                     }
-                }
-                ///////////////////////////////////////////////////////////////////////////
 
-                oLevelList.Add(stLevel);
+                    ///////////////////////////////////////////////////////////////////////////
+                    {
+                        i++; //mission and now race levels have 2 lines
+
+                        szTokens = szLines[i].Trim('\r', '\n').Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                        if (szTokens.Length < 12) continue;
+
+                        stLevel.szName = szTokens[0].Trim('\"');
+                        stLevel.bIsTime = szTokens[1].CompareTo("1") == 0;
+                        stLevel.info2.iLimit1 = int.Parse(szTokens[2]);
+                        stLevel.info2.iLimit2 = int.Parse(szTokens[3]);
+                        stLevel.info2.iLimit3 = int.Parse(szTokens[4]);
+                        stLevel.info2.iBestScoreMs = int.Parse(szTokens[5]);
+                        stLevel.info2.iLastScoreMs = -1;
+                        stLevel.info2.iTotalPlaces = -1;
+                        stLevel.info2.iYourPlace = -1;
+
+                        //handle spaces in names
+                        szWithin = szLines[i].Trim('\r', '\n').Split(szSeparator2, StringSplitOptions.RemoveEmptyEntries);
+                        stLevel.info2.szWRName1 = szWithin[2].Trim(' ');
+                        stLevel.info2.iWRScore1 = int.Parse(szWithin[3]);
+                        stLevel.info2.szWRName2 = szWithin[4].Trim(' ');
+                        stLevel.info2.iWRScore2 = int.Parse(szWithin[5]);
+                        stLevel.info2.szWRName3 = szWithin[6].Trim(' ');
+
+                        szTokens = szWithin[7].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                        stLevel.info2.iWRScore3 = int.Parse(szTokens[0]);
+                        if (szWithin.Length >= 9) stLevel.szCreateor = szWithin[8].Trim(' ');
+                        else stLevel.szCreateor = "none";
+
+                        if (szTokens.Length < 4) continue;
+                        stLevel.info2.szWRId1 = szTokens[1].Trim(' ');
+                        stLevel.info2.szWRId2 = szTokens[2].Trim(' ');
+                        stLevel.info2.szWRId3 = szTokens[3].Trim(' ');
+
+                        if (szWithin.Length >= 10)
+                        {
+                            szTokens = szWithin[9].Split(szSeparator, StringSplitOptions.RemoveEmptyEntries);
+                            if (szTokens.Length >= 2)
+                            {
+                                stLevel.info2.iTotalPlaces = int.Parse(szTokens[0].Trim(' '));
+                                stLevel.info2.iYourPlace = int.Parse(szTokens[1].Trim(' '));
+                            }
+                        }
+                    }
+                    ///////////////////////////////////////////////////////////////////////////
+
+                    oLevelList.Add(stLevel);
+                }
             }
         }
+
         bIsDone = true;
     }
 
