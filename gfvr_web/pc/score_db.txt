@@ -1,0 +1,277 @@
+-- phpMyAdmin SQL Dump
+-- version 4.9.7
+-- https://www.phpmyadmin.net/
+--
+-- Värd: s679.loopia.se
+-- Tid vid skapande: 24 mars 2021 kl 17:31
+-- Serverversion: 10.3.27-MariaDB-log
+-- PHP-version: 7.4.16
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Databas: `galaxy_forces_vr_com_db_3`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `achievements_t`
+--
+
+CREATE TABLE `achievements_t` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `user_id` varchar(34) NOT NULL,
+  `level` varchar(40) NOT NULL,
+  `score` int(11) NOT NULL,
+  `replay` mediumblob DEFAULT NULL,
+  `ip` varchar(32) NOT NULL,
+  `steam` int(11) NOT NULL DEFAULT 0
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+--
+-- Tabellstruktur `achievements2_t`
+--
+
+CREATE TABLE `achievements2_t` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `user_id` varchar(34) NOT NULL,
+  `level` varchar(40) NOT NULL,
+  `score` int(11) NOT NULL,
+  `replay` mediumblob DEFAULT NULL,
+  `ip` varchar(32) NOT NULL,
+  `steam` int(11) NOT NULL DEFAULT 0
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `levels_t`
+--
+
+CREATE TABLE `levels_t` (
+  `id` int(11) NOT NULL,
+  `level` varchar(40) NOT NULL,
+  `is_time` tinyint(1) NOT NULL DEFAULT 1,
+  `ordering` int(11) NOT NULL,
+  `limit1` int(11) NOT NULL,
+  `limit2` int(11) NOT NULL,
+  `limit3` int(11) NOT NULL,
+  `is_singleplayer` tinyint(4) NOT NULL DEFAULT 1,
+  `creator` varchar(40) NOT NULL DEFAULT 'rhx'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='valid levels for hiscore';
+
+--
+-- Dumpning av Data i tabell `levels_t`
+--
+
+INSERT INTO `levels_t` (`id`, `level`, `is_time`, `ordering`, `limit1`, `limit2`, `limit3`, `is_singleplayer`, `creator`) VALUES
+(2, 'race00', 1, 0, 34000, 40000, 120000, 1, 'rhx'),
+(3, 'race01', 1, 1, 60500, 72000, 120000, 1, 'rhx'),
+(4, 'race02', 1, 2, 46500, 57000, 120000, 1, 'rhx'),
+(5, 'race03', 1, 3, 52000, 61000, 120000, 1, 'rhx'),
+(6, 'race04', 1, 4, 45000, 56000, 120000, 1, 'rhx'),
+(7, 'race05', 1, 5, 51500, 64000, 120000, 1, 'rhx'),
+(8, 'race06', 1, 6, 52000, 65000, 120000, 1, 'rhx'),
+(9, 'race07', 1, 7, 91000, 103000, 180000, 1, 'rhx'),
+(10, 'race08', 1, 8, 64000, 71000, 180000, 1, 'rhx'),
+(11, 'race09', 1, 9, 90000, 102000, 180000, 1, 'rhx'),
+(12, 'race10', 1, 10, 97000, 113000, 180000, 1, 'rhx'),
+(13, 'race11', 1, 11, 51000, 58000, 120000, 1, 'rhx'),
+(14, 'race12', 1, 12, 85000, 107000, 180000, 1, 'rhx'),
+(15, 'race13', 1, 13, 53000, 67000, 120000, 1, 'rhx'),
+(16, 'race14', 1, 14, 59000, 82000, 180000, 1, 'rhx'),
+(17, 'race15', 1, 15, 145000, 165000, 280000, 1, 'rhx'),
+(18, 'race16', 1, 16, 83000, 97000, 120000, 1, 'rhx'),
+(19, 'race17', 1, 17, 89000, 100000, 210000, 1, 'rhx'),
+(20, 'race18', 1, 18, 29000, 34000, 90000, 1, 'rhx'),
+(21, 'mission00', 0, 30, 280500, 240000, 100000, 1, 'rhx'),
+(22, 'mission01', 0, 31, 305000, 250000, 100000, 1, 'rhx'),
+(23, 'mission02', 0, 32, 345000, 300000, 100000, 1, 'rhx'),
+(24, 'mission03', 0, 33, 358000, 300000, 100000, 1, 'rhx'),
+(25, 'mission04', 0, 34, 395000, 300000, 100000, 1, 'rhx'),
+(26, 'mission05', 0, 35, 413000, 320000, 100000, 1, 'rhx'),
+(27, 'mission06', 0, 36, 369000, 300000, 100000, 1, 'rhx'),
+(28, 'mission07', 0, 37, 364000, 300000, 100000, 1, 'rhx'),
+(29, 'mission08', 0, 38, 385000, 300000, 100000, 1, 'rhx'),
+(30, 'mission09', 0, 39, 400000, 320000, 100000, 1, 'rhx'),
+(31, 'mission10', 0, 40, 282000, 230000, 60000, 1, 'rhx'),
+(32, 'mission11', 0, 41, 432000, 340000, 10000, 1, 'rhx'),
+(33, 'mission12', 0, 42, 460000, 300000, 10000, 1, 'rhx'),
+(34, 'mission13', 0, 43, 460000, 300000, 10000, 1, 'rhx'),
+(35, 'mission14', 0, 44, 380000, 280000, 10000, 1, 'rhx'),
+(36, 'mission15', 0, 45, 475000, 300000, 10000, 1, 'rhx'),
+(37, 'mission16', 0, 46, 260000, 140000, 1000, 1, 'rhx'),
+(38, 'mission17', 0, 47, 320000, 220000, 1000, 1, 'rhx'),
+(61, 'race19', 1, 19, 41500, 56000, 100000, 1, 'rhx'),
+(62, 'race20', 1, 20, 57500, 70000, 120000, 1, 'rhx'),
+(63, 'race21', 1, 21, 125000, 155000, 240000, 1, 'rhx'),
+(64, 'mission18', 0, 48, 305000, 160000, 1000, 1, 'rhx'),
+(65, 'mission19', 0, 49, 380000, 320000, 1000, 1, 'rhx'),
+(66, 'mission20', 0, 50, 400000, 270000, 1000, 1, 'rhx'),
+(67, 'mission21', 0, 51, 210000, 100000, 1000, 1, 'rhx'),
+(68, 'mission22', 0, 52, 290000, 90000, 1000, 1, 'rhx'),
+(69, 'race22', 1, 22, 70000, 98000, 150000, 1, 'rhx'),
+(70, 'race23', 1, 23, 68000, 81000, 120000, 1, 'rhx'),
+(71, 'race24', 1, 24, 72000, 84000, 180000, 1, 'rhx'),
+(72, 'mission23', 0, 53, 440000, 300000, 1000, 1, 'rhx'),
+(73, 'mission24', 0, 54, 360000, 190000, 1000, 1, 'rhx'),
+(74, 'mission25', 0, 55, 340000, 200000, 1000, 1, 'rhx'),
+(75, 'mission26', 0, 56, 360000, 200000, 1000, 1, 'rhx'),
+(76, 'mission27', 0, 57, 390000, 210000, 1000, 1, 'rhx'),
+(77, 'mission28', 0, 58, 340000, 200000, 1000, 1, 'rhx'),
+(78, 'mission29', 0, 59, 340000, 180000, 1000, 1, 'rhx'),
+(100, 'EntryLevel', 0, 1000, 370000, 345000, 275000, 1, 'mra'),
+(101, 'FastMission', 0, 1001, 320000, 280000, 190000, 1, 'mra'),
+(102, 'DoingFineNow', 0, 1002, 472000, 400000, 278000, 1, 'mra'),
+(103, 'MakeTheGrade', 0, 1003, 460000, 386000, 270000, 1, 'mra'),
+(104, 'HardBoiled', 0, 1004, 400000, 310000, 195000, 1, 'mra'),
+(105, 'ItsAHead', 0, 1005, 395000, 320000, 230000, 1, 'mra'),
+(106, 'HappyTree', 0, 1006, 395000, 350000, 250000, 1, 'mra'),
+(107, 'WiggleBit', 0, 1007, 455000, 390000, 300000, 1, 'mra'),
+(108, 'TheCaverns', 0, 1008, 500000, 400000, 300000, 1, 'mra'),
+(109, 'IceIceBaby', 0, 1009, 520000, 440000, 300000, 1, 'mra'),
+(110, 'LittleOne', 0, 1010, 350000, 300000, 230000, 1, 'mra'),
+(111, 'CargoLoop', 0, 1011, 310000, 260000, 195000, 1, 'mra'),
+(112, 'BuiltThisCity', 0, 1012, 410000, 360000, 260000, 1, 'mra'),
+(113, 'FullOfBeans', 0, 1013, 580000, 500000, 375000, 1, 'mra'),
+(114, 'ShimaSheroo', 0, 1014, 550000, 495000, 325000, 1, 'mra'),
+(115, 'JitterBug', 0, 1015, 430000, 370000, 265000, 1, 'mra'),
+(116, 'Citadels', 0, 1016, 600000, 475000, 200000, 1, 'mra'),
+(117, 'DodgeThis', 0, 1017, 425000, 305000, 140000, 1, 'mra'),
+(118, 'FireForge', 0, 1018, 495000, 375000, 150000, 1, 'mra'),
+(119, 'NineLives', 0, 1019, 800000, 600000, 50000, 1, 'mra'),
+(120, 'Genesis', 0, 1020, 565000, 450000, 150000, 1, 'mra'),
+(121, 'SuperSprint', 0, 1021, 260000, 200000, 80000, 1, 'mra'),
+(122, 'Mushroom', 0, 1022, 420000, 340000, 200000, 1, 'mra'),
+(123, 'TheCaverns2', 0, 1023, 800000, 600000, 200000, 1, 'mra'),
+(124, 'TheTube', 0, 1024, 300000, 200000, 100000, 1, 'mra'),
+(125, 'Eliminator', 0, 1025, 540000, 420000, 100000, 1, 'mra'),
+(126, 'DeepDive', 0, 1026, 410000, 300000, 100000, 1, 'mra'),
+(127, 'SpiralSnail', 0, 1027, 170000, 110000, 50000, 1, 'mra'),
+(128, 'Pacman', 0, 1028, 540000, 320000, 100000, 1, 'mra'),
+(129, 'RuleBreaker', 0, 1029, 400000, 240000, 100000, 1, 'mra'),
+(130, 'EyeOfTheStorm', 0, 1030, 509000, 340000, 100000, 1, 'mra'),
+(131, 'OpenAndShut', 0, 1031, 425000, 340000, 130000, 1, 'zog'),
+(132, 'Enterprise', 0, 1032, 410000, 300000, 100000, 1, 'mra'),
+(133, 'Octopus', 0, 1033, 390000, 300000, 100000, 1, 'mra');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `members_t`
+--
+
+CREATE TABLE `members_t` (
+  `id` int(11) NOT NULL,
+  `oculus_id` varchar(34) NOT NULL,
+  `username` varchar(34) NOT NULL,
+  `last_access` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `statistics_t`
+--
+
+CREATE TABLE `statistics_t` (
+  `id` int(11) NOT NULL,
+  `page` varchar(32) NOT NULL,
+  `count` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumpning av Data i tabell `statistics_t`
+--
+
+INSERT INTO `statistics_t` (`id`, `page`, `count`) VALUES
+(0, 'achievements_post.php', 0),
+(1, 'achievements_get.php', 0);
+
+--
+-- Index för dumpade tabeller
+--
+
+--
+-- Index för tabell `achievements_t`
+--
+ALTER TABLE `achievements_t`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id_index` (`user_id`),
+  ADD KEY `level_index` (`level`),
+  ADD KEY `score_index` (`score`);
+
+--
+-- Index för tabell `achievements2_t`
+--
+ALTER TABLE `achievements2_t`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id_index` (`user_id`),
+  ADD KEY `level_index` (`level`),
+  ADD KEY `score_index` (`score`);
+  
+--
+-- Index för tabell `levels_t`
+--
+ALTER TABLE `levels_t`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `level_index` (`level`) USING BTREE;
+
+--
+-- Index för tabell `members_t`
+--
+ALTER TABLE `members_t`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id_index` (`oculus_id`);
+
+--
+-- Index för tabell `statistics_t`
+--
+ALTER TABLE `statistics_t`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT för dumpade tabeller
+--
+
+--
+-- AUTO_INCREMENT för tabell `achievements_t`
+--
+ALTER TABLE `achievements_t`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT för tabell `levels_t`
+--
+ALTER TABLE `levels_t`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
+
+--
+-- AUTO_INCREMENT för tabell `members_t`
+--
+ALTER TABLE `members_t`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT för tabell `statistics_t`
+--
+ALTER TABLE `statistics_t`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

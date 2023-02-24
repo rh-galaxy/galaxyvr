@@ -280,6 +280,9 @@ public class Menu : MonoBehaviour
 
     CameraController cameraHolder;
 
+#if NOOCULUS
+    C_Item2InMenu oMenuAchievements;
+#endif
     C_Item2InMenu oMenuEasyMode;
     C_Item2InMenu oMenuCargoSwingingMode;
     C_Item2InMenu oMenuYAdjust, oMenuZAdjust;
@@ -344,8 +347,25 @@ public class Menu : MonoBehaviour
 
     static bool bFirstTime = true;
 
+    GameObject[] oAchievements = null;
+    int iLastInfo = 0;
     public void SetTextInfo(int i_iInfo)
     {
+        iLastInfo = i_iInfo;
+        if (oAchievements == null)
+        {
+            oAchievements = new GameObject[22];
+            for (int i = 0; i < 22; i++) oAchievements[i] = null;
+        }
+        for (int i = 0; i < 22; i++)
+        {
+            if (oAchievements[i] != null)
+            {
+                Destroy(oAchievements[i]);
+                oAchievements[i] = null;
+            }
+        }
+
         vHeadPosition = Camera.main.transform.position;
         vGazeDirection = Camera.main.transform.forward;
         oTextInfoContainer.transform.position = (vHeadPosition + vGazeDirection * 5.30f) + new Vector3(0.0f, -.40f, 0.0f);
@@ -365,6 +385,72 @@ public class Menu : MonoBehaviour
         if(i_iInfo==1) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
         else if (i_iInfo == 3) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
         else if (i_iInfo == 4) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_motion", typeof(Material)) as Material;
+        else if (i_iInfo == 5)
+        {
+            oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Achievements", typeof(Material)) as Material;
+
+            //get achievement bool
+            bool[] bAchievements = new bool[22];
+            bAchievements[0] = PlayerPrefs.GetInt("AchSurvivor", 0) != 0;
+            bAchievements[1] = PlayerPrefs.GetInt("AchHellbent", 0) != 0;
+            bAchievements[2] = PlayerPrefs.GetInt("AchSpeedster", 0) != 0;
+            bAchievements[3] = PlayerPrefs.GetInt("AchCargo1", 0) != 0;
+            bAchievements[4] = PlayerPrefs.GetInt("AchCargo2", 0) != 0;
+            bAchievements[5] = PlayerPrefs.GetInt("AchCargo3", 0) != 0;
+            bAchievements[6] = PlayerPrefs.GetInt("AchCargo4", 0) != 0;
+            bAchievements[7] = PlayerPrefs.GetInt("AchRace1", 0) != 0;
+            bAchievements[8] = PlayerPrefs.GetInt("AchRace2", 0) != 0;
+            bAchievements[9] = PlayerPrefs.GetInt("AchRace3", 0) != 0;
+            bAchievements[10] = PlayerPrefs.GetInt("AchRace4", 0) != 0;
+
+            for (int i = 0; i < 11; i++)
+            {
+                if (bAchievements[i])
+                {
+                    GameObject oAchievement = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    oAchievement.transform.parent = oTextInfoContainer.transform;
+                    MonoBehaviour.DestroyImmediate(oAchievement.GetComponent<MeshCollider>());
+                    oAchievement.GetComponent<MeshRenderer>().material = oMaterialRankGold;
+                    oAchievement.transform.eulerAngles = vRotation;
+                    oAchievement.transform.localPosition = new Vector3(-4.67f, 3.78f - i * 0.727f, -1.20f);
+                    oAchievement.transform.localScale = new Vector3(0.36f, 0.36f, 1.0f);
+                    oAchievements[i] = oAchievement;
+                }
+            }
+        }
+        else if (i_iInfo == 6)
+        {
+            oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Achievements2", typeof(Material)) as Material;
+
+            //get achievement bool
+            bool[] bAchievements = new bool[22];
+            bAchievements[11] = PlayerPrefs.GetInt("AchFuelburner", 0) != 0;
+            bAchievements[12] = PlayerPrefs.GetInt("AchRavager", 0) != 0;
+            bAchievements[13] = PlayerPrefs.GetInt("AchDoom", 0) != 0;
+            bAchievements[14] = PlayerPrefs.GetInt("AchRacer", 0) != 0;
+            bAchievements[15] = PlayerPrefs.GetInt("AchLoader", 0) != 0;
+            bAchievements[16] = PlayerPrefs.GetInt("AchTrigger", 0) != 0;
+            bAchievements[17] = PlayerPrefs.GetInt("AchGalaxy55", 0) != 0;
+            bAchievements[18] = PlayerPrefs.GetInt("AchHitchhiker42", 0) != 0;
+            bAchievements[19] = PlayerPrefs.GetInt("AchRaceGold25", 0) != 0;
+            bAchievements[20] = PlayerPrefs.GetInt("AchCargoGold30", 0) != 0;
+            bAchievements[21] = PlayerPrefs.GetInt("AchUserLevels", 0) != 0;
+
+            for (int i = 11; i < 22; i++)
+            {
+                if (bAchievements[i])
+                {
+                    GameObject oAchievement = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                    oAchievement.transform.parent = oTextInfoContainer.transform;
+                    MonoBehaviour.DestroyImmediate(oAchievement.GetComponent<MeshCollider>());
+                    oAchievement.GetComponent<MeshRenderer>().material = oMaterialRankGold;
+                    oAchievement.transform.eulerAngles = vRotation;
+                    oAchievement.transform.localPosition = new Vector3(-4.67f, 3.78f - (i - 11) * 0.727f, -1.20f);
+                    oAchievement.transform.localScale = new Vector3(0.36f, 0.36f, 1.0f);
+                    oAchievements[i] = oAchievement;
+                }
+            }
+        }
         else if (i_iInfo == 0) oCreditsQuad.GetComponent<MeshRenderer>().material = null;
     }
 
@@ -556,7 +642,9 @@ public class Menu : MonoBehaviour
         if(!bNoHiscore)
         {
             for (int i = 0; i < aMenuLevels.Length; i++)
+            {
                 aMenuLevels[i].InitLevelRanking(i);
+            }
         }
 
         //also init custom user levels since we have them now
@@ -702,47 +790,51 @@ public class Menu : MonoBehaviour
             //menu options
             oMenuYAdjust = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -36, "Adjust height", "YAdjust", 30.0f, 12.0f);
             oMenuZAdjust = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -36, "Adjust front", "ZAdjust", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 18.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 18.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 18.0f);
+
+#if NOOCULUS
+            oMenuAchievements = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -14, "Achievements", "Achievements", 30.0f, 11.5f);
+#endif
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 18.0f);
 
             GameManager.theGM.bCargoSwingingMode = PlayerPrefs.GetInt("MyCargoSwingingMode", 0) != 0;
-            oMenuCargoSwingingMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 10, "Cargo swinging", "CargoSwingingMode", 30.0f, 9.0f);
+            oMenuCargoSwingingMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 10, "Cargo swinging", "CargoSwingingMode", 30.0f, 18.0f);
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
             cameraHolder.SetMovementMode(CameraController.bPointMovement);
-            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
+            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 18.0f);
 
             GameManager.theGM.bEasyMode = PlayerPrefs.GetInt("MyUseEasyMode", 1) != 0;
-            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
+            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 18.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             ApplyQuality(iQuality);
-            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 9.0f);
-            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 45, "High", "Qual2", 30.0f, 9.0f);
-            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 9.0f);
+            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 18.0f);
+            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 45, "High", "Qual2", 30.0f, 18.0f);
+            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 18.0f);
         }
         else if (iIncrementalInit == 8)
         {
             //next/prev buttons
             Vector3 vPos = new Vector3(0.0f, 1.0f, 3.1f);
             if (oMenuNext1 != null) oMenuNext1.DestroyObj();
-            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -9.0f), 55, ">", "Next1", 26.0f, 9.0f);
+            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -9.0f), 55, ">", "Next1", 26.0f, 18.0f);
             vPos = new Vector3(1000.0f, 1.0f, 3.1f);
             if (oMenuPrev1 != null) oMenuPrev1.DestroyObj();
-            oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), -55, "<", "Prev1", 26.0f, 9.0f);
+            oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), -55, "<", "Prev1", 26.0f, 18.0f);
 
             //additional official levels with hiscore (user levels approved levels)
             // can't be initialized here, only after webpage has run (InitLevelRanking())
             vPos = new Vector3(1000.0f, 1.0f, 3.1f);
             if (oMenuNext2 != null) oMenuNext2.DestroyObj();
-            oMenuNext2 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), 55, ">", "Next2", 26.0f, 9.0f);
+            oMenuNext2 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), 55, ">", "Next2", 26.0f, 18.0f);
             vPos = new Vector3(2000.0f, 1.0f, 3.1f);
             if (oMenuPrev2 != null) oMenuPrev2.DestroyObj();
-            oMenuPrev2 = new C_Item2InMenu(vPos, new Vector3(2000, 0, -9.0f), -55, "<", "Prev2", 26.0f, 9.0f);
+            oMenuPrev2 = new C_Item2InMenu(vPos, new Vector3(2000, 0, -9.0f), -55, "<", "Prev2", 26.0f, 18.0f);
         }
         else if (iIncrementalInit == 9)
         {
@@ -831,8 +923,15 @@ public class Menu : MonoBehaviour
 
         if ((bTextInfoActive && bAllowSelection) && bTrigger)
         {
-            SetTextInfo(0);
-            bAllowSelection = false;
+            if (iLastInfo == 5)
+            {
+                SetTextInfo(6);
+            }
+            else
+            {
+                SetTextInfo(0);
+                bAllowSelection = false;
+            }
         }
 
         //do a raycast into the world based on the user's
@@ -862,6 +961,9 @@ public class Menu : MonoBehaviour
         if (oMenuPointMovement != null) oMenuPointMovement.oLevelQuadMeshRenderer.material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuEasyMode != null) oMenuEasyMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bEasyMode ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuCargoSwingingMode != null) oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bCargoSwingingMode ? oMaterialBarHighlighted : oMaterialBar;
+#if NOOCULUS
+        if (oMenuAchievements != null) oMenuAchievements.oLevelQuadMeshRenderer.material = oMaterialBar;
+#endif
 
         bool bHitLevel = false;
         RaycastHit oHitInfo;
@@ -972,6 +1074,12 @@ public class Menu : MonoBehaviour
             {
                 oMenuQuit.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
+#if NOOCULUS
+            else if (oHitInfo.collider.name.CompareTo("Achievements") == 0)
+            {
+                oMenuAchievements.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
+            }
+#endif
             else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
             {
                 oMenuControls.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
@@ -1123,6 +1231,13 @@ public class Menu : MonoBehaviour
                 else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
                 {
                     bQuit = true;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("Achievements") == 0)
+                {
+                    if (oLevelInfoContainer.activeSelf) bLevelUnSelected = true;
+                    else SetTextInfo(5);
+
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
@@ -1490,7 +1605,7 @@ public class Menu : MonoBehaviour
             oLevelText.transform.localScale = new Vector3(1.8f, 1.8f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;
-            //oLevelText.GetComponent<TextMeshPro>().fontSize = i_fFontSize;
+            oLevelText.GetComponent<TextMeshPro>().fontSize = i_fFontSize;
             oLevelText.SetActive(true);
         }
     }

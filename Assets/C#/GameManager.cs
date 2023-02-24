@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -71,8 +72,26 @@ public class GameManager : MonoBehaviour
         if (!bInited)
         {
             //no VR
-            //bUserValid = true;
-            bNoHiscore = true;
+
+            //init user
+            szUserID = SystemInfo.deviceUniqueIdentifier; //this means PC without VR scores are per device
+            szUser = "DefaultUser"; //this is overwrited if name.txt has a name
+
+            string szFileText = "";
+            string szFile = UnityEngine.Application.persistentDataPath + "/" + "name.txt";
+            if (File.Exists(szFile))
+            {
+                try
+                {
+                    szFileText = System.Text.Encoding.UTF8.GetString(File.ReadAllBytes(szFile)).Trim();
+                    if (szFileText.Length > 32) szFileText = szFileText.Substring(0, 32); //cap at 32 chars
+                }
+                catch (Exception e) { Debug.Log(e.Message); }
+            }
+            if (szFileText.Length > 0) szUser = szFileText;
+
+            bUserValid = true;
+            bNoHiscore = false;
             bNoVR = true;
             Screen.SetResolution(1280, 720, true);
 
@@ -98,8 +117,10 @@ public class GameManager : MonoBehaviour
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFade(0.01f, 0.0f, true);
 
+        AudioStateMachine.instance.Init();
+        if (bNoVR) AudioStateMachine.instance.SetOutput();
 #if !NOOCULUS
-        if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
+        else AudioStateMachine.instance.SetOutputByRiftSetting();
 #endif
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
 
@@ -144,9 +165,12 @@ public class GameManager : MonoBehaviour
             //UnityEngine.Application.Quit();
             return false;
         }
-#endif
+
         bOculusDevicePresent = true;
         return true;
+#else
+        return false;
+#endif
     }
 
 #if !NOOCULUS
@@ -290,6 +314,148 @@ public class GameManager : MonoBehaviour
         }
     }
 #endif
+
+    void HandleAchievements_PC()
+    {
+        //handle achievements
+        if (GameLevel.theMap.player.bAchieveFinishedRaceLevel || GameLevel.theMap.bAchieveFinishedMissionLevel)
+        {
+            //finished any level with ok result
+
+            //survivor achievement check
+            if (GameLevel.theMap.player.bAchieveNoDamage)
+                PlayerPrefs.SetInt("AchSurvivor", 1);
+            //hellbent achievement check
+            if (szLastLevel.CompareTo(GameLevel.szLevel) != 0) iAchievementHellbentCounter = 1;
+            else iAchievementHellbentCounter++;
+            if (iAchievementHellbentCounter == 8)
+                PlayerPrefs.SetInt("AchHellbent", 1);
+            //speedster achievement check
+            if (GameLevel.theMap.player.bAchieveFullThrottle)
+                PlayerPrefs.SetInt("AchSpeedster", 1);
+            //racer achievement check
+            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
+            {
+                int iStatsTotalRacePlayed = PlayerPrefs.GetInt("AchRacerTotalRacePlayed", 0) + 1;
+                if (iStatsTotalRacePlayed >= 12) PlayerPrefs.SetInt("AchRacer", 1);
+                PlayerPrefs.SetInt("AchRacerTotalRacePlayed", iStatsTotalRacePlayed);
+            }
+            //transporter achievement check (named loader)
+            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
+            {
+                int iStatsTotalMissionPlayed = PlayerPrefs.GetInt("AchLoaderTotalMissionPlayed", 0) + 1;
+                if (iStatsTotalMissionPlayed >= 12) PlayerPrefs.SetInt("AchLoader", 1);
+                PlayerPrefs.SetInt("AchRacerTotalMissionPlayed", iStatsTotalMissionPlayed);
+            }
+            //user levels achievement check
+            if (GameLevel.iLevelIndex >= 55)
+            {
+                int iStatsUserLevelsPlayed = PlayerPrefs.GetInt("AchTotalUserLevelsPlayed", 0) + 1;
+                if (iStatsUserLevelsPlayed >= 20) PlayerPrefs.SetInt("AchUserLevels", 1);
+                PlayerPrefs.SetInt("AchTotalUserLevelsPlayed", iStatsUserLevelsPlayed);
+            }
+            if (GameLevel.theMap.bAchieveFinishedMissionLevel)
+            {
+                //cargo beginner
+                if (GameLevel.szLevel.CompareTo("1mission00") == 0)
+                    PlayerPrefs.SetInt("AchCargo1", 1);
+                //cargo apprentice
+                if (GameLevel.szLevel.CompareTo("1mission03") == 0)
+                    PlayerPrefs.SetInt("AchCargo2", 1);
+                //cargo expert
+                if (GameLevel.szLevel.CompareTo("1mission06") == 0 && GameLevel.theMap.player.iAchieveShipsDestroyed == 0)
+                    PlayerPrefs.SetInt("AchCargo3", 1);
+                //cargo master
+                if (GameLevel.szLevel.CompareTo("1mission09") == 0 && GameLevel.theMap.player.bAchieveNoDamage)
+                    PlayerPrefs.SetInt("AchCargo4", 1);
+            }
+            if (GameLevel.theMap.player.bAchieveFinishedRaceLevel)
+            {
+                //race beginner
+                if (GameLevel.szLevel.CompareTo("2race00") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
+                    PlayerPrefs.SetInt("AchRace1", 1);
+                //race apprentice
+                if (GameLevel.szLevel.CompareTo("2race03") == 0 && GameLevel.theMap.player.fTotalTime < 180.0f)
+                    PlayerPrefs.SetInt("AchRace2", 1);
+                //race expert
+                if (GameLevel.szLevel.CompareTo("2race06") == 0 && GameLevel.theMap.player.fTotalTime < 60.0f)
+                    PlayerPrefs.SetInt("AchRace3", 1);
+                //race master
+                if (GameLevel.szLevel.CompareTo("2race10") == 0 && GameLevel.theMap.player.fTotalTime < 104.0f)
+                    PlayerPrefs.SetInt("AchRace4", 1);
+            }
+            if (GameLevel.iLevelIndex < 55)
+            {
+                int bits = 0x00000001;
+                int iStatsLevelsPlayedBits1 = PlayerPrefs.GetInt("AchGalaxy55LevelsPlayedBits1", 0);
+                int iStatsLevelsPlayedBits2 = PlayerPrefs.GetInt("AchGalaxy55LevelsPlayedBits2", 0);
+                if (GameLevel.iLevelIndex >= 31) iStatsLevelsPlayedBits2 |= bits << (GameLevel.iLevelIndex - 31);
+                else iStatsLevelsPlayedBits1 |= bits << GameLevel.iLevelIndex; //we use 31 bits in Bits1 and 24 bits in Bits2 (55 bits)
+                if (iStatsLevelsPlayedBits1 == 0x7fffffff && iStatsLevelsPlayedBits2 == 0x00ffffff) PlayerPrefs.SetInt("AchGalaxy55", 1);
+                PlayerPrefs.SetInt("AchGalaxy55LevelsPlayedBits1", iStatsLevelsPlayedBits1);
+                PlayerPrefs.SetInt("AchGalaxy55LevelsPlayedBits2", iStatsLevelsPlayedBits2);
+            }
+        }
+        //fuelburner achievement check
+        int iTemp = (int)GameLevel.theMap.player.fAchieveFuelBurnt;
+        if (iTemp > 0)
+        {
+            int iStatsTotalFuelBurnt = PlayerPrefs.GetInt("AchFuelburnerTotalFuelBurnt", 0) + iTemp;
+            if (iStatsTotalFuelBurnt >= 1200) PlayerPrefs.SetInt("AchFuelburner", 1); //20 minutes
+            PlayerPrefs.SetInt("AchFuelburnerTotalFuelBurnt", iStatsTotalFuelBurnt);
+        }
+        //ravager achievement check
+        iTemp = GameLevel.theMap.iAchieveEnemiesKilled;
+        if (iTemp > 0)
+        {
+            int iStatsTotalEnemiesKilled = PlayerPrefs.GetInt("AchRavagerTotalEnemiesKilled", 0) + iTemp;
+            if (iStatsTotalEnemiesKilled >= 100) PlayerPrefs.SetInt("AchRavager", 1);
+            PlayerPrefs.SetInt("AchRavagerTotalEnemiesKilled", iStatsTotalEnemiesKilled);
+        }
+        //kamikaze achievement check (named doom)
+        iTemp = GameLevel.theMap.player.iAchieveShipsDestroyed;
+        if (iTemp > 0)
+        {
+            int iStatsTotalShipsDestroyed = PlayerPrefs.GetInt("AchDoomTotalShipsDestroyed", 0) + iTemp;
+            if (iStatsTotalShipsDestroyed >= 100) PlayerPrefs.SetInt("AchDoom", 1);
+            PlayerPrefs.SetInt("AchDoomTotalShipsDestroyed", iStatsTotalShipsDestroyed);
+        }
+        //trigger achievement check
+        iTemp = GameLevel.theMap.player.iAchieveBulletsFired;
+        if (iTemp > 0)
+        {
+            int iStatsTotalBulletsFired = PlayerPrefs.GetInt("AchTriggerTotalBulletsFired", 0) + iTemp;
+            if (iStatsTotalBulletsFired >= 1000) PlayerPrefs.SetInt("AchTrigger", 1);
+            PlayerPrefs.SetInt("AchTriggerTotalBulletsFired", iStatsTotalBulletsFired);
+        }
+        //hitchhiker42 achievement check
+        iTemp = (int)GameLevel.theMap.player.fAchieveDistance;
+        if (iTemp > 0)
+        {
+            int iStatsTotalMetersTravelled = PlayerPrefs.GetInt("AchHitchhiker42TotalMetersTravelled", 0) + iTemp * 5; //5m per unit is reasonable
+            if (iStatsTotalMetersTravelled >= 42000) PlayerPrefs.SetInt("AchHitchhiker42", 1);
+            PlayerPrefs.SetInt("AchHitchhiker42TotalMetersTravelled", iStatsTotalMetersTravelled);
+        }
+
+        //save
+        PlayerPrefs.Save();
+    }
+    void UnlockMissionGoldAchievement_PC()
+    {
+        if (bUserValid)
+        {
+            PlayerPrefs.SetInt("AchCargoGold30", 1);
+            PlayerPrefs.Save();
+        }
+    }
+    void UnlockRaceGoldAchievement_PC()
+    {
+        if (bUserValid)
+        {
+            PlayerPrefs.SetInt("AchRaceGold25", 1);
+            PlayerPrefs.Save();
+        }
+    }
 
     LevelInfo stLevel;
     internal HttpHiscore oHigh = new HttpHiscore();
@@ -554,7 +720,8 @@ public class GameManager : MonoBehaviour
                 //get the progress, to see how many levels are unlocked
                 if (!bNoInternet)
                 {
-                    StartCoroutine(oHigh.GetLimits());
+                    if (bNoVR) StartCoroutine(oHigh.GetLimits_PC());
+                    else StartCoroutine(oHigh.GetLimits());
                     //set in the above, but since StartCoroutine returns before it has a chance
                     // to run we need to set it
                     oHigh.bIsDone = false;
@@ -602,16 +769,20 @@ public class GameManager : MonoBehaviour
                     }
 
                     //handle gold achievements
-#if !NOOCULUS
                     if (iMissionFinishedGold >= 30)
                     {
+#if !NOOCULUS
                         UnlockMissionGoldAchievement();
+#endif
+                        if (bNoVR) UnlockMissionGoldAchievement_PC();
                     }
                     if (iRaceFinishedGold >= 25)
                     {
+#if !NOOCULUS
                         UnlockRaceGoldAchievement();
-                    }
 #endif
+                        if (bNoVR) UnlockRaceGoldAchievement_PC();
+                    }
                     //handle unlocking
                     int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
                     if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
@@ -739,7 +910,8 @@ public class GameManager : MonoBehaviour
                             if (Menu.bWorldBestReplay2) szReplayId = stLevel.info2.szWRId2;
                             if (Menu.bWorldBestReplay3) szReplayId = stLevel.info2.szWRId3;
 
-                            StartCoroutine(oHigh.GetReplay2(stLevel.szName, szReplayId, oReplay));
+                            if (bNoVR) StartCoroutine(oHigh.GetReplay2_PC(stLevel.szName, szReplayId, oReplay));
+                            else StartCoroutine(oHigh.GetReplay2(stLevel.szName, szReplayId, oReplay));
                             iState++; //load replay
                             StartFade(0.3f, 0.0f, true);
 
@@ -761,7 +933,8 @@ public class GameManager : MonoBehaviour
                             if (Menu.bWorldBestReplay2) szReplayId = stLevel.info.szWRId2;
                             if (Menu.bWorldBestReplay3) szReplayId = stLevel.info.szWRId3;
 
-                            StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayId, oReplay));
+                            if (bNoVR) StartCoroutine(oHigh.GetReplay_PC(stLevel.szName, szReplayId, oReplay));
+                            else StartCoroutine(oHigh.GetReplay(stLevel.szName, szReplayId, oReplay));
                             iState++; //load replay
                             StartFade(0.3f, 0.0f, true);
 
@@ -867,6 +1040,7 @@ public class GameManager : MonoBehaviour
                                     HandleOculusAchievements();
                                 }
 #endif
+                                if (bNoVR) HandleAchievements_PC();
                                 //////end of oculus specific code
                             }
                         }
@@ -905,7 +1079,8 @@ public class GameManager : MonoBehaviour
                                             (stLevel.bIsTime && iScoreMs < stLevel.info.iBestScoreMs))
                                         {
                                             string szFile = iLastLevelIndex < 55 ? szLastLevel.Substring(1) : szLastLevel;
-                                            StartCoroutine(oHigh.SendHiscore(szFile, iScoreMs, oReplay));
+                                            if (bNoVR) StartCoroutine(oHigh.SendHiscore_PC(szFile, iScoreMs, oReplay));
+                                            else StartCoroutine(oHigh.SendHiscore(szFile, iScoreMs, oReplay));
 
                                             //set in the above, but since StartCoroutine returns before it has a chance
                                             // to run we need to set it
@@ -918,7 +1093,8 @@ public class GameManager : MonoBehaviour
                                             (stLevel.bIsTime && iScoreMs < stLevel.info2.iBestScoreMs))
                                         {
                                             string szFile = iLastLevelIndex < 55 ? szLastLevel.Substring(1) : szLastLevel;
-                                            StartCoroutine(oHigh.SendHiscore2(szFile, iScoreMs, oReplay));
+                                            if (bNoVR) StartCoroutine(oHigh.SendHiscore2_PC(szFile, iScoreMs, oReplay));
+                                            else StartCoroutine(oHigh.SendHiscore2(szFile, iScoreMs, oReplay));
 
                                             //set in the above, but since StartCoroutine returns before it has a chance
                                             // to run we need to set it

@@ -119,6 +119,30 @@ square_end();
 <br><br><br>
 
 
+<a name="hiscore4"></a>
+<?php
+headline("Hiscores PC no VR");
+?>
+<br>
+
+<?php
+square_start("'100%'");
+?>
+<table width="95%">
+<tr><td>
+<?php
+require_once("print_hiscore2_pc.php");
+print_hiscore_pc();
+?>
+</td></tr>
+</table>
+<?php
+square_end();
+?>
+<br><br><br>
+
+
+
 <?php
 headline("Level editor");
 ?>

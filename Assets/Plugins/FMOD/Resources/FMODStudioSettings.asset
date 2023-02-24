@@ -555,12 +555,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef8d824ea7b63742966aaa0e94ac383, type: 3}
   m_Name: FMODStudioSettings
   m_EditorClassIdentifier: 
-  SwitchSettingsMigration: 1
+  switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
   sourceProjectPath: GalaxyProject/GalaxyProject.fspro
   sourceBankPath: GalaxyProject/Build
-  SourceBankPathUnformatted: GalaxyProject/Build
+  sourceBankPathUnformatted: GalaxyProject/Build
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
   AutomaticEventLoading: 1
@@ -592,11 +592,6 @@ MonoBehaviour:
     Value: 1
   - Platform: 2
     Value: 0
-  LoggingSettings:
-  - Platform: 1
-    Value: 1
-  - Platform: 2
-    Value: 0
   BankDirectorySettings:
   - Platform: 2
     Value: Desktop
@@ -624,7 +619,7 @@ MonoBehaviour:
   EnableErrorCallback: 0
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
-  CurrentVersion: 131591
+  CurrentVersion: 131601
   HideSetupWizard: 1
   LastEventReferenceScanVersion: 131591
   Platforms:

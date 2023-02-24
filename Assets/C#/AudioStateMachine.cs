@@ -53,7 +53,6 @@ public class AudioStateMachine : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
-            /**/Init();
         }
         else
         {
