@@ -8,8 +8,9 @@ using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
 
-
+#if !NOOCULUS
 using Oculus.Platform;
+#endif
 
 public class GameManager : MonoBehaviour
 {
@@ -97,7 +98,9 @@ public class GameManager : MonoBehaviour
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFade(0.01f, 0.0f, true);
 
+#if !NOOCULUS
         if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
+#endif
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
 
         cameraHolder.InitForMenu();
@@ -110,8 +113,12 @@ public class GameManager : MonoBehaviour
 
     private void AudioSettings_OnAudioConfigurationChanged(bool deviceWasChanged)
     {
+#if !NOOCULUS
         if (!bNoVR) AudioStateMachine.instance.SetOutputByRiftSetting();
         else AudioStateMachine.instance.SetOutput(0);
+#else
+        AudioStateMachine.instance.SetOutput(0);
+#endif
     }
 
     //////start of oculus specific code
@@ -123,6 +130,7 @@ public class GameManager : MonoBehaviour
          && UnityEngine.Application.platform != RuntimePlatform.Android)
             return false;
 
+#if !NOOCULUS
         //init Oculus SDK
         try
         {
@@ -136,11 +144,12 @@ public class GameManager : MonoBehaviour
             //UnityEngine.Application.Quit();
             return false;
         }
-
+#endif
         bOculusDevicePresent = true;
         return true;
     }
 
+#if !NOOCULUS
     void EntitlementCallback(Message msg)
     {
         if (msg.IsError)
@@ -280,6 +289,7 @@ public class GameManager : MonoBehaviour
             Achievements.Unlock("RaceGold25");
         }
     }
+#endif
 
     LevelInfo stLevel;
     internal HttpHiscore oHigh = new HttpHiscore();
@@ -475,10 +485,12 @@ public class GameManager : MonoBehaviour
         //pause if in oculus home universal menu
         // but for now (for debug purposes) keep the game running while XRDevice.userPresence!=Present
         bool bPauseNow = bPause; //no change below
+#if !NOOCULUS
         if (bOculusDevicePresent && !bNoVR)
         {
             bPauseNow = (!OVRPlugin.hasInputFocus || !OVRPlugin.hasVrFocus) /*|| !userPresent)*/;
         }
+#endif
         if (bNoVR) bPauseNow = false;
 
         //pause state change
@@ -590,6 +602,7 @@ public class GameManager : MonoBehaviour
                     }
 
                     //handle gold achievements
+#if !NOOCULUS
                     if (iMissionFinishedGold >= 30)
                     {
                         UnlockMissionGoldAchievement();
@@ -598,6 +611,7 @@ public class GameManager : MonoBehaviour
                     {
                         UnlockRaceGoldAchievement();
                     }
+#endif
                     //handle unlocking
                     int iMissionToUnlock = (int)(iMissionFinished * 1.35f) + 1;
                     if (bNoInternet || bNoHiscore || iMissionToUnlock > 30) iMissionToUnlock = 30; //unlock everything
@@ -847,10 +861,12 @@ public class GameManager : MonoBehaviour
                             if(!GameLevel.bRunReplay && iLastLevelIndex < 200)
                             {
                                 //////start of oculus specific code (achievements)
+#if !NOOCULUS
                                 if (bOculusDevicePresent && userPresent) //VR user must be present for achievements
                                 {
                                     HandleOculusAchievements();
                                 }
+#endif
                                 //////end of oculus specific code
                             }
                         }

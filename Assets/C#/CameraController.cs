@@ -204,9 +204,24 @@ public class CameraController : MonoBehaviour
             Mouse mouse = Mouse.current;
             if (mouse != null && mouse.middleButton.isPressed)
             {
-                if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 3.0f;
-                else fY_cam += fMouseX * 3.0f;
-                fX_cam -= fMouseY * 3.0f;
+                if(UnityEngine.Application.platform == RuntimePlatform.OSXEditor)
+                {
+                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 30.0f;
+                    else fY_cam += fMouseX * 30.0f;
+                    fX_cam -= fMouseY * 30.0f;
+                }
+                else if(UnityEngine.Application.platform == RuntimePlatform.OSXPlayer)
+                {
+                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 15.0f;
+                    else fY_cam += fMouseX * 15.0f;
+                    fX_cam -= fMouseY * 15.0f;
+                }
+                else
+                {
+                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 3.0f;
+                    else fY_cam += fMouseX * 3.0f;
+                    fX_cam -= fMouseY * 3.0f;
+                }
             }
             if (mouse!=null)
             {
