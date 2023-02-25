@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 
 	require_once("db_connect_pc.php");
 	require_once("checkparams.php");
-
+	
 	$paramArray = array($_POST["LEVEL"], $_POST["NAME"], $_POST["USERID"], $_POST["COUNTER"], $_POST["SCORE"], $_POST["STEAM"], $_POST["REPLAY"]);
 
 	if(checkstring($paramArray) && $_POST["LEVEL"]!="" && $_POST["NAME"]!="" && $_POST["USERID"]!="" && $_POST["COUNTER"]!="" && $_POST["SCORE"]!="" && $_POST["REPLAY"]!="") {
@@ -24,10 +24,10 @@ error_reporting(E_ALL);
 		$num_rows = @mysqli_num_rows($result_member);
 		if($num_rows==1) {
 			$row = @mysqli_fetch_assoc($result_member);
-			$count = $_POST["COUNTER"] ^ 1353;
+			$count = $_POST["COUNTER"] ^ 1467;
 			$tnow = time();
 			$tpast = $row['last_access'];
-			if(($tnow-$tpast)<$count+8 && ($tnow-$tpast)>$count-8 && $count>28) {
+			if(($tnow-$tpast)<$count+8 && ($tnow-$tpast)>$count-8 && $count>16) {
 				$isok = 1;
 			}
 		}

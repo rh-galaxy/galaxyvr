@@ -218,9 +218,9 @@ public class CameraController : MonoBehaviour
                 }
                 else
                 {
-                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 3.0f;
-                    else fY_cam += fMouseX * 3.0f;
-                    fX_cam -= fMouseY * 3.0f;
+                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 2.0f;
+                    else fY_cam += fMouseX * 2.0f;
+                    fX_cam -= fMouseY * 2.0f;
                 }
             }
             if (mouse!=null)
