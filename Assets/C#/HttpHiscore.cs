@@ -63,6 +63,7 @@ public class HttpHiscore
         string url = WEB_HOST + "/hiscore_getreplay2.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
         if (i_iDevice == 1) url = WEB_HOST + "/hiscore_getreplay2_quest.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
         if (i_iDevice == 2) url = WEB_HOST + "/hiscore_getreplay2_jio.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
+        if (i_iDevice == 3) url = WEB_HOST + "/hiscore_getreplay2_pc.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
 
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
@@ -87,6 +88,7 @@ public class HttpHiscore
         string url = WEB_HOST + "/hiscore_getreplay3.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
         if (i_iDevice == 1) url = WEB_HOST + "/hiscore_getreplay3_quest.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
         if (i_iDevice == 2) url = WEB_HOST + "/hiscore_getreplay3_jio.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
+        if (i_iDevice == 3) url = WEB_HOST + "/hiscore_getreplay3_pc.php?Level=" + i_szLevel + "&UserId=" + UnityWebRequest.EscapeURL(i_szId);
 
         www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
