@@ -151,7 +151,7 @@ headline("Level editor");
 square_start("'100%'");
 ?>
 <p>The ability to create and play custom levels is now added. Use the MapEditor for <a href="MapEditor_Win_x86.zip">Windows</a>, <a href="MapEditor_Mac_x64.zip">Mac</a> or <a href="MapEditor_Linux_x64.zip">Linux</a> and read editor_readme.txt</p>
-<p>In the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> there is a channel for sharing levels with me and others and I can add them to the games user level page for approved levels (implemented in all versions January 2021).</p>
+<p>In the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> there is a channel for sharing levels with me and others and I can add them to the games user level page for approved levels.</p>
 <?php
 square_end();
 ?>
@@ -167,14 +167,15 @@ square_start("'100%'");
 ?>
 <p>Point-movement (all platforms v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
-<p>v1.96 Feb 6, 2023<br>
+<p>v1.96 Feb 25, 2023<br>
+- fix ship sometimes exploding at start<br>
 - fix sorting order (cursor and status bar)<br>
 <br>
 v1.95 Nov 9, 2022<br>
 - add swinging cargo mode<br>
 <br>
 v1.90 Sep 6, 2022<br>
-- use Universal render pipeline (PC)<br>
+- use universal render pipeline (PC)<br>
 - add glow postprocessing (PC)<br>
 - replaced skyboxes<br>
 - replaced planet<br>
