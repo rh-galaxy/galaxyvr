@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     Vector2 vStartPos;
     float fAcceleration = 0.0f;
     float fDirection = 90.0f;
-    const float fGravityScale = 0.045f;
+    internal const float fGravityScale = 0.045f;
 
     //ship properties
     const float MAXFUELINTANK = 60.0f;
@@ -58,10 +58,10 @@ public class Player : MonoBehaviour
     //cargo
     bool bCargoSwingingMode = false;
     internal int iCargoNumUsed = 0;
-    int iCargoSpaceUsed = 0;
-    int[] aHold = new int[MAXSPACEINHOLDUNITS];
-    int[] aHoldZoneId = new int[MAXSPACEINHOLDUNITS];
-    float[] aHoldHealth = new float[MAXSPACEINHOLDUNITS]; //begins at 1.0 (100%) when cargo loaded, goes down equally on all positions on damage
+    internal int iCargoSpaceUsed = 0;
+    internal int[] aHold = new int[MAXSPACEINHOLDUNITS];
+    internal int[] aHoldZoneId = new int[MAXSPACEINHOLDUNITS];
+    internal float[] aHoldHealth = new float[MAXSPACEINHOLDUNITS]; //begins at 1.0 (100%) when cargo loaded, goes down equally on all positions on damage
 
     //score / time
     int iCurCP = 0;
@@ -131,7 +131,7 @@ public class Player : MonoBehaviour
 
         foreach (AudioSource aSource in GetComponents<AudioSource>())
         { //we have 3 audiosources
-            if (aSource.clip!=null && aSource.clip.name.Equals("engine"))
+            if (aSource.clip != null && aSource.clip.name.Equals("engine"))
                 oASEngine = aSource;
             else if (aSource.clip != null && aSource.clip.name.Equals("scratch"))
                 oASScrape = aSource;
@@ -148,6 +148,7 @@ public class Player : MonoBehaviour
         //all objects must be handled like this
         oRb.transform.eulerAngles = new Vector3(0, 0, fDirection);
         oRb.transform.position = vStartPos;
+        oRb.position = vStartPos;
 
         //Physics2D gravity is set to 0,0 because the ship is the only object affected
         // by gravity, so we set a constant force here instead of having it global
@@ -195,7 +196,7 @@ public class Player : MonoBehaviour
         //update ship color when blinking
         if (bFreeFromBullets && (((int)(fFreeFromBulletsTimer * 1000)) % 300 > 200))
             oShipMaterial.color = oShipColorBlink;
-        else if(fDamageTimer<0.21f) oShipMaterial.color = oShipColorDamage;
+        else if (fDamageTimer < 0.21f) oShipMaterial.color = oShipColorDamage;
         else oShipMaterial.color = oShipColorNormal;
         oShipBodyMR.material = oShipMaterial;
 
@@ -234,8 +235,8 @@ public class Player : MonoBehaviour
         ContactPoint2D c = collision.GetContact(0);
         float fImpulse = c.normalImpulse * 100.0f;
         float fTangentImpulse = c.tangentImpulse * 100.0f; //sliding impact?
-        float fSpeedX = c.relativeVelocity.x *10;
-        float fSpeedY = c.relativeVelocity.y *10;
+        float fSpeedX = c.relativeVelocity.x * 10;
+        float fSpeedY = c.relativeVelocity.y * 10;
         //then it might be a second impact point (that's all we take into concideration
         // any more and the ship is in deep trouble)
         if (iNum > 1)
@@ -243,8 +244,8 @@ public class Player : MonoBehaviour
             c = collision.GetContact(1);
             fImpulse += c.normalImpulse * 100.0f;
             fTangentImpulse += c.tangentImpulse * 100.0f; //sliding impact?
-            fSpeedX += c.relativeVelocity.x *10;
-            fSpeedY += c.relativeVelocity.y *10;
+            fSpeedX += c.relativeVelocity.x * 10;
+            fSpeedY += c.relativeVelocity.y * 10;
             fSpeedX /= 2;
             fSpeedY /= 2;
         }
@@ -447,7 +448,10 @@ public class Player : MonoBehaviour
 
         //this is a safety for if the ship is thrown outside the map area by first getting stuck then getting loose
         if (oRb.position.x < -vMapSize.x / 20.0f || oRb.position.x > vMapSize.x / 20.0f
-            || oRb.position.y < -vMapSize.y / 20.0f || oRb.position.y > vMapSize.y / 20.0f) fShipHealth = 0.0f;
+            || oRb.position.y < -vMapSize.y / 20.0f || oRb.position.y > vMapSize.y / 20.0f)
+        {
+            fShipHealth = 0.0f;
+        }
         //this is for sudden velocity increase when getting loose
         if (oRb.velocity.magnitude - vLastVel.magnitude > 0.10f)
         {
@@ -460,15 +464,15 @@ public class Player : MonoBehaviour
         fCurrentSpeedSeg += Time.fixedDeltaTime;
         if (fCurrentSpeedSeg >= 16.0f) fCurrentSpeedSeg -= 16.0f;
         int iCurSec = (int)fCurrentSpeedSeg;
-        if(iCurSec!= iLastSec)
+        if (iCurSec != iLastSec)
             fMeanSpeeds[iCurSec] = 0.0f;
         fMeanSpeeds[iCurSec] += fDist;
         fMeanSpeed = 0.0f;
-        for(int i=0; i< fMeanSpeeds.Length; i++)
+        for (int i = 0; i < fMeanSpeeds.Length; i++)
         {
-            if(i != iCurSec) fMeanSpeed += fMeanSpeeds[i];
+            if (i != iCurSec) fMeanSpeed += fMeanSpeeds[i];
         }
-        fMeanSpeed = fMeanSpeed/(fMeanSpeeds.Length-1) * 10;
+        fMeanSpeed = fMeanSpeed / (fMeanSpeeds.Length - 1) * 10;
 
         //enemies near (used in mission music)
         iNumEnemiesNear = oMap.GetNumEnemiesNearPlayer();
@@ -564,7 +568,7 @@ public class Player : MonoBehaviour
             int iInput = (bThrottle ? 8 : 0) + (bLeft ? 4 : 0) + (bRight ? 2 : 0) + (bAdjust ? 1 : 0); //bFire not included since bullets are added separately below
 
             fReplayMessageTimer += Time.fixedDeltaTime;
-            if (iInput != iLastInput || fReplayMessageTimer>0.5)
+            if (iInput != iLastInput || fReplayMessageTimer > 0.5)
             {
                 //add input message to replay if input has changed
                 ReplayMessage rm = new ReplayMessage();
@@ -812,9 +816,9 @@ public class Player : MonoBehaviour
         int iResultScore = (iScore + iLifes * 50) * 1000;
         if (oMap.iLevelType == (int)LevelType.MAP_MISSION)
         {
-            iResultScore -= (int)((fTotalTimeMission*1000) / 2); //long time is bad in mission
+            iResultScore -= (int)((fTotalTimeMission * 1000) / 2); //long time is bad in mission
         }
-        if (GameLevel.theReplay.bEasyMode && iResultScore>0) iResultScore /= 2;
+        if (GameLevel.theReplay.bEasyMode && iResultScore > 0) iResultScore /= 2;
         return iResultScore;
     }
 
@@ -937,7 +941,7 @@ public class Player : MonoBehaviour
         //reset cargo
         iCargoNumUsed = iCargoSpaceUsed = 0;
 
-        if(bSetToReplay)
+        if (bSetToReplay)
         {
             ReplayMessage rm = new ReplayMessage();
             rm.vPos = oRb.position;
