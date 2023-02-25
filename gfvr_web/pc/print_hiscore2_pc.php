@@ -109,7 +109,7 @@ function print_hiscore_pc()
 							$prefix = "1";
 							if($row["IsTime"] != 0) $prefix = "2";
 							if($i > 54) $prefix = "";
-							echo "<a href=\"webreplay/index.html?Level=".$prefix.$row["Level"]."&amp;Id=".$row2["Id"]."&amp;IsQuest=2\">";
+							echo "<a href=\"webreplay/index.html?Level=".$prefix.$row["Level"]."&amp;Id=".$row2["Id"]."&amp;IsQuest=3\">";
 
 							if($row["IsTime"] != 0) {
 								// convert to time

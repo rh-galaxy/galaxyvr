@@ -101,7 +101,7 @@ square_start("'100%'");
 								$prefix = "1";
 								if($is_time != 0) $prefix = "2";
 								if($i > 54) $prefix = "";
-								echo "<a href=\"webreplay/index.html?Level=".$prefix.$row['level']."&amp;Id=".$id."&amp;IsQuest=2\">";
+								echo "<a href=\"webreplay/index.html?Level=".$prefix.$row['level']."&amp;Id=".$id."&amp;IsQuest=3\">";
 								
 								if($is_time != 0) {
 									// convert to time
