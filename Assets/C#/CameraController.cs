@@ -229,7 +229,7 @@ public class CameraController : MonoBehaviour
                 mousePoint = Camera.main.ScreenToWorldPoint(scr, Camera.MonoOrStereoscopicEye.Mono);
             }
 
-            if (keyboard != null && keyboard.rKey.isPressed) { fX_cam = 0.0f; fY_cam = 0; fZ_cam = 0; }
+            if (keyboard != null && keyboard.rKey.isPressed && Menu.theMenu.iLastInfo != 7) { fX_cam = 0.0f; fY_cam = 0; fZ_cam = 0; }
 
             transform.eulerAngles = new Vector3(fX_cam, fY_cam, fZ_cam);
         }

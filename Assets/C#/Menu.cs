@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using TMPro;
 using UnityEngine.XR;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Menu : MonoBehaviour
 {
@@ -282,6 +285,7 @@ public class Menu : MonoBehaviour
 
 #if NOOCULUS
     C_Item2InMenu oMenuAchievements;
+    C_Item2InMenu oMenuSetName;
 #endif
     C_Item2InMenu oMenuEasyMode;
     C_Item2InMenu oMenuCargoSwingingMode;
@@ -297,6 +301,9 @@ public class Menu : MonoBehaviour
     Material oMaterialGrey;
     Material oMiniMapMaterial;
     MeshRenderer oRankQuadRenderer;
+
+    public GameObject uiInput;
+    public GameObject uiCanvas;
 
     internal Material oMaterialOctagonLocked, oMaterialOctagonUnlocked, oMaterialOctagonHighlighted;
     internal Material oMaterialPentagonLocked, oMaterialPentagonUnlocked, oMaterialPentagonHighlighted;
@@ -347,11 +354,28 @@ public class Menu : MonoBehaviour
 
     static bool bFirstTime = true;
 
+    void SubmitName(TMP_InputField input)
+    {
+        uiCanvas.SetActive(false);
+        uiInput.SetActive(false);
+
+        string name = input.text.Trim();
+        if (name.Length > 32) name = name.Substring(0, 32); //cap at 32 chars
+        if (name == "") return;
+        GameManager.szUser = name;
+
+        string szFile = UnityEngine.Application.persistentDataPath + "/" + "name.txt";
+        try
+        {
+            File.WriteAllBytes(szFile, System.Text.Encoding.UTF8.GetBytes(GameManager.szUser));
+        }
+        catch (Exception e) { Debug.Log(e.Message); }
+    }
+
     GameObject[] oAchievements = null;
-    int iLastInfo = 0;
+    internal int iLastInfo = 0;
     public void SetTextInfo(int i_iInfo)
     {
-        iLastInfo = i_iInfo;
         if (oAchievements == null)
         {
             oAchievements = new GameObject[22];
@@ -375,14 +399,14 @@ public class Menu : MonoBehaviour
         bTextInfoActive = i_iInfo != 0;
         oTextInfoContainer.SetActive(bTextInfoActive);
 
-        if(oCreditsQuad!=null) Destroy(oCreditsQuad);
+        if (oCreditsQuad!=null) Destroy(oCreditsQuad);
         oCreditsQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
         oCreditsQuad.transform.parent = oTextInfoContainer.transform;
         oCreditsQuad.transform.eulerAngles = vRotation;
         oCreditsQuad.transform.localPosition = new Vector3(0, 0, -1.20f);
         oCreditsQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
 
-        if(i_iInfo==1) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
+        if (i_iInfo == 1) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
         else if (i_iInfo == 3) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
         else if (i_iInfo == 4) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_motion", typeof(Material)) as Material;
         else if (i_iInfo == 5)
@@ -451,7 +475,33 @@ public class Menu : MonoBehaviour
                 }
             }
         }
-        else if (i_iInfo == 0) oCreditsQuad.GetComponent<MeshRenderer>().material = null;
+        else if (i_iInfo == 7)
+        {
+            oCreditsQuad.GetComponent<MeshRenderer>().material = null;
+            oCreditsQuad.SetActive(false);
+
+            uiCanvas.SetActive(true);
+            uiInput.SetActive(true);
+            TMP_InputField input = uiInput.GetComponent<TMP_InputField>();
+            if (GameManager.szUser == "DefaultUser") input.text = "";
+            else input.text = GameManager.szUser;
+            input.Select();
+            input.ActivateInputField();
+            input.lineLimit = 32;
+            input.MoveToEndOfLine(false, true);
+            input.onSubmit.AddListener(delegate { SubmitName(input); });
+        }
+        else if (i_iInfo == 0)
+        {
+            oCreditsQuad.GetComponent<MeshRenderer>().material = null;
+
+            if(iLastInfo == 7)
+            {
+                TMP_InputField input = uiInput.GetComponent<TMP_InputField>();
+                SubmitName(input);
+            }
+        }
+        iLastInfo = i_iInfo;
     }
 
     string GetTimeString(int i_iTimeMs, bool i_bTwoDec = false)
@@ -796,6 +846,7 @@ public class Menu : MonoBehaviour
 
 #if NOOCULUS
             oMenuAchievements = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -14, "Achievements", "Achievements", 30.0f, 11.5f);
+            oMenuSetName = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -3, "Enter name", "SetName", 30.0f, 18.0f);
 #endif
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
@@ -915,7 +966,7 @@ public class Menu : MonoBehaviour
             bTrigger = bTrigger || gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed;
         }
         if (mouse != null) bTrigger = bTrigger || mouse.rightButton.isPressed || mouse.leftButton.isPressed;
-        if (keyboard != null) bTrigger = bTrigger || keyboard.hKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
+        if (keyboard != null && iLastInfo != 7) bTrigger = bTrigger || keyboard.hKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
         if (bTrigger && !bLastTrigger) bAllowSelection = true; //pressed
         else bAllowSelection = false;
         if (bLevelPlay) bAllowSelection = false; //fixes bug when after start, the user clicks again on another level in the menu (before the menu-scene has stopped)
@@ -963,6 +1014,7 @@ public class Menu : MonoBehaviour
         if (oMenuCargoSwingingMode != null) oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bCargoSwingingMode ? oMaterialBarHighlighted : oMaterialBar;
 #if NOOCULUS
         if (oMenuAchievements != null) oMenuAchievements.oLevelQuadMeshRenderer.material = oMaterialBar;
+        if (oMenuSetName != null) oMenuSetName.oLevelQuadMeshRenderer.material = oMaterialBar;
 #endif
 
         bool bHitLevel = false;
@@ -1078,6 +1130,10 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("Achievements") == 0)
             {
                 oMenuAchievements.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("SetName") == 0)
+            {
+                oMenuSetName.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
 #endif
             else if (oHitInfo.collider.name.CompareTo("Controls") == 0)
@@ -1231,6 +1287,13 @@ public class Menu : MonoBehaviour
                 else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
                 {
                     bQuit = true;
+                    bPlaySelectSound = true;
+                }
+                else if (oHitInfo.collider.name.CompareTo("SetName") == 0)
+                {
+                    if (oLevelInfoContainer.activeSelf) bLevelUnSelected = true;
+                    else SetTextInfo(7);
+
                     bPlaySelectSound = true;
                 }
                 else if (oHitInfo.collider.name.CompareTo("Achievements") == 0)
