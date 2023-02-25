@@ -232,6 +232,7 @@ public class Player : MonoBehaviour
         //all objects must be handled like this
         oRb.transform.eulerAngles = new Vector3(0, 0, fDirection);
         oRb.transform.position = vStartPos;
+        oRb.position = vStartPos;
 
         //Physics2D gravity is set to 0,0 because the ship is the only object affected
         // by gravity, so we set a constant force here instead of having it global
@@ -769,7 +770,10 @@ public class Player : MonoBehaviour
 
         //this is a safety for if the ship is thrown outside the map area by first getting stuck then getting loose
         if (oRb.position.x < -vMapSize.x / 20.0f || oRb.position.x > vMapSize.x / 20.0f
-            || oRb.position.y < -vMapSize.y / 20.0f || oRb.position.y > vMapSize.y / 20.0f) fShipHealth = 0.0f;
+            || oRb.position.y < -vMapSize.y / 20.0f || oRb.position.y > vMapSize.y / 20.0f)
+        {
+            fShipHealth = 0.0f;
+        }
         //this is for sudden velocity increase when getting loose
         if (oRb.velocity.magnitude - vLastVel.magnitude > 0.10f)
         {
