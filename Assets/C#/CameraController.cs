@@ -110,6 +110,8 @@ public class CameraController : MonoBehaviour
 
         vCamOffset = new Vector3(0, iYAdjust * fYAdjustStep + 0.3f, iZAdjust * fZAdjustStep - 1.90f);
         vMapSize = oMap.GetMapSize();
+
+        /**/if (GameManager.bNoVR) fX_cam = 0.0f; fY_cam = 0; fZ_cam = 0;
     }
     public void InitForMenu()
     {
@@ -191,7 +193,7 @@ public class CameraController : MonoBehaviour
         if (GameManager.bNoVR)
         {
             Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
-            Camera.main.fieldOfView = 45.0f;
+            Camera.main.fieldOfView = 52.0f;
         }
 
         //emulate headset movement
@@ -202,7 +204,7 @@ public class CameraController : MonoBehaviour
             float fMouseX, fMouseY, fMouseXScreen, fMouseYScreen;
             GetMouseMovementSmooth(out fMouseX, out fMouseY, out fMouseXScreen, out fMouseYScreen);
             Mouse mouse = Mouse.current;
-            if (mouse != null && mouse.middleButton.isPressed)
+            if (mouse != null && (mouse.middleButton.isPressed || mouse.rightButton.isPressed))
             {
                 if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 3.0f;
                 else fY_cam += fMouseX * 3.0f;
