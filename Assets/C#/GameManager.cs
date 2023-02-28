@@ -828,16 +828,14 @@ public class GameManager : MonoBehaviour
                     //stLevel.bIsTime = GameLevel.szLevel.StartsWith("2"); //not so good way of doing it but it's all we got
                     //^this is now set in SetLevelInfo, read from file
 
-                    LiPart li = stLevel.info;
-                    li.iBestScoreMs = li.iLastScoreMs = -1;
-                    li.iWRScore1 = li.iWRScore2 = li.iWRScore3 = -1;
-                    li.iLimit1 = li.iLimit2 = li.iLimit3 = -1;
-                    li.szWRName1 = "_None"; li.szWRName2 = "_None"; li.szWRName3 = "_None";
-                    li = stLevel.info2;
-                    li.iBestScoreMs = li.iLastScoreMs = -1;
-                    li.iWRScore1 = li.iWRScore2 = li.iWRScore3 = -1;
-                    li.iLimit1 = li.iLimit2 = li.iLimit3 = -1;
-                    li.szWRName1 = "_None"; li.szWRName2 = "_None"; li.szWRName3 = "_None";
+                    stLevel.info.iBestScoreMs = stLevel.info.iLastScoreMs = -1;
+                    stLevel.info.iWRScore1 = stLevel.info.iWRScore2 = stLevel.info.iWRScore3 = -1;
+                    stLevel.info.iLimit1 = stLevel.info.iLimit2 = stLevel.info.iLimit3 = -1;
+                    stLevel.info.szWRName1 = "_None"; stLevel.info.szWRName2 = "_None"; stLevel.info.szWRName3 = "_None";
+                    stLevel.info2.iBestScoreMs = stLevel.info2.iLastScoreMs = -1;
+                    stLevel.info2.iWRScore1 = stLevel.info2.iWRScore2 = stLevel.info2.iWRScore3 = -1;
+                    stLevel.info2.iLimit1 = stLevel.info2.iLimit2 = stLevel.info2.iLimit3 = -1;
+                    stLevel.info2.szWRName1 = "_None"; stLevel.info2.szWRName2 = "_None"; stLevel.info2.szWRName3 = "_None";
 
                     string szLevelToLoad = stLevel.szName;
                     if (GameLevel.iLevelIndex >= 200 && GameLevel.iLevelIndex<400)
