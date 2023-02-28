@@ -49,6 +49,37 @@ square_end();
 ?>
 <br><br><br>
 
+
+<?php
+headline("Level editor");
+?>
+<br>
+<?php
+square_start("'100%'");
+?>
+<p>The ability to create and play custom levels is now added. Use the MapEditor for <a href="MapEditor_Win_x86.zip">Windows</a>, <a href="MapEditor_Mac_x64.zip">Mac</a> or <a href="MapEditor_Linux_x64.zip">Linux</a> and read editor_readme.txt</p>
+<p>In the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> there is a channel for sharing levels with me and others and I can add them to the games user level page for approved levels.</p>
+<?php
+square_end();
+?>
+<br><br><br>
+
+
+<?php
+headline("Public Domain");
+?>
+<br>
+<?php
+square_start("'100%'");
+?>
+<p>Since November 2020 the Unity projects source for all versions are available on <a href="https://sourceforge.net/projects/galaxy-forces-vr/">SourceForge</a>. And on <a href="https://github.com/rh-galaxy/galaxyvr">GitHub</a>.</p>
+<p>If you find the source useful I'd like to hear from you.</p>
+<?php
+square_end();
+?>
+<br><br><br>
+
+
 <a name="hiscore"></a>
 <?php
 headline("Hiscores PC");
@@ -142,22 +173,6 @@ square_end();
 <br><br><br>
 
 
-
-<?php
-headline("Level editor");
-?>
-<br>
-<?php
-square_start("'100%'");
-?>
-<p>The ability to create and play custom levels is now added. Use the MapEditor for <a href="MapEditor_Win_x86.zip">Windows</a>, <a href="MapEditor_Mac_x64.zip">Mac</a> or <a href="MapEditor_Linux_x64.zip">Linux</a> and read editor_readme.txt</p>
-<p>In the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> there is a channel for sharing levels with me and others and I can add them to the games user level page for approved levels.</p>
-<?php
-square_end();
-?>
-<br><br><br>
-
-
 <?php
 headline("Future and past");
 ?>
@@ -168,6 +183,7 @@ square_start("'100%'");
 <p>Point-movement (all platforms v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
 <p>v1.96 Feb 25, 2023<br>
+- PC noVR versions on itch.io with hiscore and progress<br>
 - fix ship sometimes exploding at start<br>
 - fix sorting order (cursor and status bar)<br>
 <br>
@@ -180,7 +196,7 @@ v1.90 Sep 6, 2022<br>
 - replaced skyboxes<br>
 - replaced planet<br>
 - removed recentering<br>
-- add adjust height<br>
+- add adjust height (Y) and front (Z)<br>
 - major update to build env<br>
 <br>
 v1.86 Jul 29, 2022<br>
@@ -210,7 +226,7 @@ v1.75 May 12, 2021<br>
 v1.70 Apr 23, 2021<br>
 - race08, race22 optimized<br>
 - choppyness fixed<br>
-- add skyview<br>
+- add skyview (quest)<br>
 <br>
 v1.65 Apr 10, 2021<br>
 - gui selection bugfix<br>
@@ -297,20 +313,6 @@ square_start("'100%'");
 ?>
 <p>Contact me if you are interested in collaborating to get this vr game feature done.
 I have set a time frame to 8 months, and have more info of what is needed. Join the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> for this purpose</p>
-<?php
-square_end();
-?>
-<br><br><br>
-
-<?php
-headline("Public Domain");
-?>
-<br>
-<?php
-square_start("'100%'");
-?>
-<p>Since November 2020 the Unity projects source for all versions are available on <a href="https://sourceforge.net/projects/galaxy-forces-vr/">SourceForge</a>. And on <a href="https://github.com/rh-galaxy/galaxyvr">GitHub</a>.</p>
-<p>If you find the source useful I'd like to hear from you.</p>
 <?php
 square_end();
 ?>
