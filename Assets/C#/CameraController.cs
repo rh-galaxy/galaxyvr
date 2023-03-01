@@ -208,21 +208,21 @@ public class CameraController : MonoBehaviour
             {
                 if(UnityEngine.Application.platform == RuntimePlatform.OSXEditor)
                 {
-                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 30.0f;
-                    else fY_cam += fMouseX * 30.0f;
-                    fX_cam -= fMouseY * 30.0f;
+                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 600.0f * Time.deltaTime * 10.0f;
+                    else fY_cam += fMouseX * 600.0f * Time.deltaTime * 10.0f;
+                    fX_cam -= fMouseY * 600.0f * Time.deltaTime * 10.0f;
                 }
                 else if(UnityEngine.Application.platform == RuntimePlatform.OSXPlayer)
                 {
-                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 15.0f;
-                    else fY_cam += fMouseX * 15.0f;
-                    fX_cam -= fMouseY * 15.0f;
+                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 600.0f * Time.deltaTime * 5.0f;
+                    else fY_cam += fMouseX * 600.0f * Time.deltaTime * 5.0f;
+                    fX_cam -= fMouseY * 600.0f * Time.deltaTime * 5.0f;
                 }
                 else
                 {
-                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 2.0f;
-                    else fY_cam += fMouseX * 2.0f;
-                    fX_cam -= fMouseY * 2.0f;
+                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 600.0f * Time.deltaTime;
+                    else fY_cam += fMouseX * 600.0f * Time.deltaTime;
+                    fX_cam -= fMouseY * 600.0f * Time.deltaTime;
                 }
             }
             if (mouse!=null)
@@ -232,6 +232,17 @@ public class CameraController : MonoBehaviour
             }
 
             if (keyboard != null && keyboard.rKey.isPressed && Menu.theMenu.iLastInfo != 7) { fX_cam = 0.0f; fY_cam = 0; fZ_cam = 0; }
+
+#if NOOCULUS
+            Gamepad gamepad = Gamepad.current;
+            if (gamepad != null && GameManager.bNoVR)
+            {
+                Vector2 stickG1 = gamepad.rightStick.ReadValue();
+                Vector2 stickG2 = gamepad.leftStick.ReadValue();
+                fY_cam += stickG1.x * 1.0f; fY_cam += stickG2.x * 1.3f * Time.deltaTime;
+                fX_cam -= stickG1.y * 1.0f; fX_cam -= stickG2.y * 1.3f * Time.deltaTime;
+            }
+#endif
 
             transform.eulerAngles = new Vector3(fX_cam, fY_cam, fZ_cam);
         }
