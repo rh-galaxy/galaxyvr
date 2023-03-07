@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
@@ -235,12 +235,12 @@ public class CameraController : MonoBehaviour
 
 #if NOOCULUS
             Gamepad gamepad = Gamepad.current;
-            if (gamepad != null && GameManager.bNoVR)
+            if (gamepad != null && GameManager.bNoVR && !bMapMode)
             {
                 Vector2 stickG1 = gamepad.rightStick.ReadValue();
                 Vector2 stickG2 = gamepad.leftStick.ReadValue();
-                fY_cam += stickG1.x * 1.0f; fY_cam += stickG2.x * 1.3f * Time.deltaTime;
-                fX_cam -= stickG1.y * 1.0f; fX_cam -= stickG2.y * 1.3f * Time.deltaTime;
+                fY_cam += stickG1.x * 58.0f * Time.deltaTime; fY_cam += stickG2.x * 58.0f * Time.deltaTime;
+                fX_cam -= stickG1.y * 58.0f * Time.deltaTime; fX_cam -= stickG2.y * 58.0f * Time.deltaTime;
             }
 #endif
 
