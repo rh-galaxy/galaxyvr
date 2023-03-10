@@ -127,29 +127,6 @@ square_end();
 <br><br><br>
 
 
-<a name="hiscore3"></a>
-<?php
-headline("Hiscores JioGlass");
-?>
-<br>
-
-<?php
-square_start("'100%'");
-?>
-<table width="95%">
-<tr><td>
-<?php
-require_once("print_hiscore2_jio.php");
-print_hiscore_jio();
-?>
-</td></tr>
-</table>
-<?php
-square_end();
-?>
-<br><br><br>
-
-
 <a name="hiscore4"></a>
 <?php
 headline("Hiscores PC no VR");
@@ -182,7 +159,8 @@ square_start("'100%'");
 ?>
 <p>Point-movement (all platforms v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
-<p>v1.96 Feb 25, 2023<br>
+<p>v1.96 Feb 28, 2023<br>
+- fix custom levels working again<br>
 - PC noVR versions on itch.io with hiscore and progress<br>
 - fix ship sometimes exploding at start<br>
 - fix sorting order (cursor and status bar)<br>
