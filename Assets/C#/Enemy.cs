@@ -115,12 +115,12 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                oAudioSource.PlayOneShot(oClipHit);
+                oAudioSource.PlayOneShot(oClipHit, GameManager.theGM.fMasterVolMod);
             }
         }
         else
         {
-            oAudioSource.PlayOneShot(oClipHit);
+            oAudioSource.PlayOneShot(oClipHit, GameManager.theGM.fMasterVolMod);
         }
 
         //collision with player, done in player
@@ -158,7 +158,7 @@ public class Enemy : MonoBehaviour
                     o.GetComponent<Bullet>().Init(stBulletInfo, 1/*iOwnerId*/);
 
                     if(rm.iGeneralByte1==0)
-                        GetComponent<AudioSource>().PlayOneShot(oClipFire);
+                        GetComponent<AudioSource>().PlayOneShot(oClipFire, GameManager.theGM.fMasterVolMod);
                 }
             }
 
@@ -198,7 +198,7 @@ public class Enemy : MonoBehaviour
                 }
 
                 //play explosion sound
-                oAudioSource.PlayOneShot(oClipExplosion);
+                oAudioSource.PlayOneShot(oClipExplosion, GameManager.theGM.fMasterVolMod);
 
                 //add score
                 oMap.iAchieveEnemiesKilled++;
@@ -269,7 +269,7 @@ public class Enemy : MonoBehaviour
 
                     if (InFireRange())
                     {
-                        oAudioSource.PlayOneShot(oClipFire);
+                        oAudioSource.PlayOneShot(oClipFire, GameManager.theGM.fMasterVolMod);
 
                         float fDirection = stInfo.iAngle;
                         if (SENEMY_RANDOMBULLETANGLE[stInfo.iEnemyType])
