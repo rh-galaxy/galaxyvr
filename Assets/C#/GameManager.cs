@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     internal static bool bNoInternet = false;
     internal static bool bNoVR = false;
 
+    internal float fMasterVolMod = 1.0f;
     internal bool bEasyMode;
     internal bool bCargoSwingingMode;
 
@@ -78,6 +79,8 @@ public class GameManager : MonoBehaviour
         StartFade(0.01f, 0.0f, true);
 
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
+        GameManager.theGM.fMasterVolMod = PlayerPrefs.GetFloat("MyMasterVolMod", 1.0f);
+        AudioStateMachine.instance.masterVolume = 1.25f * fMasterVolMod;
 
         cameraHolder.InitForMenu();
 #if LOGPROFILERDATA
@@ -602,7 +605,7 @@ public class GameManager : MonoBehaviour
 
         //recenter
         //(the ability for the app to initiate recenter is removed in new steamvr/openvr)
-        //implement Y-adjust instead, recenter is working in steamvr system (left-menu, select recenter)
+        //implement Y/Z-adjust instead, recenter is working in steamvr system (left-menu, select recenter)
         if (Menu.bYAdjust)
         {
             cameraHolder.CycleYAdjust();
@@ -659,7 +662,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1.0f;
 
                 AudioListener.pause = false;
-                AudioStateMachine.instance.masterVolume = 1.35f;
+                AudioStateMachine.instance.masterVolume = 1.25f * fMasterVolMod;
 
                 Menu.bPauseInput = false;
             }

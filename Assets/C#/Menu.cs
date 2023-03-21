@@ -285,6 +285,7 @@ public class Menu : MonoBehaviour
 
     CameraController cameraHolder;
 
+    C_Item2InMenu oMenuAudio;
     C_Item2InMenu oMenuEasyMode;
     C_Item2InMenu oMenuCargoSwingingMode;
     C_Item2InMenu oMenuYAdjust, oMenuZAdjust;
@@ -372,14 +373,14 @@ public class Menu : MonoBehaviour
         bTextInfoActive = i_iInfo != 0;
         oTextInfoContainer.SetActive(bTextInfoActive);
 
-        if(oCreditsQuad!=null) Destroy(oCreditsQuad);
+        if (oCreditsQuad!=null) Destroy(oCreditsQuad);
         oCreditsQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
         oCreditsQuad.transform.parent = oTextInfoContainer.transform;
         oCreditsQuad.transform.eulerAngles = vRotation;
         oCreditsQuad.transform.localPosition = new Vector3(0, 0, -1.20f);
         oCreditsQuad.transform.localScale = new Vector3(10.0f, 10.0f, 1.0f);
 
-        if(i_iInfo==1) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
+        if (i_iInfo == 1) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls", typeof(Material)) as Material;
         else if (i_iInfo == 3) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Credits", typeof(Material)) as Material;
         else if (i_iInfo == 4) oCreditsQuad.GetComponent<MeshRenderer>().material = Resources.Load("Controls_motion", typeof(Material)) as Material;
         else if (i_iInfo == 0) oCreditsQuad.GetComponent<MeshRenderer>().material = null;
@@ -627,7 +628,9 @@ public class Menu : MonoBehaviour
         if(!bNoHiscore)
         {
             for (int i = 0; i < aMenuLevels.Length; i++)
+            {
                 aMenuLevels[i].InitLevelRanking(i);
+            }
         }
 
         //also init custom user levels since we have them now
@@ -773,47 +776,50 @@ public class Menu : MonoBehaviour
             //menu options
             oMenuYAdjust = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -36, "Adjust height", "YAdjust", 30.0f, 12.0f);
             oMenuZAdjust = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -36, "Adjust front", "ZAdjust", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 12.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 9.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 9.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 18.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 18.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 18.0f);
+
+            GameManager.theGM.fMasterVolMod = PlayerPrefs.GetFloat("MyMasterVolMod", 1.0f);
+            oMenuAudio = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -3, "Audio " + (GameManager.theGM.fMasterVolMod * 100.0f).ToString("F0") + "%", "Audio", 30.0f, 18.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 9.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 18.0f);
 
             GameManager.theGM.bCargoSwingingMode = PlayerPrefs.GetInt("MyCargoSwingingMode", 0) != 0;
-            oMenuCargoSwingingMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 10, "Cargo swinging", "CargoSwingingMode", 30.0f, 9.0f);
+            oMenuCargoSwingingMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 10, "Cargo swinging", "CargoSwingingMode", 30.0f, 18.0f);
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
             cameraHolder.SetMovementMode(CameraController.bPointMovement);
-            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 9.0f);
+            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 18.0f);
 
             GameManager.theGM.bEasyMode = PlayerPrefs.GetInt("MyUseEasyMode", 1) != 0;
-            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 9.0f);
+            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 18.0f);
 
             iQuality = PlayerPrefs.GetInt("MyUnityGraphicsQuality", 2);
             ApplyQuality(iQuality);
-            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 9.0f);
-            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 45, "High", "Qual2", 30.0f, 9.0f);
-            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 9.0f);
+            oMenuQuality1 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 34, "Med", "Qual1", 30.0f, 18.0f);
+            oMenuQuality2 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 45, "High", "Qual2", 30.0f, 18.0f);
+            oMenuQuality3 = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 56, "Ultra", "Qual3", 30.0f, 18.0f);
         }
         else if (iIncrementalInit == 8)
         {
             //next/prev buttons
             Vector3 vPos = new Vector3(0.0f, 1.0f, 3.1f);
             if (oMenuNext1 != null) oMenuNext1.DestroyObj();
-            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -9.0f), 55, ">", "Next1", 26.0f, 9.0f);
+            oMenuNext1 = new C_Item2InMenu(vPos, new Vector3(0, 0, -9.0f), 55, ">", "Next1", 26.0f, 18.0f);
             vPos = new Vector3(1000.0f, 1.0f, 3.1f);
             if (oMenuPrev1 != null) oMenuPrev1.DestroyObj();
-            oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), -55, "<", "Prev1", 26.0f, 9.0f);
+            oMenuPrev1 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), -55, "<", "Prev1", 26.0f, 18.0f);
 
             //additional official levels with hiscore (user levels approved levels)
             // can't be initialized here, only after webpage has run (InitLevelRanking())
             vPos = new Vector3(1000.0f, 1.0f, 3.1f);
             if (oMenuNext2 != null) oMenuNext2.DestroyObj();
-            oMenuNext2 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), 55, ">", "Next2", 26.0f, 9.0f);
+            oMenuNext2 = new C_Item2InMenu(vPos, new Vector3(1000, 0, -9.0f), 55, ">", "Next2", 26.0f, 18.0f);
             vPos = new Vector3(2000.0f, 1.0f, 3.1f);
             if (oMenuPrev2 != null) oMenuPrev2.DestroyObj();
-            oMenuPrev2 = new C_Item2InMenu(vPos, new Vector3(2000, 0, -9.0f), -55, "<", "Prev2", 26.0f, 9.0f);
+            oMenuPrev2 = new C_Item2InMenu(vPos, new Vector3(2000, 0, -9.0f), -55, "<", "Prev2", 26.0f, 18.0f);
         }
         else if (iIncrementalInit == 9)
         {
@@ -935,6 +941,7 @@ public class Menu : MonoBehaviour
         if (oMenuPointMovement != null) oMenuPointMovement.oLevelQuadMeshRenderer.material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuEasyMode != null) oMenuEasyMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bEasyMode ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuCargoSwingingMode != null) oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bCargoSwingingMode ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuAudio != null) oMenuAudio.oLevelQuadMeshRenderer.material = oMaterialBar;
 
         bool bHitLevel = false;
         RaycastHit oHitInfo;
@@ -1080,6 +1087,10 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("CargoSwingingMode") == 0)
             {
                 oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("Audio") == 0)
+            {
+                oMenuAudio.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
@@ -1331,7 +1342,19 @@ public class Menu : MonoBehaviour
                     SetLevelInfoOff();
                 }
 
-                if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
+                else if (oHitInfo.collider.name.CompareTo("Audio") == 0)
+                {
+                    GameManager.theGM.fMasterVolMod += 0.1f;
+                    if (GameManager.theGM.fMasterVolMod > 1.01f) GameManager.theGM.fMasterVolMod = 0.0f;
+                    AudioStateMachine.instance.masterVolume = 1.25f * GameManager.theGM.fMasterVolMod;
+                    PlayerPrefs.SetFloat("MyMasterVolMod", GameManager.theGM.fMasterVolMod);
+                    PlayerPrefs.Save();
+                    bPlaySelectSound = true;
+
+                    oMenuAudio.oLevelText.GetComponent<TextMeshPro>().text = "Audio " + (GameManager.theGM.fMasterVolMod * 100.0f).ToString("F0") + "%";
+                }
+
+                if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip, GameManager.theGM.fMasterVolMod);
                 if (bPlaySelectSound) bAllowSelection = false;
             }
         }
@@ -1580,7 +1603,7 @@ public class Menu : MonoBehaviour
     {
         public GameObject oLevelQuad;
         public MeshRenderer oLevelQuadMeshRenderer;
-        GameObject oLevelText;
+        internal GameObject oLevelText;
 
         Vector3 vPos;
 
@@ -1623,7 +1646,7 @@ public class Menu : MonoBehaviour
             oLevelText.transform.localScale = new Vector3(1.8f, 1.8f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;
-            //oLevelText.GetComponent<TextMeshPro>().fontSize = i_fFontSize;
+            oLevelText.GetComponent<TextMeshPro>().fontSize = i_fFontSize;
             oLevelText.SetActive(true);
         }
     }
