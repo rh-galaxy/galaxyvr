@@ -482,7 +482,7 @@ public class GameLevel : MonoBehaviour
         else if (iFinalizeCounter == 10)
         {
             oPlanet.Init(m_stTilesetInfos[iTilesetInfoIndex].iPlanet);
-            GetComponent<AudioSource>().PlayOneShot(oClipLevelStart);
+            GetComponent<AudioSource>().PlayOneShot(oClipLevelStart, GameManager.theGM.fMasterVolMod);
 
             //(user name not currently used in Player)
             string szUser = GameManager.szUser == null ? "Incognito" : GameManager.szUser;
@@ -570,12 +570,12 @@ public class GameLevel : MonoBehaviour
             //delay sounds 0.5 sec
             if(bPlayClipWin && fGameOverTimer > 0.5f)
             {
-                GetComponent<AudioSource>().PlayOneShot(oClipLevelWin);
+                GetComponent<AudioSource>().PlayOneShot(oClipLevelWin, GameManager.theGM.fMasterVolMod);
                 bPlayClipWin = false;
             }
             if (bPlayClipGameOver && fGameOverTimer > 0.5f)
             {
-                GetComponent<AudioSource>().PlayOneShot(oClipLevelGameOver);
+                GetComponent<AudioSource>().PlayOneShot(oClipLevelGameOver, GameManager.theGM.fMasterVolMod);
                 bPlayClipGameOver = false;
             }
 

@@ -283,6 +283,7 @@ public class Menu : MonoBehaviour
 
     CameraController cameraHolder;
 
+    C_Item2InMenu oMenuAudio;
 #if NOOCULUS
     C_Item2InMenu oMenuAchievements;
     C_Item2InMenu oMenuSetName;
@@ -844,9 +845,11 @@ public class Menu : MonoBehaviour
             oMenuControls = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 18.0f);
             oMenuCredits = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 18.0f);
 
+            GameManager.theGM.fMasterVolMod = PlayerPrefs.GetFloat("MyMasterVolMod", 1.0f);
+            oMenuAudio = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -3, "Audio " + (GameManager.theGM.fMasterVolMod * 100.0f).ToString("F0") + "%", "Audio", 30.0f, 18.0f);
 #if NOOCULUS
             oMenuAchievements = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -14, "Achievements", "Achievements", 30.0f, 11.5f);
-            oMenuSetName = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -3, "Enter name", "SetName", 30.0f, 18.0f);
+            oMenuSetName = new C_Item2InMenu(new Vector3(0, -8.0f, 2.81f), vAroundPoint, -3, "Enter name", "SetName", 30.0f, 18.0f);
 #endif
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
@@ -1012,6 +1015,7 @@ public class Menu : MonoBehaviour
         if (oMenuPointMovement != null) oMenuPointMovement.oLevelQuadMeshRenderer.material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuEasyMode != null) oMenuEasyMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bEasyMode ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuCargoSwingingMode != null) oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bCargoSwingingMode ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuAudio != null) oMenuAudio.oLevelQuadMeshRenderer.material = oMaterialBar;
 #if NOOCULUS
         if (oMenuAchievements != null) oMenuAchievements.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuSetName != null) oMenuSetName.oLevelQuadMeshRenderer.material = oMaterialBar;
@@ -1171,6 +1175,10 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("CargoSwingingMode") == 0)
             {
                 oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
+            }
+            else if (oHitInfo.collider.name.CompareTo("Audio") == 0)
+            {
+                oMenuAudio.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
             {
@@ -1376,7 +1384,19 @@ public class Menu : MonoBehaviour
                     SetLevelInfoOff();
                 }
 
-                if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
+                else if (oHitInfo.collider.name.CompareTo("Audio") == 0)
+                {
+                    GameManager.theGM.fMasterVolMod += 0.1f;
+                    if (GameManager.theGM.fMasterVolMod > 1.01f) GameManager.theGM.fMasterVolMod = 0.0f;
+                    AudioStateMachine.instance.masterVolume = 1.25f * GameManager.theGM.fMasterVolMod;
+                    PlayerPrefs.SetFloat("MyMasterVolMod", GameManager.theGM.fMasterVolMod);
+                    PlayerPrefs.Save();
+                    bPlaySelectSound = true;
+
+                    oMenuAudio.oLevelText.GetComponent<TextMeshPro>().text = "Audio " + (GameManager.theGM.fMasterVolMod * 100.0f).ToString("F0") + "%";
+                }
+
+                if (bPlaySelectSound) GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip, GameManager.theGM.fMasterVolMod);
                 if (bPlaySelectSound) bAllowSelection = false;
             }
         }
@@ -1625,7 +1645,7 @@ public class Menu : MonoBehaviour
     {
         public GameObject oLevelQuad;
         public MeshRenderer oLevelQuadMeshRenderer;
-        GameObject oLevelText;
+        internal GameObject oLevelText;
 
         Vector3 vPos;
 

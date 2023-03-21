@@ -387,7 +387,7 @@ public class Player : MonoBehaviour
                 oWallsCollEmission.enabled = true;
             }
 
-            oASGeneral.PlayOneShot(oClipLand);
+            oASGeneral.PlayOneShot(oClipLand, GameManager.theGM.fMasterVolMod);
         }
 
         //map or door, or map decorations
@@ -410,7 +410,7 @@ public class Player : MonoBehaviour
                 fShipHealth -= (fImpulse / 80.0f) * 0.5f;
 
                 bScrapeFadeOut = false;
-                oASScrape.volume = 1.0f;
+                oASScrape.volume = 1.0f * GameManager.theGM.fMasterVolMod;
                 oASScrape.Play();
 
                 c = collision.GetContact(0);
@@ -431,7 +431,7 @@ public class Player : MonoBehaviour
             {
                 fShipHealth -= 0.47f; //4 hits if full health
                 //play hit sound
-                oASGeneral.PlayOneShot(oClipHit);
+                oASGeneral.PlayOneShot(oClipHit, GameManager.theGM.fMasterVolMod);
             }
         }
 
@@ -837,7 +837,7 @@ public class Player : MonoBehaviour
                     GameObject o = Instantiate(oMap.oBulletObjBase, oMap.transform);
                     o.GetComponent<Bullet>().Init(stBulletInfo, 0/*iOwnerID*/);
 
-                    oASGeneral.PlayOneShot(oClipFire);
+                    oASGeneral.PlayOneShot(oClipFire, GameManager.theGM.fMasterVolMod);
                 }
                 if (rm.iType == (byte)MsgType.PLAYER_KILL)
                 {
@@ -1121,7 +1121,7 @@ public class Player : MonoBehaviour
                 {
                     oThrusterEmission.enabled = true;
                     bEngineFadeOut = false;
-                    oASEngine.volume = 0.40f;
+                    oASEngine.volume = 0.40f * GameManager.theGM.fMasterVolMod;
                     oASEngine.Play();
                 }
                 else
@@ -1235,7 +1235,7 @@ public class Player : MonoBehaviour
                 bFireTriggered = false; //reset so we can fire again
                 CreateBullet();
 
-                oASGeneral.PlayOneShot(oClipFire);
+                oASGeneral.PlayOneShot(oClipFire, GameManager.theGM.fMasterVolMod);
 
                 iAchieveBulletsFired++;
             }
@@ -1335,7 +1335,7 @@ public class Player : MonoBehaviour
                     if (iCurLap == iTotalLaps)
                     {
                         bTimeCounting = false;
-                        oASGeneral.PlayOneShot(oClipCPEnd);
+                        oASGeneral.PlayOneShot(oClipCPEnd, GameManager.theGM.fMasterVolMod);
 
                         bAchieveFinishedRaceLevel = true;
                     }
@@ -1351,7 +1351,7 @@ public class Player : MonoBehaviour
 
                 if (iCurLap < iTotalLaps)
                 {
-                    oASGeneral.PlayOneShot(oClipCP);
+                    oASGeneral.PlayOneShot(oClipCP, GameManager.theGM.fMasterVolMod);
 
                     oMap.aCheckPointList[iCurCP].GetComponent<CheckPoint>().SetBlinkState(true);
                 }
@@ -1412,7 +1412,7 @@ public class Player : MonoBehaviour
         oExplosionParticle.Play();
         fExplosionTimer = 0.0f;
 
-        oASGeneral.PlayOneShot(oClipExplosion);
+        oASGeneral.PlayOneShot(oClipExplosion, GameManager.theGM.fMasterVolMod);
 
         //to prevent movement during explosion
         Stop();
@@ -1482,7 +1482,7 @@ public class Player : MonoBehaviour
             }
 
             //play load cargo sound
-            oASGeneral.PlayOneShot(oClipLoadCargo);
+            oASGeneral.PlayOneShot(oClipLoadCargo, GameManager.theGM.fMasterVolMod);
         }
 
         return bCargoLoaded;
@@ -1528,7 +1528,7 @@ public class Player : MonoBehaviour
             o.Init(stFlyingScoreInfo);
 
             //play unload cargo sound
-            oASGeneral.PlayOneShot(oClipUnloadCargo);
+            oASGeneral.PlayOneShot(oClipUnloadCargo, GameManager.theGM.fMasterVolMod);
         }
     }
 
