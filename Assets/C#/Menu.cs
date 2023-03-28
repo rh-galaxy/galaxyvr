@@ -826,7 +826,7 @@ public class Menu : MonoBehaviour
         {
             bTrigger = bTrigger || gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed;
         }
-        if (mouse != null) bTrigger = bTrigger || mouse.rightButton.isPressed || mouse.leftButton.isPressed;
+        if (mouse != null) bTrigger = bTrigger || mouse.leftButton.isPressed;
         if (keyboard != null) bTrigger = bTrigger || keyboard.hKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
         if (bTrigger && !bLastTrigger) bAllowSelection = true; //pressed
         else bAllowSelection = false;
