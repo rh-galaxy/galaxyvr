@@ -596,16 +596,6 @@ public class GameManager : MonoBehaviour
         //recenter
         //(the ability for the app to initiate recenter is removed in new steamvr/openvr)
         //implement Y/Z-adjust instead, recenter is working in steamvr system (left-menu, select recenter)
-        if (Menu.bYAdjust)
-        {
-            cameraHolder.CycleYAdjust();
-            Menu.bYAdjust = false; //we have acted on it
-        }
-        if (Menu.bZAdjust)
-        {
-            cameraHolder.CycleZAdjust();
-            Menu.bZAdjust = false; //we have acted on it
-        }
 
         //long press on grip button is back
         //left menu button is occupied by steamvr
