@@ -40,7 +40,7 @@ public class CameraController : MonoBehaviour
         else if (instance != this)
         {
             //enforce singleton pattern, meaning there can only ever be one instance of a CameraController.
-         //   for (int i=0; i< transform.childCount; i++) //this is ok, since destroy doesn't take it away immediatly
+         //   for (int i=0; i< transform.childCount; i++) //this is ok, since destroy doesn't take it away immediately
          //       Destroy(transform.GetChild(i).gameObject);
             Destroy(gameObject);
             return;
@@ -195,7 +195,7 @@ public class CameraController : MonoBehaviour
         if (GameManager.bNoVR)
         {
             Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
-            Camera.main.fieldOfView = 52.0f;
+            Camera.main.fieldOfView = 55.0f;
         }
 
         //emulate headset movement
@@ -208,24 +208,15 @@ public class CameraController : MonoBehaviour
             Mouse mouse = Mouse.current;
             if (mouse != null && (mouse.middleButton.isPressed || mouse.rightButton.isPressed))
             {
-                if(UnityEngine.Application.platform == RuntimePlatform.OSXEditor)
-                {
-                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 600.0f * Time.deltaTime * 10.0f;
-                    else fY_cam += fMouseX * 600.0f * Time.deltaTime * 10.0f;
-                    fX_cam -= fMouseY * 600.0f * Time.deltaTime * 10.0f;
-                }
-                else if(UnityEngine.Application.platform == RuntimePlatform.OSXPlayer)
-                {
-                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 600.0f * Time.deltaTime * 5.0f;
-                    else fY_cam += fMouseX * 600.0f * Time.deltaTime * 5.0f;
-                    fX_cam -= fMouseY * 600.0f * Time.deltaTime * 5.0f;
-                }
-                else
-                {
-                    if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 600.0f * Time.deltaTime;
-                    else fY_cam += fMouseX * 600.0f * Time.deltaTime;
-                    fX_cam -= fMouseY * 600.0f * Time.deltaTime;
-                }
+                float multiply = 0.9f;
+                if(UnityEngine.Application.platform == RuntimePlatform.OSXEditor)           multiply = 100.0f;
+                else if(UnityEngine.Application.platform == RuntimePlatform.OSXPlayer)      multiply = 3.0f;
+                else if (UnityEngine.Application.platform == RuntimePlatform.WindowsEditor) multiply = 15.0f;
+
+                if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 100.0f * Time.deltaTime * multiply;
+                else fY_cam += fMouseX * 100.0f * Time.deltaTime * multiply;
+                fX_cam -= fMouseY * 100.0f * Time.deltaTime * multiply;
+
             }
             if (mouse!=null)
             {

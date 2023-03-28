@@ -529,7 +529,8 @@ public class Menu : MonoBehaviour
     {
         //i_stLevelInfo.szName is in the form "race00", but we need the filename "2race00"
         //we rely on GameLevel.szLevel for that
-        oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel, GameLevel.iLevelIndex >= 200 && GameLevel.iLevelIndex<400, GameLevel.iLevelIndex>=400, out i_stLevelInfo.bIsTime, out szLevelInfoDescription);
+        oMiniMapTex = GameLevel.GetMiniMap(GameLevel.szLevel, GameLevel.iLevelIndex >= 200 && GameLevel.iLevelIndex<400,
+            GameLevel.iLevelIndex>=400, out i_stLevelInfo.bIsTime, out szLevelInfoDescription);
         oMiniMapMaterial.mainTexture = oMiniMapTex;
     }
 
@@ -839,8 +840,8 @@ public class Menu : MonoBehaviour
             //menu options
             float yMod = cameraHolder.CycleYAdjust(0);
             float zMod = cameraHolder.CycleZAdjust(0);
-            oMenuYAdjust = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -36, "Adjust height " + ((yMod > 0.0f) ? "+" : "") + yMod.ToString("F2") + "m", "YAdjust", 30.0f, 12.0f);
-            oMenuZAdjust = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -36, "Adjust front " + ((zMod > 0.0f) ? "+" : "") + zMod.ToString("F2") + "m", "ZAdjust", 30.0f, 12.0f);
+            oMenuYAdjust = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -36, "Adjust height\n" + ((yMod > 0.0f) ? "+" : "") + yMod.ToString("F2") + "m", "YAdjust", 30.0f, 12.0f);
+            oMenuZAdjust = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -36, "Adjust front\n" + ((zMod > 0.0f) ? "+" : "") + zMod.ToString("F2") + "m", "ZAdjust", 30.0f, 12.0f);
             oMenuQuit = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 18.0f);
             oMenuControls = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 18.0f);
             oMenuCredits = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 18.0f);
@@ -1287,14 +1288,14 @@ public class Menu : MonoBehaviour
                     float yMod = cameraHolder.CycleYAdjust(1);
                     bPlaySelectSound = true;
 
-                    oMenuYAdjust.oLevelText.GetComponent<TextMeshPro>().text = "Adjust height " + ((yMod > 0.0f) ? "+" : "") + yMod.ToString("F2") + "m";
+                    oMenuYAdjust.oLevelText.GetComponent<TextMeshPro>().text = "Adjust height\n" + ((yMod > 0.0f) ? "+" : "") + yMod.ToString("F2") + "m";
                 }
                 else if (oHitInfo.collider.name.CompareTo("ZAdjust") == 0)
                 {
                     float zMod = cameraHolder.CycleZAdjust(1);
                     bPlaySelectSound = true;
 
-                    oMenuZAdjust.oLevelText.GetComponent<TextMeshPro>().text = "Adjust front " + ((zMod > 0.0f) ? "+" : "") + zMod.ToString("F2") + "m";
+                    oMenuZAdjust.oLevelText.GetComponent<TextMeshPro>().text = "Adjust front\n" + ((zMod > 0.0f) ? "+" : "") + zMod.ToString("F2") + "m";
                 }
                 else if (oHitInfo.collider.name.CompareTo("Quit") == 0)
                 {
