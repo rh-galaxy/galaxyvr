@@ -451,16 +451,6 @@ public class GameManager : MonoBehaviour
                 bTrackingOriginSet = true;
             }
         }
-        if (Menu.bYAdjust)
-        {
-            cameraHolder.CycleYAdjust();
-            Menu.bYAdjust = false; //we have acted on it
-        }
-        if (Menu.bZAdjust)
-        {
-            cameraHolder.CycleZAdjust();
-            Menu.bZAdjust = false; //we have acted on it
-        }
 
         bool bBackButton = false;
 
