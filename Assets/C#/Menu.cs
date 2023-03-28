@@ -369,6 +369,14 @@ public class Menu : MonoBehaviour
             File.WriteAllBytes(szFile, System.Text.Encoding.UTF8.GetBytes(GameManager.szUser));
         }
         catch (Exception e) { Debug.Log(e.Message); }
+
+        //fix to always close text info after name is submitted
+        if(bTextInfoActive)
+        {
+            oTextInfoContainer.SetActive(false);
+            bTextInfoActive = false;
+            iLastInfo = 0;
+        }
     }
 
     GameObject[] oAchievements = null;
@@ -969,7 +977,7 @@ public class Menu : MonoBehaviour
         {
             bTrigger = bTrigger || gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed;
         }
-        if (mouse != null) bTrigger = bTrigger || mouse.rightButton.isPressed || mouse.leftButton.isPressed;
+        if (mouse != null) bTrigger = bTrigger || mouse.leftButton.isPressed;
         if (keyboard != null && iLastInfo != 7) bTrigger = bTrigger || keyboard.hKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
         if (bTrigger && !bLastTrigger) bAllowSelection = true; //pressed
         else bAllowSelection = false;
