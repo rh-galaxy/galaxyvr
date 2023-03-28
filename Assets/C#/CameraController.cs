@@ -46,7 +46,7 @@ public class CameraController : MonoBehaviour
         else if (instance != this)
         {
             //enforce singleton pattern, meaning there can only ever be one instance of a CameraController.
-         //   for (int i=0; i< transform.childCount; i++) //this is ok, since destroy doesn't take it away immediatly
+         //   for (int i=0; i< transform.childCount; i++) //this is ok, since destroy doesn't take it away immediately
          //       Destroy(transform.GetChild(i).gameObject);
             Destroy(gameObject);
             return;
@@ -204,7 +204,7 @@ public class CameraController : MonoBehaviour
         if (GameManager.bNoVR)
         {
             Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
-            Camera.main.fieldOfView = 52.0f;
+            Camera.main.fieldOfView = 55.0f;
         }
 
         //emulate headset movement
