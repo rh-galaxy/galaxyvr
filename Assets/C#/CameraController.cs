@@ -71,9 +71,9 @@ public class CameraController : MonoBehaviour
     private int iYAdjust = 0, iZAdjust = 0;
     private float fYAdjustStep = 0.24f;
     private float fZAdjustStep = 0.20f;
-    public void CycleYAdjust()
+    public float CycleYAdjust(int iStep)
     {
-        iYAdjust++;
+        iYAdjust += iStep;
         if (iYAdjust > 10) iYAdjust = -10; //21 steps
 
         vCamOffset = new Vector3(0, iYAdjust * fYAdjustStep + 0.3f, iZAdjust * fZAdjustStep - 1.90f);
@@ -85,10 +85,11 @@ public class CameraController : MonoBehaviour
 
         PlayerPrefs.SetInt("MyYAdjustInt", iYAdjust);
         PlayerPrefs.Save();
+        return (iYAdjust * fYAdjustStep);
     }
-    public void CycleZAdjust()
+    public float CycleZAdjust(int iStep)
     {
-        iZAdjust++;
+        iZAdjust += iStep;
         if (iZAdjust > 2) iZAdjust = -4; //7 steps
 
         vCamOffset = new Vector3(0, iYAdjust * fYAdjustStep + 0.3f, iZAdjust * fZAdjustStep - 1.90f);
@@ -100,6 +101,7 @@ public class CameraController : MonoBehaviour
 
         PlayerPrefs.SetInt("MyZAdjustInt", iZAdjust);
         PlayerPrefs.Save();
+        return (iZAdjust * fZAdjustStep);
     }
     public void InitForGame(GameLevel i_oMap, GameObject i_oPlayer)
     {
