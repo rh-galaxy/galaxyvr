@@ -41,7 +41,7 @@ public class FlyingScore : MonoBehaviour
         fTotAlive += Time.fixedDeltaTime;
         if (fTotAlive > 2.0f)
         {
-            //this removes the object from its parent and from existance
+            //this removes the object from its parent and from existence
             Destroy(gameObject);
         }
     }

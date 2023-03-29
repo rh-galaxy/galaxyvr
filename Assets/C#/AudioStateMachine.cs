@@ -64,7 +64,7 @@ public class AudioStateMachine : MonoBehaviour
     {
         if (!main.isValid())
         {
-            // Spatialize audio
+            //spatialize audio
             main = FMODUnity.RuntimeManager.CreateInstance(EventMain);
             main.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
 
@@ -161,7 +161,7 @@ public class AudioStateMachine : MonoBehaviour
         if (fFadeTimer < fFadeDelay)
             return false; //delay not reached
 
-        //calculate new value fcrom progress
+        //calculate new value from progress
         float fFadeCurVol = fFadeStart + fProgress * fFadeRange;
         //hard limits
         if (fFadeCurVol < 0.0f) fFadeCurVol = 0.0f;
