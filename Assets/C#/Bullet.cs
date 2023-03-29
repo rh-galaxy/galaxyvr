@@ -92,7 +92,7 @@ public class Bullet : MonoBehaviour
         }
 
         //always remove the bullet
-        //this removes the object from its parent and from existance
+        //this removes the object from its parent and from existence
         //Destroy(gameObject);
 
         //new, play particle effect, then destroy object
@@ -108,7 +108,7 @@ public class Bullet : MonoBehaviour
         fTotAlive += Time.fixedDeltaTime;
         if (fTotAlive > BULLETLIFETIME)
         {
-            //this removes the object from its parent and from existance
+            //this removes the object from its parent and from existence
             Destroy(gameObject);
         }
     }

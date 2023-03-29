@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour
         oMap = i_oMap;
         stInfo = i_stInfo;
 
-        //set owner id to a uniqe value
+        //set owner id to a unique value
         iOwnerId = iOwnerIdBase++;
 
         //set the correct one active

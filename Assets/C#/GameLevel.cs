@@ -14,7 +14,7 @@ using UnityEngine.XR;
 //When the game was finished it came up in the review that there was almost no difference in the view when you moved your head in VR
 // (3DoF instead of 6DoF). I had missed the fact that 1.0 units in Unity equals 1.0 meter in reality. And I saw no other way to fix
 // it than to make everything 10 times smaller and bring the camera closer so that a map is a couple of meters instead of 100 meter.
-// This also ment that I had to readjust ship engine power, ship mass, gravity and drag. It took 3 days.
+// This also meant that I had to readjust ship engine power, ship mass, gravity and drag. It took 3 days.
 
 public enum LevelType { MAP_MISSION, MAP_RACE, MAP_DOGFIGHT, MAP_MISSION_COOP }; //MAP_DOGFIGHT, MAP_MISSION_COOP not supported
 
@@ -134,10 +134,10 @@ public class GameLevel : MonoBehaviour
 
     Vector2[] stPlayerStartPos = new Vector2[8];
 
-    const float DEFAULT_SHIPGRAVITYBASEX = 0.0f;      //pixel/second 2
-    const float DEFAULT_SHIPGRAVITYBASEY = 7.6f;      //pixel/second 2             //70
-    const float DEFAULT_SHIPRESISTANCE = 0.68f;       //constant (velocity dependent)  //0.68f
-    internal const float BULLETBASEVEL = 22.0f;       //pixel/second
+    const float DEFAULT_SHIPGRAVITYBASEX = 0.0f; //pixel/second 2
+    const float DEFAULT_SHIPGRAVITYBASEY = 7.6f; //pixel/second 2
+    const float DEFAULT_SHIPRESISTANCE = 0.68f;  //constant (velocity dependent)
+    internal const float BULLETBASEVEL = 22.0f;  //pixel/second
     internal const float BULLETFREETIME = 3.1f;  //sec to be free from bullets when just come alive
 
     //map objects
@@ -1298,7 +1298,7 @@ public class GameLevel : MonoBehaviour
     {
         if (!bTilesetLoaded) return false;
 
-        //analyse tileset (get rectangles)
+        //analyze tileset (get rectangles)
         int i, j;
         int iNumX, iNumY, iTileNum;
         //iNumX = oTileTexture.width / iTileSize;
@@ -1325,7 +1325,7 @@ public class GameLevel : MonoBehaviour
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //minimap, made independant of other code, therefore there is some duplicate code here
+    //minimap, made independent of other code, therefore there is some duplicate code here
 /*    static int iMiniWidth, iMiniHeight;
     static string szMiniMapfile;
     static string szMiniMapDescription;
@@ -1454,7 +1454,7 @@ public class GameLevel : MonoBehaviour
                 iTile = aMap[y, x];
                 if (iTile != 0)
                 {
-                    iTile = 2; //assume. a solid tile on all current tilesets (2=transparrent)
+                    iTile = 2; //assume. a solid tile on all current tilesets (2=transparent)
                                //if any neighbor is 0, this tile is a border (1)
                     int k, l;
                     for (k = x - 1; k <= x + 1; k++)

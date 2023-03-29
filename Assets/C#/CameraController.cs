@@ -151,7 +151,7 @@ public class CameraController : MonoBehaviour
         if (GameManager.bNoVR)
         {
             Camera.main.stereoTargetEye = StereoTargetEyeMask.None;
-            Camera.main.fieldOfView = 52.0f;
+            Camera.main.fieldOfView = 55.0f;
         }
 
         //emulate headset movement
