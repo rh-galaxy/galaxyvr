@@ -229,7 +229,7 @@ public class Player : MonoBehaviour
         oRb = GetComponent<Rigidbody2D>();
         oRb.rotation = fDirection; //happens after next FixedUpdate
         //therefore we need to set the transform immediately so that it
-        // is in the startposition pointing correctly after init
+        // is in the start position pointing correctly after init
         //all objects must be handled like this
         oRb.transform.eulerAngles = new Vector3(0, 0, fDirection);
         oRb.transform.position = vStartPos;
@@ -241,7 +241,7 @@ public class Player : MonoBehaviour
         oRb.mass = SHIP_MASS;
         oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
-        //cannot use because it also becomes the piviot for rotation...
+        //cannot use because it also becomes the pivot for rotation...
         //make it higher up to make ship tilt faster on landingzone
         //m_oRb.centerOfMass = new Vector2(0.5f, 0.0f); //ship points right at rotation 0
 
@@ -979,7 +979,7 @@ public class Player : MonoBehaviour
 
                 if (bThrottle && !bAdjust && !bRight && !bLeft)
                 {
-                    //new move descicion
+                    //new move decision
                     if (fMovementTimer > 0.07f)
                     {
                         fMovementTimer = 0;
