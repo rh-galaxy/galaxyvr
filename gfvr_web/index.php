@@ -57,7 +57,7 @@ headline("Level editor");
 <?php
 square_start("'100%'");
 ?>
-<p>The ability to create and play custom levels is now added. Use the MapEditor for <a href="MapEditor_Win_x86.zip">Windows</a>, <a href="MapEditor_Mac_x64.zip">Mac</a> or <a href="MapEditor_Linux_x64.zip">Linux</a> and read editor_readme.txt</p>
+<p>The ability to create and play custom levels is now added. Use the MapEditor for <a href="MapEditor_Win_x64.zip">Windows</a>, <a href="MapEditor_Mac_x64.zip">Mac</a> or <a href="MapEditor_Linux_x64.zip">Linux</a> and read editor_readme.txt</p>
 <p>In the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> there is a channel for sharing levels with me and others and I can add them to the games user level page for approved levels.</p>
 <?php
 square_end();
