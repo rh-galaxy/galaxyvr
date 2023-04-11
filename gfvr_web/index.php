@@ -57,7 +57,7 @@ headline("Level editor");
 <?php
 square_start("'100%'");
 ?>
-<p>The ability to create and play custom levels is now added. Use the MapEditor for <a href="MapEditor_Win_x64.zip">Windows</a> or <a href="MapEditor_Linux_x64.zip">Linux</a> and read editor_readme.txt. Mac version can be built from <a href="https://sourceforge.net/projects/galaxyv2/files/galaxyv2/galaxyv2_2.00/galaxyv2_2.00_src.zip/download">source</a>.</p>
+<p>The ability to create and play custom levels is now added. Use the MapEditor for <a href="MapEditor_Win_x64.zip">Windows</a>, <a href="MapEditor_Linux_x64.zip">Linux</a> or <a href="MapEditor_Mac_x64.zip">Mac</a> and read editor_readme.txt.</p>
 <p>In the <a href="https://discord.gg/cjptxT5JCb">Discord server</a> there is a channel for sharing levels with me and others and I can add them to the games user level page for approved levels.</p>
 <?php
 square_end();
