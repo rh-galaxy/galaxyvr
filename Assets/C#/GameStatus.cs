@@ -35,7 +35,7 @@ public class GameStatus : MonoBehaviour
 
         //gameObject.SetActive(true);
 
-        if (!GameManager.bNoVR) transform.eulerAngles = new Vector3(45, 0, 0);
+        if (!GameManager.bNoVR) transform.eulerAngles = new Vector3(45.0f, -16.0f, 0);
         transform.localScale = new Vector3(0.68f, 0.68f, 0.68f);
 
         string szMaterial = i_bIsRace ? "Status2" : "Status";

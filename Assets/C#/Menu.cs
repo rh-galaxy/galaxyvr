@@ -568,7 +568,7 @@ public class Menu : MonoBehaviour
         }
 
         //also init custom user levels since we have them now
-        float fStartAngle = -45;
+        float fStartAngle = -40;
         List<LevelInfo> li = GameManager.theGM.oHigh.oLevelList;
         int iBase = 55;
         int iLen = li.Count - 55;
@@ -580,7 +580,7 @@ public class Menu : MonoBehaviour
             for (int i = 0; i < iNum; i++)
             {
                 Vector3 vPos = new Vector3(1000, (i % 10) * 1.05f - 5.00f, 2.81f);
-                float fRotateAngle = fStartAngle + (i / 10) * 23.0f;
+                float fRotateAngle = fStartAngle + (i / 10) * 20.0f;
                 S_Levels level = new S_Levels();
                 level.szLevelDescription = ""; //set when level info is set
                 level.iLevelType = li[iBase + i].bIsTime ? (int)LevelType.MAP_RACE : (int)LevelType.MAP_MISSION;
@@ -597,8 +597,9 @@ public class Menu : MonoBehaviour
         //level text
         GameObject oCustomPathText;
         oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-        oCustomPathText.transform.position = new Vector3(1000.0f, 6.3f, 2.81f);
-        oCustomPathText.transform.localScale = new Vector3(1.6f, 1.6f, 1.0f);
+        oCustomPathText.transform.position = new Vector3(1000.0f-3.1f, 6.0f, 2.81f);
+        oCustomPathText.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
+        oCustomPathText.transform.eulerAngles = new Vector3(-10f, 0f, 0f);
         oCustomPathText.GetComponent<TextMeshPro>().text = "User contributed levels";
         oCustomPathText.SetActive(true);
         //////////////////////////////////
@@ -613,7 +614,8 @@ public class Menu : MonoBehaviour
             aMenuLevels = new C_LevelInMenu[NUM_LEVELS];
 
             //set random skybox
-            int iSkyBox = UnityEngine.Random.Range(3, 7);
+            //int iSkyBox = UnityEngine.Random.Range(3, 7);
+            int iSkyBox = 3;
             switch (iSkyBox)
             {
                 //case 2: RenderSettings.skybox = oSkyBoxMat2; break; //avoid blue sky
@@ -670,7 +672,7 @@ public class Menu : MonoBehaviour
             oMaterialRankSilver = Resources.Load("RankSilver", typeof(Material)) as Material;
             oMaterialRankGold = Resources.Load("RankGold", typeof(Material)) as Material;
 
-            oMaterialGrey = Resources.Load("LandingZone", typeof(Material)) as Material;
+            oMaterialGrey = Resources.Load("CheckPoint", typeof(Material)) as Material;
             oMiniMapMaterial = Resources.Load("MiniMap", typeof(Material)) as Material;
             oRankQuadRenderer = oRankQuad.GetComponent<MeshRenderer>();
         }
@@ -705,29 +707,29 @@ public class Menu : MonoBehaviour
             //menu options
             float yMod = cameraHolder.CycleYAdjust(0);
             float zMod = cameraHolder.CycleZAdjust(0);
-            oMenuYAdjust = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -36, "Adjust height\n" + ((yMod > 0.0f) ? "+" : "") + yMod.ToString("F2") + "m", "YAdjust", 30.0f, 12.0f);
-            oMenuZAdjust = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -36, "Adjust front\n" + ((zMod > 0.0f) ? "+" : "") + zMod.ToString("F2") + "m", "ZAdjust", 30.0f, 12.0f);
-            oMenuQuit = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 18.0f);
-            oMenuControls = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 18.0f);
-            oMenuCredits = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 18.0f);
+            oMenuYAdjust = new C_Item2InMenu(new Vector3(0, -4.5f, 2.81f), vAroundPoint, -36, "Adjust height\n" + ((yMod > 0.0f) ? "+" : "") + yMod.ToString("F2") + "m", "YAdjust", 30.0f, 12.0f);
+            oMenuZAdjust = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -36, "Adjust front\n" + ((zMod > 0.0f) ? "+" : "") + zMod.ToString("F2") + "m", "ZAdjust", 30.0f, 12.0f);
+            oMenuQuit = new C_Item2InMenu(new Vector3(0, -4.5f, 2.81f), vAroundPoint, -25, "Quit", "Quit", 30.0f, 18.0f);
+            oMenuControls = new C_Item2InMenu(new Vector3(0, -4.5f, 2.81f), vAroundPoint, -14, "Controls", "Controls", 30.0f, 18.0f);
+            oMenuCredits = new C_Item2InMenu(new Vector3(0, -4.5f, 2.81f), vAroundPoint, -3, "Credits", "Credits", 30.0f, 18.0f);
 
             GameManager.theGM.fMasterVolMod = PlayerPrefs.GetFloat("MyMasterVolMod", 1.0f);
-            oMenuAudio = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, -3, "Audio " + (GameManager.theGM.fMasterVolMod * 100.0f).ToString("F0") + "%", "Audio", 30.0f, 18.0f);
+            oMenuAudio = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, -3, "Audio " + (GameManager.theGM.fMasterVolMod * 100.0f).ToString("F0") + "%", "Audio", 30.0f, 18.0f);
 
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
-            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 18.0f);
+            oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -4.5f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 18.0f);
 
             GameManager.theGM.bCargoSwingingMode = PlayerPrefs.GetInt("MyCargoSwingingMode", 0) != 0;
-            oMenuCargoSwingingMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 10, "Cargo swinging", "CargoSwingingMode", 30.0f, 18.0f);
+            oMenuCargoSwingingMode = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 10, "Cargo swinging", "CargoSwingingMode", 30.0f, 18.0f);
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
             cameraHolder.SetMovementMode(CameraController.bPointMovement);
-            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -5.0f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 18.0f);
+            oMenuPointMovement = new C_Item2InMenu(new Vector3(0, -4.5f, 2.81f), vAroundPoint, 21, "Point motion", "Point", 30.0f, 18.0f);
 
             GameManager.theGM.bEasyMode = PlayerPrefs.GetInt("MyUseEasyMode", 1) != 0;
-            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -6.5f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 18.0f);
+            oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 18.0f);
 
-            oMenuLayDown = new C_Item2InMenu(new Vector3(0, -8.0f, 2.81f), vAroundPoint, -36, "Sky view", "LayDownView", 30.0f, 18.0f);
+            oMenuLayDown = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, -36, "Sky view", "LayDownView", 30.0f, 18.0f);
         }
         else if (iIncrementalInit == 8)
         {
@@ -751,7 +753,7 @@ public class Menu : MonoBehaviour
         else if (iIncrementalInit == 9)
         {
             //custom levels, own files on device
-            float fStartAngle = -45;
+            float fStartAngle = -40;
             string s = UnityEngine.Application.persistentDataPath;
             DirectoryInfo info = new DirectoryInfo(s);
             FileInfo[] fileInfo = info.GetFiles("*.des");
@@ -761,7 +763,7 @@ public class Menu : MonoBehaviour
             for (int i = 0; i < iNum; i++)
             {
                 Vector3 vPos = new Vector3(2000, (i % 10) * 1.05f - 5.00f, 2.81f);
-                float fRotateAngle = fStartAngle + (i / 10) * 23.0f;
+                float fRotateAngle = fStartAngle + (i / 10) * 20.0f;
                 S_Levels level = new S_Levels();
                 level.iLevelType = (int)LevelType.MAP_MISSION;
                 level.szLevelDescription = ""; //set when level info is set
@@ -774,9 +776,9 @@ public class Menu : MonoBehaviour
             //level text
             GameObject oCustomPathText;
             oCustomPathText = Instantiate(Menu.theMenu.oTMProBaseObj2, Menu.theMenu.transform);
-            oCustomPathText.transform.position = new Vector3(2000.0f, fileInfo.Length < 22 ? 0.0f : 6.0f, 2.81f);
-            oCustomPathText.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels (" + s + "), download editor from www.galaxy-forces-vr.com";
+            oCustomPathText.transform.position = new Vector3(2000.0f-8f, fileInfo.Length < 11 ? 0.0f : 7.0f, 6.81f);
+            oCustomPathText.transform.localScale = new Vector3(2.0f, 2.0f, 1.0f);
+            oCustomPathText.GetComponent<TextMeshPro>().text = "Custom levels (" + s + "),\ndownload editor from www.galaxy-forces-vr.com";
             oCustomPathText.SetActive(true);
         }
         else if (iIncrementalInit == 10)
@@ -1482,7 +1484,7 @@ public class Menu : MonoBehaviour
             //create text
             oLevelText = Instantiate(Menu.theMenu.oTMProBaseObj, Menu.theMenu.transform);
             oLevelText.name = "TextMesh" + i_szCollID;
-            oLevelText.transform.position = new Vector3(vPos.x - .68f, vPos.y - .17f, vPos.z - .12f);
+            oLevelText.transform.position = new Vector3(vPos.x - .68f, vPos.y - .25f, vPos.z - .12f);
             oLevelText.transform.localScale = new Vector3(1.8f, 1.8f, 1.0f);
             oLevelText.transform.RotateAround(i_vAroundPoint, Vector3.up, i_fRotateAngle);
             oLevelText.GetComponent<TextMeshPro>().text = i_szText;
