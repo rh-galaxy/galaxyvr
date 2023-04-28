@@ -27,6 +27,8 @@ public class Menu : MonoBehaviour
     const int iNumMission = 30;
     const int NUM_LEVELS = iNumRace + iNumMission;
 
+    public GameObject oMenuPlayer;
+
     public struct S_Levels
     {
         public int iLevelType;
@@ -797,6 +799,8 @@ public class Menu : MonoBehaviour
                 SetTextInfo(CameraController.bPointMovement ? 4 : 1);
                 bFirstTime = false;
             }
+
+            oMenuPlayer.SetActive(true);
         }
 
         iIncrementalInit++;

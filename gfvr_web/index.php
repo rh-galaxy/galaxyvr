@@ -159,6 +159,10 @@ square_start("'100%'");
 ?>
 <p>Point-movement (all platforms v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
+<p>v2.00 Apr 28, 2023<br>
+- change theme in menu<br>
+- add slow moving ship to menu background<br>
+<br>
 <p>v1.97 Mar 21, 2023<br>
 - add master volume setting<br>
 - fix custom levels working again<br>

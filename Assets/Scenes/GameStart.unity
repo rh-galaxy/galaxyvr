@@ -1335,7 +1335,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: v2.00
+  m_text: v2.01
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9092,6 +9092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8094110256a346f45bcd06874e50aa0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  oMenuPlayer: {fileID: 0}
   oSkyBoxMat1: {fileID: 2100000, guid: 7a3d52d8303b9f94f919098d239d5dd6, type: 2}
   oSkyBoxMat2: {fileID: 2100000, guid: b7b4f7531bc4e03418206b198cd4524b, type: 2}
   oSkyBoxMat3: {fileID: 2100000, guid: 2f4eeee454357514cb4eb96c127b9af5, type: 2}
