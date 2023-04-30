@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MenuPlayer : MonoBehaviour
 {
-    public GameObject oShip;
     public ParticleSystem oThruster;
     ParticleSystem.EmissionModule oThrusterEmission;
 
