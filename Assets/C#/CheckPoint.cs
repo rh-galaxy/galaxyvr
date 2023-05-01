@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CheckPoint : MonoBehaviour
@@ -34,21 +35,23 @@ public class CheckPoint : MonoBehaviour
         oCP1.transform.localScale = new Vector3(20.0f / 32.0f * 1.0f, 16.0f / 32.0f * 1.0f, 1.0f);
         oCP2.transform.localScale = new Vector3(20.0f / 32.0f * 1.0f, 16.0f / 32.0f * 1.0f, 1.0f);
 
-        oCP1Text.transform.position = new Vector3(vPos1.x, vPos1.y, -.17f);
-        oCP2Text.transform.position = new Vector3(vPos2.x, vPos2.y, -.17f);
         if (iCPNum >= 10)
         {
+            oCP1Text.transform.position = new Vector3(vPos1.x - .027f, vPos1.y - .015f, -0.175f);
+            oCP2Text.transform.position = new Vector3(vPos2.x - .027f, vPos2.y - .015f, -0.175f);
             oCP1Text.transform.localScale = new Vector3(12.0f / 32.0f * 0.40f, 16.0f / 32.0f * 0.3f, 1.0f);
             oCP2Text.transform.localScale = new Vector3(12.0f / 32.0f * 0.40f, 16.0f / 32.0f * 0.3f, 1.0f);
         }
         else
         {
+            oCP1Text.transform.position = new Vector3(vPos1.x - .015f, vPos1.y - .015f, -0.175f);
+            oCP2Text.transform.position = new Vector3(vPos2.x - .015f, vPos2.y - .015f, -0.175f);
             oCP1Text.transform.localScale = new Vector3(14.0f / 32.0f * 0.4f, 16.0f / 32.0f * 0.3f, 1.0f);
             oCP2Text.transform.localScale = new Vector3(14.0f / 32.0f * 0.4f, 16.0f / 32.0f * 0.3f, 1.0f);
         }
 
-        oCP1Text.GetComponent<TextMesh>().text = iCPNum.ToString();
-        oCP2Text.GetComponent<TextMesh>().text = iCPNum.ToString();
+        oCP1Text.GetComponent<TextMeshPro>().text = iCPNum.ToString();
+        oCP2Text.GetComponent<TextMeshPro>().text = iCPNum.ToString();
 
         gameObject.SetActive(true);
     }

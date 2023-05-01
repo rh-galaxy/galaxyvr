@@ -16462,6 +16462,16 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3709904688192845240, guid: 4008a60273ee8c1488c845630ad21873,
+        type: 3}
+      propertyPath: oCP1Text
+      value: 
+      objectReference: {fileID: 295703728425633145}
+    - target: {fileID: 3709904688192845240, guid: 4008a60273ee8c1488c845630ad21873,
+        type: 3}
+      propertyPath: oCP2Text
+      value: 
+      objectReference: {fileID: 295703728425633144}
     - target: {fileID: 4172018629596121405, guid: 4008a60273ee8c1488c845630ad21873,
         type: 3}
       propertyPath: m_CastShadows
@@ -16491,6 +16501,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9d6cbe4ff4c8b34885cc4ea27d18456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &295703728425633144 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2953953387253214452, guid: 4008a60273ee8c1488c845630ad21873,
+    type: 3}
+  m_PrefabInstance: {fileID: 295703728425633142}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &295703728425633145 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7352216359136786163, guid: 4008a60273ee8c1488c845630ad21873,
+    type: 3}
+  m_PrefabInstance: {fileID: 295703728425633142}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &612892451777728984
 Transform:
   m_ObjectHideFlags: 0
