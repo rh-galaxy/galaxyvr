@@ -235,6 +235,13 @@ public class CameraController : MonoBehaviour
                 fY_cam += stickG1.x * 58.0f * Time.deltaTime; fY_cam += stickG2.x * 58.0f * Time.deltaTime;
                 fX_cam -= stickG1.y * 58.0f * Time.deltaTime; fX_cam -= stickG2.y * 58.0f * Time.deltaTime;
             }
+            if (keyboard != null && GameManager.bNoVR && !bMapMode)
+            {
+                fY_cam -= (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed) ? 58.0f * Time.deltaTime : 0;
+                fY_cam += (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed) ? 58.0f * Time.deltaTime : 0;
+                fX_cam -= (keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed) ? 58.0f * Time.deltaTime : 0;
+                fX_cam += (keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed) ? 58.0f * Time.deltaTime : 0;
+            }
 #endif
 
             transform.eulerAngles = new Vector3(fX_cam, fY_cam, fZ_cam);

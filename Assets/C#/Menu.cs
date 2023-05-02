@@ -984,7 +984,7 @@ public class Menu : MonoBehaviour
             bTrigger = bTrigger || gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed;
         }
         if (mouse != null) bTrigger = bTrigger || mouse.leftButton.isPressed;
-        if (keyboard != null && iLastInfo != 7) bTrigger = bTrigger || keyboard.hKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
+        if (keyboard != null && iLastInfo != 7) bTrigger = bTrigger || keyboard.hKey.isPressed || keyboard.enterKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
         if (bTrigger && !bLastTrigger) bAllowSelection = true; //pressed
         else bAllowSelection = false;
         if (bLevelPlay) bAllowSelection = false; //fixes bug when after start, the user clicks again on another level in the menu (before the menu-scene has stopped)
