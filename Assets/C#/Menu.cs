@@ -26,6 +26,7 @@ public class Menu : MonoBehaviour
     const int NUM_LEVELS = iNumRace + iNumMission;
 
     public GameObject oMenuPlayer;
+    public GameObject oMenuPlayer2;
 
     public struct S_Levels
     {
@@ -796,6 +797,7 @@ public class Menu : MonoBehaviour
             }
 
             oMenuPlayer.SetActive(true);
+            oMenuPlayer2.SetActive(true);
         }
 
         iIncrementalInit++;
