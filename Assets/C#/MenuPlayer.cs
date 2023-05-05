@@ -35,7 +35,7 @@ public class MenuPlayer : MonoBehaviour
         //all objects must be handled like this
         oRb.transform.eulerAngles = new Vector3(0, 0, fDirection);
         oRb.transform.localPosition = vStartPos;
-        oRb.position = vStartPos / 10.0f;
+        oRb.position = vStartPos;
         iCurTarget = UnityEngine.Random.Range(0, TARGETS.Length);
 
         //Physics2D gravity is set to 0,0 because the ship is the only object affected
@@ -43,9 +43,16 @@ public class MenuPlayer : MonoBehaviour
         oRb.drag = 0.68f * 0.85f;
         oRb.mass = SHIP_MASS;
         oCustomGravity.force = new Vector2(0, -7.6f) * oRb.mass * fGravityScale;
+
+        MeshRenderer oShipBodyMR = oShipBody.GetComponent<MeshRenderer>();
+        oShipMaterial.color = oShipColorNormal;
+        oShipBodyMR.material = oShipMaterial;
     }
 
-    Vector3 vStartPos = new Vector3(-120.0f, -120.0f, 32.0f);
+    public GameObject oShipBody;
+    public Material oShipMaterial;
+    public Color oShipColorNormal = new Color(138 / 255.0f, 0, 0, 1.0f);
+    public Vector3 vStartPos; // = new Vector3(-12.0f, -12.0f, 32.0f);
     int iCurTarget = 0;
     Vector2[] TARGETS = {
         new Vector2(-12.0f, -12.0f), new Vector2(12.0f, 12.0f), new Vector2(-12.0f, 12.0f), new Vector2(12.0f, -12.0f),

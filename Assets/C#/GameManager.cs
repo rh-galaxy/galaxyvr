@@ -540,7 +540,7 @@ public class GameManager : MonoBehaviour
         if (bSteamAPIInited)
             SteamAPI.RunCallbacks(); //must run every frame for some reason or garbage collector takes something and unity crashes
 
-        /**/if (iInitState < 2)
+        if (iInitState < 2)
         {
             fInitTimer += Time.deltaTime;
             switch (iInitState)
@@ -567,6 +567,7 @@ public class GameManager : MonoBehaviour
                         bNoVR = true;
                         Screen.SetResolution(1280, 720, true);
                         Debug.Log("Error initing VR, continue with no VR");
+                        //Valve.VR.OpenVR.TrackedCamera.SetCameraTrackingSpace(ETrackingUniverseOrigin.TrackingUniverseSeated);
                         iInitState++;
                     }
                     return;
