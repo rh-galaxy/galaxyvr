@@ -73,6 +73,9 @@ public class HttpHiscore
         }
         else
         {
+            while (!www.downloadHandler.isDone)
+                yield return null;
+
             //retrieve results as text
             string szResult = www.downloadHandler.text;
             LevelInfo stLevel = new LevelInfo();
@@ -232,6 +235,8 @@ public class HttpHiscore
         }
         else
         {
+            while (!www.downloadHandler.isDone)
+                yield return null;
         }
         bIsDone = true;
     }
@@ -255,6 +260,8 @@ public class HttpHiscore
         }
         else
         {
+            while (!www.downloadHandler.isDone)
+                yield return null;
         }
         bIsDone = true;
     }
@@ -273,6 +280,9 @@ public class HttpHiscore
         }
         else
         {
+            while (!www.downloadHandler.isDone)
+                yield return null;
+
             //retrieve results as text and convert it to binary
             byte[] bytes = System.Convert.FromBase64String(www.downloadHandler.text);
 
@@ -294,6 +304,9 @@ public class HttpHiscore
         }
         else
         {
+            while (!www.downloadHandler.isDone)
+                yield return null;
+
             //retrieve results as text and convert it to binary
             byte[] bytes = System.Convert.FromBase64String(www.downloadHandler.text);
 
@@ -318,6 +331,9 @@ public class HttpHiscore
         }
         else
         {
+            while (!www.downloadHandler.isDone)
+                yield return null;
+
             if (!i_bBinary) szLevelTextData = www.downloadHandler.text;
             else aLevelBinaryData = www.downloadHandler.data;
         }
