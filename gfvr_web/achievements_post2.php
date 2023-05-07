@@ -24,7 +24,7 @@
 			$count = $_POST["COUNTER"] ^ 1467;
 			$tnow = time();
 			$tpast = $row['last_access'];
-			if(($tnow-$tpast)<$count+8 && ($tnow-$tpast)>$count-8 && $count>28) {
+			if(($tnow-$tpast)<$count+8 && ($tnow-$tpast)>$count-8 && $count>21) {
 				$isok = 1;
 			}
 		}
