@@ -6,9 +6,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.Profiling;
 using System.IO;
 using System.Threading;
+using UnityEngine.XR;
 
 using Steamworks; //when used: Edit->Project Settings...->Player.Scripting Backend must be [Mono] (not IL2CPP which should be used otherwise)
-using Valve.VR;
 
 public class GameManager : MonoBehaviour
 {
@@ -522,7 +522,7 @@ public class GameManager : MonoBehaviour
     }
 
     float fLongpressTimer = 0.0f;
-    float fInitTimer = 0.0f;
+    //float fInitTimer = 0.0f;
     int iInitState = 0;
     void Update()
     {
@@ -542,7 +542,8 @@ public class GameManager : MonoBehaviour
 
         if (iInitState < 2)
         {
-            fInitTimer += Time.deltaTime;
+            iInitState = 2;
+            /*fInitTimer += Time.deltaTime;
             switch (iInitState)
             {
                 case 0:
@@ -571,12 +572,17 @@ public class GameManager : MonoBehaviour
                         iInitState++;
                     }
                     return;
-            }
+            }*/
         }
 
         //get input devices
         Gamepad gamepad = Gamepad.current;
         Keyboard keyboard = Keyboard.current;
+        UnityEngine.XR.InputDevice headDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
+        UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        UnityEngine.XR.InputDevice handLDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+        bool buttonSelLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.menuButton, out bool buttonSelL);
+        bool buttonGripLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.gripButton, out bool buttonGripL);
 
         //quit
         if (Menu.bQuit)
@@ -584,7 +590,6 @@ public class GameManager : MonoBehaviour
             if (bSteamAPIInited)
                 SteamAPI.Shutdown();
 
-            SteamVR.enabled = false;
 #if UNITY_EDITOR
             //Application.Quit() does not work in the editor so
             // this need to be set to false to end the game
@@ -602,7 +607,7 @@ public class GameManager : MonoBehaviour
         //left menu button is occupied by steamvr
         bool bBackButton = false;
         bool bBackLong = false;
-        try { bBackLong = SteamVR_Actions.default_Back_long.GetState(SteamVR_Input_Sources.Any); } catch { }
+        bBackLong = buttonGripL;
         if (bBackLong)
         {
             fLongpressTimer += Time.unscaledDeltaTime;
@@ -620,7 +625,7 @@ public class GameManager : MonoBehaviour
         if (!bNoVR)
         {
             //bool presenceFeatureSupported = headDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.userPresence, out bool userPresent);
-            /**///bPauseNow = Valve.VR.OpenVR.System.ShouldApplicationPause(); //!userPresent;
+            /**///bPauseNow = !userPresent;
         }
         if (bNoVR) bPauseNow = false;
 
@@ -843,8 +848,7 @@ public class GameManager : MonoBehaviour
                 }
                 if (gamepad != null) bBackButton = bBackButton || gamepad.selectButton.isPressed;
                 if (keyboard != null) bBackButton = bBackButton || keyboard.escapeKey.isPressed;
-                try { bBackButton = bBackButton || SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
-                if (Menu.bLevelUnSelected || bBackButton)
+                if (Menu.bLevelUnSelected || bBackButton || buttonSelL)
                 {
                     Menu.bLevelUnSelected = false;
                     iState = 1; //goto menu part 1 (back)
@@ -974,8 +978,7 @@ public class GameManager : MonoBehaviour
 
                     if (gamepad != null) bBackButton = bBackButton || gamepad.selectButton.isPressed;
                     if (keyboard != null) bBackButton = bBackButton || keyboard.escapeKey.isPressed;
-                    try { bBackButton = bBackButton || SteamVR_Actions.default_Back_instant.GetStateDown(SteamVR_Input_Sources.Any); } catch { }
-                    if (bBackButton) //back to menu
+                    if (bBackButton || buttonSelL) //back to menu
                     {
                         bBackToMenu = true;
                         bAutoSetLevelInfo = true; //causes the menu to open up the levelinfo for this last played level

@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
 	<meta http-equiv="content-language" content="en-us">
-	<meta name="description" content="Galaxy Forces VR - A space shooter with global hiscores and achievements.">
+	<meta name="description" content="Galaxy Forces VR - Fight evil enemies in a space cave, do race and pick-up missions.">
 	<meta name="keywords" content="game VR space shooter hiscore achievements">
 	<meta name="author" content="rh_galaxy">
 	<meta name="viewport" content="initial-scale=1">
@@ -36,7 +36,8 @@ All done in 55 narrow space caves filled with evil enemies. Featuring interactiv
 <p>All players may have their best score for each level sent to this website and the top scores and top players are displayed below. The replay of the record scores are possible to view from the game and here to see how it was done. There are also 22 achievements to unlock.</p>
 
 <p>Available for free on <a href="https://www.oculus.com/experiences/rift/2005558116207772/">Oculus Home</a> (for Rift), and <a href="https://store.steampowered.com/app/1035550/Galaxy_Forces_VR/">Steam</a> (Rift, Vive and others) since 20th of September 2019.</p>
-<p>Also free on <a href="https://www.oculus.com/experiences/quest/4116487761695377/">AppLab</a> (<a href="https://sidequestvr.com/app/2058/galaxy-forces-vr">SideQuest</a> page).</p>
+<p>Also on <a href="https://www.oculus.com/experiences/quest/4116487761695377/">AppLab</a> (<a href="https://sidequestvr.com/app/2058/galaxy-forces-vr">SideQuest</a> page).</p>
+<p>As of March 2023 on <a href="https://rh-galaxy.itch.io/galaxy-forces-vr">itch.io</a> for PC without VR.</p>
 <p><video width="860" height="484" controls poster="/images/screen4_race13_860.jpg"><source src="gfvr16.mp4" type="video/mp4">Your browser does not support the video tag.</video></p>
 <p><img align="left" src="images/screen8_860.jpg" title="Galaxy Forces VR screenshot"></p>
 
@@ -159,9 +160,10 @@ square_start("'100%'");
 ?>
 <p>Point-movement (all platforms v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
-<p>v2.00 Apr 28, 2023<br>
+<p>v2.01 May 8, 2023<br>
+- fix score sometimes not registering<br>
 - change theme in menu<br>
-- add slow moving ship to menu background<br>
+- add slow moving ships to menu background<br>
 <br>
 <p>v1.97 Mar 21, 2023<br>
 - add master volume setting<br>

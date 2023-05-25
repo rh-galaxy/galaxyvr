@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{4FA199DF-C535-63C7-538F-99022A350E53}</ProjectGuid>
+    <ProjectGuid>{8FBF8AFA-9F91-A336-580D-676CF0994E66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>SteamVR_Actions</AssemblyName>
@@ -734,7 +734,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="SteamVR.csproj">
-      <Project>{4AE660DA-B0A9-91CC-F80E-9A6AE2A79B19}</Project>
+      <Project>{1F2E119F-DABC-2719-ECB0-A6EE30BE61B2}</Project>
       <Name>SteamVR</Name>
     </ProjectReference>
   </ItemGroup>

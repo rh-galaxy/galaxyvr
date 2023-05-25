@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{11D3F371-4290-B42A-B6AB-D67E34D2F3F2}</ProjectGuid>
+    <ProjectGuid>{2EE50A47-AE7B-ECEA-27E4-9C2CC4B29048}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>SteamVR_Windows_EditorHelper</AssemblyName>

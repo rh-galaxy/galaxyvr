@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using TMPro;
-//using UnityEngine.XR;
+using UnityEngine.XR;
 using UnityEngine.InputSystem;
-
-using Valve.VR;
 
 public class Menu : MonoBehaviour
 {
@@ -821,22 +819,26 @@ public class Menu : MonoBehaviour
         Keyboard keyboard = Keyboard.current;
         Mouse mouse = Mouse.current;
         Gamepad gamepad = Gamepad.current;
-        bool bTrigger = false;
-        try
-        {
-            bTrigger = (SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Any) > 0.5f) ||
-                SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any);
-        }
-        catch { }
+        UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        UnityEngine.XR.InputDevice handLDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+        bool triggerRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float triggerR);
+        bool button1RSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool button1R);
+        bool button2RSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2R);
+        bool stickRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickR);
+        bool triggerLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float triggerL);
+        bool button1LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool button1L);
+        bool button2LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2L);
+        bool stickLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickL);
 
         float fAdjust = 0;
 
+        bool bTrigger = (triggerR > 0.5f) || (triggerL > 0.5f) || button1R || button2R || button1L || button2L;
         if (gamepad != null)
         {
             bTrigger = bTrigger || gamepad.rightTrigger.ReadValue() > 0.5f || gamepad.buttonSouth.isPressed || gamepad.buttonEast.isPressed;
         }
         if (mouse != null) bTrigger = bTrigger || mouse.leftButton.isPressed;
-        if (keyboard != null) bTrigger = bTrigger || keyboard.hKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
+        if (keyboard != null) bTrigger = bTrigger || keyboard.hKey.isPressed || keyboard.enterKey.isPressed; //hkey emulates buttonclick, for easier use when mouse outside window
         if (bTrigger && !bLastTrigger) bAllowSelection = true; //pressed
         else bAllowSelection = false;
         if (bLevelPlay) bAllowSelection = false; //fixes bug when after start, the user clicks again on another level in the menu (before the menu-scene has stopped)
