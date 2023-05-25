@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.XR;
+using UnityEngine.XR;
 using UnityEngine.InputSystem;
-using Valve.VR;
 
 public class CameraController : MonoBehaviour
 {
@@ -12,8 +11,6 @@ public class CameraController : MonoBehaviour
     bool bMapMode;
     GameObject oPlayer;
     GameLevel oMap;
-
-    public Transform cameraRig;
 
     private Vector3 vCamOffset;
     private Vector3 vMapSize;
@@ -32,9 +29,6 @@ public class CameraController : MonoBehaviour
     internal Vector3 vHeadPosition;
     internal Vector3 vGazeDirection;
     internal Quaternion qRotation;
-
-    SteamVR_Action_Pose poseActionR;
-    SteamVR_Action_Pose poseActionL;
 
     private void Awake()
     {
@@ -70,9 +64,6 @@ public class CameraController : MonoBehaviour
         oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
         oGazeQuad.transform.localScale = new Vector3(.38f, .38f, 1);
         oGazeQuad.SetActive(false);
-
-        poseActionR = SteamVR_Input.GetAction<SteamVR_Action_Pose>("Pose_right_tip");
-        poseActionL = SteamVR_Input.GetAction<SteamVR_Action_Pose>("Pose_left_tip");
 
         oRayQuad.SetActive(false);
     }
@@ -306,32 +297,27 @@ public class CameraController : MonoBehaviour
     {
         Mouse mouse = Mouse.current;
         Gamepad gamepad = Gamepad.current;
+        UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        UnityEngine.XR.InputDevice handLDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
 
         //switch hand/use gamepad?
         {
-            try
+            bool triggerRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float triggerR);
+            bool button1RSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool button1R);
+            bool button2RSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2R);
+            bool triggerLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float triggerL);
+            bool button1LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool button1L);
+            bool button2LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2L);
+            if (triggerR > 0.5f || button1R || button2R)
             {
-                if ((SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.RightHand) > 0.5f)
-                    || SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.RightHand))
-                {
-                    bPointMovementInMenu = true;
-                    iRightHanded = 1;
-                }
-                else if ((SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.LeftHand) > 0.5f)
-                    || SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.LeftHand))
-                {
-                    bPointMovementInMenu = true;
-                    iRightHanded = 2;
-                }
-
-                if ((SteamVR_Actions.default_Throttle.GetAxis(SteamVR_Input_Sources.Gamepad) > 0.5f)
-                    || SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Gamepad))
-                {
-                    bPointMovementInMenu = false;
-                    iRightHanded = 0;
-                }
+                bPointMovementInMenu = true;
+                iRightHanded = 1;
             }
-            catch { }
+            else if (triggerL > 0.5f || button1L || button2L)
+            {
+                bPointMovementInMenu = true;
+                iRightHanded = 2;
+            }
 
             if (gamepad != null)
             {
@@ -363,19 +349,29 @@ public class CameraController : MonoBehaviour
         qRotation = Camera.main.transform.rotation;
         if (iRightHanded == 1)
         {
-            vHeadPosition = cameraRig.position + poseActionR[SteamVR_Input_Sources.RightHand].localPosition;
-            qRotation = cameraRig.rotation * poseActionR[SteamVR_Input_Sources.RightHand].localRotation;
-            vGazeDirection = qRotation * Vector3.forward;
+            bool posRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posR);
+            vHeadPosition = transform.TransformPoint(posR); //to world coords
+            bool rotRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotR);
+            Quaternion qOffs = Quaternion.Euler(75, 0, 0);
+            rotR *= transform.rotation;
+            vGazeDirection = rotR * Vector3.forward;
+            //vGazeDirection = transform.TransformDirection(vGazeDirection);
+            qRotation = rotR; // Quaternion.LookRotation(vGazeDirection);
         }
         if (iRightHanded == 2)
         {
-            vHeadPosition = cameraRig.position + poseActionL[SteamVR_Input_Sources.LeftHand].localPosition;
-            qRotation = cameraRig.rotation * poseActionL[SteamVR_Input_Sources.LeftHand].localRotation;
-            vGazeDirection = qRotation * Vector3.forward;
+            bool posLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posL);
+            vHeadPosition = transform.TransformPoint(posL); //to world coords
+            bool rotLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotL);
+            Quaternion qOffs = Quaternion.Euler(75, 0, 0);
+            rotL *= transform.rotation;
+            vGazeDirection = rotL * Vector3.forward;
+            //vGazeDirection = transform.TransformDirection(vGazeDirection);
+            qRotation = rotL; // Quaternion.LookRotation(vGazeDirection);
         }
         if (iRightHanded == 0 && bPointMovementInMenu) //on mouse only (gamepad uses head to point in menu, and cannot point in game)
         {
-            vHeadPosition = new Vector3(vHeadPosition.x, vHeadPosition.y-0.5f, vHeadPosition.z); //below head
+            vHeadPosition = new Vector3(vHeadPosition.x, vHeadPosition.y - 0.5f, vHeadPosition.z); //below head
             Ray r = new Ray(vHeadPosition, (mousePoint - vHeadPosition).normalized);
             qRotation = Quaternion.LookRotation(r.direction);
             vGazeDirection = qRotation * Vector3.forward;

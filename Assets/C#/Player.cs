@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.XR;
+using UnityEngine.XR;
 using UnityEngine.InputSystem;
-using Valve.VR;
 
 public class Player : MonoBehaviour
 {
@@ -854,30 +853,29 @@ public class Player : MonoBehaviour
             bool bNewFireState = false;
             bThrottle = bLeft = bRight = bAdjust = false;
 
-            //get input from joysticks
-            float fX = 0;
-            float fY = 0;
-            float fTrg2 = 0;
-            try
-            {
-                fX = SteamVR_Actions.default_Steering.axis.x;
-                if (!bMotionMovementEnabled) fY = SteamVR_Actions.default_Steering.axis.y;
-                fTrg2 = SteamVR_Actions.default_Throttle.axis;
-            }
-            catch { }
+            UnityEngine.XR.InputDevice handRDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+            UnityEngine.XR.InputDevice handLDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+            bool triggerRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float triggerR);
+            bool button1RSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool button1R);
+            bool button2RSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2R);
+            bool stickRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickR);
+            bool triggerLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float triggerL);
+            bool button1LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primaryButton, out bool button1L);
+            bool button2LSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.secondaryButton, out bool button2L);
+            bool stickLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.primary2DAxis, out Vector2 stickL);
 
-            if (fTrg2 > 0.3f) bThrottle = true;
-            try { if (SteamVR_Actions.default_Throttle2.GetState(SteamVR_Input_Sources.Any)) bThrottle = true; } catch { }
-
-            if (fX > 0.35f) bRight = true;
-            if (fX < -0.35f) bLeft = true;
+            //get input from joystick
+            if (stickR.x > 0.35f || stickL.x > 0.35f) bRight = true;
+            if (stickR.x < -0.35f || stickL.x < -0.35f) bLeft = true;
             if (!bMotionMovementEnabled)
             {
-                if ((fY < -0.75f) && bLeft == false && bRight == false) bAdjust = true;
-                if (fY < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
+                if ((stickR.y < -0.75f || stickL.y < -0.75f) && bLeft == false && bRight == false) bAdjust = true;
+                if (stickR.y < -0.85f || stickL.y < -0.85f) bAdjust = true; //safety if all the way down, don't care if left/right
 
-                try { if (SteamVR_Actions.default_Fire.GetState(SteamVR_Input_Sources.Any)) bNewFireState = true; } catch { }
+                if (button1R || button1L) bNewFireState = true; //button A (X)
             }
+            if (triggerR > 0.3f || triggerL > 0.3f) bThrottle = true;
+            if (button2R || button2L) bThrottle = true; //button B (Y)
 
             Gamepad gamepad = Gamepad.current;
             if (gamepad != null && !bMotionMovementEnabled)
