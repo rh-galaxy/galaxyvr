@@ -284,6 +284,7 @@ public class Menu : MonoBehaviour
     C_Item2InMenu oMenuAudio;
     C_Item2InMenu oMenuLayDown;
     C_Item2InMenu oMenuEasyMode;
+    C_Item2InMenu oMenuUserNext;
     C_Item2InMenu oMenuCargoSwingingMode;
     C_Item2InMenu oMenuYAdjust, oMenuZAdjust;
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
@@ -732,6 +733,8 @@ public class Menu : MonoBehaviour
             GameManager.theGM.bEasyMode = PlayerPrefs.GetInt("MyUseEasyMode", 1) != 0;
             oMenuEasyMode = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 21, "Easy mode", "EasyMode", 30.0f, 18.0f);
 
+            oMenuUserNext = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, 21, "User levels", "UserNext", 30.0f, 18.0f);
+
             oMenuLayDown = new C_Item2InMenu(new Vector3(0, -7.5f, 2.81f), vAroundPoint, -36, "Sky view", "LayDownView", 30.0f, 18.0f);
         }
         else if (iIncrementalInit == 8)
@@ -870,6 +873,7 @@ public class Menu : MonoBehaviour
         if (oMenuSnapMovement != null) oMenuSnapMovement.oLevelQuadMeshRenderer.material = CameraController.bSnapMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuPointMovement != null) oMenuPointMovement.oLevelQuadMeshRenderer.material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuEasyMode != null) oMenuEasyMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bEasyMode ? oMaterialBarHighlighted : oMaterialBar;
+        if (oMenuUserNext != null) oMenuUserNext.oLevelQuadMeshRenderer.material = oMaterialBar;
         if (oMenuCargoSwingingMode != null) oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bCargoSwingingMode ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuAudio != null) oMenuAudio.oLevelQuadMeshRenderer.material = oMaterialBar;
 
@@ -1004,6 +1008,10 @@ public class Menu : MonoBehaviour
             {
                 oMenuEasyMode.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
+            else if (oHitInfo.collider.name.CompareTo("UserNext") == 0)
+            {
+                oMenuUserNext.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
+            }
             else if (oHitInfo.collider.name.CompareTo("CargoSwingingMode") == 0)
             {
                 oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
@@ -1078,7 +1086,7 @@ public class Menu : MonoBehaviour
                     bLevelPlay = true;
                     bPlaySelectSound = true;
                 }
-                else if (oHitInfo.collider.name.CompareTo("Next1") == 0)
+                else if ((oHitInfo.collider.name.CompareTo("Next1") == 0) || (oHitInfo.collider.name.CompareTo("UserNext") == 0))
                 {
                     fAdjust = 1000;
                     bPlaySelectSound = true;
