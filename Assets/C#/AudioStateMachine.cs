@@ -85,15 +85,16 @@ public class AudioStateMachine : MonoBehaviour
 
     //only to be run when compiled for oculus
     // setting rift headphones or windows default or both depending on config in Oculus Home
-    /*public void SetOutputByRiftSetting()
+    public void SetOutputByOpenXRSetting()
     {
-        FMOD.System sys;
+        SetOutput(0); //not figured this out yet
+        /*FMOD.System sys;
         FMODUnity.RuntimeManager.StudioSystem.getCoreSystem(out sys);
 
         int i, driverCount = 0;
         sys.getNumDrivers(out driverCount);
 
-        string riftId = OVRPlugin.audioOutId; // OVRManager.audioOutId;
+        string id = OVRPlugin.audioOutId; //what guid is SteamVR/OpenXR audio device?
 
         for (i=0; i<driverCount; i++)
         {
@@ -102,13 +103,14 @@ public class AudioStateMachine : MonoBehaviour
             FMOD.SPEAKERMODE mode;
             sys.getDriverInfo(i, out guid, out rate, out mode, out channels);
 
-            if (guid.ToString() == riftId)
+            if (guid.ToString() == id)
             {
                 sys.setDriver(i);
                 break;
             }
         }
-    }*/
+        if(i == driverCount) sys.setDriver(0);*/
+    }
 
 
     public void LevelTransition(float f)
