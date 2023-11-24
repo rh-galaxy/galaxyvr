@@ -83,7 +83,7 @@ public class AudioStateMachine : MonoBehaviour
         FMODUnity.RuntimeManager.CoreSystem.setDriver(i);
     }
 
-    //setting headphones or windows default depending wich headset is found
+    //setting headphones or windows default depending on headset found
     public void SetOutputByOpenXRSetting()
     {
         FMOD.System sys;
