@@ -78,6 +78,9 @@ public class GameManager : MonoBehaviour
         oFadeBox.GetComponent<MeshRenderer>().material = oFadeMatCopy;
         StartFade(0.01f, 0.0f, true);
 
+        if (bNoVR) AudioStateMachine.instance.SetOutput();
+        else AudioStateMachine.instance.SetOutputByOpenXRSetting();
+
         AudioSettings.OnAudioConfigurationChanged += AudioSettings_OnAudioConfigurationChanged;
         GameManager.theGM.fMasterVolMod = PlayerPrefs.GetFloat("MyMasterVolMod", 1.0f);
         AudioStateMachine.instance.masterVolume = 1.25f * fMasterVolMod;
@@ -92,7 +95,8 @@ public class GameManager : MonoBehaviour
 
     private void AudioSettings_OnAudioConfigurationChanged(bool deviceWasChanged)
     {
-        AudioStateMachine.instance.SetOutput(0);
+        //AudioStateMachine.instance.SetOutput(0);
+        AudioStateMachine.instance.SetOutputByOpenXRSetting();
     }
 
     //////start of valve specific code
@@ -578,6 +582,7 @@ public class GameManager : MonoBehaviour
                         bNoVR = true;
                         Screen.SetResolution(1280, 720, true);
                         Debug.Log("Error initing VR, continue with no VR");
+                        //Valve.VR.OpenVR.TrackedCamera.SetCameraTrackingSpace(ETrackingUniverseOrigin.TrackingUniverseSeated);
                         iInitState++;
                     }
                     return;
