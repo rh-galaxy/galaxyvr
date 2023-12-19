@@ -197,6 +197,7 @@ public class HttpHiscore
             }
         }
 
+        www.Dispose();
         bIsDone = true;
     }
 
@@ -238,6 +239,7 @@ public class HttpHiscore
             while (!www.downloadHandler.isDone)
                 yield return null;
         }
+        www.Dispose();
         bIsDone = true;
     }
     public IEnumerator SendHiscore2(string i_szLevel, int i_iScoreMs, Replay i_oReplay)
@@ -263,6 +265,7 @@ public class HttpHiscore
             while (!www.downloadHandler.isDone)
                 yield return null;
         }
+        www.Dispose();
         bIsDone = true;
     }
 
@@ -288,6 +291,7 @@ public class HttpHiscore
 
             i_oResult.LoadFromMem(bytes);
         }
+        www.Dispose();
         bIsDone = true;
     }
     public IEnumerator GetReplay2(string i_szLevel, string i_szId, Replay i_oResult)
@@ -312,6 +316,7 @@ public class HttpHiscore
 
             i_oResult.LoadFromMem(bytes);
         }
+        www.Dispose();
         bIsDone = true;
     }
 
@@ -337,6 +342,7 @@ public class HttpHiscore
             if (!i_bBinary) szLevelTextData = www.downloadHandler.text;
             else aLevelBinaryData = www.downloadHandler.data;
         }
+        www.Dispose();
         bIsDone = true;
     }
 

@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
 
     int iRightHanded = 0;
     public GameObject oRayQuad;
-    GameObject oGazeQuad = null;
+    public GameObject oGazeQuad;
     Material oCursorMaterial;
 
     internal Vector3 vHeadPosition;
@@ -56,12 +56,6 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //create a quad a circle for gazeing in VR or mouse cursor in non VR
-        oGazeQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        oGazeQuad.transform.parent = transform;
-        MonoBehaviour.DestroyImmediate(oGazeQuad.GetComponent<Collider>());
-        oCursorMaterial = Resources.Load("Cursor", typeof(Material)) as Material;
-        oGazeQuad.GetComponent<MeshRenderer>().material = oCursorMaterial;
         oGazeQuad.transform.localScale = new Vector3(.38f, .38f, 1);
         oGazeQuad.SetActive(false);
 
