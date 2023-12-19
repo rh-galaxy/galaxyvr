@@ -82,6 +82,7 @@ public class HttpHiscore
 
             i_oResult.LoadFromMem(bytes);
         }
+        www.Dispose();
         bIsDone = true;
     }
     public IEnumerator GetReplay2(string i_szLevel, string i_szId, int i_iDevice, Replay i_oResult)
@@ -110,6 +111,7 @@ public class HttpHiscore
 
             i_oResult.LoadFromMem(bytes);
         }
+        www.Dispose();
         bIsDone = true;
     }
 
@@ -135,6 +137,7 @@ public class HttpHiscore
             if (!i_bBinary) szLevelTextData = www.downloadHandler.text;
             else aLevelBinaryData = www.downloadHandler.data;
         }
+        www.Dispose();
         bIsDone = true;
     }
 
