@@ -49,7 +49,11 @@ function print_hiscore()
 						echo "</a></td>";
 						
 						echo "<td>";
-						printf("%d.%02d", $row["score_sum"]/1000, ($row["score_sum"]%1000)/10);
+						$remain = $row["score_sum"];
+						$part1 = (int)($remain/1000);
+						$remain -= $part1*1000;
+						if($remain<0) $remain *= -1;
+						printf("%d.%02d", $part1, $remain/10);
 						echo "</td>";
 						echo "</tr>";
 					
