@@ -286,7 +286,6 @@ public class Menu : MonoBehaviour
 
     C_Item2InMenu oMenuAudio;
     C_Item2InMenu oMenuEasyMode;
-    C_Item2InMenu oMenuCargoSwingingMode;
     C_Item2InMenu oMenuYAdjust, oMenuZAdjust;
     C_Item2InMenu oMenuQuit, oMenuCredits, oMenuControls;
     GameObject oCreditsQuad;
@@ -790,8 +789,7 @@ public class Menu : MonoBehaviour
             CameraController.bSnapMovement = PlayerPrefs.GetInt("MyUseSnapMovement", 0) != 0;
             oMenuSnapMovement = new C_Item2InMenu(new Vector3(0, -4.5f, 2.81f), vAroundPoint, 10, "Snap", "Snap", 30.0f, 18.0f);
 
-            GameManager.theGM.bCargoSwingingMode = PlayerPrefs.GetInt("MyCargoSwingingMode", 0) != 0;
-            oMenuCargoSwingingMode = new C_Item2InMenu(new Vector3(0, -6.0f, 2.81f), vAroundPoint, 10, "Cargo swinging", "CargoSwingingMode", 30.0f, 18.0f);
+            GameManager.theGM.bCargoSwingingMode = false; //PlayerPrefs.GetInt("MyCargoSwingingMode", 0) != 0;
 
             CameraController.bPointMovement = PlayerPrefs.GetInt("MyUsePointMovement", 0) != 0;
             cameraHolder.SetMovementMode(CameraController.bPointMovement);
@@ -951,7 +949,6 @@ public class Menu : MonoBehaviour
         if (oMenuSnapMovement != null) oMenuSnapMovement.oLevelQuadMeshRenderer.material = CameraController.bSnapMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuPointMovement != null) oMenuPointMovement.oLevelQuadMeshRenderer.material = CameraController.bPointMovement ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuEasyMode != null) oMenuEasyMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bEasyMode ? oMaterialBarHighlighted : oMaterialBar;
-        if (oMenuCargoSwingingMode != null) oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = GameManager.theGM.bCargoSwingingMode ? oMaterialBarHighlighted : oMaterialBar;
         if (oMenuAudio != null) oMenuAudio.oLevelQuadMeshRenderer.material = oMaterialBar;
 
         bool bHitLevel = false;
@@ -1094,10 +1091,6 @@ public class Menu : MonoBehaviour
             else if (oHitInfo.collider.name.CompareTo("EasyMode") == 0)
             {
                 oMenuEasyMode.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
-            }
-            else if (oHitInfo.collider.name.CompareTo("CargoSwingingMode") == 0)
-            {
-                oMenuCargoSwingingMode.oLevelQuadMeshRenderer.material = oMaterialBarHighlighted;
             }
             else if (oHitInfo.collider.name.CompareTo("Audio") == 0)
             {
@@ -1346,16 +1339,6 @@ public class Menu : MonoBehaviour
 
                     oLevelInfoEMContainer.SetActive(GameManager.theGM.bEasyMode && oLevelInfoLimitsContainer.activeSelf);
                 }
-                else if (oHitInfo.collider.name.CompareTo("CargoSwingingMode") == 0)
-                {
-                    GameManager.theGM.bCargoSwingingMode = !GameManager.theGM.bCargoSwingingMode;
-                    PlayerPrefs.SetInt("MyCargoSwingingMode", GameManager.theGM.bCargoSwingingMode ? 1 : 0);
-                    PlayerPrefs.Save();
-                    bPlaySelectSound = true;
-
-                    //close menu, so that when it is opened again new info is presented
-                    SetLevelInfoOff();
-                }
                 else if (oHitInfo.collider.name.CompareTo("Audio") == 0)
                 {
                     GameManager.theGM.fMasterVolMod += 0.1f;
@@ -1524,44 +1507,6 @@ public class Menu : MonoBehaviour
                     oRankQuad.transform.RotateAround(vAroundPoint, Vector3.up, fRotateAngle);
                     oRankQuad.GetComponent<MeshRenderer>().material = oMaterial;
                 }
-
-                /////////////////////////////////////////////////////////////////////////////////
-                {
-                    iRank = 5; //no score at all
-                    if (stLevelInfo.info2.iBestScoreMs != -1)
-                    {
-                        iRank = 4; //a score less than bronze
-                        if (stLevelInfo.bIsTime)
-                        {
-                            if (stLevelInfo.info2.iBestScoreMs < stLevelInfo.info2.iLimit1) iRank = 1; //gold
-                            else if (stLevelInfo.info2.iBestScoreMs < stLevelInfo.info2.iLimit2) iRank = 2; //silver
-                            else if (stLevelInfo.info2.iBestScoreMs < stLevelInfo.info2.iLimit3) iRank = 3; //bronze
-                        }
-                        else
-                        {
-                            if (stLevelInfo.info2.iBestScoreMs >= stLevelInfo.info2.iLimit1) iRank = 1; //gold
-                            else if (stLevelInfo.info2.iBestScoreMs >= stLevelInfo.info2.iLimit2) iRank = 2; //silver
-                            else if (stLevelInfo.info2.iBestScoreMs >= stLevelInfo.info2.iLimit3) iRank = 3; //bronze
-                        }
-                    }
-                    oMaterial = null;
-                    if (iRank == 4) oMaterial = Menu.theMenu.oMaterialRankGreen;
-                    if (iRank == 3) oMaterial = Menu.theMenu.oMaterialRankBronze;
-                    if (iRank == 2) oMaterial = Menu.theMenu.oMaterialRankSilver;
-                    if (iRank == 1) oMaterial = Menu.theMenu.oMaterialRankGold;
-
-                    if (oMaterial != null)
-                    {
-                        oRankQuad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                        oRankQuad.transform.parent = Menu.theMenu.transform;
-                        oRankQuad.transform.position = new Vector3(vPos.x + .70f, vPos.y - .35f, vPos.z - .17f);
-                        oRankQuad.transform.localScale = new Vector3(4.0f, 4.0f, 1.0f);
-                        oRankQuad.transform.localEulerAngles = new Vector3(0.0f, 0.0f, UnityEngine.Random.value * 100.0f); //vary 100 deg around z
-                        oRankQuad.transform.RotateAround(vAroundPoint, Vector3.up, fRotateAngle);
-                        oRankQuad.GetComponent<MeshRenderer>().material = oMaterial;
-                    }
-                }
-                /////////////////////////////////////////////////////////////////////////////////
             }
         }
     }
