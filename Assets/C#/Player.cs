@@ -9,26 +9,6 @@ public class Player : MonoBehaviour
     public GameLevel oMap;
     Vector3 vMapSize;
 
-    ///////////////////////////
-    public Rigidbody2D link0rb; //drag the nr1 link here in the inspector
-    public Rigidbody2D link1rb;
-    public Rigidbody2D link2rb;
-    public Rigidbody2D cargo0rb;
-
-    public ConstantForce2D link0cf; //drag the nr1 link here in the inspector (you must add a ConstandForce2D component first)
-    public ConstantForce2D link1cf;
-    public ConstantForce2D link2cf;
-    public ConstantForce2D cargo0cf;
-
-    Vector3 link0tr_pos = new Vector3(-0.02f, 0.00f, -1.75f);
-    Vector3 link1tr_pos = new Vector3(-0.06f, 0.00f, -1.75f);
-    Vector3 link2tr_pos = new Vector3(-0.10f, 0.00f, -1.75f);
-    Vector3 cargo0tr_pos = new Vector3(-0.14f, 0.00f, -1.75f);
-
-    public GameObject oChain;
-    ///////////////////////////
-
-
     public GameObject oShip;
     public ParticleSystem oThruster;
     ParticleSystem.EmissionModule oThrusterEmission;
@@ -80,7 +60,6 @@ public class Player : MonoBehaviour
     const int NUM_LIFES_MISSION = 5;
 
     //cargo
-    bool bCargoSwingingMode = false;
     internal int iCargoNumUsed = 0;
     internal int iCargoSpaceUsed = 0;
     internal int[] aHold = new int[MAXSPACEINHOLDUNITS];
@@ -129,58 +108,8 @@ public class Player : MonoBehaviour
 
     bool bInited = false;
 
-    private void chain_load()
-    {
-        link0rb.transform.localPosition = link0tr_pos;
-        link0rb.transform.localRotation = Quaternion.identity;
-        link1rb.transform.localPosition = link1tr_pos;
-        link1rb.transform.localRotation = Quaternion.identity;
-        link2rb.transform.localPosition = link2tr_pos;
-        link2rb.transform.localRotation = Quaternion.identity;
-        cargo0rb.transform.localPosition = cargo0tr_pos;
-        cargo0rb.transform.localRotation = Quaternion.identity;
-    }
-    //private void chain_save()
-    //{
-    //    link0tr_pos = link0rb.transform.localPosition;
-    //    link0tr_rot = link0rb.transform.localRotation;
-    //    link1tr_pos = link0rb.transform.localPosition;
-    //    link1tr_rot = link0rb.transform.localRotation;
-    //    link2tr_pos = link0rb.transform.localPosition;
-    //    link2tr_rot = link0rb.transform.localRotation;
-    //    cargo0tr_pos = cargo0rb.transform.localPosition;
-    //    cargo0tr_rot = cargo0rb.transform.localRotation;
-    //}
-    //private void chain_load()
-    //{
-    //    link0rb.position = link0tr_pos2 + oRb.position;
-    //    link0rb.rotation = link0tr_rot2;
-    //    link1rb.position = link1tr_pos2 + oRb.position;
-    //    link1rb.rotation = link1tr_rot2;
-    //    link2rb.position = link2tr_pos2 + oRb.position;
-    //    link2rb.rotation = link2tr_rot2;
-    //    cargo0rb.position = cargo0tr_pos2 + oRb.position;
-    //    cargo0rb.rotation = cargo0tr_rot2;
-    //    Debug.Log("chain Pos/Rot loaded");
-    //}
-    //private void chain_save()
-    //{
-    //    link0tr_pos2 = link0rb.transform.localPosition;
-    //    link0tr_rot2 = link0rb.rotation;
-    //    link1tr_pos2 = link0rb.transform.localPosition;
-    //    link1tr_rot2 = link0rb.rotation;
-    //    link2tr_pos2 = link0rb.transform.localPosition;
-    //    link2tr_rot2 = link0rb.rotation;
-    //    cargo0tr_pos2 = cargo0rb.transform.localPosition;
-    //    cargo0tr_rot2 = cargo0rb.rotation;
-    //    Debug.Log("chain Pos/Rot saved");
-    //}
     private void Start()
     {
-        if (bCargoSwingingMode)
-        {
-            oChain.SetActive(false);
-        }
     }
 
     private void Awake()
@@ -192,7 +121,6 @@ public class Player : MonoBehaviour
         asm = GameObject.Find("AudioStateMachineDND").GetComponent<AudioStateMachine>();
 
         FULL_HEALTH = GameLevel.theReplay.bEasyMode ? 7.5f : 1.5f;
-        bCargoSwingingMode = GameLevel.theReplay.bCargoSwingingMode;
 
         fShipHealth = FULL_HEALTH;
         fLastShipHealth = FULL_HEALTH;
@@ -263,20 +191,6 @@ public class Player : MonoBehaviour
         {
             fMeanSpeeds[i] = 0.0f;
         }
-
-        if (bCargoSwingingMode)
-        {
-            link0cf.force = oMap.vGravity * 0.1f * 0.045f;
-            link1cf.force = oMap.vGravity * 0.1f * 0.045f;
-            link2cf.force = oMap.vGravity * 0.1f * 0.045f;
-            link0rb.mass = 0.1f;
-            link1rb.mass = 0.1f;
-            link2rb.mass = 0.1f;
-            cargo0cf.force = oMap.vGravity * 0.1f * 0.045f;
-            cargo0rb.mass = 0.1f;
-
-            oChain.SetActive(false);
-        }
     }
 
     bool bFireTriggered = false, bFire = false;
@@ -309,18 +223,6 @@ public class Player : MonoBehaviour
         else
         {
             float fCargoHealthValue = -1f;
-            if (bCargoSwingingMode)
-            {
-                fCargoHealthValue = 0f;
-                if (iCargoSpaceUsed > 0)
-                {
-                    for (int i = 0; i < iCargoNumUsed; i++)
-                    {
-                        fCargoHealthValue += aHold[i] * aHoldHealth[i];
-                    }
-                    fCargoHealthValue = fCargoHealthValue / iCargoSpaceUsed;
-                }
-            }
             status.SetForMission(fShipHealth / FULL_HEALTH, iNumLifes, iCargoSpaceUsed / MAXSPACEINHOLDWEIGHT,
                 iCargoNumUsed == 3 || iCargoSpaceUsed == MAXSPACEINHOLDWEIGHT, fFuel / MAXFUELINTANK, GetScore() / 1000, fCargoHealthValue);
         }
@@ -744,26 +646,10 @@ public class Player : MonoBehaviour
     Vector2 vLastVel;
     float fLastDirection;
 
-    bool bInitCargo = true;
     public void FixedUpdate()
     {
         if (!bInited)
             return;
-
-        if(bCargoSwingingMode && oMap.iLevelType == (int)LevelType.MAP_RACE)
-        {
-            if (bAlive && bInitCargo)
-            {
-                bNoUnloading = true;
-                LoadCargo(35, -1);
-                bInitCargo = false;
-            }
-            /**/
-            float d = Vector2.Distance(oRb.position, cargo0rb.position);
-            if (d > /**/40.5f)
-                Physics2D.IgnoreLayerCollision(15, 16, false); //on
-        }
-
 
         float fDist = (oRb.position - vLastPosition).magnitude;
         if (fDist > 0.80f) fDist = 0.0f; //detect when player has jumped to a new position (after death)
@@ -1389,7 +1275,6 @@ public class Player : MonoBehaviour
 
         if (!bAlive) return;
         bAlive = false;
-        bInitCargo = true;
 
         //prevent instant change in the music
         asm.ResetLife();
@@ -1404,7 +1289,6 @@ public class Player : MonoBehaviour
         iAchieveShipsDestroyed++;
 
         //inactivate ship
-        oChain.SetActive(false);
         oShip.SetActive(false);
 
         oPolygonCollider2D.enabled = false; //make the explosion not moving because of an enemy moving and pushing it
@@ -1427,8 +1311,6 @@ public class Player : MonoBehaviour
             }
         }
         //reset cargo
-        cargo0rb.mass = 0.1f;
-        cargo0cf.force = oMap.vGravity * cargo0rb.mass * fGravityScale;
         iCargoNumUsed = iCargoSpaceUsed = 0;
 
         if (bSetToReplay)
@@ -1463,23 +1345,8 @@ public class Player : MonoBehaviour
             bCargoLoaded = true;
 
             //new weight
-            if (bCargoSwingingMode)
-            {
-                cargo0rb.mass += iCargo / 11.0f;
-                cargo0cf.force = oMap.vGravity * cargo0rb.mass * fGravityScale;
-
-                if (!oChain.activeSelf)
-                {
-                    Physics2D.IgnoreLayerCollision(15, 16, true); //off
-                    oChain.SetActive(true);
-                    chain_load();
-                }
-            }
-            else
-            {
-                oRb.mass += iCargo / 11.0f;
-                oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
-            }
+            oRb.mass += iCargo / 11.0f;
+            oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //play load cargo sound
             oASGeneral.PlayOneShot(oClipLoadCargo, GameManager.theGM.fMasterVolMod);
@@ -1498,22 +1365,8 @@ public class Player : MonoBehaviour
             iCargoSpaceUsed -= aHold[iCargoNumUsed];
 
             //new weight
-            if (bCargoSwingingMode)
-            {
-                cargo0rb.mass -= aHold[iCargoNumUsed] / 11.0f;
-                cargo0cf.force = oMap.vGravity * cargo0rb.mass * fGravityScale;
-
-                if(iCargoNumUsed==0)
-                {
-                    //we have unloaded last
-                    oChain.SetActive(false);
-                }
-            }
-            else
-            {
-                oRb.mass -= aHold[iCargoNumUsed] / 11.0f;
-                oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
-            }
+            oRb.mass -= aHold[iCargoNumUsed] / 11.0f;
+            oCustomGravity.force = oMap.vGravity * oRb.mass * fGravityScale;
 
             //add score for the cargo moved
             int s = Mathf.RoundToInt(aHold[iCargoNumUsed] * aHoldHealth[iCargoNumUsed]);
