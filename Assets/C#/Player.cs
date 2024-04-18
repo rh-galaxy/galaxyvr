@@ -56,7 +56,6 @@ public class Player : MonoBehaviour
     const int NUM_LIFES_MISSION = 5;
 
     //cargo
-    bool bCargoSwingingMode = false;
     internal int iCargoNumUsed = 0;
     internal int iCargoSpaceUsed = 0;
     internal int[] aHold = new int[MAXSPACEINHOLDUNITS];
@@ -109,7 +108,6 @@ public class Player : MonoBehaviour
         asm = GameObject.Find("AudioStateMachineDND").GetComponent<AudioStateMachine>();
 
         FULL_HEALTH = GameLevel.theReplay.bEasyMode ? 7.5f : 1.5f;
-        bCargoSwingingMode = GameLevel.theReplay.bCargoSwingingMode;
 
         fShipHealth = FULL_HEALTH;
         fLastShipHealth = FULL_HEALTH;
@@ -208,18 +206,6 @@ public class Player : MonoBehaviour
         else
         {
             float fCargoHealthValue = -1f;
-            if (bCargoSwingingMode)
-            {
-                fCargoHealthValue = 0f;
-                if (iCargoSpaceUsed > 0)
-                {
-                    for (int i = 0; i < iCargoNumUsed; i++)
-                    {
-                        fCargoHealthValue += aHold[i] * aHoldHealth[i];
-                    }
-                    fCargoHealthValue = fCargoHealthValue / iCargoSpaceUsed;
-                }
-            }
             status.SetForMission(fShipHealth / FULL_HEALTH, iNumLifes, iCargoSpaceUsed / MAXSPACEINHOLDWEIGHT,
                 iCargoNumUsed == 3 || iCargoSpaceUsed == MAXSPACEINHOLDWEIGHT, fFuel / MAXFUELINTANK, GetScore() / 1000, fCargoHealthValue);
         }
@@ -999,8 +985,7 @@ public class Player : MonoBehaviour
 
             //add flying score text
             S_FlyingScoreInfo stFlyingScoreInfo;
-            if(bCargoSwingingMode) stFlyingScoreInfo.szScore = aHold[iCargoNumUsed].ToString() + " @" + Mathf.RoundToInt(aHoldHealth[iCargoNumUsed]*100.0f) + "%";
-            else stFlyingScoreInfo.szScore = aHold[iCargoNumUsed].ToString();
+            stFlyingScoreInfo.szScore = aHold[iCargoNumUsed].ToString();
             stFlyingScoreInfo.vPos = new Vector3(oRb.position.x, oRb.position.y, -0.2f);
             stFlyingScoreInfo.vVel = new Vector3(UnityEngine.Random.Range(-0.15f, 0.15f), UnityEngine.Random.Range(-0.15f, 0.15f), -0.35f);
             FlyingScore o = Instantiate(oMap.oFlyingScoreObjBase, oMap.transform);
