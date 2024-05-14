@@ -24,7 +24,6 @@ public class CameraController : MonoBehaviour
     int iRightHanded = 0;
     public GameObject oRayQuad;
     public GameObject oGazeQuad;
-    Material oCursorMaterial;
 
     internal Vector3 vHeadPosition;
     internal Vector3 vGazeDirection;
