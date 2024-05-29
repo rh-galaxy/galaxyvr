@@ -1052,6 +1052,7 @@ public class Player : MonoBehaviour
                 fDirection -= iNumCounts * 360.0f;
 
                 oRb.MoveRotation(fDirection);
+                //it's too late now but should have used oRb.angularVelocity...
             }
 
             //consume fuel
