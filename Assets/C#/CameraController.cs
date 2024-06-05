@@ -29,6 +29,9 @@ public class CameraController : MonoBehaviour
     internal Vector3 vGazeDirection;
     internal Quaternion qRotation;
 
+    InputFeatureUsage<Vector3> pointerPosFeature;
+    InputFeatureUsage<Quaternion> pointerRotFeature;
+
     private void Awake()
     {
         //singleton
@@ -47,6 +50,10 @@ public class CameraController : MonoBehaviour
 
         //the rest is done once only...
         DontDestroyOnLoad(gameObject);
+
+        //non default input feature
+        pointerPosFeature = new InputFeatureUsage<Vector3>("PointerPosition");
+        pointerRotFeature = new InputFeatureUsage<Quaternion>("PointerRotation");
 
         iYAdjust = PlayerPrefs.GetInt("MyYAdjustInt", 0);
         iZAdjust = PlayerPrefs.GetInt("MyZAdjustInt", 0);
@@ -342,24 +349,32 @@ public class CameraController : MonoBehaviour
         qRotation = Camera.main.transform.rotation;
         if (iRightHanded == 1)
         {
-            bool posRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posR);
+            bool posRSupported = handRDevice.TryGetFeatureValue(pointerPosFeature, out Vector3 posR);
+            bool rotRSupported = handRDevice.TryGetFeatureValue(pointerRotFeature, out Quaternion rotR);
+            Quaternion qOffs = Quaternion.Euler(0, 0, 0);
+            //had this before where i had to hack an offset
+            //bool posRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posR);
+            //bool rotRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotR);
+            //Quaternion qOffs = Quaternion.Euler(75, 0, 0);
+
             vHeadPosition = transform.TransformPoint(posR); //to world coords
-            bool rotRSupported = handRDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotR);
-            Quaternion qOffs = Quaternion.Euler(75, 0, 0);
             rotR *= transform.rotation * qOffs;
             vGazeDirection = rotR * Vector3.forward;
-            //vGazeDirection = transform.TransformDirection(vGazeDirection);
             qRotation = rotR; // Quaternion.LookRotation(vGazeDirection);
         }
         if (iRightHanded == 2)
         {
-            bool posLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posL);
+            bool posLSupported = handLDevice.TryGetFeatureValue(pointerPosFeature, out Vector3 posL);
+            bool rotLSupported = handLDevice.TryGetFeatureValue(pointerRotFeature, out Quaternion rotL);
+            Quaternion qOffs = Quaternion.Euler(0, 0, 0);
+            //had this before where i had to hack an offset
+            //bool posLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.devicePosition, out Vector3 posL);
+            //bool rotLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotL);
+            //Quaternion qOffs = Quaternion.Euler(75, 0, 0);
+
             vHeadPosition = transform.TransformPoint(posL); //to world coords
-            bool rotLSupported = handLDevice.TryGetFeatureValue(UnityEngine.XR.CommonUsages.deviceRotation, out Quaternion rotL);
-            Quaternion qOffs = Quaternion.Euler(75, 0, 0);
             rotL *= transform.rotation * qOffs;
             vGazeDirection = rotL * Vector3.forward;
-            //vGazeDirection = transform.TransformDirection(vGazeDirection);
             qRotation = rotL; // Quaternion.LookRotation(vGazeDirection);
         }
         if (iRightHanded == 0 && bPointMovementInMenu) //on mouse only (gamepad uses head to point in menu, and cannot point in game)
