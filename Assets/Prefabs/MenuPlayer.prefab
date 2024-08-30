@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 308664080531279079}
   - component: {fileID: 308664080531278875}
   - component: {fileID: 308664080531279078}
-  - component: {fileID: 73525778965183661}
   m_Layer: 16
   m_Name: MenuPlayer
   m_TagString: Player
@@ -151,20 +150,6 @@ ConstantForce2D:
   m_Force: {x: 0, y: 0}
   m_RelativeForce: {x: 0, y: 0}
   m_Torque: 0
---- !u!114 &73525778965183661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 308664080531278873}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef60bff44e8af1a449d7bac8eda19c32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  oShip: {fileID: 5175617689589614154}
-  oThruster: {fileID: 308664080835252970}
 --- !u!1 &308664080551912969
 GameObject:
   m_ObjectHideFlags: 0

@@ -141,7 +141,7 @@ MonoBehaviour:
   Path: GalaxyProject/Build/Desktop/Master Bank.bank
   Name: Master Bank
   StudioPath: bank:/Master Bank
-  lastModified: 638035734978188999
+  lastModified: 638035734980000000
   FileSizes:
   - Name: Desktop
     Value: 4330816
@@ -222,7 +222,7 @@ MonoBehaviour:
   - {fileID: -2363220183309261349}
   StringsBanks:
   - {fileID: 5179412264206534648}
-  cacheTime: 638035734978248841
+  cacheTime: 638035734980000000
   cacheVersion: 131591
 --- !u!114 &340617412484138923
 MonoBehaviour:
@@ -339,7 +339,7 @@ MonoBehaviour:
   Path: GalaxyProject/Build/Desktop/Master Bank.strings.bank
   Name: Master Bank.strings
   StudioPath: bank:/Master Bank.strings
-  lastModified: 638035734978248841
+  lastModified: 638035734980000000
   FileSizes:
   - Name: Desktop
     Value: 864
