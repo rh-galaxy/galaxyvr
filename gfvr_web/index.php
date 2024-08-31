@@ -160,16 +160,12 @@ square_start("'100%'");
 ?>
 <p>Point-movement (all platforms v1.40) where you point with your hand and the ship goes there.
 The plan is to also add multiplayer for 4 players with 4 new dogfight maps as well as the existing race and mission maps. Race will be done without collision between players, and mission as co-op where you cooperate to transport all cargo.</p>
-<p>v2.04 Apr 19, 2024<br>
-- removed swinging cargo mode<br>
-- fix memory leak<br>
-<br>
-v2.01 May 8, 2023<br>
+<p>v2.01 May 8, 2023<br>
 - fix score sometimes not registering<br>
 - change theme in menu<br>
 - add slow moving ships to menu background<br>
 <br>
-v1.97 Mar 21, 2023<br>
+<p>v1.97 Mar 21, 2023<br>
 - add master volume setting<br>
 - fix custom levels working again<br>
 - PC noVR versions on itch.io with hiscore and progress<br>
@@ -181,7 +177,7 @@ v1.95 Nov 9, 2022<br>
 <br>
 v1.90 Sep 6, 2022<br>
 - use universal render pipeline (PC)<br>
-- add glow post processing (PC)<br>
+- add glow postprocessing (PC)<br>
 - replaced skyboxes<br>
 - replaced planet<br>
 - removed recentering<br>

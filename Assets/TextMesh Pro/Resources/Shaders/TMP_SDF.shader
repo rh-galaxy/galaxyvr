@@ -1,5 +1,3 @@
-// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
 Shader "TextMeshPro/Distance Field" {
 
 Properties {
@@ -14,7 +12,7 @@ Properties {
 	_OutlineUVSpeedX	("Outline UV Speed X", Range(-5, 5)) = 0.0
 	_OutlineUVSpeedY	("Outline UV Speed Y", Range(-5, 5)) = 0.0
 	_OutlineWidth		("Outline Thickness", Range(0, 1)) = 0
-	_OutlineSoftness	("Outline Softness", Range(0,1)) = 0
+	_OutlineSoftness	("Outline Softness", Range(-1,1)) = 0
 
 	_Bevel				("Bevel", Range(0,1)) = 0.5
 	_BevelOffset		("Bevel Offset", Range(-0.5,0.5)) = 0
@@ -118,7 +116,9 @@ SubShader {
 		#pragma shader_feature __ BEVEL_ON
 		#pragma shader_feature __ UNDERLAY_ON UNDERLAY_INNER
 		#pragma shader_feature __ GLOW_ON
-		#pragma shader_feature __ MASK_OFF
+
+		#pragma multi_compile __ UNITY_UI_CLIP_RECT
+		#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
 
 		#include "UnityCG.cginc"
@@ -127,7 +127,6 @@ SubShader {
 		#include "TMPro.cginc"
 
 		struct vertex_t {
-			UNITY_VERTEX_INPUT_INSTANCE_ID
 			float4	position		: POSITION;
 			float3	normal			: NORMAL;
 			fixed4	color			: COLOR;
@@ -137,8 +136,6 @@ SubShader {
 
 
 		struct pixel_t {
-			UNITY_VERTEX_INPUT_INSTANCE_ID
-			UNITY_VERTEX_OUTPUT_STEREO
 			float4	position		: SV_POSITION;
 			fixed4	color			: COLOR;
 			float2	atlas			: TEXCOORD0;		// Atlas
@@ -159,18 +156,12 @@ SubShader {
 
 		pixel_t VertShader(vertex_t input)
 		{
-			pixel_t output = (pixel_t)0;
-
-			UNITY_INITIALIZE_OUTPUT(pixel_t, output);
-			UNITY_SETUP_INSTANCE_ID(input);
-			UNITY_TRANSFER_INSTANCE_ID(input,output);
-			UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
-
 			float bold = step(input.texcoord1.y, 0);
 
 			float4 vert = input.position;
 			vert.x += _VertexOffsetX;
 			vert.y += _VertexOffsetY;
+
 			float4 vPosition = UnityObjectToClipPos(vert);
 
 			float2 pixelSize = vPosition.w;
@@ -214,21 +205,19 @@ SubShader {
 			float2 faceUV = TRANSFORM_TEX(textureUV, _FaceTex);
 			float2 outlineUV = TRANSFORM_TEX(textureUV, _OutlineTex);
 
-			
-			output.position = vPosition;
-			output.color = input.color;
-			output.atlas =	input.texcoord0;
-			output.param =	float4(alphaClip, scale, bias, weight);
-			output.mask = half4(vert.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_MaskSoftnessX, _MaskSoftnessY) + pixelSize.xy));
-			output.viewDir =	mul((float3x3)_EnvMatrix, _WorldSpaceCameraPos.xyz - mul(unity_ObjectToWorld, vert).xyz);
+			pixel_t output = {
+				vPosition,
+				input.color,
+				input.texcoord0,
+				float4(alphaClip, scale, bias, weight),
+				half4(vert.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_MaskSoftnessX, _MaskSoftnessY) + pixelSize.xy)),
+				mul((float3x3)_EnvMatrix, _WorldSpaceCameraPos.xyz - mul(unity_ObjectToWorld, vert).xyz),
 			#if (UNDERLAY_ON || UNDERLAY_INNER)
-			output.texcoord2 = float4(input.texcoord0 + bOffset, bScale, bBias);
-			output.underlayColor =	underlayColor;
+				float4(input.texcoord0 + bOffset, bScale, bBias),
+				underlayColor,
 			#endif
-			output.textures = float4(faceUV, outlineUV);
-			
-
-
+				float4(faceUV, outlineUV),
+			};
 
 			return output;
 		}
@@ -236,8 +225,6 @@ SubShader {
 
 		fixed4 PixShader(pixel_t input) : SV_Target
 		{
-			UNITY_SETUP_INSTANCE_ID(input);
-
 			float c = tex2D(_MainTex, input.atlas).a;
 		
 		#ifndef UNDERLAY_ON
@@ -296,17 +283,15 @@ SubShader {
 			faceColor.rgb += glowColor.rgb * glowColor.a;
 		#endif
 
-		// #if !MASK_OFF
-		#if UNITY_VERSION < 530
-			// Unity 5.2 2D Rect Mask Support
-			if (_UseClipRect)
-				faceColor *= UnityGet2DClipping(input.mask.xy, _ClipRect);
-		#else
-			// Alternative implementation to UnityGet2DClipping with support for softness.
+		// Alternative implementation to UnityGet2DClipping with support for softness.
+		#if UNITY_UI_CLIP_RECT
 			half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
 			faceColor *= m.x * m.y;
 		#endif
-		//#endif
+
+		#if UNITY_UI_ALPHACLIP
+			clip(faceColor.a - 0.001);
+		#endif
 
   		return faceColor * input.color.a;
 		}
