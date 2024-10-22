@@ -42,8 +42,6 @@ public class CameraController : MonoBehaviour
         else if (instance != this)
         {
             //enforce singleton pattern, meaning there can only ever be one instance of a CameraController.
-         //   for (int i=0; i< transform.childCount; i++) //this is ok, since destroy doesn't take it away immediately
-         //       Destroy(transform.GetChild(i).gameObject);
             Destroy(gameObject);
             return;
         }
@@ -129,21 +127,21 @@ public class CameraController : MonoBehaviour
     // now: 2 2 1 2 2 1 
     float fCurX = 0, fCurY = 0;
     float fStepX = 0, fStepY = 0;
-    public void GetMouseMovementSmooth(out float o_fX, out float o_fY, out float o_fXScreen, out float o_fYScreen)
+    public void GetMouseMovementSmooth(out float o_fDeltaX, out float o_fDeltaY, out float o_fScreenX, out float o_fScreenY)
     {
-        o_fX = 0;
-        o_fY = 0;
-        o_fXScreen = 0;
-        o_fYScreen = 0;
+        o_fDeltaX = 0;
+        o_fDeltaY = 0;
+        o_fScreenX = 0;
+        o_fScreenY = 0;
 
         Mouse mouse = Mouse.current;
         if (mouse != null)
         {
             //InputSystem
             Vector2 v = mouse.position.ReadValue();
-            o_fXScreen = v.x;
-            o_fYScreen = v.y;
-            v = mouse.delta.ReadValue() * Time.deltaTime * 7.0f;
+            o_fScreenX = v.x;
+            o_fScreenY = v.y;
+            v = mouse.delta.ReadValue() * 0.09f; //should not apply Time.deltaTime here since a shorter or longer deltaTime already modifies the mouse delta
             fCurX += v.x;
             fCurY += v.y;
 
@@ -157,22 +155,22 @@ public class CameraController : MonoBehaviour
             if (Mathf.Abs(fCurX) > Mathf.Abs(fStepX))
             {
                 fCurX -= fStepX;
-                o_fX = fStepX;
+                o_fDeltaX = fStepX;
             }
             else
             {
-                o_fX = fCurX;
+                o_fDeltaX = fCurX;
                 fCurX = 0;
             }
 
             if (Mathf.Abs(fCurY) > Mathf.Abs(fStepY))
             {
                 fCurY -= fStepY;
-                o_fY = fStepY;
+                o_fDeltaY = fStepY;
             }
             else
             {
-                o_fY = fCurY;
+                o_fDeltaY = fCurY;
                 fCurY = 0;
             }
         }
@@ -203,18 +201,25 @@ public class CameraController : MonoBehaviour
         if ((keyboard!=null && keyboard.fKey.isPressed) || GameManager.bNoVR)
         {
             //using mouse smoothing to avoid jerkyness
-            float fMouseX, fMouseY, fMouseXScreen, fMouseYScreen;
-            GetMouseMovementSmooth(out fMouseX, out fMouseY, out fMouseXScreen, out fMouseYScreen);
+            float fMouseDeltaX, fMouseDeltaY, fMouseScreenX, fMouseScreenY;
+            GetMouseMovementSmooth(out fMouseDeltaX, out fMouseDeltaY, out fMouseScreenX, out fMouseScreenY);
             Mouse mouse = Mouse.current;
             if (mouse != null && (mouse.middleButton.isPressed || mouse.rightButton.isPressed))
             {
-                if (keyboard.gKey.isPressed) fZ_cam += fMouseX * 3.0f;
-                else fY_cam += fMouseX * 3.0f;
-                fX_cam -= fMouseY * 3.0f;
+                float ratio = (float)Screen.width / 1920.0f;
+                float multiply = 2.0f / ratio;
+                /*if(UnityEngine.Application.platform == RuntimePlatform.OSXEditor)           multiply = 100.0f;
+                else if(UnityEngine.Application.platform == RuntimePlatform.OSXPlayer)      multiply = 3.0f;
+                else if (UnityEngine.Application.platform == RuntimePlatform.WindowsEditor) multiply = 15.0f;*/
+
+                if (keyboard.gKey.isPressed) fZ_cam += fMouseDeltaX * multiply;
+                else fY_cam += fMouseDeltaX * multiply;
+                fX_cam -= fMouseDeltaY * multiply;
+
             }
             if (mouse!=null)
             {
-                Vector3 scr = new Vector3(fMouseXScreen, fMouseYScreen, 5.0f);
+                Vector3 scr = new Vector3(fMouseScreenX, fMouseScreenY, 5.0f);
                 mousePoint = Camera.main.ScreenToWorldPoint(scr, Camera.MonoOrStereoscopicEye.Mono);
             }
 
