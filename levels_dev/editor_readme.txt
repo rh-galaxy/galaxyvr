@@ -79,6 +79,9 @@ CTRL+PAGEDOWN  Extend map one row from bottom
 CTRL+END       Extend map one column from right
 CTRL+HOME      Extend map one column from left
 
+If you don't have PGUP/PGDOWN use T and G
+If you don't have HOME/END use F and H
+
 * Don't use enemy7 and Z-objects 2..3
 
 MOUSE
