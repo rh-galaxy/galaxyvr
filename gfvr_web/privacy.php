@@ -26,12 +26,10 @@ headline("Galaxy Forces VR - Privacy Policy");
 <?php
 square_start("'100%'");
 ?>
-<p><i>Team Galaxy</i> is committed to protecting the privacy of players.</p>
-<p>We collect and store the following information:<br>
-<i>The type of device you’re using.</i><br>
-<i>Your game play statistics - disclosed on this website.</i>
+<p><i>Team Galaxy</i> collect and store the following information:<br>
+<i>USER_ID, USER_PROFILE (name only).</i><br>
+<i>The data is used to keep track of your game play progress and high scores - disclosed on this web-site and in the game. For the best score for each level that you complete a recorded replay is stored, viewable by others.</i>
 </p>
-<p>We collect this information to provide you with a good achievement system.</p>
 <p>We will not distribute your personal information to third parties, unless we are required by law to do so.</p>
 <p>You can request to delete this data by sending an email to contact@galaxy-forces-vr.com
 </p>

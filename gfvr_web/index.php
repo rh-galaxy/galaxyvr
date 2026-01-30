@@ -31,7 +31,7 @@ square_start("'100%'");
 The goal is to race against the clock to get the fastest time (<i>race</i>), or transport cargo to get the best score (<i>mission</i>).
 All done in 55 narrow space caves filled with evil enemies. Featuring interactive music, realistic physics and challenging game-play.</p>
 
-<p>The game is inspired by <a href="https://www.mobygames.com/game/amiga/gravity-force">Gravity Force</a> on the Amiga, and by <a href="http://www.galaxy-forces.com">Galaxy Forces V2</a>.</p>
+<p>The game is inspired by <a href="https://www.mobygames.com/game/amiga/gravity-force">Gravity Force</a> on the Amiga, and by <a href="https://galaxyv2.sourceforge.io/">Galaxy Forces V2</a>.</p>
 
 <p>All players may have their best score for each level sent to this website and the top scores and top players are displayed below. The replay of the record scores are possible to view from the game and here to see how it was done. There are also 22 achievements to unlock.</p>
 

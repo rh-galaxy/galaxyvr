@@ -1,11 +1,11 @@
 # galaxyvr
 Galaxy Forces VR
 
-- Steam:       Using unity 2021.3.25f1 (2021.3.8f1 before 20230525, 2019.2.10f1 before 20220827) (the default branch)
-- Multiplayer: Using unity 2021.3.25f1 (2021.3.8f1 before 20230525, 2019.2.10f1 before 20220827)
-- Meta PC:     Using unity 2021.3.25f1 (2021.3.8f1 before 20230525, 2021.1.6f1 before 20220827, 2020.1.13f1 before 20210526) (Use this on macOS)
+- Steam:       Using unity 2021.3.45f2 (2021.3.8f1 before 20230525, 2019.2.10f1 before 20220827) (the default branch)
+- Multiplayer: Using unity 2021.3.45f2 (2021.3.8f1 before 20230525, 2019.2.10f1 before 20220827)
+- Meta PC:     Using unity 2021.3.45f2 (2021.3.8f1 before 20230525, 2021.1.6f1 before 20220827, 2020.1.13f1 before 20210526) (Use this on macOS)
 - Meta Quest:  Using unity 2021.3.8f1 (2021.1.6f1 before 20220827, 2020.1.13f1 before 20210526)
-- WebReplay:   Using unity 2021.3.8f1 (2021.1.6f1 before 20220829)
+- WebReplay:   Using unity 2021.3.45f2 (2021.1.6f1 before 20220829)
 
 Version differences
 
